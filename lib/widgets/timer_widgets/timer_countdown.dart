@@ -22,7 +22,7 @@ class TimerCountdown extends StatelessWidget {
             child: timerProgressSnapshot.hasData
                 ? FittedBox(
                     fit: BoxFit.fitWidth,
-                    child: Text(_formatTime(timerProgressSnapshot.data)))
+                    child: Text(_formatTime(timerProgressSnapshot.data!)))
                 : const Center(child: CircularProgressIndicator()),
           );
         });

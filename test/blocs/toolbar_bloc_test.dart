@@ -1,3 +1,5 @@
+@Timeout(Duration(seconds: 5))
+
 import 'package:api_client/api/api.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +10,8 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 
 void main() {
-  ToolbarBloc bloc;
-  Api api;
+  Api api = Api('baseUrl');
+  late ToolbarBloc bloc;
 
   setUp(() {
     di.clearAll();
@@ -20,8 +22,7 @@ void main() {
     di.registerDependency<ToolbarBloc>(() => bloc);
   });
 
-  test('Should insert log out icon when none are defined',
-      async((DoneFn done) {
+  test('Should insert log out icon when none are defined', async((DoneFn done) {
     bloc.visibleButtons.skip(1).listen((List<IconButton> response) {
       expect(response.length, 1);
       done();
@@ -31,7 +32,7 @@ void main() {
 
   test('Defined icon is added to stream', async((DoneFn done) {
     final Map<AppBarIcon, VoidCallback> icons = <AppBarIcon, VoidCallback>{
-      AppBarIcon.undo: null
+      AppBarIcon.undo: () {}
     };
 
     bloc.visibleButtons.skip(1).listen((List<IconButton> response) {
@@ -44,8 +45,8 @@ void main() {
 
   test('Defined icons are added to stream', async((DoneFn done) {
     final Map<AppBarIcon, VoidCallback> icons = <AppBarIcon, VoidCallback>{
-      AppBarIcon.undo: null,
-      AppBarIcon.search: null
+      AppBarIcon.undo: () {},
+      AppBarIcon.search: () {}
     };
 
     bloc.visibleButtons.skip(1).listen((List<IconButton> response) {

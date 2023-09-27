@@ -14,7 +14,7 @@ class AuthBloc extends BlocBase {
   AuthBloc(this._api);
 
   /// Store logged in user data.
-  GirafUserModel loggedInUser;
+  late GirafUserModel loggedInUser;
 
   final Api _api;
 
@@ -50,7 +50,6 @@ class AuthBloc extends BlocBase {
       // If there is a successful login, remove the loading spinner,
       // and push the status to the stream
       if (status) {
-
         // Store the logged in user data
         _api.user.me().listen((GirafUserModel event) {
           loggedInUser = GirafUserModel(
@@ -76,7 +75,6 @@ class AuthBloc extends BlocBase {
         }).onError((Object error) {
           completer.completeError(error);
         });
-
       }
     }).onError((Object error) {
       completer.completeError(error);

@@ -6,7 +6,7 @@ import 'package:api_client/models/giraf_user_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/new_pictogram_password_bloc.dart';
 
 class MockUserApi extends Mock implements UserApi {
@@ -25,8 +25,8 @@ class MockUserApi extends Mock implements UserApi {
 class MockAccountApi extends Mock implements AccountApi {}
 
 void main() {
-  NewPictogramPasswordBloc bloc;
-  Api api;
+  Api api = Api('baseUrl');
+  NewPictogramPasswordBloc bloc = NewPictogramPasswordBloc(api);
 
   final GirafUserModel user = GirafUserModel(
       id: '1',
@@ -36,6 +36,10 @@ void main() {
       displayName: 'Birgit',
       username: 'b1337');
 
+  setUpAll(() {
+    registerFallbackValue(Role.Unknown);
+  });
+
   setUp(() {
     api = Api('any');
     api.user = MockUserApi();
@@ -43,9 +47,9 @@ void main() {
     bloc = NewPictogramPasswordBloc(api);
     bloc.initialize('testUser', 'testName', Uint8List(1));
 
-    when(api.account.register(any, any, any, any,
-            departmentId: anyNamed('departmentId'), role: anyNamed('role')))
-        .thenAnswer((_) {
+    when(() => api.account.register(any(), any(), any(), any(),
+        departmentId: any(named: 'departmentId'),
+        role: any(named: 'role'))).thenAnswer((_) {
       return Stream<GirafUserModel>.value(user);
     });
   });
@@ -54,7 +58,7 @@ void main() {
     bloc.onPictogramPasswordChanged.add('1111');
     bloc.createCitizen();
 
-    verify(bloc.createCitizen());
+    verify(() => bloc.createCitizen());
     done();
   }));
 

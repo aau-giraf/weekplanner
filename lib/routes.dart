@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 class Routes {
   /// Push the given route onto the navigator that most tightly encloses the
   /// given context.
-  Future<T> push<T extends Object>(BuildContext context, Widget widget) {
+  Future<T?> push<T extends Object>(BuildContext context, Widget widget) {
     return Navigator.of(context).push<T>(
         MaterialPageRoute<T>(builder: (BuildContext context) => widget));
   }
 
   /// Pop the top-most route off the navigator that most tightly encloses the
   /// given context.
-  void pop<T extends Object>(BuildContext context, [T result]) {
+  void pop<T extends Object>(BuildContext context, [T? result]) {
     Navigator.of(context).pop<T>(result);
   }
 

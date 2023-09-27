@@ -16,8 +16,8 @@ class PictogramLoginScreen extends LoginScreen {
 
 class _PictogramLoginState extends LoginScreenState {
   final Api _api = di.get<Api>();
-  PictogramPassword pictogramPassword;
-  void onPasswordUpdate(String password) {
+  late PictogramPassword pictogramPassword;
+  void onPasswordUpdate(String? password) {
     if (password != null) {
       passwordCtrl.text = password;
     }

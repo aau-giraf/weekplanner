@@ -7,7 +7,7 @@ class TimerPiechart extends StatelessWidget {
   /// Constructor
   const TimerPiechart(this._timerBloc);
 
-   /// Bloc for timer logic
+  /// Bloc for timer logic
   final TimerBloc _timerBloc;
 
   @override
@@ -25,8 +25,9 @@ class TimerPiechart extends StatelessWidget {
                         color: theme.GirafColors.black, width: 0.5))),
             child: CircleAvatar(
               backgroundColor: timerProgressSnapshot.hasData &&
-                  timerProgressSnapshot.data < 1
-                  ? theme.GirafColors.red : theme.GirafColors.white,
+                      timerProgressSnapshot.data! < 1
+                  ? theme.GirafColors.red
+                  : theme.GirafColors.white,
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: CircularProgressIndicator(

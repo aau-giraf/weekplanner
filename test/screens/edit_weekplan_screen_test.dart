@@ -2,12 +2,13 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
@@ -32,16 +33,13 @@ class MockEditWeekplanBloc extends EditWeekplanBloc {
   Api api;
 
   @override
-  Stream<bool> get validTitleStream =>
-      Stream<bool>.value(acceptAllInputs);
+  Stream<bool> get validTitleStream => Stream<bool>.value(acceptAllInputs);
 
   @override
-  Stream<bool> get validYearStream =>
-      Stream<bool>.value(acceptAllInputs);
+  Stream<bool> get validYearStream => Stream<bool>.value(acceptAllInputs);
 
   @override
-  Stream<bool> get validWeekNumberStream =>
-      Stream<bool>.value(acceptAllInputs);
+  Stream<bool> get validWeekNumberStream => Stream<bool>.value(acceptAllInputs);
 
   @override
   Stream<PictogramModel> get thumbnailStream =>
@@ -59,7 +57,7 @@ final PictogramModel mockPictogram = PictogramModel(
     id: 1,
     lastEdit: null,
     title: 'title',
-    accessLevel: null,
+    accessLevel: AccessLevel.PROTECTED,
     imageUrl: 'http://any.tld',
     imageHash: null);
 
@@ -71,14 +69,14 @@ final WeekModel mockWeek = WeekModel(
     weekYear: 2019);
 
 final DisplayNameModel mockUser =
-DisplayNameModel(displayName: 'test', role: 'test', id: 'test');
+    DisplayNameModel(displayName: 'test', role: 'test', id: 'test');
 
-WeekplansBloc mockWeekplanSelector;
+late WeekplansBloc mockWeekplanSelector;
 
 void main() {
-  MockEditWeekplanBloc mockBloc;
-  Api api;
-  bool savedWeekplan;
+  late MockEditWeekplanBloc mockBloc;
+  late Api api;
+  late bool savedWeekplan;
 
   setUp(() {
     api = Api('any');
@@ -86,26 +84,30 @@ void main() {
     api.pictogram = MockPictogramApi();
     savedWeekplan = false;
 
-    when(api.pictogram.getImage(mockPictogram.id))
+    when(api.pictogram.getImage(mockPictogram.id!) as Function())
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
-    when(api.week.update(any, any, any, any)).thenAnswer((_) {
+    when(api.week
+                .update(any as String, any as int, any as int, any as WeekModel)
+            as Function())
+        .thenAnswer((_) {
       savedWeekplan = true;
       return Stream<WeekModel>.value(mockWeek);
     });
 
-    when(api.week.getNames(any)).thenAnswer(
+    when(api.week.getNames(any as String) as Function()).thenAnswer(
       (_) {
         return Stream<List<WeekNameModel>>.value(<WeekNameModel>[
           WeekNameModel(
               name: mockWeek.name,
-              weekNumber: mockWeek.weekNumber,
-              weekYear: mockWeek.weekYear),
+              weekNumber: mockWeek.weekNumber!,
+              weekYear: mockWeek.weekYear!),
         ]);
       },
     );
 
-    when(api.week.get(any, any, any)).thenAnswer(
+    when(api.week.get(any as String, any as int, any as int) as Function())
+        .thenAnswer(
       (_) {
         return Stream<WeekModel>.value(mockWeek);
       },
@@ -321,10 +323,10 @@ void main() {
 
     testWidgets('Click on thumbnail redirects to pictogram search screen',
         (WidgetTester tester) async {
-
-          when(api.pictogram.getAll(page: 1,
-              pageSize: pageSize, query: '')).thenAnswer(
-                  (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
+      when(api.pictogram.getAll(page: 1, pageSize: pageSize, query: '')
+              as Function())
+          .thenAnswer((_) =>
+              rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
                   <PictogramModel>[mockPictogram]));
       mockBloc.acceptAllInputs = true;
       await tester.pumpWidget(
@@ -341,9 +343,8 @@ void main() {
 
       expect(find.byType(PictogramSearch), findsOneWidget);
 
-          await tester.pump(const Duration(milliseconds: 11000));
-
-        });
+      await tester.pump(const Duration(milliseconds: 11000));
+    });
   });
 
   group('Edit weekplan overwriting', () {
@@ -351,7 +352,7 @@ void main() {
         (WidgetTester tester) async {
       final WeekModel editWeekModel = WeekModel(
           name: mockWeek.name,
-          weekNumber: mockWeek.weekNumber + 1,
+          weekNumber: mockWeek.weekNumber! + 1,
           weekYear: mockWeek.weekYear,
           days: mockWeek.days,
           thumbnail: mockWeek.thumbnail);
@@ -368,7 +369,7 @@ void main() {
       await tester.pump();
 
       await tester.enterText(
-          find.byKey(const Key('WeekTitleTextFieldKey')), mockWeek.name);
+          find.byKey(const Key('WeekTitleTextFieldKey')), mockWeek.name!);
       await tester.enterText(find.byKey(const Key('WeekYearTextFieldKey')),
           mockWeek.weekYear.toString());
       await tester.enterText(find.byKey(const Key('WeekNumberTextFieldKey')),
@@ -397,7 +398,7 @@ void main() {
         (WidgetTester tester) async {
       final WeekModel editWeekModel = WeekModel(
           name: mockWeek.name,
-          weekNumber: mockWeek.weekNumber + 1,
+          weekNumber: mockWeek.weekNumber! + 1,
           weekYear: mockWeek.weekYear,
           days: mockWeek.days,
           thumbnail: mockWeek.thumbnail);
@@ -414,7 +415,7 @@ void main() {
       await tester.pump();
 
       await tester.enterText(
-          find.byKey(const Key('WeekTitleTextFieldKey')), mockWeek.name);
+          find.byKey(const Key('WeekTitleTextFieldKey')), mockWeek.name!);
       await tester.enterText(find.byKey(const Key('WeekYearTextFieldKey')),
           mockWeek.weekYear.toString());
       await tester.enterText(find.byKey(const Key('WeekNumberTextFieldKey')),
@@ -441,7 +442,7 @@ void main() {
         (WidgetTester tester) async {
       final WeekModel editWeekModel = WeekModel(
           name: mockWeek.name,
-          weekNumber: mockWeek.weekNumber + 1,
+          weekNumber: mockWeek.weekNumber! + 1,
           weekYear: mockWeek.weekYear,
           days: mockWeek.days,
           thumbnail: mockWeek.thumbnail);
@@ -458,7 +459,7 @@ void main() {
       await tester.pump();
 
       await tester.enterText(
-          find.byKey(const Key('WeekTitleTextFieldKey')), mockWeek.name);
+          find.byKey(const Key('WeekTitleTextFieldKey')), mockWeek.name!);
       await tester.enterText(find.byKey(const Key('WeekYearTextFieldKey')),
           mockWeek.weekYear.toString());
       await tester.enterText(find.byKey(const Key('WeekNumberTextFieldKey')),

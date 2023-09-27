@@ -5,15 +5,17 @@ import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
@@ -50,24 +52,24 @@ bool hasConflict = false;
 
 class MockWeekApi extends Mock implements WeekApi {
   @override
-  Stream<WeekModel> get(String id, int year, int weekNumber) {
+  Stream<WeekModel> get(String? id, int? year, int? weekNumber) {
     final WeekModel weekModel = WeekModel(days: <WeekdayModel>[
-      WeekdayModel(
-          day: Weekday.Monday, activities: <ActivityModel>[
-            ActivityModel(
-              pictograms: null,
-              order: 1,
-              state: null,
-              isChoiceBoard: false,
-              id: 1
-            )
+      WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[
+        ActivityModel(
+            pictograms: <PictogramModel>[],
+            order: 1,
+            state: ActivityState.Normal,
+            isChoiceBoard: false,
+            id: 1)
       ])
     ]);
     return hasConflict
         ? Stream<WeekModel>.value(weekModel)
         : Stream<WeekModel>.value(WeekModel(
-        thumbnail: null, name: '$year - $weekNumber', weekYear: year,
-        weekNumber: weekNumber));
+            thumbnail: null,
+            name: '$year - $weekNumber',
+            weekYear: year,
+            weekNumber: weekNumber));
   }
 
   @override
@@ -85,9 +87,9 @@ final DisplayNameModel user2 = DisplayNameModel(
     id: 'test2Id', displayName: 'test2Name', role: 'test2Role');
 
 void main() {
-  CopyWeekplanBloc bloc;
-  ToolbarBloc toolbarBloc;
-  Api api;
+  late CopyWeekplanBloc bloc;
+  late ToolbarBloc toolbarBloc;
+  late Api api;
   setUp(() {
     di.clearAll();
     api = Api('any');
@@ -95,7 +97,7 @@ void main() {
     api.user = MockUserApi();
     api.week = MockWeekApi();
 
-    when(api.week.getNames(any)).thenAnswer((_) {
+    when(api.week.getNames(any as String) as Function()).thenAnswer((_) {
       return Stream<List<WeekNameModel>>.value(<WeekNameModel>[]);
     });
 
@@ -113,17 +115,15 @@ void main() {
   testWidgets('Renders CopyToCitizenScreen', (WidgetTester tester) async {
     final WeekModel weekplan1 = WeekModel(
         thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 32);
-    await tester.pumpWidget(
-        MaterialApp(home: CopyToCitizensScreen(
-            <WeekModel>[weekplan1], mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: CopyToCitizensScreen(<WeekModel>[weekplan1], mockUser)));
     expect(find.byType(CopyToCitizensScreen), findsOneWidget);
   });
 
   testWidgets('Has Citizens Avatar', (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
-    await tester.pumpWidget(
-        MaterialApp(home: CopyToCitizensScreen(
-            <WeekModel>[mockWeek], mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: CopyToCitizensScreen(<WeekModel>[mockWeek], mockUser)));
     await tester.pumpAndSettle();
     bloc.citizen.listen((List<DisplayNameModel> response) {
       expect(find.byType(CircleAvatar), findsNWidgets(response.length));
@@ -133,9 +133,8 @@ void main() {
   });
 
   testWidgets('Has Accept and Cancel buttons', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: CopyToCitizensScreen(
-            <WeekModel>[mockWeek], mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: CopyToCitizensScreen(<WeekModel>[mockWeek], mockUser)));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('AcceptButton')), findsOneWidget);
@@ -145,9 +144,8 @@ void main() {
   testWidgets(
       'Test whether it copies to citizens when pressing the accept button',
       (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: CopyToCitizensScreen(
-            <WeekModel>[mockWeek], mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: CopyToCitizensScreen(<WeekModel>[mockWeek], mockUser)));
     await tester.pumpAndSettle();
 
     bloc.toggleMarkedUserModel(user1);
@@ -168,9 +166,8 @@ void main() {
   testWidgets(
       'Testing that it launches the conflict dialog when there are conflicts',
       (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: CopyToCitizensScreen(
-            <WeekModel>[mockWeek], mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: CopyToCitizensScreen(<WeekModel>[mockWeek], mockUser)));
     await tester.pumpAndSettle();
 
     bloc.toggleMarkedUserModel(user1);

@@ -16,7 +16,7 @@ class ApiErrorTranslator {
         builder: (BuildContext context) {
           return GirafNotifyDialog(
               title: 'Fejl',
-              description: getErrorMessage(error),
+              description: getErrorMessage(error as ApiException),
               key: const Key('ErrorMessageDialog'));
         });
   }

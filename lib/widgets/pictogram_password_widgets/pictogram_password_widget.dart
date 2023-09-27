@@ -6,7 +6,6 @@ import 'package:weekplanner/widgets/pictogram_password_widgets/pictogram_input_f
 
 import '../giraf_notify_dialog.dart';
 
-
 /// The pictograms to choose between for the code.
 /// If these are changed all previously made passwords will become unusable
 const List<int> CHOSENPICTOGRAMS = <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -20,9 +19,8 @@ class PictogramPassword extends StatelessWidget {
   ///Widget with the possible pictograms in the code and the currently picked
   /// pictograms in the code.
 
-  const PictogramPassword({Key key,
-    @required this.onPasswordChanged,
-    @required this.api})
+  const PictogramPassword(
+      {required Key key, required this.onPasswordChanged, required this.api})
       : super(key: key);
 
   /// This function returns the new password every time the password has been
@@ -34,9 +32,9 @@ class PictogramPassword extends StatelessWidget {
 
   /// Returns the list of possible pictograms for use in the password
   /// as a stream
-  Stream<List<PictogramModel>> getStream(BuildContext context) async* {
-    final List<PictogramModel> list =
-    List<PictogramModel>.filled(CHOSENPICTOGRAMS.length, null);
+  Stream<List<PictogramModel?>?> getStream(BuildContext context) async* {
+    final List<PictogramModel?> list =
+        List<PictogramModel?>.filled(CHOSENPICTOGRAMS.length, null);
     yield list;
     try {
       for (int i = 0; i < list.length; i++) {
@@ -50,13 +48,14 @@ class PictogramPassword extends StatelessWidget {
       showErrorMessage(e, context);
     }
   }
+
   /// Shows error message in case of any pictogram being unobtainable
   void showErrorMessage(Object error, BuildContext context) {
     showDialog<Center>(
 
-      /// exception handler to handle web_api exceptions
+        /// exception handler to handle web_api exceptions
         barrierDismissible: false,
-        context:  context,
+        context: context,
         builder: (BuildContext context) {
           return const GirafNotifyDialog(
               title: 'Fejl',
@@ -67,11 +66,10 @@ class PictogramPassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Stream<List<PictogramModel>> _pictogramChoices = getStream(context);
+    final Stream<List<PictogramModel?>?> _pictogramChoices = getStream(context);
     final GlobalKey<PictogramInputFieldState> inputFieldKey = GlobalKey();
     final PictogramInputField password = PictogramInputField(
-        key: inputFieldKey,
-        onPasswordChanged: onPasswordChanged);
+        key: inputFieldKey, onPasswordChanged: onPasswordChanged);
     return Column(children: <Widget>[
       // Grid view with available pictograms
       Row(
@@ -80,10 +78,10 @@ class PictogramPassword extends StatelessWidget {
           Container(
               constraints: const BoxConstraints(
                   maxHeight: double.infinity, maxWidth: MAXWIDTH),
-              child: StreamBuilder<List<PictogramModel>>(
+              child: StreamBuilder<List<PictogramModel?>?>(
                   stream: _pictogramChoices,
                   builder: (BuildContext context,
-                      AsyncSnapshot<List<PictogramModel>> snapshot) {
+                      AsyncSnapshot<List<PictogramModel?>?> snapshot) {
                     if (snapshot.hasError) {
                       print(snapshot.error);
                       return const Text('Fejl i forbindelse med piktogrammer.');
@@ -92,21 +90,20 @@ class PictogramPassword extends StatelessWidget {
                           shrinkWrap: true,
                           crossAxisCount: 5,
                           physics: const NeverScrollableScrollPhysics(),
-                          children: snapshot.data
-                              .map<Widget>((PictogramModel pictogram) {
+                          children: snapshot.data!
+                              .map<Widget>((PictogramModel? pictogram) {
                             if (pictogram == null) {
                               return Container(
                                 height: 80,
                                 child: const Center(
                                     child: CircularProgressIndicator()),
                               );
-                            }
-                            else {
+                            } else {
                               return PictogramImage(
                                   pictogram: pictogram,
-                                  onPressed: () =>
-                                      inputFieldKey.
-                                      currentState.addToPass(pictogram));
+                                  onPressed: () => inputFieldKey.currentState!
+                                      .addToPass(pictogram),
+                                  key: UniqueKey());
                             }
                           }).toList());
                     } else {

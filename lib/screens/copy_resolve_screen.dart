@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'dart:async';
 
 import 'package:api_client/models/displayname_model.dart';
@@ -19,9 +21,9 @@ class CopyResolveScreen extends StatelessWidget {
   /// Screen for creating a new weekplan.
   /// Requires a [UsernameModel] to be able to save the new weekplan.
   CopyResolveScreen({
-    @required this.currentUser,
-    @required this.weekModel,
-    @required this.forThisCitizen,
+    required this.currentUser,
+    required this.weekModel,
+    required this.forThisCitizen,
     this.copyBloc,
   }) : _bloc = di.get<CopyResolveBloc>() {
     _bloc.initializeCopyResolverBloc(currentUser, weekModel);
@@ -34,7 +36,7 @@ class CopyResolveScreen extends StatelessWidget {
   final bool forThisCitizen;
 
   /// An instance of the copyWeekplanBloc.
-  CopyWeekplanBloc copyBloc;
+  CopyWeekplanBloc? copyBloc;
 
   /// The user that is being copied from
   final DisplayNameModel currentUser;
@@ -51,27 +53,24 @@ class CopyResolveScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () async {
-        final WeekModel newWeekModel = _bloc.createNewWeekmodel(
-            weekModel);
+        final WeekModel newWeekModel = _bloc.createNewWeekmodel(weekModel);
 
-        final int numberOfConflicts = await copyBloc.numberOfConflictingUsers(
+        final int numberOfConflicts = await copyBloc!.numberOfConflictingUsers(
             <WeekModel>[newWeekModel], currentUser, forThisCitizen);
 
         bool toCopy = true;
         if (numberOfConflicts > 0) {
           toCopy = await _displayConflictDialog(
               context,
-              newWeekModel.weekNumber,
-              newWeekModel.weekYear,
+              newWeekModel.weekNumber!,
+              newWeekModel.weekYear!,
               numberOfConflicts,
               currentUser);
         }
 
         if (toCopy) {
-          copyBloc
-              .copyWeekplan(
-              <WeekModel>[newWeekModel], currentUser, forThisCitizen)
-              .then((_) {
+          copyBloc!.copyWeekplan(
+              <WeekModel>[newWeekModel], currentUser, forThisCitizen).then((_) {
             Routes().goHome(context);
             Routes().push(context, WeekplanSelectorScreen(currentUser));
           });
@@ -80,7 +79,10 @@ class CopyResolveScreen extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: GirafAppBar(title: 'Kopier ugeplan'),
+      appBar: GirafAppBar(
+        title: 'Kopier ugeplan',
+        key: UniqueKey(),
+      ),
       body: InputFieldsWeekPlan(
           bloc: _bloc, button: saveButton, weekModel: weekModel),
     );
@@ -98,13 +100,9 @@ class CopyResolveScreen extends StatelessWidget {
             title: 'Erstat eksisterende ugeplan',
             description: 'Der eksisterer allerede en ugeplan (uge: $weekNumber'
                 ', år: $year) hos $numberOfConflicts '
-                '${numberOfConflicts == 1
-                ? "bruger. "
-                : "brugere. "}'
+                '${numberOfConflicts == 1 ? "bruger. " : "brugere. "}'
                 'Vil du overskrive '
-                '${numberOfConflicts == 1
-                  ? "denne ugeplan"
-                  : "disse ugeplaner"}?',
+                '${numberOfConflicts == 1 ? "denne ugeplan" : "disse ugeplaner"}?',
             confirmButtonText: 'Ja',
             confirmButtonIcon:
                 const ImageIcon(AssetImage('assets/icons/accept.png')),
