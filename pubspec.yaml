@@ -1,14 +1,14 @@
 name: weekplanner
 description: WeekPlanner for GIRAF
 
-version: 1.3.0+2
+version: 1.3.1
 publish_to: none
 
 module:
   androidX: true
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=3.1.2"
 dependencies:
   api_client:
     git:
@@ -20,7 +20,7 @@ dependencies:
   auto_size_text: ^3.0.0
   csv: ^5.0.1
   cupertino_icons: ^1.0.5
-  data_connection_checker: ^0.3.4
+  internet_connection_checker: ^1.0.0
 
   flutter:
     sdk: flutter
@@ -38,7 +38,7 @@ dependencies:
 dev_dependencies:
   async_test:
     git:
-      url: https://github.com/polytope/async_test
+      url: https://github.com/aau-giraf/async_test
   flutter_test:
     sdk: flutter
   mockito: ^5.3.2
