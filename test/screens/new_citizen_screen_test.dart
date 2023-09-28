@@ -31,7 +31,7 @@ class MockAccountApi extends AccountApi {
   @override
   Stream<GirafUserModel> register(String username, String password,
       String displayName, Uint8List profilePicture,
-      {@required int departmentId, @required Role role}) {
+      {required int departmentId, required Role role}) {
     final Map<String, dynamic> body = <String, dynamic>{
       'username': username,
       'displayName': displayName,

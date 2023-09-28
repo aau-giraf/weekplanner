@@ -13,13 +13,13 @@ class GirafConfirmDialog extends StatelessWidget {
   ///to either confirm the action, or cancel, which simply closes the dialog.
   const GirafConfirmDialog(
       {Key key,
-      @required this.title,
+      required this.title,
       this.description,
-        this.descriptionRichText,
-        this.inputField,
-      @required this.confirmButtonText,
-      @required this.confirmButtonIcon,
-      @required this.confirmOnPressed,
+      this.descriptionRichText,
+      this.inputField,
+      required this.confirmButtonText,
+      required this.confirmButtonIcon,
+      required this.confirmOnPressed,
       this.cancelOnPressed})
       : super(key: key);
 
@@ -29,7 +29,6 @@ class GirafConfirmDialog extends StatelessWidget {
   ///description of the dialogBox, displayed under the header, describing the
   ///encountered problem
   final String description;
-
 
   ///description of the dialogBox, displayed under the header, describing the
   ///encountered problem
@@ -72,30 +71,28 @@ class GirafConfirmDialog extends StatelessWidget {
             children: <Widget>[
               Expanded(
                   child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: descriptionRichText ?? Text(
-                  //if description is null, its replaced with an empty string.
-                  description ?? '',
-                  textAlign: TextAlign.center,
-                ),
-              )),
-
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      child: descriptionRichText // ??
+                      // Text(
+                      //   description ?? '',
+                      //   textAlign: TextAlign.center,
+                      // ),
+                      )),
             ],
           ),
           //if an inputfield is provided, display it
-          inputField != null?
-              Row(
+          inputField != null
+              ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-          Expanded(
-              child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  child:inputField
-              )
-          )
-                  ]
-              ):Container(),
+                      Expanded(
+                          child: Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                              child: inputField))
+                    ])
+              : Container(),
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
             child: Row(
@@ -115,7 +112,7 @@ class GirafConfirmDialog extends StatelessWidget {
                           if (cancelOnPressed != null) {
                             cancelOnPressed();
                           }
-                          
+
                           Routes().pop(context);
                         }),
                   ),

@@ -54,8 +54,8 @@ class MockUserApi extends Mock implements UserApi {
 class MockAuth extends Mock implements AuthBloc {
   @override
   Stream<bool> get loggedIn => _loggedIn.stream;
-  final rx_dart.BehaviorSubject<bool> _loggedIn = rx_dart.BehaviorSubject<bool>
-      .seeded(true);
+  final rx_dart.BehaviorSubject<bool> _loggedIn =
+      rx_dart.BehaviorSubject<bool>.seeded(true);
 
   @override
   Stream<WeekplanMode> get mode => _mode.stream;
@@ -357,7 +357,6 @@ void main() {
     di.registerDependency<TimerBloc>(() => timerBloc);
     di.registerDependency<WeekplanBloc>(() => weekplanBloc);
     di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
-
   });
 
   testWidgets('renders', (WidgetTester tester) async {
@@ -792,7 +791,7 @@ void main() {
     final StreamSubscription<bool> listenForFalse =
         timerBloc.timerIsInstantiated.listen((bool init) {
       expect(init, isFalse);
-      done.complete();
+      done.complete(true);
     });
     await done.future;
     listenForFalse.cancel();
@@ -816,7 +815,7 @@ void main() {
     final StreamSubscription<TimerRunningMode> listenForNotInitialized =
         timerBloc.timerRunningMode.listen((TimerRunningMode running) {
       expect(running, TimerRunningMode.initialized);
-      checkNotRun.complete();
+      checkNotRun.complete(true);
     });
     await checkNotRun.future;
     listenForNotInitialized.cancel();
@@ -826,7 +825,7 @@ void main() {
     final StreamSubscription<TimerRunningMode> listenForRunningTrue =
         timerBloc.timerRunningMode.listen((TimerRunningMode running) {
       expect(running, TimerRunningMode.running);
-      checkRunning.complete();
+      checkRunning.complete(true);
     });
     await checkRunning.future;
     listenForRunningTrue.cancel();
@@ -869,11 +868,11 @@ void main() {
 
       await tester.pumpAndSettle();
       // ignore: always_specify_types
-       Future.delayed(const Duration(seconds: 2), () async {
+      Future.delayed(const Duration(seconds: 2), () async {
         final StreamSubscription<TimerRunningMode> listenForCompleted =
             timerBloc.timerRunningMode.skip(1).listen((TimerRunningMode m) {
           expect(m, TimerRunningMode.completed);
-          checkCompleted.complete();
+          checkCompleted.complete(true);
         });
         await checkCompleted.future;
         listenForCompleted.cancel();
@@ -1034,7 +1033,7 @@ void main() {
 
   testWidgets(
       'Activity state is normal when an activity has been cancelled and'
-          ' non-cancelled and timer added', (WidgetTester tester) async {
+      ' non-cancelled and timer added', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
 
     final ActivityModel activistModel = makeNewActivityModel();
@@ -1110,7 +1109,7 @@ void main() {
 
   testWidgets(
       'Button for update activity title to pictogram title'
-          ' is not rendered in citizen mode', (WidgetTester tester) async {
+      ' is not rendered in citizen mode', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivity.isChoiceBoard = false;
     await tester.pumpWidget(MaterialApp(
@@ -1124,7 +1123,7 @@ void main() {
 
   testWidgets(
       'Button for save alternate name to activity title is not rendered'
-          ' while isChoiceBoard is true', (WidgetTester tester) async {
+      ' while isChoiceBoard is true', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.isChoiceBoard = true;
     await tester.pumpWidget(MaterialApp(
@@ -1136,7 +1135,8 @@ void main() {
         find.byKey(const Key('SavePictogramTextForCitizenBtn')), findsNothing);
   });
 
-  testWidgets('Button for update activity title to pictogram title is not'
+  testWidgets(
+      'Button for update activity title to pictogram title is not'
       ' rendered while isChoiceBoard is true', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.isChoiceBoard = true;
@@ -1151,35 +1151,29 @@ void main() {
 
   testWidgets('Activity title is updated on button press',
       (WidgetTester tester) async {
-        await tester.runAsync(() async {
-          authBloc.setMode(WeekplanMode.guardian);
-          mockActivity.isChoiceBoard = false;
+    await tester.runAsync(() async {
+      authBloc.setMode(WeekplanMode.guardian);
+      mockActivity.isChoiceBoard = false;
 
-          await tester.pumpWidget(MaterialApp(
-              home: ShowActivityScreen(mockActivity, mockUser2, weekplanBloc,
-                  timerBloc, mockWeekDayModel())));
+      await tester.pumpWidget(MaterialApp(
+          home: ShowActivityScreen(mockActivity, mockUser2, weekplanBloc,
+              timerBloc, mockWeekDayModel())));
 
-          await tester.pump();
+      await tester.pump();
 
-          expect(bloc
-              .getActivity()
-              .title, 'blå');
-          await tester.enterText(
-              find.byKey(const Key('AlternateNameTextField')), 'test');
-          await tester.pumpAndSettle();
-          await tester.tap(
-              find.byKey(const Key('SavePictogramTextForCitizenBtn')));
-          await tester.pumpAndSettle();
+      expect(bloc.getActivity().title, 'blå');
+      await tester.enterText(
+          find.byKey(const Key('AlternateNameTextField')), 'test');
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('SavePictogramTextForCitizenBtn')));
+      await tester.pumpAndSettle();
 
-          expect(bloc
-              .getActivity()
-              .title, 'test');
-        });
+      expect(bloc.getActivity().title, 'test');
+    });
   });
 
   testWidgets('Activity title is set to pictogram title on button press',
       (WidgetTester tester) async {
-
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.isChoiceBoard = false;
 

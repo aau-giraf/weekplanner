@@ -18,7 +18,8 @@ class ActivityBloc extends BlocBase {
 
   /// Stream for updated ActivityModel.
   Stream<ActivityModel> get activityModelStream => _activityModelStream.stream;
-  StreamSubscription<ActivityModel> _subscription; // ignore: cancel_subscriptions
+  StreamSubscription<ActivityModel>
+      _subscription; // ignore: cancel_subscriptions
   /// rx_dart.BehaviorSubject for the updated ActivityModel.
   final rx_dart.BehaviorSubject<ActivityModel> _activityModelStream =
       rx_dart.BehaviorSubject<ActivityModel>();
@@ -36,22 +37,24 @@ class ActivityBloc extends BlocBase {
     _user = user;
     _activityModelStream.add(activityModel);
   }
+
   /// Method used to access the WeekPlanBlock
   void accesWeekPlanBloc(WeekplanBloc weekplanBloc, WeekdayModel weekday) {
     _weekplanBloc = weekplanBloc;
     _weekday = weekday;
   }
-  
+
   /// Return the current ActivityModel
-  ActivityModel getActivity(){
+  ActivityModel getActivity() {
     return _activityModel;
   }
+
   /// Checks if subscription is not null
   void addHandlerToActivityStateOnce() {
-    if (_subscription != null ) {
+    if (_subscription != null) {
       return;
     }
-    
+
     _subscription = activityModelStream.listen((ActivityModel activity) {
       _weekplanBloc.getWeekday(_weekday.day);
     });
@@ -77,7 +80,7 @@ class ActivityBloc extends BlocBase {
 
   /// Mark the selected activity as active. Toggle function, if activity is
   /// Active, it will become Normal
-  void activateActivity(){
+  void activateActivity() {
     _activityModel.state = _activityModel.state == ActivityState.Active
         ? ActivityState.Normal
         : ActivityState.Active;
@@ -95,43 +98,43 @@ class ActivityBloc extends BlocBase {
   }
 
   /// Set a new alternate Name
-  void setAlternateName(String name){
-
+  void setAlternateName(String name) {
     _alternateName = null;
     final Completer<void> completer = Completer<void>();
-    final AlternateNameModel newAn = AlternateNameModel(name: name,
-        citizen: _user.id, pictogram: _activityModel.pictograms.first.id);
+    final AlternateNameModel newAn = AlternateNameModel(
+        name: name,
+        citizen: _user.id,
+        pictogram: _activityModel.pictograms.first.id);
     getAlternateName().whenComplete(() {
       if (_alternateName == null) {
         _api.alternateName.create(newAn).listen((AlternateNameModel an) {
           _alternateName = an;
           _activityModel.title = _alternateName.name;
           update();
-          completer.complete();
+          completer.complete(true);
         });
-      }
-      else {
-        _api.alternateName.put(_alternateName.id, newAn).listen(
-                (AlternateNameModel an) {
-              _alternateName = an;
-              _activityModel.title = _alternateName.name;
-              update();
-              completer.complete();
-            });
+      } else {
+        _api.alternateName
+            .put(_alternateName.id, newAn)
+            .listen((AlternateNameModel an) {
+          _alternateName = an;
+          _activityModel.title = _alternateName.name;
+          update();
+          completer.complete(true);
+        });
       }
     });
     Future.wait(<Future<void>>[completer.future]);
-
   }
+
   /// Get the title of the lefover activity when deleting choiceboard
-  void getTitleWhenChoiceboardDeleted(){
+  void getTitleWhenChoiceboardDeleted() {
     _alternateName = null;
     getAlternateName().whenComplete(() {
-      if(_alternateName == null){
+      if (_alternateName == null) {
         getStandardTitle();
         update();
-      }
-      else{
+      } else {
         _activityModel.title = _alternateName.name;
         update();
       }
@@ -139,20 +142,22 @@ class ActivityBloc extends BlocBase {
   }
 
   /// Method to get alternate name from api
-  Future<void> getAlternateName(){
+  Future<void> getAlternateName() {
     final Completer<AlternateNameModel> f = Completer<AlternateNameModel>();
-    _api.alternateName.get(_user.id, _activityModel.pictograms.first.id)
+    _api.alternateName
+        .get(_user.id, _activityModel.pictograms.first.id)
         .listen((Object result) {
-          _alternateName = result;
-          f.complete();
-        }).onError((Object error){
-          _alternateName = null;
-          f.complete();
+      _alternateName = result;
+      f.complete();
+    }).onError((Object error) {
+      _alternateName = null;
+      f.complete();
     });
     return f.future;
   }
+
   ///Method to get the standard tile from the pictogram
-  void getStandardTitle(){
+  void getStandardTitle() {
     _activityModel.title = _activityModel.pictograms.first.title;
     update();
   }

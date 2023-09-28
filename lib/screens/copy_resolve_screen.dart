@@ -19,10 +19,10 @@ class CopyResolveScreen extends StatelessWidget {
   /// Screen for creating a new weekplan.
   /// Requires a [UsernameModel] to be able to save the new weekplan.
   CopyResolveScreen({
-    @required this.currentUser,
-    @required this.weekModel,
-    @required this.forThisCitizen,
-    this.copyBloc,
+    required this.currentUser,
+    required this.weekModel,
+    required this.forThisCitizen,
+    required this.copyBloc,
   }) : _bloc = di.get<CopyResolveBloc>() {
     _bloc.initializeCopyResolverBloc(currentUser, weekModel);
     copyBloc ??= di.get<CopyWeekplanBloc>();
@@ -51,8 +51,7 @@ class CopyResolveScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () async {
-        final WeekModel newWeekModel = _bloc.createNewWeekmodel(
-            weekModel);
+        final WeekModel newWeekModel = _bloc.createNewWeekmodel(weekModel);
 
         final int numberOfConflicts = await copyBloc.numberOfConflictingUsers(
             <WeekModel>[newWeekModel], currentUser, forThisCitizen);
@@ -68,10 +67,8 @@ class CopyResolveScreen extends StatelessWidget {
         }
 
         if (toCopy) {
-          copyBloc
-              .copyWeekplan(
-              <WeekModel>[newWeekModel], currentUser, forThisCitizen)
-              .then((_) {
+          copyBloc.copyWeekplan(
+              <WeekModel>[newWeekModel], currentUser, forThisCitizen).then((_) {
             Routes().goHome(context);
             Routes().push(context, WeekplanSelectorScreen(currentUser));
           });
@@ -98,13 +95,9 @@ class CopyResolveScreen extends StatelessWidget {
             title: 'Erstat eksisterende ugeplan',
             description: 'Der eksisterer allerede en ugeplan (uge: $weekNumber'
                 ', år: $year) hos $numberOfConflicts '
-                '${numberOfConflicts == 1
-                ? "bruger. "
-                : "brugere. "}'
+                '${numberOfConflicts == 1 ? "bruger. " : "brugere. "}'
                 'Vil du overskrive '
-                '${numberOfConflicts == 1
-                  ? "denne ugeplan"
-                  : "disse ugeplaner"}?',
+                '${numberOfConflicts == 1 ? "denne ugeplan" : "disse ugeplaner"}?',
             confirmButtonText: 'Ja',
             confirmButtonIcon:
                 const ImageIcon(AssetImage('assets/icons/accept.png')),

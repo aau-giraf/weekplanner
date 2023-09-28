@@ -8,7 +8,10 @@ import 'package:weekplanner/widgets/giraf_title_header.dart';
 /// Toolbar of the application.
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Toolbar of the application.
-  GirafAppBar({Key key, this.title, this.appBarIcons})
+  GirafAppBar(
+      {required Key key,
+      required this.title,
+      this.appBarIcons = const <AppBarIcon, VoidCallback>{}})
       : toolbarBloc = di.get<ToolbarBloc>(),
         preferredSize = const Size.fromHeight(56.0),
         super(key: key);
@@ -31,21 +34,22 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
       iconTheme: const IconThemeData(
         color: GirafColors.black,
       ),
-        title: Text(title, overflow: TextOverflow.clip,
+      title: Text(title,
+          overflow: TextOverflow.clip,
           style: const TextStyle(color: GirafColors.black)),
-        flexibleSpace: const GirafTitleHeader(),
-        actions: <Widget>[
-          StreamBuilder<List<IconButton>>(
-              initialData: const <IconButton>[],
-              key: const Key('streambuilderVisibility'),
-              stream: toolbarBloc.visibleButtons,
-              builder: (BuildContext context, 
+      flexibleSpace: const GirafTitleHeader(
+        key: ValueKey<String>('titleHeaderKey'),
+      ),
+      actions: <Widget>[
+        StreamBuilder<List<IconButton>>(
+            initialData: const <IconButton>[],
+            key: const Key('streambuilderVisibility'),
+            stream: toolbarBloc.visibleButtons,
+            builder: (BuildContext context,
                 AsyncSnapshot<List<IconButton>> snapshot) {
-                return Row(
-                  children: snapshot.data
-                );
-              }),
-        ],
+              return Row(children: snapshot.data);
+            }),
+      ],
     );
   }
 }

@@ -11,7 +11,6 @@ import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 
-
 /// Bloc that streams the currently chosen weekplan
 class WeekplanBloc extends BlocBase {
   /// Constructor that initializes _api
@@ -21,7 +20,7 @@ class WeekplanBloc extends BlocBase {
   Stream<UserWeekModel> get userWeek => _userWeek.stream;
 
   final List<rx_dart.BehaviorSubject<WeekdayModel>> _weekDayStreams =
-    <rx_dart.BehaviorSubject<WeekdayModel>>[];
+      <rx_dart.BehaviorSubject<WeekdayModel>>[];
 
   /// The stream that emits whether in editMode or not
   Stream<bool> get editMode => _editMode.stream;
@@ -34,19 +33,18 @@ class WeekplanBloc extends BlocBase {
       _activityPlaceholderVisible.stream;
 
   /// Checks if there are no selected activities
-  Stream<bool> get atLeastOneActivityMarked =>
-      _atLeastOneActivityMarked();
+  Stream<bool> get atLeastOneActivityMarked => _atLeastOneActivityMarked();
 
   /// The API
   final Api _api;
-  final rx_dart.BehaviorSubject<bool> _editMode
-    = rx_dart.BehaviorSubject<bool>.seeded(false);
+  final rx_dart.BehaviorSubject<bool> _editMode =
+      rx_dart.BehaviorSubject<bool>.seeded(false);
   final rx_dart.BehaviorSubject<List<ActivityModel>> _markedActivities =
-    rx_dart.BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
+      rx_dart.BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
   final rx_dart.BehaviorSubject<UserWeekModel> _userWeek =
-    rx_dart.BehaviorSubject<UserWeekModel>();
+      rx_dart.BehaviorSubject<UserWeekModel>();
   final rx_dart.BehaviorSubject<bool> _activityPlaceholderVisible =
-    rx_dart.BehaviorSubject<bool>.seeded(false);
+      rx_dart.BehaviorSubject<bool>.seeded(false);
 
   WeekModel _week;
 
@@ -116,8 +114,8 @@ class WeekplanBloc extends BlocBase {
 
   /// Add a new weekdaystream
   void addWeekdayStream() {
-    _weekDayStreams.add(rx_dart.BehaviorSubject<WeekdayModel>
-        .seeded(_week.days[_firstDay + _weekDayStreams.length]));
+    _weekDayStreams.add(rx_dart.BehaviorSubject<WeekdayModel>.seeded(
+        _week.days[_firstDay + _weekDayStreams.length]));
   }
 
   /// Clear weekdaystreams list
@@ -224,8 +222,7 @@ class WeekplanBloc extends BlocBase {
               state: ActivityState.Normal,
               title: activity.title,
               choiceBoardName: activity.choiceBoardName.toString(),
-              timer: activity.timer
-          );
+              timer: activity.timer);
 
           // Add the copy to the specified day
 
@@ -266,15 +263,16 @@ class WeekplanBloc extends BlocBase {
   Future<void> addActivity(ActivityModel activity, int day) {
     final Completer<void> completer = Completer<void>();
     final DisplayNameModel user = _userWeek.value.user;
-    _api.activity.add(activity, user.id, _week.name, _week.weekYear,
-        _week.weekNumber, _week.days[day].day)
+    _api.activity
+        .add(activity, user.id, _week.name, _week.weekYear, _week.weekNumber,
+            _week.days[day].day)
         .listen((ActivityModel ac) {
       _week.days[day].activities.add(ac);
       updateWeekdays(<WeekdayModel>[_week.days[day]])
           .catchError((Object error) {
         completer.completeError(error);
       });
-      completer.complete();
+      completer.complete(true);
     }).onError((Object error) {
       completer.completeError(error);
     });
@@ -299,13 +297,12 @@ class WeekplanBloc extends BlocBase {
       _week.days[dayFrom.index].activities[i].order -= 1;
     }
 
-
-    _week.days[dayFrom.index].activities.removeWhere(
-            (ActivityModel a) => a.id == activity.id);
+    _week.days[dayFrom.index].activities
+        .removeWhere((ActivityModel a) => a.id == activity.id);
     daysToUpdate.add(_week.days[dayFrom.index]);
 
     activity.order = dayFrom == dayTo &&
-        _week.days[dayTo.index].activities.length == newOrder - 1
+            _week.days[dayTo.index].activities.length == newOrder - 1
         ? newOrder - 1
         : newOrder;
 
@@ -321,22 +318,22 @@ class WeekplanBloc extends BlocBase {
     }
     _week.days[dayTo.index].activities.insert(activity.order, activity);
 
-    updateWeekdays(daysToUpdate)
-        .catchError((Object error) {
+    updateWeekdays(daysToUpdate).catchError((Object error) {
       return Future<void>.error(error);
     });
     return Future<void>.value();
   }
 
   Stream<bool> _atLeastOneActivityMarked() {
-    return _markedActivities.map((List<ActivityModel> activities) =>
-    activities.isNotEmpty);
+    return _markedActivities
+        .map((List<ActivityModel> activities) => activities.isNotEmpty);
   }
 
   /// Method to get a single weekday from the api
   Future<void> getWeekday(Weekday day) async {
     final DisplayNameModel user = _userWeek.value.user;
-    _api.week.getDay(user.id, _week.weekYear, _week.weekNumber, day)
+    _api.week
+        .getDay(user.id, _week.weekYear, _week.weekNumber, day)
         .listen((WeekdayModel newDay) {
       _weekDayStreams[newDay.day.index - _firstDay].add(newDay);
     }).onError((Object error) {
@@ -350,7 +347,8 @@ class WeekplanBloc extends BlocBase {
   Future<void> updateWeekdays(List<WeekdayModel> days) async {
     final DisplayNameModel user = _userWeek.value.user;
     for (WeekdayModel day in days) {
-      _api.week.updateDay(user.id, _week.weekYear, _week.weekNumber, day)
+      _api.week
+          .updateDay(user.id, _week.weekYear, _week.weekNumber, day)
           .listen((WeekdayModel newDay) {
         _weekDayStreams[newDay.day.index - _firstDay].add(newDay);
         _week.days[newDay.day.index] = newDay;

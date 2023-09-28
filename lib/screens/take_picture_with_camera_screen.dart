@@ -3,6 +3,7 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/take_image_with_camera_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -16,29 +17,29 @@ import '../style/custom_color.dart' as theme;
 // ignore: must_be_immutable
 class TakePictureWithCamera extends StatelessWidget {
   /// Default constructor
-  TakePictureWithCamera({Key key}) : super(key: key);
+  TakePictureWithCamera({required Key key}) : super(key: key);
 
   final TakePictureWithCameraBloc _takePictureWithCamera =
-  di.get<TakePictureWithCameraBloc>();
+      di.get<TakePictureWithCameraBloc>();
 
   final BorderRadius _imageBorder = BorderRadius.circular(25);
+
   ///height of screen
   dynamic screenHeight;
+
   ///width of screen
   dynamic screenWidth;
 
   @override
   Widget build(BuildContext context) {
-    screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
-    screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: GirafAppBar(title: 'Tilføj fra kamera'),
+      appBar: GirafAppBar(
+        key: ValueKey<String>('pictureKey'),
+        title: 'Tilføj fra kamera',
+        appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.home: () {}},
+      ),
       body: StreamBuilder<bool>(
           stream: _takePictureWithCamera.isUploading,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
@@ -87,8 +88,8 @@ class TakePictureWithCamera extends StatelessWidget {
             icon: const ImageIcon(AssetImage('assets/icons/save.png')),
             text: 'Gem',
             onPressed: () {
-              _takePictureWithCamera.createPictogram().listen((PictogramModel p)
-              {
+              _takePictureWithCamera.createPictogram().listen(
+                  (PictogramModel p) {
                 Routes().pop(context, p);
               }, onError: (Object error) {
                 _showUploadError(context);
@@ -110,13 +111,11 @@ class TakePictureWithCamera extends StatelessWidget {
             child: StreamBuilder<File>(
                 stream: _takePictureWithCamera.file,
                 builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
-                snapshot.data != null
-                    ? _displayImage(snapshot.data)
-                    : _displayIfNoImage()),
-
+                    snapshot.data != null
+                        ? _displayImage(snapshot.data)
+                        : _displayIfNoImage()),
           ),
-        )
-    );
+        ));
   }
 
   void _showUploadError(BuildContext context) {
@@ -154,8 +153,8 @@ class TakePictureWithCamera extends StatelessWidget {
           ),
           const Text(
             'Tryk for at tage billede med kamera',
-            style: TextStyle(color: theme.GirafColors.black,
-                fontSize: GirafFont.medium),
+            style: TextStyle(
+                color: theme.GirafColors.black, fontSize: GirafFont.medium),
           )
         ],
       ),
@@ -169,16 +168,16 @@ class TakePictureWithCamera extends StatelessWidget {
         ),
         child: Text(
           'Tag billede med kamera',
-          style: TextStyle(color: theme.GirafColors.black,
-              fontSize: GirafFont.medium),
+          style: TextStyle(
+              color: theme.GirafColors.black, fontSize: GirafFont.medium),
           textAlign: TextAlign.center,
         ));
   }
 
   Widget _displayImage(File image) {
     return Container(
-        height: screenHeight / 2,
-        width: screenWidth / 2,
+      height: screenHeight / 2,
+      width: screenWidth / 2,
       child: Image.file(image),
       decoration: BoxDecoration(
         borderRadius: _imageBorder,

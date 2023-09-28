@@ -7,7 +7,10 @@ void main() {
       (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(
         home: Scaffold(
-      body: GirafTitleHeader(title: 'TitleHeader'),
+      body: GirafTitleHeader(
+        title: 'TitleHeader',
+        key: ValueKey<String>('nullTitleKey'),
+      ),
     )));
     await tester.pump();
     expect(find.text('TitleHeader'), findsOneWidget);
@@ -17,7 +20,9 @@ void main() {
       (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(
         home: Scaffold(
-      body: GirafTitleHeader(),
+      body: GirafTitleHeader(
+        key: ValueKey<String>('nullTitleKey'),
+      ),
     )));
     await tester.pump();
     expect(find.text(''), findsOneWidget);

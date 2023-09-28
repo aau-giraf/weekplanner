@@ -3,28 +3,27 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
 /// Creates a button in the ButtomAppBar.
 class BottomAppBarButton extends StatelessWidget {
-  
   /// Constructor to get required information.
   const BottomAppBarButton({
-    Key key,
-    @required this.buttonText,
-    @required this.buttonKey,
-    @required this.assetPath,
-    @required this.dialogFunction,
-    this.isEnabled  = true,
-    this.isEnabledStream,
+    required Key key,
+    required this.buttonText,
+    required this.buttonKey,
+    required this.assetPath,
+    required this.dialogFunction,
+    this.isEnabled = true,
+    this.isEnabledStream = const Stream<bool>.empty(),
   }) : super(key: key);
 
   /// Text to be dispayed on the button.
   final String buttonText;
-  
-  /// Key to identify the button when testing. 
+
+  /// Key to identify the button when testing.
   final String buttonKey;
 
   /// Path to the ImageIcon.
   final String assetPath;
 
-  /// Function to handle when the button is pressed. 
+  /// Function to handle when the button is pressed.
   final Function dialogFunction;
 
   /// Determines whether the button is enabled or disabled by default. If no

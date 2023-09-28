@@ -4,12 +4,11 @@ import 'package:weekplanner/widgets/pictogram_image.dart';
 
 /// Shows the currently picked pictograms in either making pictogram code
 /// or logging in with it
-class PictogramInputField  extends StatefulWidget {
-
+class PictogramInputField extends StatefulWidget {
   /// Shows the currently picked pictograms in either making pictogram code
   /// or logging in with it
-  const PictogramInputField({Key key, @required this.onPasswordChanged})
-  : super(key: key);
+  const PictogramInputField({Key key, required this.onPasswordChanged})
+      : super(key: key);
 
   /// Function called when an input is changed to update save button
   /// usability
@@ -24,7 +23,6 @@ const double MAXWIDTH = 500;
 
 /// State for PassWordInputField
 class PictogramInputFieldState extends State<PictogramInputField> {
-
   List<PictogramModel> _inputCode;
   @override
   void initState() {
@@ -44,6 +42,7 @@ class PictogramInputFieldState extends State<PictogramInputField> {
     //Reloads the widget with the new input
     setState(() {});
   }
+
   /// Validates whether all four needed pictograms have been input and returns
   /// value of password
   String validateAndConvertPass() {
@@ -72,9 +71,7 @@ class PictogramInputFieldState extends State<PictogramInputField> {
             color: const Color(0xFFe0dede),
           ),
         );
-      }
-      else
-      {
+      } else {
         widget = PictogramImage(
             pictogram: pictogram, onPressed: () => removeFromPass(i));
       }

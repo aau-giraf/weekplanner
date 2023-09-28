@@ -14,8 +14,8 @@ class NewWeekplanScreen extends StatelessWidget {
   /// Screen for creating a new weekplan.
   /// Requires a [UsernameModel] to be able to save the new weekplan.
   NewWeekplanScreen({
-    @required DisplayNameModel user,
-    @required this.existingWeekPlans,
+    required DisplayNameModel user,
+    required this.existingWeekPlans,
   }) : _bloc = di.get<NewWeekplanBloc>() {
     _bloc.initialize(user);
   }

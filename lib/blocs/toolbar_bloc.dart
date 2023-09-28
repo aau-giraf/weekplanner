@@ -33,9 +33,7 @@ class ToolbarBloc extends BlocBase {
     _iconsToAdd = <IconButton>[];
 
     // Assigns a map to icons, if icons is null.
-    icons ??= <AppBarIcon, VoidCallback>{
-      AppBarIcon.logout: () {}
-    };
+    icons = <AppBarIcon, VoidCallback>{AppBarIcon.logout: () {}};
 
     for (AppBarIcon icon in icons.keys) {
       _addIconButton(_iconsToAdd, icon, icons[icon], context);
@@ -223,7 +221,7 @@ class ToolbarBloc extends BlocBase {
   }
 
   /// Return the dialog of the popup.
-  Alert createPopupDialog(BuildContext context){
+  Alert createPopupDialog(BuildContext context) {
     /// UserName/Password controller for passing information from a text field
     /// to the authenticator.
     final TextEditingController userNameCtrl = TextEditingController();
@@ -238,9 +236,7 @@ class ToolbarBloc extends BlocBase {
             RichText(
               text: TextSpan(
                 text: 'Log ind som værger',
-                style: DefaultTextStyle
-                    .of(context)
-                    .style,
+                style: DefaultTextStyle.of(context).style,
               ),
             ),
             TextField(
@@ -270,21 +266,21 @@ class ToolbarBloc extends BlocBase {
             // be tapped than each 2 seconds.
             onPressed: _clickable
                 ? () {
-              if (_clickable) {
-                _clickable = false;
-                loginFromPopUp(context, userNameCtrl.value.text,
-                    passwordCtrl.value.text);
-                // Timer makes it clicable again after 2 seconds.
-                Timer(const Duration(milliseconds: 2000), () {
-                  _clickable = true;
-                });
-              }
-            }
+                    if (_clickable) {
+                      _clickable = false;
+                      loginFromPopUp(context, userNameCtrl.value.text,
+                          passwordCtrl.value.text);
+                      // Timer makes it clicable again after 2 seconds.
+                      Timer(const Duration(milliseconds: 2000), () {
+                        _clickable = true;
+                      });
+                    }
+                  }
                 : null,
             child: const Text(
               'Bekræft',
-              style: TextStyle(color: theme.GirafColors.white,
-                  fontSize: GirafFont.small),
+              style: TextStyle(
+                  color: theme.GirafColors.white, fontSize: GirafFont.small),
             ),
             color: theme.GirafColors.dialogButton,
           )

@@ -12,17 +12,19 @@ class Giraf3ButtonDialog extends StatelessWidget {
   ///The dialog displays the title and description, with two buttons
   ///to either confirm the action, or cancel, which simply closes the dialog.
   const Giraf3ButtonDialog(
-      {Key key,
-      @required this.title,
-      this.description,
-      @required this.option1Text,
-      @required this.option1Icon,
-      @required this.option1OnPressed,
-      @required this.option2Text,
-      @required this.option2Icon,
-      @required this.option2OnPressed,
-      this.cancelOnPressed})
+      {required Key key,
+      required this.title,
+      this.description = 'Beskrivelse',
+      required this.option1Text,
+      required this.option1Icon,
+      required this.option1OnPressed,
+      required this.option2Text,
+      required this.option2Icon,
+      required this.option2OnPressed,
+      this.cancelOnPressed = _defaultCancelFunction})
       : super(key: key);
+
+  static void _defaultCancelFunction() {}
 
   ///title of the dialogBox, displayed in the header of the dialogBox
   final String title;
@@ -75,14 +77,14 @@ class Giraf3ButtonDialog extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 15.0),
-                      child: Text(
-                  //if description is null,
-                  // its replaced with empty.
-                  description ?? '',
-                  textAlign: TextAlign.center,
-                ),
-                    ))
+                  padding: const EdgeInsets.symmetric(vertical: 15.0),
+                  child: Text(
+                    //if description is null,
+                    // its replaced with empty.
+                    description ?? '',
+                    textAlign: TextAlign.center,
+                  ),
+                ))
               ],
             ),
             Row(

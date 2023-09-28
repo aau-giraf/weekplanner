@@ -2,6 +2,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
@@ -45,16 +46,16 @@ void main() {
 
   final PictogramModel pictogramModel = PictogramModel(
       id: 1,
-      lastEdit: null,
+      lastEdit: DateTime(2020),
       title: 'SomeTitle',
-      accessLevel: null,
+      accessLevel: AccessLevel.PUBLIC,
       imageUrl: 'http://any.tld',
-      imageHash: null);
+      imageHash: '');
 
   final ActivityModel activityModel = ActivityModel(
       id: 1,
       pictograms: <PictogramModel>[pictogramModel],
-      order: null,
+      order: 0,
       state: ActivityState.Normal,
       isChoiceBoard: false,
       title: pictogramModel.title);
@@ -64,7 +65,7 @@ void main() {
     api = Api('any');
 
     mockSettings = SettingsModel(
-      orientation: null,
+      orientation: Orientation.landscape,
       completeMark: CompleteMark.Checkmark,
       cancelMark: null,
       defaultTimer: null,

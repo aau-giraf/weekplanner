@@ -55,419 +55,520 @@ class MockActivityApi extends Mock implements ActivityApi {
 }
 
 void main() {
-  WeekModel mockWeek;
-  SettingsModel mockSettings;
-  List<ActivityModel> mockActivities;
-  List<PictogramModel> mockPictograms;
-  DisplayNameModel user;
-  WeekplanBloc weekplanBloc;
-  AuthBloc authBloc;
-  Api api;
+  group('MainPage navigation tests', () {
+    WeekModel mockWeek;
+    SettingsModel mockSettings;
+    List<ActivityModel> mockActivities;
+    List<PictogramModel> mockPictograms;
+    DisplayNameModel user;
+    WeekplanBloc weekplanBloc;
+    AuthBloc authBloc;
+    Api api;
 
-  setUp(() {
-    MockData mockData;
-    mockData = MockData();
-    mockWeek = mockData.mockWeek;
-    mockSettings = mockData.mockSettings;
-    mockActivities = mockData.mockActivities;
-    mockPictograms = mockData.mockPictograms;
-    user = mockData.mockUser;
-    api = mockData.mockApi;
-    api.pictogram=MockPictogramApi();
-    authBloc = AuthBloc(api);
-    authBloc.setMode(WeekplanMode.guardian);
-    weekplanBloc = WeekplanBloc(api);
-    di.clearAll();
-    // We register the dependencies needed to build different widgets
-    di.registerDependency<AuthBloc>(() => authBloc);
-    di.registerDependency<WeekplanBloc>(() => weekplanBloc);
-    di.registerDependency<Api>(() => api);
-    di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
-    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
-    di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));
-    di.registerDependency<TimerBloc>(() => TimerBloc(api));
-    di.registerDependency<ActivityBloc>(() => ActivityBloc(api));
-    di.registerDependency<PictogramBloc>(() => PictogramBloc(api));
-    di.registerDependency<CopyActivitiesBloc>(() => CopyActivitiesBloc());
-  });
+    setUp(() {
+      MockData mockData;
+      mockData = MockData();
+      mockWeek = mockData.mockWeek;
+      mockSettings = mockData.mockSettings;
+      mockActivities = mockData.mockActivities;
+      mockPictograms = mockData.mockPictograms;
+      user = mockData.mockUser;
+      api = mockData.mockApi;
+      api.pictogram = MockPictogramApi();
+      authBloc = AuthBloc(api);
+      authBloc.setMode(WeekplanMode.guardian);
+      weekplanBloc = WeekplanBloc(api);
+      di.clearAll();
+      // We register the dependencies needed to build different widgets
+      di.registerDependency<AuthBloc>(() => authBloc);
+      di.registerDependency<WeekplanBloc>(() => weekplanBloc);
+      di.registerDependency<Api>(() => api);
+      di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
+      di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
+      di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));
+      di.registerDependency<TimerBloc>(() => TimerBloc(api));
+      di.registerDependency<ActivityBloc>(() => ActivityBloc(api));
+      di.registerDependency<PictogramBloc>(() => PictogramBloc(api));
+      di.registerDependency<CopyActivitiesBloc>(() => CopyActivitiesBloc());
+    });
 
-  testWidgets('WeekplanScreen renders', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
-    await tester.pumpAndSettle();
-    expect(find.byType(WeekplanScreen), findsOneWidget);
-  });
+    _weekplanRenders(WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(
+          home: WeekplanScreen(
+        mockWeek,
+        user,
+        key: ValueKey<String>('value'),
+      )));
+      await tester.pumpAndSettle();
+      expect(find.byType(WeekplanScreen), findsOneWidget);
+    }
 
-  testWidgets('ChoiceBoard shows in weekplan', (WidgetTester tester) async {
-    authBloc.setMode(WeekplanMode.citizen);
-    mockActivities[0].state = ActivityState.Normal;
-    mockActivities[0].isChoiceBoard = true;
-    mockActivities[0].pictograms = mockPictograms;
-    mockWeek.days[0].activities.add(mockActivities[0]);
+    Future<Null> _choiceBoardShownsInWeekplan(WidgetTester tester) async {
+      authBloc.setMode(WeekplanMode.citizen);
+      mockActivities[0].state = ActivityState.Normal;
+      mockActivities[0].isChoiceBoard = true;
+      mockActivities[0].pictograms = mockPictograms;
+      mockWeek.days[0].activities.add(mockActivities[0]);
 
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(MaterialApp(
+          home: WeekplanScreen(
+        mockWeek,
+        user,
+        key: ValueKey<String>('value'),
+      )));
+      await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('WeekPlanScreenChoiceBoard')), findsOneWidget);
-  });
+      expect(find.byKey(const Key('WeekPlanScreenChoiceBoard')), findsOneWidget);
+    }
 
-  testWidgets('Activity selector pops up when choiceBoard activity is tapped',
-          (WidgetTester tester) async {
-        authBloc.setMode(WeekplanMode.citizen);
-        mockActivities[0].state = ActivityState.Normal;
-        mockActivities[0].isChoiceBoard = true;
-        mockActivities[0].pictograms = mockPictograms;
-        mockWeek.days[0].activities.add(mockActivities[0]);
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+    Future<Null> _activitySelectorShowsUpWhenActivityTapped(WidgetTester tester) async {
+      authBloc.setMode(WeekplanMode.citizen);
+      mockActivities[0].state = ActivityState.Normal;
+      mockActivities[0].isChoiceBoard = true;
+      mockActivities[0].pictograms = mockPictograms;
+      mockWeek.days[0].activities.add(mockActivities[0]);
+      await tester.pumpWidget(MaterialApp(
+          home: WeekplanScreen(
+        mockWeek,
+        user,
+        key: ValueKey<String>('value'),
+      )));
+      await tester.pumpAndSettle();
 
-        await tester.tap(find.byKey(const Key('WeekPlanScreenChoiceBoard')));
-        await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('WeekPlanScreenChoiceBoard')));
+      await tester.pumpAndSettle();
 
-        expect(
-            find.byKey(const Key('ChoiceBoardActivitySelector')),
-            findsOneWidget);
+      expect(find.byKey(const Key('ChoiceBoardActivitySelector')), findsOneWidget);
+    }
+
+
+    Future<Null> _hasGirafAppBar(WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(
+          home: WeekplanScreen(
+        mockWeek,
+        user,
+        key: ValueKey<String>('value'),
+      )));
+      await tester.pumpAndSettle();
+      expect(find.byType(GirafAppBar), findsOneWidget);
+    }
+
+    Future<Null> _hasEditButton(WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(
+          home: WeekplanScreen(
+        mockWeek,
+        user,
+        key: ValueKey<String>('value'),
+      )));
+      await tester.pumpAndSettle();
+      expect(find.byTooltip('Rediger'), findsOneWidget);
+    }
+
+
+    Future<Null> _editButtonTogglesEditMode(WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(
+          home: WeekplanScreen(
+        mockWeek,
+        user,
+        key: ValueKey<String>('value'),
+      )));
+      await tester.pumpAndSettle();
+
+      bool currentEditMode = false;
+      weekplanBloc.editMode.listen((bool editMode) {
+        currentEditMode = editMode;
       });
+      // Initial edit mode should be false
+      expect(currentEditMode, false);
 
-  testWidgets('Has Giraf App Bar', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
-    await tester.pumpAndSettle();
-    expect(find.byType(GirafAppBar), findsOneWidget);
-  });
+      await tester.tap(find.byTooltip('Rediger'));
+      await tester.pump();
 
-  testWidgets('Has edit/rediger button', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
-    await tester.pumpAndSettle();
-    expect(find.byTooltip('Rediger'), findsOneWidget);
-  });
-
-  testWidgets('Click on edit icon toggles edit mode',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
-
-        bool currentEditMode = false;
-        weekplanBloc.editMode.listen((bool editMode) {
-          currentEditMode = editMode;
-        });
-        // Initial edit mode should be false
-        expect(currentEditMode, false);
-
-        await tester.tap(find.byTooltip('Rediger'));
-        await tester.pump();
-
-        weekplanBloc.editMode.listen((bool editMode) {
-          currentEditMode = editMode;
-        });
-        // After tapping the button edit mode should be true
-        expect(currentEditMode, true);
-
-        await tester.tap(find.byTooltip('Rediger'));
-        await tester.pump();
-        weekplanBloc.editMode.listen((bool editMode) {
-          currentEditMode = editMode;
-        });
-        // After tapping the button agian it should be false
-        expect(currentEditMode, false);
+      weekplanBloc.editMode.listen((bool editMode) {
+        currentEditMode = editMode;
       });
+      // After tapping the button edit mode should be true
+      expect(currentEditMode, true);
 
-  testWidgets('No activity cards when no activities are added',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
-        // After tapping the button edit mode should be true
-        expect(find.byType(ActivityCard), findsNothing);
+      await tester.tap(find.byTooltip('Rediger'));
+      await tester.pump();
+      weekplanBloc.editMode.listen((bool editMode) {
+        currentEditMode = editMode;
       });
+      // After tapping the button agian it should be false
+      expect(currentEditMode, false);
+    }
+
+    Future<Null> _emptyBoardWhenEmpty(WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(
+          home: WeekplanScreen(
+        mockWeek,
+        user,
+        key: ValueKey<String>('value'),
+      )));
+      await tester.pumpAndSettle();
+      // After tapping the button edit mode should be true
+      expect(find.byType(ActivityCard), findsNothing);
+    }
+    
+    Future<Null> _test(WidgetTester tester) async {}
+    Future<Null> _test(WidgetTester tester) async {}
+    Future<Null> _test(WidgetTester tester) async {}
+    Future<Null> _test(WidgetTester tester) async {}
+    Future<Null> _test(WidgetTester tester) async {}
+    Future<Null> _test(WidgetTester tester) async {}
+    Future<Null> _test(WidgetTester tester) async {}
+    Future<Null> _test(WidgetTester tester) async {}
+    Future<Null> _test(WidgetTester tester) async {}
+    Future<Null> _test(WidgetTester tester) async {}
+    Future<Null> _test(WidgetTester tester) async {}
+    Future<Null> _test(WidgetTester tester) async {}
+    Future<Null> _test(WidgetTester tester) async {}
+
+
+    testWidgets('Weekplan Tests', (WidgetTester tester) async {
+      await _weekplanRenders(tester);
+
+      await _choiceBoardShownsInWeekplan(tester);
+      await _activitySelectorShowsUpWhenActivityTapped(tester);
+      await _hasGirafAppBar(tester);
+      await _hasEditButton(tester);
+      await _editButtonTogglesEditMode(tester);
+      await _emptyBoardWhenEmpty(tester);
+    });
+  });
 
   testWidgets('Each added activity gets an activity card',
-          (WidgetTester tester) async {
-        // We add an activity to monday and one to tuesday
-        mockWeek.days[0].activities.add(mockActivities[0]);
-        mockWeek.days[1].activities.add(mockActivities[1]);
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+      (WidgetTester tester) async {
+    // We add an activity to monday and one to tuesday
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    mockWeek.days[1].activities.add(mockActivities[1]);
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        // After tapping the button edit mode should be true
-        expect(find.byType(ActivityCard), findsNWidgets(2));
-      });
+    // After tapping the button edit mode should be true
+    expect(find.byType(ActivityCard), findsNWidgets(2));
+  });
 
   testWidgets('Tapping activity when not in edit mode pushes activity screen',
-          (WidgetTester tester) async {
-        mockWeek.days[0].activities.add(mockActivities[0]);
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+      (WidgetTester tester) async {
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        await tester.tap(find.byType(ActivityCard));
-        await tester.pumpAndSettle();
-        expect(find.byType(ShowActivityScreen), findsOneWidget);
-      });
+    await tester.tap(find.byType(ActivityCard));
+    await tester.pumpAndSettle();
+    expect(find.byType(ShowActivityScreen), findsOneWidget);
+  });
 
   testWidgets('Tapping activity in edit mode selects/deselects it',
-          (WidgetTester tester) async {
-        mockWeek.days[0].activities.add(mockActivities[0]);
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+      (WidgetTester tester) async {
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        //We enter edit mode.
-        await tester.tap(find.byTooltip('Rediger'));
-        await tester.pump();
+    //We enter edit mode.
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
 
-        expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
+    expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
 
-        await tester.tap(find.byType(ActivityCard));
-        await tester.pumpAndSettle();
-        expect(weekplanBloc.getNumberOfMarkedActivities(), 1);
+    await tester.tap(find.byType(ActivityCard));
+    await tester.pumpAndSettle();
+    expect(weekplanBloc.getNumberOfMarkedActivities(), 1);
 
-        await tester.tap(find.byType(ActivityCard));
-        await tester.pumpAndSettle();
-        expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
-      });
+    await tester.tap(find.byType(ActivityCard));
+    await tester.pumpAndSettle();
+    expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
+  });
 
   testWidgets('Marking activity in edit mode renders a black box around it',
-          (WidgetTester tester) async {
-        mockWeek.days[0].activities.add(mockActivities[0]);
+      (WidgetTester tester) async {
+    mockWeek.days[0].activities.add(mockActivities[0]);
 
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        await tester.tap(find.byTooltip('Rediger'));
-        await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
 
-        await tester.tap(find.byType(ActivityCard));
-        await tester.pumpAndSettle();
+    await tester.tap(find.byType(ActivityCard));
+    await tester.pumpAndSettle();
 
-        expect(find.byKey(const Key('isSelectedKey')), findsOneWidget);
-      });
+    expect(find.byKey(const Key('isSelectedKey')), findsOneWidget);
+  });
 
   testWidgets(
       'Cancel/Copy/Delete/Undo buttons not built when edit mode is false',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is BottomAppBarButton &&
-                widget.buttonText == 'Aflys' &&
-                widget.buttonKey == 'CancelActivtiesButton'),
-            findsNothing);
+            widget.buttonText == 'Aflys' &&
+            widget.buttonKey == 'CancelActivtiesButton'),
+        findsNothing);
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is BottomAppBarButton &&
-                widget.buttonText == 'Kopier' &&
-                widget.buttonKey == 'CopyActivtiesButton'),
-            findsNothing);
+            widget.buttonText == 'Kopier' &&
+            widget.buttonKey == 'CopyActivtiesButton'),
+        findsNothing);
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is BottomAppBarButton &&
-                widget.buttonText == 'Slet' &&
-                widget.buttonKey == 'DeleteActivtiesButton'),
-            findsNothing);
+            widget.buttonText == 'Slet' &&
+            widget.buttonKey == 'DeleteActivtiesButton'),
+        findsNothing);
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is BottomAppBarButton &&
-                widget.buttonText == 'Genoptag' &&
-                widget.buttonKey == 'GenoptagActivtiesButton'),
-            findsNothing);
-      });
+            widget.buttonText == 'Genoptag' &&
+            widget.buttonKey == 'GenoptagActivtiesButton'),
+        findsNothing);
+  });
 
   testWidgets(
       'Cancel/Copy/Delete/Undo buttons are built when edit mode is true',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        // Toggle edit mode by pressing the edit mode button
-        await tester.tap(find.byTooltip('Rediger'));
-        await tester.pump();
+    // Toggle edit mode by pressing the edit mode button
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is BottomAppBarButton &&
-                widget.buttonText == 'Aflys' &&
-                widget.buttonKey == 'CancelActivtiesButton'),
-            findsOneWidget);
+            widget.buttonText == 'Aflys' &&
+            widget.buttonKey == 'CancelActivtiesButton'),
+        findsOneWidget);
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is BottomAppBarButton &&
-                widget.buttonText == 'Kopier' &&
-                widget.buttonKey == 'CopyActivtiesButton'),
-            findsOneWidget);
+            widget.buttonText == 'Kopier' &&
+            widget.buttonKey == 'CopyActivtiesButton'),
+        findsOneWidget);
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is BottomAppBarButton &&
-                widget.buttonText == 'Slet' &&
-                widget.buttonKey == 'DeleteActivtiesButton'),
-            findsOneWidget);
+            widget.buttonText == 'Slet' &&
+            widget.buttonKey == 'DeleteActivtiesButton'),
+        findsOneWidget);
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is BottomAppBarButton &&
-                widget.buttonText == 'Genoptag' &&
-                widget.buttonKey == 'GenoptagActivtiesButton'),
-            findsOneWidget);
-      });
+            widget.buttonText == 'Genoptag' &&
+            widget.buttonKey == 'GenoptagActivtiesButton'),
+        findsOneWidget);
+  });
 
   testWidgets(
       'Cancel/Copy/Delete/Undo buttons do not open dialog when no activites are selected',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        await tester.tap(find.byTooltip('Rediger'));
-        await tester.pump();
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
 
-        await tester.tap(find.byWidgetPredicate((Widget widget) =>
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
         widget is BottomAppBarButton &&
-            widget.buttonText == 'Aflys' &&
-            widget.buttonKey == 'CancelActivtiesButton'));
-        await tester.pumpAndSettle();
+        widget.buttonText == 'Aflys' &&
+        widget.buttonKey == 'CancelActivtiesButton'));
+    await tester.pumpAndSettle();
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is GirafConfirmDialog &&
-                widget.title == 'Aflys aktiviteter'),
-            findsNothing);
+            widget.title == 'Aflys aktiviteter'),
+        findsNothing);
 
-        await tester.tap(find.byWidgetPredicate((Widget widget) =>
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
         widget is BottomAppBarButton &&
-            widget.buttonText == 'Kopier' &&
-            widget.buttonKey == 'CopyActivtiesButton'));
-        await tester.pumpAndSettle();
+        widget.buttonText == 'Kopier' &&
+        widget.buttonKey == 'CopyActivtiesButton'));
+    await tester.pumpAndSettle();
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is GirafCopyActivitiesDialog &&
-                widget.title == 'Kopier aktiviteter'),
-            findsNothing);
+            widget.title == 'Kopier aktiviteter'),
+        findsNothing);
 
-        await tester.tap(find.byWidgetPredicate((Widget widget) =>
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
         widget is BottomAppBarButton &&
-            widget.buttonText == 'Slet' &&
-            widget.buttonKey == 'DeleteActivtiesButton'));
-        await tester.pumpAndSettle();
+        widget.buttonText == 'Slet' &&
+        widget.buttonKey == 'DeleteActivtiesButton'));
+    await tester.pumpAndSettle();
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is GirafConfirmDialog && widget.title == 'Slet aktiviteter'),
-            findsNothing);
+        findsNothing);
 
-        await tester.tap(find.byWidgetPredicate((Widget widget) =>
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
         widget is BottomAppBarButton &&
-            widget.buttonText == 'Genoptag' &&
-            widget.buttonKey == 'GenoptagActivtiesButton'));
-        await tester.pumpAndSettle();
+        widget.buttonText == 'Genoptag' &&
+        widget.buttonKey == 'GenoptagActivtiesButton'));
+    await tester.pumpAndSettle();
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is GirafConfirmDialog && widget.title == 'Genoptag'),
-            findsNothing
-        );
-      });
+        findsNothing);
+  });
 
   testWidgets('Cancel activity button opens dialog when activity is selected',
-          (WidgetTester tester) async {
-        mockWeek.days[0].activities.add(mockActivities[0]);
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+      (WidgetTester tester) async {
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        // Toggle edit mode by pressing the edit mode button
-        await tester.tap(find.byTooltip('Rediger'));
-        await tester.pump();
+    // Toggle edit mode by pressing the edit mode button
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
 
-        // Selecting an activity
-        await tester.tap(find.byType(ActivityCard));
-        await tester.pumpAndSettle();
+    // Selecting an activity
+    await tester.tap(find.byType(ActivityCard));
+    await tester.pumpAndSettle();
 
-        // Tapping cancel activities button
-        await tester.tap(find.byWidgetPredicate((Widget widget) =>
+    // Tapping cancel activities button
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
         widget is BottomAppBarButton &&
-            widget.buttonText == 'Aflys' &&
-            widget.buttonKey == 'CancelActivtiesButton'));
-        await tester.pumpAndSettle();
+        widget.buttonText == 'Aflys' &&
+        widget.buttonKey == 'CancelActivtiesButton'));
+    await tester.pumpAndSettle();
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is GirafConfirmDialog &&
-                widget.title == 'Aflys aktiviteter'),
-            findsOneWidget);
-      });
+            widget.title == 'Aflys aktiviteter'),
+        findsOneWidget);
+  });
 
   testWidgets('Copy activity button opens dialog when activity is selected',
-          (WidgetTester tester) async {
-        mockWeek.days[0].activities.add(mockActivities[0]);
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+      (WidgetTester tester) async {
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        // Toggle edit mode by pressing the edit mode button
-        await tester.tap(find.byTooltip('Rediger'));
-        await tester.pump();
+    // Toggle edit mode by pressing the edit mode button
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
 
-        // Selecting an activity
-        await tester.tap(find.byType(ActivityCard));
-        await tester.pumpAndSettle();
+    // Selecting an activity
+    await tester.tap(find.byType(ActivityCard));
+    await tester.pumpAndSettle();
 
-        // Tapping copy activities button
-        await tester.tap(find.byWidgetPredicate((Widget widget) =>
+    // Tapping copy activities button
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
         widget is BottomAppBarButton &&
-            widget.buttonText == 'Kopier' &&
-            widget.buttonKey == 'CopyActivtiesButton'));
-        await tester.pumpAndSettle();
+        widget.buttonText == 'Kopier' &&
+        widget.buttonKey == 'CopyActivtiesButton'));
+    await tester.pumpAndSettle();
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is GirafCopyActivitiesDialog &&
-                widget.title == 'Kopier aktiviteter'),
-            findsOneWidget);
-      });
+            widget.title == 'Kopier aktiviteter'),
+        findsOneWidget);
+  });
 
   testWidgets('Delete activity button opens dialog when activity is selected',
-          (WidgetTester tester) async {
-        mockWeek.days[0].activities.add(mockActivities[0]);
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+      (WidgetTester tester) async {
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        // Toggle edit mode by pressing the edit mode button
-        await tester.tap(find.byTooltip('Rediger'));
-        await tester.pump();
+    // Toggle edit mode by pressing the edit mode button
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
 
-        // Selecting an activity
-        await tester.tap(find.byType(ActivityCard));
-        await tester.pumpAndSettle();
+    // Selecting an activity
+    await tester.tap(find.byType(ActivityCard));
+    await tester.pumpAndSettle();
 
-        // Tapping copy activities button
-        await tester.tap(find.byWidgetPredicate((Widget widget) =>
+    // Tapping copy activities button
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
         widget is BottomAppBarButton &&
-            widget.buttonText == 'Slet' &&
-            widget.buttonKey == 'DeleteActivtiesButton'));
-        await tester.pumpAndSettle();
+        widget.buttonText == 'Slet' &&
+        widget.buttonKey == 'DeleteActivtiesButton'));
+    await tester.pumpAndSettle();
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is GirafConfirmDialog && widget.title == 'Slet aktiviteter'),
-            findsOneWidget);
-      });
+        findsOneWidget);
+  });
 
   testWidgets('Canceling an activity works', (WidgetTester tester) async {
     mockWeek.days[0].activities.add(mockActivities[0]);
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byTooltip('Rediger'));
@@ -477,7 +578,6 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.tap(find.byWidgetPredicate((Widget widget) =>
-    widget is BottomAppBarButton &&
         widget is BottomAppBarButton &&
         widget.buttonText == 'Aflys' &&
         widget.buttonKey == 'CancelActivtiesButton'));
@@ -492,12 +592,17 @@ void main() {
   });
 
   testWidgets('Marking an activity as current and updating work',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     mockSettings.nrOfDaysToDisplayLandscape = 1;
-    final int weekDay = DateTime.now().weekday.toInt()-1;
+    final int weekDay = DateTime.now().weekday.toInt() - 1;
     mockWeek.days[weekDay].activities.add(mockActivities[0]);
     mockWeek.days[weekDay].activities.add(mockActivities[1]);
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('IconActive')), findsOneWidget);
@@ -509,7 +614,6 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.tap(find.byWidgetPredicate((Widget widget) =>
-    widget is BottomAppBarButton &&
         widget is BottomAppBarButton &&
         widget.buttonText == 'Aflys' &&
         widget.buttonKey == 'CancelActivtiesButton'));
@@ -531,7 +635,6 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.tap(find.byWidgetPredicate((Widget widget) =>
-    widget is BottomAppBarButton &&
         widget is BottomAppBarButton &&
         widget.buttonText == 'Genoptag' &&
         widget.buttonKey == 'GenoptagActivtiesButton'));
@@ -552,7 +655,12 @@ void main() {
     //Create a cancel activity
     mockActivities[0].state = ActivityState.Canceled;
     mockWeek.days[0].activities.add(mockActivities[0]);
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byTooltip('Rediger'));
@@ -562,7 +670,6 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.tap(find.byWidgetPredicate((Widget widget) =>
-    widget is BottomAppBarButton &&
         widget is BottomAppBarButton &&
         widget.buttonText == 'Genoptag' &&
         widget.buttonKey == 'GenoptagActivtiesButton'));
@@ -576,9 +683,13 @@ void main() {
   });
 
   testWidgets('Copying an activity works', (WidgetTester tester) async {
-
     mockWeek.days[0].activities.add(mockActivities[0]);
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
     await tester.pumpAndSettle();
 
     expect(mockWeek.days[0].activities.length, 1);
@@ -594,7 +705,7 @@ void main() {
 
     // Tapping copy activities button
     await tester.tap(find.byWidgetPredicate((Widget widget) =>
-    widget is BottomAppBarButton &&
+        widget is BottomAppBarButton &&
         widget.buttonText == 'Kopier' &&
         widget.buttonKey == 'CopyActivtiesButton'));
     await tester.pumpAndSettle();
@@ -611,7 +722,12 @@ void main() {
 
   testWidgets('Deleting an activity works', (WidgetTester tester) async {
     mockWeek.days[0].activities.add(mockActivities[0]);
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
     await tester.pumpAndSettle();
 
     expect(mockWeek.days[0].activities.length, 1);
@@ -626,7 +742,7 @@ void main() {
 
     // Tapping copy activities button
     await tester.tap(find.byWidgetPredicate((Widget widget) =>
-    widget is BottomAppBarButton &&
+        widget is BottomAppBarButton &&
         widget.buttonText == 'Slet' &&
         widget.buttonKey == 'DeleteActivtiesButton'));
     await tester.pumpAndSettle();
@@ -638,7 +754,12 @@ void main() {
   });
 
   testWidgets('Has 7 select all buttons', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byTooltip('Rediger'));
@@ -649,7 +770,12 @@ void main() {
   });
 
   testWidgets('Has 7 deselect all buttons', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byTooltip('Rediger'));
@@ -660,63 +786,79 @@ void main() {
   });
 
   testWidgets('Marks all and unmarks all activities for a given day',
-          (WidgetTester tester) async {
-        // Adding two activities too monday
-        mockWeek.days[0].activities.add(mockActivities[0]);
-        mockWeek.days[0].activities.add(mockActivities[1]);
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+      (WidgetTester tester) async {
+    // Adding two activities too monday
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    mockWeek.days[0].activities.add(mockActivities[1]);
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        await tester.tap(find.byTooltip('Rediger'));
-        await tester.pump();
-        expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
+    expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
 
-        // Checking that the select all activities button works
-        await tester.tap(find.byKey(const Key('SelectAllButton')).first);
-        await tester.pump();
-        expect(weekplanBloc.getNumberOfMarkedActivities(), 2);
+    // Checking that the select all activities button works
+    await tester.tap(find.byKey(const Key('SelectAllButton')).first);
+    await tester.pump();
+    expect(weekplanBloc.getNumberOfMarkedActivities(), 2);
 
-        // Checking that the Deselect all activities button works
-        await tester.tap(find.byKey(const Key('DeselectAllButton')).first);
-        await tester.pump();
-        expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
-      });
+    // Checking that the Deselect all activities button works
+    await tester.tap(find.byKey(const Key('DeselectAllButton')).first);
+    await tester.pump();
+    expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
+  });
 
   /// All tests test in landscape mode by default. Preferably, we would test
   /// in portrait mode as well, but we are unsure how to do so
-  testWidgets('When showing one day in landscape mode for citizen,'
-      ' one weekday row is created',
-      (WidgetTester tester) async {
+  testWidgets(
+      'When showing one day in landscape mode for citizen,'
+      ' one weekday row is created', (WidgetTester tester) async {
     mockSettings.nrOfDaysToDisplayLandscape = 1;
     authBloc.setMode(WeekplanMode.citizen);
-    final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
+    final WeekplanScreen weekplanScreen = WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    );
 
-        await tester.pumpWidget(MaterialApp(home: weekplanScreen));
-        await tester.pumpAndSettle();
+    await tester.pumpWidget(MaterialApp(home: weekplanScreen));
+    await tester.pumpAndSettle();
 
-        expect(find.byKey(const Key('SingleWeekdayRow')), findsOneWidget);
-      });
+    expect(find.byKey(const Key('SingleWeekdayRow')), findsOneWidget);
+  });
 
-  testWidgets('When showing 5 days in landscape mode for citizen, '
-      '5 weekday columns are created',
-      (WidgetTester tester) async {
+  testWidgets(
+      'When showing 5 days in landscape mode for citizen, '
+      '5 weekday columns are created', (WidgetTester tester) async {
     mockSettings.nrOfDaysToDisplayLandscape = 5;
     authBloc.setMode(WeekplanMode.citizen);
-    final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
+    final WeekplanScreen weekplanScreen = WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    );
 
-        await tester.pumpWidget(MaterialApp(home: weekplanScreen));
-        await tester.pumpAndSettle();
-        expect(find.byKey(const Key('SingleWeekdayRow')), findsNothing);
-        expect(find.byType(WeekplanDayColumn), findsNWidgets(5));
-      });
+    await tester.pumpWidget(MaterialApp(home: weekplanScreen));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('SingleWeekdayRow')), findsNothing);
+    expect(find.byType(WeekplanDayColumn), findsNWidgets(5));
+  });
 
-  testWidgets('When showing 7 days in landscape mode for citizen, '
-      '7 weekday columns are created',
-      (WidgetTester tester) async {
+  testWidgets(
+      'When showing 7 days in landscape mode for citizen, '
+      '7 weekday columns are created', (WidgetTester tester) async {
     mockSettings.nrOfDaysToDisplayLandscape = 7;
     authBloc.setMode(WeekplanMode.citizen);
-    final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
+    final WeekplanScreen weekplanScreen = WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    );
     await tester.pumpWidget(MaterialApp(home: weekplanScreen));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('SingleWeekdayRow')), findsNothing);
@@ -724,15 +866,18 @@ void main() {
   });
 
   testWidgets('7 weekday columns are always created for guardian',
-          (WidgetTester tester) async {
-        authBloc.setMode(WeekplanMode.guardian);
-        final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
-        await tester.pumpWidget(MaterialApp(home: weekplanScreen));
-        await tester.pumpAndSettle();
-        expect(find.byKey(const Key('SingleWeekdayRow')), findsNothing);
-        expect(find.byType(WeekplanDayColumn), findsNWidgets(7));
-      });
-
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    final WeekplanScreen weekplanScreen = WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    );
+    await tester.pumpWidget(MaterialApp(home: weekplanScreen));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('SingleWeekdayRow')), findsNothing);
+    expect(find.byType(WeekplanDayColumn), findsNWidgets(7));
+  });
 
   testWidgets(
       'Week day colors should be in correct order regardless of order in DB',
@@ -759,7 +904,12 @@ void main() {
     ];
 
     authBloc.setMode(WeekplanMode.citizen);
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
     await tester.pumpAndSettle();
     await tester.pumpAndSettle();
     for (WeekdayColorModel dayColor in mockSettings.weekDayColors) {
@@ -769,7 +919,7 @@ void main() {
 
   testWidgets(
       'Pictogram text renders when settings are set to display '
-          'pictogram text', (WidgetTester tester) async {
+      'pictogram text', (WidgetTester tester) async {
     // Enable the setting that displays pictogram text
     mockSettings.pictogramText = true;
 
@@ -777,7 +927,12 @@ void main() {
     mockWeek.days[4].activities.add(mockActivities[0]);
 
     // Build the weekPlan screen
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
     await tester.pumpAndSettle();
 
     expect(find.byType(PictogramText), findsOneWidget);
@@ -792,17 +947,22 @@ void main() {
   testWidgets('Changing to Citizen works', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
 
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byWidgetPredicate((Widget widget) =>
-    widget is IconButton && widget.tooltip == 'Skift til borger tilstand'));
+        widget is IconButton && widget.tooltip == 'Skift til borger tilstand'));
     await tester.pumpAndSettle();
 
     expect(find.byType(GirafConfirmDialog), findsOneWidget);
 
     await tester.tap(find.byWidgetPredicate((Widget widget) =>
-    widget is GirafButton &&
+        widget is GirafButton &&
         widget.key == const Key('ConfirmDialogConfirmButton')));
     await tester.pumpAndSettle();
 
@@ -813,22 +973,27 @@ void main() {
   testWidgets('Changing to Guardian works', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
 
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
     await tester.pumpAndSettle();
 
     expect(
         find.byWidgetPredicate((Widget widget) =>
-        widget is IconButton &&
+            widget is IconButton &&
             widget.tooltip == 'Skift til værge tilstand'),
         findsOneWidget);
 
     await tester.tap(find.byWidgetPredicate((Widget widget) =>
-    widget is IconButton && widget.tooltip == 'Skift til værge tilstand'));
+        widget is IconButton && widget.tooltip == 'Skift til værge tilstand'));
     await tester.pumpAndSettle();
 
     expect(
         find.byWidgetPredicate((Widget widget) =>
-        widget is DialogButton &&
+            widget is DialogButton &&
             widget.key == const Key('SwitchToGuardianSubmit')),
         findsOneWidget);
 
@@ -840,12 +1005,16 @@ void main() {
   });
 
   testWidgets('Add Activity buttons work', (WidgetTester tester) async {
-    when(api.pictogram.getAll(page: 1,
-        pageSize: pageSize, query: '')).thenAnswer(
-            (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
+    when(api.pictogram.getAll(page: 1, pageSize: pageSize, query: ''))
+        .thenAnswer((_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[mockPictograms[0]]));
     mockSettings.nrOfDaysToDisplayLandscape = 7;
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
     await tester.pumpAndSettle();
 
     expect(find.byType(ElevatedButton), findsNWidgets(7));
@@ -855,171 +1024,203 @@ void main() {
 
     expect(find.byType(PictogramSearch), findsOneWidget);
     await tester.pump(const Duration(milliseconds: 11000));
-
   });
 
   testWidgets('Completed activities displayed correctly in Guardian Mode',
-          (WidgetTester tester) async {
-        mockActivities[0].state = ActivityState.Completed;
+      (WidgetTester tester) async {
+    mockActivities[0].state = ActivityState.Completed;
 
-        // Added the activity that is completed with checkmark
-        mockWeek.days[0].activities.add(mockActivities[0]);
+    // Added the activity that is completed with checkmark
+    mockWeek.days[0].activities.add(mockActivities[0]);
 
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        // Find checkmark icon by key
-        expect(find.byKey(const Key('IconComplete')), findsOneWidget);
-      });
+    // Find checkmark icon by key
+    expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+  });
 
   testWidgets('Cancelled activities displayed correctly in Guardian Mode',
-          (WidgetTester tester) async {
-        mockActivities[0].state = ActivityState.Canceled;
+      (WidgetTester tester) async {
+    mockActivities[0].state = ActivityState.Canceled;
 
-        // Added Cancelled activity with a cross
-        mockWeek.days[0].activities.add(mockActivities[0]);
+    // Added Cancelled activity with a cross
+    mockWeek.days[0].activities.add(mockActivities[0]);
 
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        // Find cross (cancelled) icon by key
-        expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
-      });
+    // Find cross (cancelled) icon by key
+    expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
+  });
 
   testWidgets('Timer icon displayed correctly in Guardian Mode',
-          (WidgetTester tester) async {
-        // Activity with a timer
-        mockWeek.days[0].activities.add(mockActivities[2]);
+      (WidgetTester tester) async {
+    // Activity with a timer
+    mockWeek.days[0].activities.add(mockActivities[2]);
 
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        // Find timer icon
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    // Find timer icon
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is Image &&
-                widget.image == const AssetImage('assets/timer/piechart_icon.png')),
-            findsOneWidget);
-      });
+            widget.image == const AssetImage('assets/timer/piechart_icon.png')),
+        findsOneWidget);
+  });
 
   testWidgets('Check mark completed activity mode works in Citizen Mode',
-          (WidgetTester tester) async {
-        authBloc.setMode(WeekplanMode.citizen);
-        mockSettings.completeMark = CompleteMark.Checkmark;
-        mockActivities[0].state = ActivityState.Completed;
-        // Added the activity that is completed with checkmark
-        mockWeek.days[0].activities.add(mockActivities[0]);
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockSettings.completeMark = CompleteMark.Checkmark;
+    mockActivities[0].state = ActivityState.Completed;
+    // Added the activity that is completed with checkmark
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        // Find checkmark icon by key
-        expect(find.byKey(const Key('IconComplete')), findsOneWidget);
-      });
+    // Find checkmark icon by key
+    expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+  });
 
   testWidgets('Greyed out completed activity mode works in Citizen Mode',
-          (WidgetTester tester) async {
-        authBloc.setMode(WeekplanMode.citizen);
-        mockSettings.completeMark = CompleteMark.MovedRight;
-        mockActivities[0].state = ActivityState.Completed;
-        // Added the activity that is completed with checkmark
-        mockWeek.days[0].activities.add(mockActivities[0]);
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockSettings.completeMark = CompleteMark.MovedRight;
+    mockActivities[0].state = ActivityState.Completed;
+    // Added the activity that is completed with checkmark
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        // Find greyed out box by key
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    // Find greyed out box by key
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is Container && widget.key == const Key('GreyOutBox')),
-            findsOneWidget);
-      });
+        findsOneWidget);
+  });
 
   testWidgets('Remove completed activity mode works in Citizen Mode',
-          (WidgetTester tester) async {
-        authBloc.setMode(WeekplanMode.citizen);
-        mockSettings.completeMark = CompleteMark.Removed;
-        mockActivities[0].state = ActivityState.Completed;
-        // Added the activity that is completed with checkmark
-        mockWeek.days[0].activities.add(mockActivities[0]);
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockSettings.completeMark = CompleteMark.Removed;
+    mockActivities[0].state = ActivityState.Completed;
+    // Added the activity that is completed with checkmark
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        // Check that the opacity of the activity card is set to zero.
-        expect(
-            find.byWidgetPredicate(
-                    (Widget widget) => widget is
-                    Opacity && widget.opacity == 0.0),
-            findsOneWidget);
-      });
+    // Check that the opacity of the activity card is set to zero.
+    expect(
+        find.byWidgetPredicate(
+            (Widget widget) => widget is Opacity && widget.opacity == 0.0),
+        findsOneWidget);
+  });
 
   testWidgets('Not completed activities are not hidden',
-          (WidgetTester tester) async {
-        authBloc.setMode(WeekplanMode.citizen);
-        mockSettings.completeMark = CompleteMark.Removed;
-        mockActivities[0].state = ActivityState.Normal;
-        // Added the activity that is completed with checkmark
-        mockWeek.days[0].activities.add(mockActivities[0]);
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockSettings.completeMark = CompleteMark.Removed;
+    mockActivities[0].state = ActivityState.Normal;
+    // Added the activity that is completed with checkmark
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        // Check that the opacity of the activity card is set to zero.
-        expect(
-            find.byWidgetPredicate(
-                    (Widget widget) => widget is
-                    Opacity && widget.opacity == 1.0),
-            findsOneWidget);
-      });
+    // Check that the opacity of the activity card is set to zero.
+    expect(
+        find.byWidgetPredicate(
+            (Widget widget) => widget is Opacity && widget.opacity == 1.0),
+        findsOneWidget);
+  });
 
   testWidgets('Check mark completed activity mode works in Citizen Mode',
-          (WidgetTester tester) async {
-        authBloc.setMode(WeekplanMode.citizen);
-        mockSettings.completeMark = CompleteMark.Checkmark;
-        mockActivities[0].state = ActivityState.Completed;
-        // Added the activity that is completed with checkmark
-        mockWeek.days[0].activities.add(mockActivities[0]);
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockSettings.completeMark = CompleteMark.Checkmark;
+    mockActivities[0].state = ActivityState.Completed;
+    // Added the activity that is completed with checkmark
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(
+        home: WeekplanScreen(
+      mockWeek,
+      user,
+      key: ValueKey<String>('value'),
+    )));
+    await tester.pumpAndSettle();
 
-        // Find checkmark icon by key
-        expect(find.byKey(const Key('IconComplete')), findsOneWidget);
-      });
+    // Find checkmark icon by key
+    expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+  });
 
-  testWidgets('Tests if the correct number of activities'
+  testWidgets(
+      'Tests if the correct number of activities'
       ' is displayed', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockSettings.showOnlyActivities = true;
     mockSettings.nrOfActivitiesToDisplay = 2;
-    final int weekDay = DateTime
-        .now()
-        .weekday
-        .toInt() - 1;
+    final int weekDay = DateTime.now().weekday.toInt() - 1;
     mockWeek.days[weekDay].activities.add(mockActivities[0]);
     mockWeek.days[weekDay].activities.add(mockActivities[1]);
     mockWeek.days[weekDay].activities.add(mockActivities[2]);
     mockWeek.days[weekDay].activities.add(mockActivities[3]);
 
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpWidget(MaterialApp(
+      home: WeekplanScreen(
+        mockWeek,
+        user,
+        key: ValueKey<String>('value'),
+      ),
+      key: ValueKey<String>('value'),
+    ));
     await tester.pumpAndSettle();
 
     expect(find.byType(ActivityCard), findsNWidgets(2));
   });
 
-  testWidgets('Tests if two activities still show up after completing and '
+  testWidgets(
+      'Tests if two activities still show up after completing and '
       'cancelling first and last activity', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockSettings.showOnlyActivities = true;
     mockSettings.nrOfActivitiesToDisplay = 2;
-    final int weekDay = DateTime
-        .now()
-        .weekday
-        .toInt() - 1;
+    final int weekDay = DateTime.now().weekday.toInt() - 1;
     mockActivities[0].state = ActivityState.Completed;
     mockActivities[2].state = ActivityState.Canceled;
     mockWeek.days[weekDay].activities.add(mockActivities[0]);
@@ -1033,15 +1234,13 @@ void main() {
     expect(find.byType(ActivityCard), findsNWidgets(2));
   });
 
-  testWidgets('Tests if two activities still show up after completing and '
+  testWidgets(
+      'Tests if two activities still show up after completing and '
       'cancelling first and last activity', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockSettings.showOnlyActivities = true;
     mockSettings.nrOfActivitiesToDisplay = 2;
-    final int weekDay = DateTime
-        .now()
-        .weekday
-        .toInt() - 1;
+    final int weekDay = DateTime.now().weekday.toInt() - 1;
     mockActivities[0].state = ActivityState.Completed;
     mockActivities[1].state = ActivityState.Completed;
     mockActivities[2].state = ActivityState.Canceled;
@@ -1056,15 +1255,13 @@ void main() {
     expect(find.byType(ActivityCard), findsOneWidget);
   });
 
-  testWidgets('Tests if two activities still show up after completing and '
+  testWidgets(
+      'Tests if two activities still show up after completing and '
       'cancelling first and last activity', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockSettings.showOnlyActivities = true;
     mockSettings.nrOfActivitiesToDisplay = 2;
-    final int weekDay = DateTime
-        .now()
-        .weekday
-        .toInt() - 1;
+    final int weekDay = DateTime.now().weekday.toInt() - 1;
     mockActivities[0].state = ActivityState.Completed;
     mockActivities[1].state = ActivityState.Completed;
     mockActivities[2].state = ActivityState.Canceled;
@@ -1094,163 +1291,159 @@ void main() {
   });
 
   testWidgets('Cancelled activities displayed correctly in Citizen Mode',
-          (WidgetTester tester) async {
-        authBloc.setMode(WeekplanMode.citizen);
-        mockActivities[0].state = ActivityState.Canceled;
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockActivities[0].state = ActivityState.Canceled;
 
+    // Added Cancelled activity with a cross
+    mockWeek.days[0].activities.add(mockActivities[0]);
 
-        // Added Cancelled activity with a cross
-        mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
 
-        await tester.pumpWidget(MaterialApp(
-            home: WeekplanScreen(mockWeek, user)));
-        await tester.pumpAndSettle();
+    // Find cross (cancelled) icon by key
+    expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
+  });
 
-        // Find cross (cancelled) icon by key
-        expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
-      });
-
-  testWidgets('When showing 7 days in landscape mode for citizen, '
+  testWidgets(
+      'When showing 7 days in landscape mode for citizen, '
       'the 7 weekdays with their corresponding colors are present',
       (WidgetTester tester) async {
     mockSettings.nrOfDaysToDisplayLandscape = 7;
 
-        authBloc.setMode(WeekplanMode.citizen);
-        final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
-        await tester.pumpWidget(MaterialApp(home: weekplanScreen));
-        await tester.pumpAndSettle();
+    authBloc.setMode(WeekplanMode.citizen);
+    final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
+    await tester.pumpWidget(MaterialApp(home: weekplanScreen));
+    await tester.pumpAndSettle();
 
-        final List<WeekdayColorModel> expectedColors =
-            mockSettings.weekDayColors;
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    final List<WeekdayColorModel> expectedColors = mockSettings.weekDayColors;
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is WeekplanDayColumn &&
             widget.color == getColorFromWeekdayColorModel(expectedColors[0])),
         findsOneWidget);
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is WeekplanDayColumn &&
             widget.color == getColorFromWeekdayColorModel(expectedColors[1])),
         findsOneWidget);
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is WeekplanDayColumn &&
             widget.color == getColorFromWeekdayColorModel(expectedColors[2])),
         findsOneWidget);
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is WeekplanDayColumn &&
             widget.color == getColorFromWeekdayColorModel(expectedColors[3])),
         findsOneWidget);
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is WeekplanDayColumn &&
             widget.color == getColorFromWeekdayColorModel(expectedColors[4])),
         findsOneWidget);
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is WeekplanDayColumn &&
             widget.color == getColorFromWeekdayColorModel(expectedColors[5])),
         findsOneWidget);
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is WeekplanDayColumn &&
             widget.color == getColorFromWeekdayColorModel(expectedColors[6])),
         findsOneWidget);
   });
 
-  testWidgets('Aciticy card starts time when activated'
-      ' and shows it for citizen',
-    (WidgetTester tester) async {
-      await tester.runAsync(() async {
-        final Completer<bool> checkCompleted = Completer<bool>();
+  testWidgets(
+      'Aciticy card starts time when activated'
+      ' and shows it for citizen', (WidgetTester tester) async {
+    await tester.runAsync(() async {
+      final Completer<bool> checkCompleted = Completer<bool>();
 
-        mockActivities[2].state = ActivityState.Normal;
-        mockActivities[2].timer.paused = true;
-        mockActivities[2].timer.fullLength = 100;
-        mockWeek.days[0].activities.add(mockActivities[2]);
-        authBloc.setMode(WeekplanMode.citizen);
-        final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
-        await tester.pumpWidget(MaterialApp(home: weekplanScreen));
+      mockActivities[2].state = ActivityState.Normal;
+      mockActivities[2].timer.paused = true;
+      mockActivities[2].timer.fullLength = 100;
+      mockWeek.days[0].activities.add(mockActivities[2]);
+      authBloc.setMode(WeekplanMode.citizen);
+      final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
+      await tester.pumpWidget(MaterialApp(home: weekplanScreen));
 
-        await tester.pumpAndSettle();
-        await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString() +
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString() +
           mockActivities[2].id.toString())));
-        await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-        expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
-          // ignore: always_specify_types
-          Future.delayed(const Duration(seconds: 2), () async {
-          checkCompleted.complete();
-          await checkCompleted.future;
-          expect(find.byKey(const Key('IconComplete')), findsOneWidget);
-        });
+      expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
+      // ignore: always_specify_types
+      Future.delayed(const Duration(seconds: 2), () async {
+        checkCompleted.complete(true);
+        await checkCompleted.future;
+        expect(find.byKey(const Key('IconComplete')), findsOneWidget);
       });
+    });
   });
 
   testWidgets('Aciticy card has completed icon when activity is completed',
-    (WidgetTester tester) async {
-      await tester.runAsync(() async {
-        mockActivities[0].state = ActivityState.Normal;
-        mockWeek.days[0].activities.add(mockActivities[0]);
-        authBloc.setMode(WeekplanMode.citizen);
-        final WeekplanScreen weekplanScreen = WeekplanScreen(
-          mockWeek, user);
-        await tester.pumpWidget(MaterialApp(home: weekplanScreen));
+      (WidgetTester tester) async {
+    await tester.runAsync(() async {
+      mockActivities[0].state = ActivityState.Normal;
+      mockWeek.days[0].activities.add(mockActivities[0]);
+      authBloc.setMode(WeekplanMode.citizen);
+      final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
+      await tester.pumpWidget(MaterialApp(home: weekplanScreen));
 
-        await tester.pumpAndSettle();
-        await tester.tap(
-          find.byKey(Key(mockWeek.days[0].day.index.toString() +
-              mockActivities[0].id.toString())));
-        await tester.pumpAndSettle();
-        expect(find.byKey(const Key('IconComplete')), findsOneWidget);
-        });
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString() +
+          mockActivities[0].id.toString())));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+    });
   });
 
-  testWidgets('click actitivty card for citizen does nothing '
+  testWidgets(
+      'click actitivty card for citizen does nothing '
       'if the activity is completed or the timer is running',
-    (WidgetTester tester) async {
-      await tester.runAsync(() async {
-        final Completer<bool> checkCompleted = Completer<bool>();
+      (WidgetTester tester) async {
+    await tester.runAsync(() async {
+      final Completer<bool> checkCompleted = Completer<bool>();
 
-        mockActivities[2].state = ActivityState.Normal;
-        mockActivities[2].timer.paused = true;
-        mockActivities[2].timer.fullLength = 100;
-        mockWeek.days[0].activities.add(mockActivities[2]);
-        authBloc.setMode(WeekplanMode.citizen);
-        final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
-        await tester.pumpWidget(MaterialApp(home: weekplanScreen));
+      mockActivities[2].state = ActivityState.Normal;
+      mockActivities[2].timer.paused = true;
+      mockActivities[2].timer.fullLength = 100;
+      mockWeek.days[0].activities.add(mockActivities[2]);
+      authBloc.setMode(WeekplanMode.citizen);
+      final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
+      await tester.pumpWidget(MaterialApp(home: weekplanScreen));
 
-        await tester.pumpAndSettle();
-        await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString()
-            + mockActivities[2].id.toString())));
-        await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString() +
+          mockActivities[2].id.toString())));
+      await tester.pumpAndSettle();
 
-        expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
-        await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString()
-              + mockActivities[2].id.toString())));
+      expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
+      await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString() +
+          mockActivities[2].id.toString())));
 
-        expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
-        // ignore: always_specify_types
-        Future.delayed(const Duration(seconds: 2), () async {
-          checkCompleted.complete();
-          await checkCompleted.future;
+      expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
+      // ignore: always_specify_types
+      Future.delayed(const Duration(seconds: 2), () async {
+        checkCompleted.complete(true);
+        await checkCompleted.future;
 
-          expect(find.byKey(const Key('IconComplete')), findsOneWidget);
-          await tester.tap(find.byKey(Key(
-              mockWeek.days[0].day.index.toString()
-              + mockActivities[2].id.toString())));
+        expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+        await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString() +
+            mockActivities[2].id.toString())));
 
-          expect(find.byKey(const Key('IconComplete')), findsOneWidget);
-        });
+        expect(find.byKey(const Key('IconComplete')), findsOneWidget);
       });
     });
+  });
 }
 
 Color getColorFromWeekdayColorModel(WeekdayColorModel weekdayColorModel) {
@@ -1279,9 +1472,9 @@ void expectColorDayMatch(Weekday day, String color) {
   }
 
   final Finder findColor = find.byWidgetPredicate((Widget widget) =>
-  widget is Card && widget.color == Color(int.parse(color)));
+      widget is Card && widget.color == Color(int.parse(color)));
   final Finder findTitle = find.byWidgetPredicate(
-          (Widget widget) => widget is Card && widget.key == Key(dayString));
+      (Widget widget) => widget is Card && widget.key == Key(dayString));
 
   expect(find.descendant(of: findColor, matching: findTitle), findsOneWidget);
-}
+}}

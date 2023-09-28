@@ -1,4 +1,4 @@
-# Specify analysis options.
+<# Specify analysis options.
 #
 # Until there are meta linter rules, each desired lint must be explicitly enabled.
 # See: https://github.com/dart-lang/linter/issues/288
@@ -102,7 +102,7 @@ linter:
     - library_names
     - library_prefixes
     - lines_longer_than_80_chars # not yet tested
-    - list_remove_unrelated_type
+    - collection_methods_unrelated_type
     # - literal_only_boolean_expressions # too many false positives: https://github.com/dart-lang/sdk/issues/34181
     - no_adjacent_strings_in_list
     - no_duplicate_case_values

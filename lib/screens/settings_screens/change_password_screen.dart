@@ -5,13 +5,15 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import '../../style/custom_color.dart' as theme;
 
 /// Screen for changing password
-class ChangePasswordScreen extends StatelessWidget {//ignore: must_be_immutable
+class ChangePasswordScreen extends StatelessWidget {
+  //ignore: must_be_immutable
   /// Constructor
   ChangePasswordScreen(DisplayNameModel user) : _user = user;
 
@@ -31,18 +33,14 @@ class ChangePasswordScreen extends StatelessWidget {//ignore: must_be_immutable
 
   final DisplayNameModel _user;
 
-  /// authbloc
-  final AuthBloc authBloc = di.get<AuthBloc>();
-  final Api _api = di.get<Api>();
-  
-  /// used for popping the dialog
-  BuildContext currentContext;
-  bool loginStatus = false; //ignore: public_member_api_docs
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GirafAppBar(title: 'Skift password'),
+        appBar: GirafAppBar(
+          key: const ValueKey<String>('widgetKey'),
+          title: 'Skift password',
+          appBarIcons: const <AppBarIcon, VoidCallback>{},
+        ),
         body: buildPasswordChange(context));
   }
 

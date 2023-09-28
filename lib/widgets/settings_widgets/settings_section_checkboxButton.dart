@@ -46,7 +46,7 @@ class SettingsCheckMarkButton extends SettingsSectionItem {
 
     ListTile checkBoxButton;
 
-    if (timer == null) {
+    if (timer == 0) {
       checkBoxButton = ListTile(
         title: Text(text),
         trailing: trailing,

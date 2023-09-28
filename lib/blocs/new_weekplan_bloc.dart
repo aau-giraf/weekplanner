@@ -36,22 +36,22 @@ class NewWeekplanBloc extends BlocBase {
   /// This field controls the title input field
   @protected
   final rx_dart.BehaviorSubject<String> titleController =
-  rx_dart.BehaviorSubject<String>();
+      rx_dart.BehaviorSubject<String>();
 
   /// This field controls the year no input field
   @protected
   final rx_dart.BehaviorSubject<String> yearController =
-  rx_dart.BehaviorSubject<String>();
+      rx_dart.BehaviorSubject<String>();
 
   /// This field controls the week no input field
   @protected
   final rx_dart.BehaviorSubject<String> weekNoController =
-  rx_dart.BehaviorSubject<String>();
+      rx_dart.BehaviorSubject<String>();
 
   /// This field controls the pictogram input field
   @protected
   final rx_dart.BehaviorSubject<PictogramModel> thumbnailController =
-  rx_dart.BehaviorSubject<PictogramModel>();
+      rx_dart.BehaviorSubject<PictogramModel>();
 
   /// Handles when the entered title is changed.
   Sink<String> get onTitleChanged => titleController.sink;
@@ -114,8 +114,8 @@ class NewWeekplanBloc extends BlocBase {
 
   /// Saves the entered information to the database.
   Future<WeekModel> saveWeekplan({
-    @required BuildContext screenContext,
-    @required Stream<List<WeekNameModel>> existingWeekPlans,
+    required BuildContext screenContext,
+    required Stream<List<WeekNameModel>> existingWeekPlans,
   }) async {
     if (weekUser == null) {
       return Future<WeekModel>.value(null);
@@ -171,9 +171,9 @@ class NewWeekplanBloc extends BlocBase {
   /// Returns a [Future] that resolves to true if there is a matching week plan
   /// with the same year and week number.
   Future<bool> hasExisitingMatchingWeekplan({
-    @required Stream<List<WeekNameModel>> existingWeekPlans,
-    @required int year,
-    @required int weekNumber,
+    required Stream<List<WeekNameModel>> existingWeekPlans,
+    required int year,
+    required int weekNumber,
   }) {
     final Completer<bool> matchCompleter = Completer<bool>();
 

@@ -5,7 +5,8 @@ import '../../style/custom_color.dart' as theme;
 /// SettingSection ArrowButton class
 class SettingsArrowButton extends SettingsSectionItem {
   /// Constructor
-  const SettingsArrowButton(this.text, this._callback, {this.titleTrailing});
+  const SettingsArrowButton(this.text, this._callback,
+      {required this.titleTrailing});
 
   /// Text on button
   final String text;
@@ -31,17 +32,9 @@ class SettingsArrowButton extends SettingsSectionItem {
 
   /// Builds the text with or without the optional trailing widget
   Widget buildTitle() {
-    if (titleTrailing == null) {
-      return Text(text);
-    } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Flexible(
-          child: Text(text)),
-          titleTrailing
-        ],
-      );
-    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[Flexible(child: Text(text)), titleTrailing],
+    );
   }
 }

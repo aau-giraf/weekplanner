@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/role_enum.dart';
+import 'package:api_client/models/giraf_user_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -47,9 +48,10 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
         child: Dialog(
           child: Scaffold(
             appBar: GirafAppBar(
+              key: ValueKey<String>('girafDialogKey'),
               title: 'Vælg borger',
               appBarIcons: <AppBarIcon, VoidCallback>{
-                AppBarIcon.logout: null,
+                AppBarIcon.logout: () {},
                 AppBarIcon.settings: () =>
                     Routes().push(context, UserSettingsScreen())
               },
@@ -90,7 +92,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
   Future<void> _pushWeekplanSelector(DisplayNameModel user) async {
     bool repush = true;
     while (repush) {
-      final bool result =
+      final bool? result =
           await Routes().push<bool>(context, WeekplanSelectorScreen(user));
       repush = result ?? false;
     }
@@ -100,70 +102,67 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
   /// Builds the list of citizens together with the "add citizen" button
   List<Widget> _buildCitizenSelectionList(
       BuildContext context, AsyncSnapshot<List<DisplayNameModel>> snapshot) {
-    final List<Widget> list = snapshot.data
+    final List<Widget> list = (snapshot.data ?? [])
         .map<Widget>((DisplayNameModel user) => CitizenAvatar(
-              displaynameModel: user,
-     onPressed: () async {
-             await Routes().push(context,
-                 WeekplanSelectorScreen(user));
-             _bloc.updateBloc();
-           })).toList();
+            displaynameModel: user,
+            onPressed: () async {
+              await Routes().push(context, WeekplanSelectorScreen(user));
+              _bloc.updateBloc();
+            }))
+        .toList();
 
     /// Defines variables needed to check user role
     final Role role = _authBloc.loggedInUser.role;
 
-    if (role != null) {
-      /// Checks user role and gives option to add Citizen if user is Guardian
-      if (role == Role.Guardian) {
-        list.insert(0, TextButton(
-          onPressed: () async {
-            final Object result =
-            await Routes().push(context, NewCitizenScreen());
-            final DisplayNameModel newUser =
-            DisplayNameModel.fromGirafUser(result);
-            list.add(CitizenAvatar(
-                displaynameModel: newUser,
-                onPressed: () => _pushWeekplanSelector(newUser)
-            )
-            );
-            ///Update the screen with the new citizen
-            _bloc.updateBloc();
-            setState(() {});
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 30),
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: LayoutBuilder(builder:
-                      (BuildContext context, BoxConstraints constraints) {
-                    return Icon(
-                      Icons.person_add,
-                      size: constraints.biggest.height,
-                      color: Colors.black,
-                    );
-                  }),
-                ),
-                ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      minWidth: 200.0,
-                      maxWidth: 200.0,
-                      minHeight: 15.0,
-                      maxHeight: 50.0,
-                    ),
-                    child: const Center(
-                      child: AutoSizeText(
-                          'Tilføj Bruger',
-                          style: TextStyle(fontSize: GirafFont.large,
-                              color: Colors.black)
+    /// Checks user role and gives option to add Citizen if user is Guardian
+    if (role == Role.Guardian) {
+      list.insert(
+          0,
+          TextButton(
+            onPressed: () async {
+              final Object? result =
+                  await Routes().push(context, NewCitizenScreen());
+              final DisplayNameModel newUser =
+                  DisplayNameModel.fromGirafUser(result as GirafUserModel);
+              list.add(CitizenAvatar(
+                  displaynameModel: newUser,
+                  onPressed: () => _pushWeekplanSelector(newUser)));
+
+              ///Update the screen with the new citizen
+              _bloc.updateBloc();
+              setState(() {});
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 30),
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: LayoutBuilder(builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      return Icon(
+                        Icons.person_add,
+                        size: constraints.biggest.height,
+                        color: Colors.black,
+                      );
+                    }),
+                  ),
+                  ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        minWidth: 200.0,
+                        maxWidth: 200.0,
+                        minHeight: 15.0,
+                        maxHeight: 50.0,
                       ),
-                    )
-                )
-              ],
+                      child: const Center(
+                        child: AutoSizeText('Tilføj Bruger',
+                            style: TextStyle(
+                                fontSize: GirafFont.large,
+                                color: Colors.black)),
+                      ))
+                ],
+              ),
             ),
-          ),
-        ));
-      }
+          ));
     }
     return list;
   }

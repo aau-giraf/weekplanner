@@ -26,9 +26,9 @@ class EditWeekplanBloc extends NewWeekplanBloc {
   /// This method allows one to save the new information stored in the week
   /// model object and also deletes the old object if necessary
   Future<WeekModel> editWeekPlan(
-      {BuildContext screenContext,
-      WeekModel oldWeekModel,
-      WeekplansBloc selectorBloc}) async {
+      {required BuildContext screenContext,
+      required WeekModel oldWeekModel,
+      required WeekplansBloc selectorBloc}) async {
     final WeekModel newWeekModel = WeekModel();
 
     // We copy the activities from the old week model.

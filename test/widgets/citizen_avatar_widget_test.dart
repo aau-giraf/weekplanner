@@ -4,20 +4,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 
 class MockScreen extends StatelessWidget {
-  MockScreen({@required this.callback});
+  MockScreen({required this.callback});
 
   final VoidCallback callback;
   final DisplayNameModel usernameModel =
-  DisplayNameModel(displayName: 'Testname', role: 'Guardian', id: '2');
+      DisplayNameModel(displayName: 'Testname', role: 'Guardian', id: '2');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: CitizenAvatar(
-          displaynameModel: usernameModel,
-          onPressed: callback
-        ),
+        child:
+            CitizenAvatar(displaynameModel: usernameModel, onPressed: callback),
       ),
     );
   }

@@ -20,15 +20,17 @@ void showLoadingSpinner(BuildContext context, bool dismissible,
       barrierDismissible: dismissible,
       context: context,
       builder: (BuildContext context) {
-        return const LoadingSpinnerWidget();
+        return const LoadingSpinnerWidget(
+          key: ValueKey<String>('showDialogKey'),
+        );
       });
 }
 
 /// The Giraf standardized loading spinner used throughout the application
 class LoadingSpinnerWidget extends StatelessWidget {
-	/// Default constructor
+  /// Default constructor
   const LoadingSpinnerWidget({
-    Key key,
+    required Key key,
   }) : super(key: key);
 
   @override
@@ -37,8 +39,8 @@ class LoadingSpinnerWidget extends StatelessWidget {
       child: Transform.scale(
           scale: 2,
           child: const CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(
-                theme.GirafColors.loadingColor),
+            valueColor:
+                AlwaysStoppedAnimation<Color>(theme.GirafColors.loadingColor),
           )),
     );
   }

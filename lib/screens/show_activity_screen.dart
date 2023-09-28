@@ -38,7 +38,7 @@ class ShowActivityScreen extends StatelessWidget {
   /// Constructor
   ShowActivityScreen(this._activity, this._girafUser, this._weekplanBloc,
       this._timerBloc, this._weekday,
-      {Key key})
+      {required Key key})
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictograms.first);
     _activityBloc.load(_activity, _girafUser);
@@ -53,7 +53,6 @@ class ShowActivityScreen extends StatelessWidget {
 
   final DisplayNameModel _girafUser;
   final ActivityModel _activity;
-
 
   final PictogramImageBloc _pictoImageBloc = di.get<PictogramImageBloc>();
   final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
@@ -79,8 +78,7 @@ class ShowActivityScreen extends StatelessWidget {
     ///Used to check if the keyboard is visible
     return StreamBuilder<WeekplanMode>(
         stream: _authBloc.mode,
-        builder: (BuildContext context,
-            AsyncSnapshot<WeekplanMode> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<WeekplanMode> snapshot) {
           return buildScreenFromOrientation(
               orientation, context, snapshot.data);
         });
@@ -123,43 +121,38 @@ class ShowActivityScreen extends StatelessWidget {
   /// Builds the activity.
   List<Widget> buildScreen(BuildContext context, WeekplanMode mode) {
     final List<Widget> list = <Widget>[];
-    list.add(Expanded(
-      flex: 2,
-      child:
-        Center(
-          child:
-            AspectRatio(
-              aspectRatio: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: buildActivity(context),
-              ),
+    list.add(
+      Expanded(
+        flex: 2,
+        child: Center(
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: buildActivity(context),
             ),
           ),
         ),
-      );
+      ),
+    );
 
     // All the buttons excluding the activity itself
     final List<Widget> buttons = <Widget>[];
     buttons.add(Container(
-      margin: const EdgeInsets.all(10),
-      width: 150,
-      height: 150,
-      child:
-      CitizenAvatar(
-        displaynameModel: _girafUser,
-      )
-    ));
+        margin: const EdgeInsets.all(10),
+        width: 150,
+        height: 150,
+        child: CitizenAvatar(
+          displaynameModel: _girafUser,
+        )));
     buttons.add(
       StreamBuilder<ActivityModel>(
           stream: _activityBloc.activityModelStream,
           builder: (BuildContext context,
               AsyncSnapshot<ActivityModel> activitySnapshot) {
             return (activitySnapshot.hasData &&
-
-                  (activitySnapshot.data.state == ActivityState.Canceled ||
-                   activitySnapshot.data.state == ActivityState.Completed))
-
+                    (activitySnapshot.data.state == ActivityState.Canceled ||
+                        activitySnapshot.data.state == ActivityState.Completed))
                 ? _resetTimerAndBuildEmptyContainer()
                 : _buildTimer(context);
           }),
@@ -581,8 +574,8 @@ class ShowActivityScreen extends StatelessWidget {
               // depending on whether the timer is running.
               child: GirafButton(
                 key: (timerRunningSnapshot.hasData
-                    ? timerRunningSnapshot.data == TimerRunningMode.running
-                    : false)
+                        ? timerRunningSnapshot.data == TimerRunningMode.running
+                        : false)
                     ? const Key('TimerPauseButtonKey')
                     : const Key('TimerPlayButtonKey'),
                 onPressed: () {
@@ -592,21 +585,25 @@ class ShowActivityScreen extends StatelessWidget {
                   switch (timerRunningSnapshot.data) {
                     case TimerRunningMode.initialized:
                     case TimerRunningMode.stopped:
-                    case TimerRunningMode.paused: {
-                      _timerBloc.playTimer();
-                      break;
-                    }
-                    case TimerRunningMode.running: {
+                    case TimerRunningMode.paused:
+                      {
+                        _timerBloc.playTimer();
+                        break;
+                      }
+                    case TimerRunningMode.running:
+                      {
                         _timerBloc.pauseTimer();
                         break;
-                    }
-                    case TimerRunningMode.not_initialized: {
+                      }
+                    case TimerRunningMode.not_initialized:
+                      {
                         break;
-                    }
-                    case TimerRunningMode.completed: {
+                      }
+                    case TimerRunningMode.completed:
+                      {
                         _timerBloc.stopTimer();
                         break;
-                    }
+                      }
                   }
                 },
                 icon: (timerRunningSnapshot.hasData
@@ -705,7 +702,7 @@ class ShowActivityScreen extends StatelessWidget {
           return GirafActivityTimerPickerDialog(_activity, _timerBloc);
         });
   }
-  
+
   /// Builds the button that changes the state of the activity. The content
   /// of the button depends on whether it is in guardian or citizen mode.
   ButtonBar buildButtonBar() {
@@ -730,8 +727,6 @@ class ShowActivityScreen extends StatelessWidget {
                         key: const Key('CompleteStateToggleButton'),
                         onPressed: () {
                           _activityBloc.completeActivity();
-
-
                         },
                         isEnabled: activitySnapshot.data.state !=
                             ActivityState.Canceled,
@@ -753,10 +748,9 @@ class ShowActivityScreen extends StatelessWidget {
                         key: const Key('CancelStateToggleButton'),
                         onPressed: () {
                           _activityBloc.cancelActivity();
-         _activity.state = _activityBloc.getActivity().state;
+                          _activity.state = _activityBloc.getActivity().state;
                           //This removes current context
                           // so back button correctly navigates
-
                         },
                         isEnabled: activitySnapshot.data.state !=
                             ActivityState.Completed,
@@ -872,25 +866,20 @@ class ShowActivityScreen extends StatelessWidget {
       },
     );
   }
-  
+
   /// Builds the icon that displays the activity's state
   Stack _buildActivityStateIcon(
       BuildContext context, ActivityState state, TimerRunningMode timemode) {
-
-
     if (state == ActivityState.Completed ||
         TimerRunningMode.completed == timemode) {
       return Stack(children: <Widget>[
         Container(
           child: Icon(
-        Icons.check,
-        key: const Key('IconComplete'),
-        color: theme.GirafColors.green,
-        size: MediaQuery
-            .of(context)
-            .size
-            .width,
-      ),
+            Icons.check,
+            key: const Key('IconComplete'),
+            color: theme.GirafColors.green,
+            size: MediaQuery.of(context).size.width,
+          ),
         ),
         Container(
           child: ImageIcon(

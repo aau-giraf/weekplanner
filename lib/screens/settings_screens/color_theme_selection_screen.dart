@@ -13,7 +13,7 @@ import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart'
 /// This class is used to select the color theme for a citizen's weekplans
 class ColorThemeSelectorScreen extends StatelessWidget {
   /// Constructor
-  ColorThemeSelectorScreen({@required DisplayNameModel user}) : _user = user {
+  ColorThemeSelectorScreen({required DisplayNameModel user}) : _user = user {
     _settingsBloc.loadSettings(_user);
   }
 
@@ -54,7 +54,7 @@ class ColorThemeSelectorScreen extends StatelessWidget {
         WeekplanColorTheme().standardColorSetting(),
         _settingsModel.weekDayColors,
         'Standard', () {
-          Routes().pop(context, WeekplanColorTheme().standardColorSetting());
+      Routes().pop(context, WeekplanColorTheme().standardColorSetting());
     }));
 
     settingsList.add(SettingsColorThemeCheckMarkButton(

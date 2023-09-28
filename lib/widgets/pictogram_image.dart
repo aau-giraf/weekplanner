@@ -17,11 +17,11 @@ class PictogramImage extends StatelessWidget {
   ///
   /// The [onPressed] function will be called every time the image is pressed
   PictogramImage(
-      {Key key,
-      @required this.pictogram,
-      @required this.onPressed,
+      {required Key key,
+      required this.pictogram,
+      required this.onPressed,
       this.haveRights = false,
-        this.needsTitle = false})
+      this.needsTitle = false})
       : super(key: key) {
     _bloc.load(pictogram);
   }
@@ -46,7 +46,7 @@ class PictogramImage extends StatelessWidget {
       child: Container(
           width: 200, height: 200, child: const CircularProgressIndicator()));
 
-  Future<Center> _confirmDeleteDialog(BuildContext context) {
+  Future<Center?> _confirmDeleteDialog(BuildContext context) {
     return showDialog<Center>(
         context: context,
         barrierDismissible: false,
@@ -66,7 +66,7 @@ class PictogramImage extends StatelessWidget {
         });
   }
 
-  Future<Center> _notifyErrorOnDeleteDialog(BuildContext context) {
+  Future<Center?> _notifyErrorOnDeleteDialog(BuildContext context) {
     return showDialog<Center>(
         context: context,
         barrierDismissible: false,
@@ -75,10 +75,10 @@ class PictogramImage extends StatelessWidget {
             title: 'Det valgte piktogram kunne ikke slettes',
             description: 'Piktogrammet kunne ikke slettes, prøv igen. '
                 'Hvis fejlen gentager sig, kontakt en administrator.',
+            key: ValueKey<String>('errorOnDeleteKey'),
           );
         });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -94,28 +94,28 @@ class PictogramImage extends StatelessWidget {
                           //If needsTitle=true display picture and title,
                           // else only show picture
                           needsTitle
-                              ? Column(
-                              children: <Widget>[
-                                Stack(children:  <Widget>[
-                                  Container(
-                                    //200x200 is the size of the pictograms,
-                                    //this is added so the text does not scale
-                                    width:200,
-                                    height: 200,
-                                  ),
-                                  StreamBuilder<Image>(
-                                      stream: _bloc.image,
-                                      builder: (BuildContext context,
+                              ? Column(children: <Widget>[
+                                  Stack(children: <Widget>[
+                                    Container(
+                                      //200x200 is the size of the pictograms,
+                                      //this is added so the text does not scale
+                                      width: 200,
+                                      height: 200,
+                                    ),
+                                    StreamBuilder<Image>(
+                                        stream: _bloc.image,
+                                        builder: (BuildContext context,
+                                                AsyncSnapshot<Image>
+                                                    snapshot) =>
+                                            snapshot.data ?? _loading)
+                                  ]),
+                                  Text(pictogram.title),
+                                ])
+                              : StreamBuilder<Image>(
+                                  stream: _bloc.image,
+                                  builder: (BuildContext context,
                                           AsyncSnapshot<Image> snapshot) =>
-                                      snapshot.data ?? _loading)]),
-                        Text(pictogram.title),
-                          ]
-                          ):
-                          StreamBuilder<Image>(
-                              stream: _bloc.image,
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<Image> snapshot) =>
-                              snapshot.data ?? _loading),
+                                      snapshot.data ?? _loading),
                           //delete button
                           haveRights
                               ? Positioned(
@@ -128,6 +128,7 @@ class PictogramImage extends StatelessWidget {
                                     icon: const ImageIcon(
                                         AssetImage('assets/icons/gallery.png')),
                                     text: 'Slet',
+                                    key: const ValueKey<String>('deleteBtnKey'),
                                   ),
                                 )
                               : Container(),

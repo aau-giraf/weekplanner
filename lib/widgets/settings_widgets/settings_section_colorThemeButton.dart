@@ -40,9 +40,7 @@ class SettingsColorThemeCheckMarkButton extends SettingsSectionItem {
 
   /// Checks if the button has been chosen
   bool hasCheckMark() {
-    if (_expected != null &&
-        _current != null &&
-        _expected.length == _current.length) {
+    if (_expected.length == _current.length) {
       for (int i = 0; i < _expected.length; i++) {
         if (_expected[i].hexColor != _current[i].hexColor ||
             _expected[i].day != _current[i].day) {

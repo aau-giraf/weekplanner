@@ -6,7 +6,6 @@ import 'package:weekplanner/widgets/pictogram_password_widgets/pictogram_input_f
 
 import '../giraf_notify_dialog.dart';
 
-
 /// The pictograms to choose between for the code.
 /// If these are changed all previously made passwords will become unusable
 const List<int> CHOSENPICTOGRAMS = <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -20,9 +19,8 @@ class PictogramPassword extends StatelessWidget {
   ///Widget with the possible pictograms in the code and the currently picked
   /// pictograms in the code.
 
-  const PictogramPassword({Key key,
-    @required this.onPasswordChanged,
-    @required this.api})
+  const PictogramPassword(
+      {Key key, required this.onPasswordChanged, required this.api})
       : super(key: key);
 
   /// This function returns the new password every time the password has been
@@ -36,7 +34,7 @@ class PictogramPassword extends StatelessWidget {
   /// as a stream
   Stream<List<PictogramModel>> getStream(BuildContext context) async* {
     final List<PictogramModel> list =
-    List<PictogramModel>.filled(CHOSENPICTOGRAMS.length, null);
+        List<PictogramModel>.filled(CHOSENPICTOGRAMS.length, null);
     yield list;
     try {
       for (int i = 0; i < list.length; i++) {
@@ -50,13 +48,14 @@ class PictogramPassword extends StatelessWidget {
       showErrorMessage(e, context);
     }
   }
+
   /// Shows error message in case of any pictogram being unobtainable
   void showErrorMessage(Object error, BuildContext context) {
     showDialog<Center>(
 
-      /// exception handler to handle web_api exceptions
+        /// exception handler to handle web_api exceptions
         barrierDismissible: false,
-        context:  context,
+        context: context,
         builder: (BuildContext context) {
           return const GirafNotifyDialog(
               title: 'Fejl',
@@ -70,8 +69,7 @@ class PictogramPassword extends StatelessWidget {
     final Stream<List<PictogramModel>> _pictogramChoices = getStream(context);
     final GlobalKey<PictogramInputFieldState> inputFieldKey = GlobalKey();
     final PictogramInputField password = PictogramInputField(
-        key: inputFieldKey,
-        onPasswordChanged: onPasswordChanged);
+        key: inputFieldKey, onPasswordChanged: onPasswordChanged);
     return Column(children: <Widget>[
       // Grid view with available pictograms
       Row(
@@ -100,13 +98,11 @@ class PictogramPassword extends StatelessWidget {
                                 child: const Center(
                                     child: CircularProgressIndicator()),
                               );
-                            }
-                            else {
+                            } else {
                               return PictogramImage(
                                   pictogram: pictogram,
-                                  onPressed: () =>
-                                      inputFieldKey.
-                                      currentState.addToPass(pictogram));
+                                  onPressed: () => inputFieldKey.currentState
+                                      .addToPass(pictogram));
                             }
                           }).toList());
                     } else {

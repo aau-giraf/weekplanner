@@ -26,12 +26,12 @@ import 'activity_card.dart';
 class WeekplanActivitiesColumn extends StatelessWidget {
   /// Constructor
   WeekplanActivitiesColumn({
-    @required this.dayOfTheWeek,
-    @required this.color,
-    @required this.user,
-    @required this.weekplanBloc,
-    @required this.streamIndex,
-    @required this.activitiesToDisplay,
+    required this.dayOfTheWeek,
+    required this.color,
+    required this.user,
+    required this.weekplanBloc,
+    required this.streamIndex,
+    required this.activitiesToDisplay,
   }) {
     _settingsBloc.loadSettings(user);
   }
@@ -232,8 +232,6 @@ class WeekplanActivitiesColumn extends StatelessWidget {
     );
   }
 
-
-
   // Returning a widget that stacks a pictogram and an status icon
   FittedBox _pictogramIconStack(
       BuildContext context, int index, WeekdayModel weekday, bool inEditMode) {
@@ -334,9 +332,11 @@ class WeekplanActivitiesColumn extends StatelessWidget {
                 activities[index], _activityBloc, user);
           });
     } else if (!inEditMode) {
-      Routes().push(context, ShowActivityScreen(activities[index], user,
-          weekplanBloc,
-          _timerBloc,weekday))
+      Routes()
+          .push(
+              context,
+              ShowActivityScreen(
+                  activities[index], user, weekplanBloc, _timerBloc, weekday))
           .whenComplete(() {
         weekplanBloc.getWeekday(weekday.day).catchError((Object error) {
           creatingNotifyDialog(error, context);
@@ -359,9 +359,9 @@ class WeekplanActivitiesColumn extends StatelessWidget {
               border: Border.all(
                   color: Colors.black,
                   width: MediaQuery.of(context).size.width * 0.1)),
-          child: ActivityCard(activities[index],_timerBloc, user));
+          child: ActivityCard(activities[index], _timerBloc, user));
     } else {
-      return ActivityCard(activities[index],_timerBloc, user);
+      return ActivityCard(activities[index], _timerBloc, user);
     }
   }
 

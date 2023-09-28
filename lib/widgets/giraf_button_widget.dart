@@ -12,17 +12,19 @@ class GirafButton extends StatefulWidget {
   /// isEnabledStream is a stream which is listened to, to update the
   /// enabled/disabled state of the button.
   const GirafButton({
-    Key key,
-    this.text,
+    required Key key,
+    this.text = 'Default',
     this.fontSize = 20,
     this.fontWeight = FontWeight.normal,
-    this.icon,
-    this.width,
+    this.icon = const ImageIcon(AssetImage('assets/icons/accept.png')),
+    this.width = 40.0,
     this.height = 40.0,
-    @required this.onPressed,
+    required this.onPressed,
     this.isEnabled = true,
     // ignore: avoid_unused_constructor_parameters
-    this.isEnabledStream, StreamBuilder<File> child,
+    this.isEnabledStream = const Stream<bool>.empty(),
+    // ignore: avoid_unused_constructor_parameters
+    StreamBuilder<File>? child,
   }) : super(key: key);
 
   /// The text placed at the center of the button.
@@ -76,23 +78,20 @@ class _GirafButtonState extends State<GirafButton> {
     super.initState();
   }
 
-  static const Gradient _gradientDefault = LinearGradient(
-      colors: <Color>[theme.GirafColors.gradientDefaultYellow,
-        theme.GirafColors.gradientDefaultOrange],
-      begin: Alignment(0.0, -1.0),
-      end: Alignment(0.0, 1.0));
+  static const Gradient _gradientDefault = LinearGradient(colors: <Color>[
+    theme.GirafColors.gradientDefaultYellow,
+    theme.GirafColors.gradientDefaultOrange
+  ], begin: Alignment(0.0, -1.0), end: Alignment(0.0, 1.0));
 
-  static const Gradient _gradientPressed = LinearGradient(
-      colors: <Color>[theme.GirafColors.gradientPressedYellow,
-        theme.GirafColors.gradientPressedOrange],
-      begin: Alignment(0.0, -1.0),
-      end: Alignment(0.0, 1.0));
+  static const Gradient _gradientPressed = LinearGradient(colors: <Color>[
+    theme.GirafColors.gradientPressedYellow,
+    theme.GirafColors.gradientPressedOrange
+  ], begin: Alignment(0.0, -1.0), end: Alignment(0.0, 1.0));
 
-  static const Gradient _gradientDisabled = LinearGradient(
-      colors: <Color>[theme.GirafColors.gradientDisabledYellow,
-        theme.GirafColors.gradientDisabledOrange],
-      begin: Alignment(0.0, -1.0),
-      end: Alignment(0.0, 1.0));
+  static const Gradient _gradientDisabled = LinearGradient(colors: <Color>[
+    theme.GirafColors.gradientDisabledYellow,
+    theme.GirafColors.gradientDisabledOrange
+  ], begin: Alignment(0.0, -1.0), end: Alignment(0.0, 1.0));
 
   static const Color _borderDefault = theme.GirafColors.gradientDefaultBorder;
   static const Color _borderPressed = theme.GirafColors.gradientPressedBorder;
@@ -170,10 +169,12 @@ class _GirafButtonState extends State<GirafButton> {
   }
 
   Widget _buildWidgetsOnButton() {
-    final TextStyle textStyle = TextStyle(color: theme.GirafColors.black,
-        fontSize: widget.fontSize, fontWeight: widget.fontWeight);
+    final TextStyle textStyle = TextStyle(
+        color: theme.GirafColors.black,
+        fontSize: widget.fontSize,
+        fontWeight: widget.fontWeight);
 
-    if (widget.text != null && widget.icon != null) {
+    if (widget.text != '' && widget.icon != '') {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -187,14 +188,14 @@ class _GirafButtonState extends State<GirafButton> {
           ),
         ],
       );
-    } else if (widget.text != null) {
+    } else if (widget.text != '') {
       return Center(
           child: AutoSizeText(
-            widget.text,
-            style: textStyle,
-            minFontSize: 5,
+        widget.text,
+        style: textStyle,
+        minFontSize: 5,
       ));
-    } else if (widget.icon != null) {
+    } else if (widget.icon != '') {
       return Center(
         child: widget.icon,
       );
