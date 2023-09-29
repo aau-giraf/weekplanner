@@ -33,11 +33,11 @@ class SettingsCheckMarkButton extends SettingsSectionItem {
   final VoidCallback callback;
 
   /// Optional timer parameter for timer settings
-  final DefaultTimer timer;
+  final DefaultTimer? timer;
 
   @override
   ListTile build(BuildContext context) {
-    Widget trailing;
+    Widget? trailing;
     if (expected == current) {
       trailing = const Icon(Icons.check, color: theme.GirafColors.black);
     } else {
@@ -53,7 +53,7 @@ class SettingsCheckMarkButton extends SettingsSectionItem {
         onTap: () => callback(),
       );
     } else {
-      String _imagePath;
+      late String _imagePath;
       if (timer == DefaultTimer.PieChart) {
         _imagePath = 'assets/timer/piechart_icon.png';
       } else if (timer == DefaultTimer.Hourglass) {

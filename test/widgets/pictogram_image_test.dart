@@ -27,9 +27,9 @@ class MockUserApi extends Mock implements UserApi {
 }
 
 void main() {
-  PictogramImageBloc bloc;
-  Api api;
-  MockPictogramApi pictogramApi;
+  late PictogramImageBloc bloc;
+  late Api api;
+  late MockPictogramApi pictogramApi;
 
   final PictogramModel pictogramModel = PictogramModel(
       id: 1,
@@ -47,7 +47,7 @@ void main() {
     api.user = MockUserApi();
     bloc = PictogramImageBloc(api);
 
-    when(pictogramApi.getImage(pictogramModel.id))
+    when(pictogramApi.getImage(pictogramModel.id!))
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
     di.clearAll();
@@ -142,7 +142,7 @@ void main() {
 
   testWidgets('show delete button when comparing ids',
       (WidgetTester tester) async {
-    String id;
+    late String id;
     final Completer<bool> done = Completer<bool>();
     api.user.me().listen((GirafUserModel model) {
       id = model.id;

@@ -54,12 +54,12 @@ class MockUserApi extends Mock implements UserApi, NavigatorObserver {
   }
 }
 
-SettingsModel mockSettings;
+late SettingsModel mockSettings;
 
 void main() {
-  Api api;
-  SettingsBloc settingsBloc;
-  NavigatorObserver mockObserver;
+  late Api api;
+  late SettingsBloc settingsBloc;
+  late NavigatorObserver mockObserver;
 
   final DisplayNameModel user = DisplayNameModel(
       displayName: 'Anders And', id: '101', role: Role.Guardian.toString());
@@ -81,7 +81,8 @@ void main() {
       showPopup: false,
       showOnlyActivities: false,
       showSettingsForCitizen: false,
-      weekDayColors: MockUserApi.createWeekDayColors(),);
+      weekDayColors: MockUserApi.createWeekDayColors(),
+    );
 
     when(api.user.updateSettings(any, any)).thenAnswer((_) {
       return Stream<bool>.value(true);
@@ -125,10 +126,10 @@ void main() {
       final List<WeekdayColorModel> expectedList =
           MockUserApi.createWeekDayColors();
 
-      for (int i = 0; i < response.weekDayColors.length; i++) {
-        expect(response.weekDayColors[i].hexColor == expectedList[i].hexColor,
+      for (int i = 0; i < response.weekDayColors!.length; i++) {
+        expect(response.weekDayColors?[i].hexColor == expectedList[i].hexColor,
             isTrue);
-        expect(response.weekDayColors[i].day == expectedList[i].day, isTrue);
+        expect(response.weekDayColors?[i].day == expectedList[i].day, isTrue);
       }
     });
   });
@@ -200,21 +201,19 @@ void main() {
   });
 
   testWidgets('Has color theme selection screen been popped',
-          (WidgetTester tester) async{
-        await tester.pumpWidget(MaterialApp(
-            home: ColorThemeSelectorScreen(user: user),
-            // ignore: always_specify_types
-            navigatorObservers: [mockObserver]
-        ));
-        verify(mockObserver.didPush(any, any));
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+        home: ColorThemeSelectorScreen(user: user),
+        // ignore: always_specify_types
+        navigatorObservers: [mockObserver]));
+    verify(mockObserver.didPush(any, any));
 
-        await tester.pumpAndSettle();
-        expect(find.byType(SettingsColorThemeCheckMarkButton),
-            findsNWidgets(3));
+    await tester.pumpAndSettle();
+    expect(find.byType(SettingsColorThemeCheckMarkButton), findsNWidgets(3));
 
-        await tester.pump();
-        await tester.tap(find.byType(SettingsColorThemeCheckMarkButton).first);
-        await tester.pump();
-        verify(mockObserver.didPop(any, any));
-      });
+    await tester.pump();
+    await tester.tap(find.byType(SettingsColorThemeCheckMarkButton).first);
+    await tester.pump();
+    verify(mockObserver.didPop(any, any));
+  });
 }

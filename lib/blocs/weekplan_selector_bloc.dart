@@ -29,10 +29,10 @@ class WeekplansBloc extends BlocBase {
   Stream<List<WeekModel>> get markedWeekModels => _markedWeekModels.stream;
 
   final rx_dart.BehaviorSubject<List<WeekModel>> _weekModel =
-    rx_dart.BehaviorSubject<List<WeekModel>>();
+      rx_dart.BehaviorSubject<List<WeekModel>>();
 
   final rx_dart.BehaviorSubject<List<WeekModel>> _oldWeekModel =
-    rx_dart.BehaviorSubject<List<WeekModel>>();
+      rx_dart.BehaviorSubject<List<WeekModel>>();
 
   /// This is a stream where all the old [WeekModel] are put in,
   /// and this is the stream to listen to,
@@ -40,20 +40,20 @@ class WeekplansBloc extends BlocBase {
   Stream<List<WeekModel>> get oldWeekModels => _oldWeekModel.stream;
 
   final rx_dart.BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
-    rx_dart.BehaviorSubject<List<WeekNameModel>>();
+      rx_dart.BehaviorSubject<List<WeekNameModel>>();
 
   final rx_dart.BehaviorSubject<bool> _editMode =
-    rx_dart.BehaviorSubject<bool>.seeded(false);
+      rx_dart.BehaviorSubject<bool>.seeded(false);
 
   final rx_dart.BehaviorSubject<List<WeekModel>> _markedWeekModels =
-    rx_dart.BehaviorSubject<List<WeekModel>>.seeded(<WeekModel>[]);
+      rx_dart.BehaviorSubject<List<WeekModel>>.seeded(<WeekModel>[]);
 
   final Api _api;
-  DisplayNameModel _user;
+  late DisplayNameModel _user;
 
   /// To control adding an extra result for creating a new [WeekModel]
   /// for the weekplan_selector_screen.
-  bool _addWeekplan;
+  late bool _addWeekplan;
 
   /// Loads all the [WeekNameModel] for a given [user].
   /// [addWeekplan] parameter controls if there should be a result
@@ -91,10 +91,10 @@ class WeekplansBloc extends BlocBase {
     getWeekDetails(weekPlanNames, weekDetails, oldWeekDetails);
 
     final Stream<List<WeekModel>> getWeekPlans =
-      reformatWeekDetailsToObservableList(weekDetails);
+        reformatWeekDetailsToObservableList(weekDetails);
 
     final Stream<List<WeekModel>> getOldWeekPlans =
-      reformatWeekDetailsToObservableList(oldWeekDetails);
+        reformatWeekDetailsToObservableList(oldWeekDetails);
 
     getWeekPlans
         .take(1)
@@ -114,13 +114,13 @@ class WeekplansBloc extends BlocBase {
       List<Stream<WeekModel>> details) {
     // ignore: always_specify_types
     return details.isEmpty
-    // Ignore type specification; Stream<WeekModel>
-    //   does not contain .empty()
-    // ignore: always_specify_types
+        // Ignore type specification; Stream<WeekModel>
+        //   does not contain .empty()
+        // ignore: always_specify_types
         ? const Stream.empty()
         : details.length == 1
-        ? details[0].map((WeekModel plan) => <WeekModel>[plan])
-        : rx_dart.Rx.combineLatestList(details);
+            ? details[0].map((WeekModel plan) => <WeekModel>[plan])
+            : rx_dart.Rx.combineLatestList(details);
   }
 
   /// Makes API calls to get the weekplan details
@@ -204,9 +204,9 @@ class WeekplansBloc extends BlocBase {
         return -1;
       }
       if (a.weekYear == b.weekYear) {
-        return a.weekNumber.compareTo(b.weekNumber);
+        return a.weekNumber!.compareTo(b.weekNumber!);
       } else {
-        return a.weekYear.compareTo(b.weekYear);
+        return a.weekYear!.compareTo(b.weekYear!);
       }
     });
     return list;
@@ -216,9 +216,9 @@ class WeekplansBloc extends BlocBase {
   List<WeekModel> _sortOldWeekPlans(List<WeekModel> list) {
     list.toList().sort((WeekModel a, WeekModel b) {
       if (a.weekYear == b.weekYear) {
-        return b.weekNumber.compareTo(a.weekNumber);
+        return b.weekNumber!.compareTo(a.weekNumber!);
       } else {
-        return b.weekYear.compareTo(a.weekYear);
+        return b.weekYear!.compareTo(a.weekYear!);
       }
     });
     return list;
@@ -264,10 +264,10 @@ class WeekplansBloc extends BlocBase {
 
   /// Delete the marked week models when the trash button is clicked
   void deleteMarkedWeekModels() {
-    final List<WeekModel> localWeekModels = _weekModel.hasValue ?
-    _weekModel.value : null;
-    final List<WeekModel> oldLocalWeekModels = _oldWeekModel.hasValue ?
-    _oldWeekModel.value.toList() : null;
+    final List<WeekModel>? localWeekModels =
+        _weekModel.hasValue ? _weekModel.value : null;
+    final List<WeekModel>? oldLocalWeekModels =
+        _oldWeekModel.hasValue ? _oldWeekModel.value.toList() : null;
     // Updates the weekplan in the database
     for (WeekModel weekModel in _markedWeekModels.value) {
       _api.week
@@ -279,7 +279,7 @@ class WeekplansBloc extends BlocBase {
             localWeekModels.remove(weekModel);
             _weekModel.add(localWeekModels);
           } else {
-            oldLocalWeekModels.remove(weekModel);
+            oldLocalWeekModels!.remove(weekModel);
             _oldWeekModel.add(oldLocalWeekModels);
           }
         }
@@ -291,10 +291,10 @@ class WeekplansBloc extends BlocBase {
   /// This method deletes the given week model from the database after checking
   /// if it's an old weekplan or an upcoming
   void deleteWeekModel(WeekModel weekModel) {
-    final List<WeekModel> localWeekModels = _weekModel.hasValue ?
-    _weekModel.value : null;
-    final List<WeekModel> oldLocalWeekModels = _oldWeekModel.hasValue ?
-    _oldWeekModel.value : null;
+    final List<WeekModel>? localWeekModels =
+        _weekModel.hasValue ? _weekModel.value : null;
+    final List<WeekModel>? oldLocalWeekModels =
+        _oldWeekModel.hasValue ? _oldWeekModel.value : null;
 
     if (localWeekModels != null && localWeekModels.contains(weekModel)) {
       deleteWeek(localWeekModels, weekModel);
@@ -343,7 +343,7 @@ class WeekplansBloc extends BlocBase {
   /// Returns a WeekModel list of the marked weeks
   Future<List<WeekModel>> getMarkedWeeks() async {
     final List<WeekModel> weekList = <WeekModel>[];
-    for (WeekModel weekModel in _markedWeekModels.value){
+    for (WeekModel weekModel in _markedWeekModels.value) {
       final Completer<WeekModel> completer = Completer<WeekModel>();
       _api.week
           .get(_user.id, weekModel.weekYear, weekModel.weekNumber)

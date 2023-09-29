@@ -20,7 +20,8 @@ class UserSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GirafAppBar(title: 'Indstillinger'),
+        appBar: GirafAppBar(
+            title: 'Indstillinger', key: const ValueKey<String>('value')),
         body: _buildAllSettings(context));
   }
 
@@ -38,11 +39,11 @@ class UserSettingsScreen extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<GirafUserModel> snapshot) {
           if (snapshot.hasData) {
-            print('Snapshot has Girafuser: ' + snapshot.data.username);
+            print('Snapshot has Girafuser: ' + snapshot.data!.username);
             final DisplayNameModel user =
-                DisplayNameModel.fromGirafUser(snapshot.data);
+                DisplayNameModel.fromGirafUser(snapshot.data!);
             return SettingsSection(
-                snapshot.data.username + ' - skift personlig information',
+                snapshot.data!.username + ' - skift personlig information',
                 <SettingsSectionItem>[
                   SettingsArrowButton('Skift brugernavn', () {
                     Routes().push(context, ChangeUsernameScreen(user));

@@ -20,7 +20,7 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
 
-SettingsModel mockSettings;
+late SettingsModel mockSettings;
 
 class MockUserApi extends Mock implements UserApi {
   @override
@@ -36,10 +36,10 @@ class MockUserApi extends Mock implements UserApi {
 }
 
 void main() {
-  Api api;
-  SettingsBloc settingsBloc;
-  ActivityBloc activityBloc;
-  AuthBloc authBloc;
+  late Api api;
+  late SettingsBloc settingsBloc;
+  late ActivityBloc activityBloc;
+  late AuthBloc authBloc;
 
   final DisplayNameModel user = DisplayNameModel(
       displayName: 'Anders And', id: '101', role: Role.Guardian.toString());
@@ -58,14 +58,14 @@ void main() {
       order: 0,
       state: ActivityState.Normal,
       isChoiceBoard: false,
-      title: pictogramModel.title);
+      title: pictogramModel.title!);
 
   setUp(() {
     di.clearAll();
     api = Api('any');
 
     mockSettings = SettingsModel(
-      orientation: Orientation.landscape,
+      orientation: null,
       completeMark: CompleteMark.Checkmark,
       cancelMark: null,
       defaultTimer: null,
@@ -95,7 +95,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(Container), findsOneWidget);
-    final String title = pictogramModel.title;
+    final String title = pictogramModel.title!;
     expect(find.text(title.toUpperCase()), findsNothing);
   });
 

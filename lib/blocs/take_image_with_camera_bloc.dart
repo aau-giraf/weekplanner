@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -16,10 +17,10 @@ class TakePictureWithCameraBloc extends BlocBase {
   TakePictureWithCameraBloc(this._api);
 
   final Api _api;
-  String _pictogramName;
+  late String? _pictogramName;
 
   /// Publishes the image file, while it is not null
-  Stream<File> get file => _file.stream.where((File f) => f != null);
+  Stream<File> get file => _file.stream.where((File? f) => f != null);
 
   /// Publishes true while waiting for the pictogram to be uploaded
   Stream<bool> get isUploading => _isUploading.stream;
@@ -43,7 +44,7 @@ class TakePictureWithCameraBloc extends BlocBase {
   void takePictureWithCamera() {
     ImagePicker()
         .pickImage(source: ImageSource.camera)
-        .then<dynamic>((XFile f) {
+        .then<dynamic>((XFile? f) {
       if (f != null) {
         _publishImage(File(f.path));
         _checkInput();
@@ -53,9 +54,7 @@ class TakePictureWithCameraBloc extends BlocBase {
 
   /// Checks if the input fields are filled out
   void _checkInput() {
-    if (_file.value != null &&
-        _pictogramName != null &&
-        _pictogramName.isNotEmpty) {
+    if (_pictogramName != null && _pictogramName!.isNotEmpty) {
       _isInputValid.add(true);
     } else {
       _isInputValid.add(false);
@@ -87,7 +86,7 @@ class TakePictureWithCameraBloc extends BlocBase {
       title: _pictogramName,
     ))
         .flatMap((PictogramModel pictogram) {
-      return _api.pictogram.updateImage(pictogram.id, _encodePng(_file.value));
+      return _api.pictogram.updateImage(pictogram.id!, _encodePng(_file.value));
     }).map((PictogramModel pictogram) {
       _isUploading.add(false);
       return pictogram;

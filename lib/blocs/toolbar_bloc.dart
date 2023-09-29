@@ -28,7 +28,8 @@ class ToolbarBloc extends BlocBase {
   final AuthBloc _authBloc = di.get<AuthBloc>();
 
   //// Based on a list of the enum AppBarIcon this method populates a list of IconButtons to render in the nav-bar
-  void updateIcons(Map<AppBarIcon, VoidCallback> icons, BuildContext context) {
+  void updateIcons(
+      Map<AppBarIcon, VoidCallback>? icons, BuildContext? context) {
     List<IconButton> _iconsToAdd;
     _iconsToAdd = <IconButton>[];
 
@@ -36,7 +37,7 @@ class ToolbarBloc extends BlocBase {
     icons = <AppBarIcon, VoidCallback>{AppBarIcon.logout: () {}};
 
     for (AppBarIcon icon in icons.keys) {
-      _addIconButton(_iconsToAdd, icon, icons[icon], context);
+      _addIconButton(_iconsToAdd, icon, icons[icon]!, context!);
     }
 
     _visibleButtons.add(_iconsToAdd);
@@ -114,7 +115,7 @@ class ToolbarBloc extends BlocBase {
         break;
       default:
         throw Exception('IconButton not implemented');
-        break;
+      //break;
     }
   }
 
@@ -204,6 +205,7 @@ class ToolbarBloc extends BlocBase {
                     Routes().pop(context);
                   },
                   title: 'Skift til borger',
+                  key: const ValueKey<String>('value'),
                 );
               });
         });
@@ -346,6 +348,7 @@ class ToolbarBloc extends BlocBase {
                   _authBloc.logout();
                   Routes().goHome(context);
                 },
+                key: const ValueKey<String>('value'),
               );
             });
       },
@@ -424,7 +427,7 @@ class ToolbarBloc extends BlocBase {
   bool _popCalled = false;
 
   /// Holds the current context
-  BuildContext _currentContext;
+  late BuildContext _currentContext;
 
   /// Used to authenticate a user from popup.
   void loginFromPopUp(BuildContext context, String username, String password) {

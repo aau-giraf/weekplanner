@@ -13,9 +13,9 @@ import '../test_image.dart';
 class MockPictogramApi extends Mock implements PictogramApi {}
 
 void main() {
-  PictogramImageBloc bloc;
-  Api api;
-  MockPictogramApi pictogramApi;
+  late PictogramImageBloc bloc;
+  late Api api;
+  late MockPictogramApi pictogramApi;
 
   setUp(() {
     api = Api('any');
@@ -33,7 +33,7 @@ void main() {
         imageUrl: null,
         imageHash: null);
 
-    when(pictogramApi.getImage(model.id))
+    when(pictogramApi.getImage(model.id!))
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
     bloc.image.listen((Image response) {

@@ -9,7 +9,7 @@ import '../style/custom_color.dart' as theme;
 ///
 /// timeoutMS defaults to 2000 ms
 void showLoadingSpinner(BuildContext context, bool dismissible,
-    [void callback(), int timeoutMS]) {
+    [void callback()?, int? timeoutMS]) {
   // If there is no callback method, no need for a timer
   if (callback != null) {
     timeoutMS ??= 2000;

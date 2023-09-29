@@ -69,7 +69,7 @@ class WeekplanScreen extends StatelessWidget {
                     child: Scaffold(
                       appBar: GirafAppBar(
                         key: const ValueKey<String>('settings'),
-                        title: _user.displayName + ' - ' + _week.name,
+                        title: _user.displayName! + ' - ' + _week.name,
                         appBarIcons: (weekModeSnapshot.data ==
                                 WeekplanMode.guardian)
                             ? <AppBarIcon, VoidCallback>{
@@ -80,7 +80,7 @@ class WeekplanScreen extends StatelessWidget {
                                 AppBarIcon.settings: () => Routes()
                                     .push<WeekModel>(
                                         context, SettingsScreen(_user))
-                                    .then((WeekModel newWeek) =>
+                                    .then((WeekModel? newWeek) =>
                                         _settingsBloc.loadSettings(_user)),
                                 AppBarIcon.logout: () {}
                               }
@@ -93,20 +93,21 @@ class WeekplanScreen extends StatelessWidget {
                                     AppBarIcon.settings: () => Routes()
                                         .push<WeekModel>(
                                             context, SettingsScreen(_user))
-                                        .then((WeekModel newWeek) =>
+                                        .then((WeekModel? newWeek) =>
                                             _settingsBloc.loadSettings(_user)),
                                     AppBarIcon.logout: () {}
                                   }
                                 : (weekModeSnapshot.data ==
                                             WeekplanMode.citizen &&
-                                        _settingsModel.showSettingsForCitizen ==
+                                        _settingsModel!
+                                                .showSettingsForCitizen ==
                                             true)
                                     ? <AppBarIcon, VoidCallback>{
                                         AppBarIcon.changeToGuardian: () {},
                                         AppBarIcon.settings: () => Routes()
                                             .push<WeekModel>(
                                                 context, SettingsScreen(_user))
-                                            .then((WeekModel newWeek) =>
+                                            .then((WeekModel? newWeek) =>
                                                 _settingsBloc
                                                     .loadSettings(_user)),
                                         AppBarIcon.logout: () {}
@@ -123,7 +124,7 @@ class WeekplanScreen extends StatelessWidget {
                         builder: (BuildContext context,
                             AsyncSnapshot<UserWeekModel> snapshot) {
                           if (snapshot.hasData) {
-                            return _buildWeeks(snapshot.data.week, context);
+                            return _buildWeeks(snapshot.data!.week, context);
                           } else {
                             return const Center(
                               child: CircularProgressIndicator(),
@@ -143,7 +144,7 @@ class WeekplanScreen extends StatelessWidget {
                               initialData: false,
                               builder: (BuildContext context,
                                   AsyncSnapshot<bool> snapshot) {
-                                if (snapshot.data) {
+                                if (snapshot.data!) {
                                   return buildBottomAppBar(context);
                                 } else {
                                   return Container(width: 0.0, height: 0.0);
@@ -190,37 +191,41 @@ class WeekplanScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       BottomAppBarButton(
-                          buttonText: 'Genoptag',
-                          buttonKey: 'GenoptagActivtiesButton',
-                          assetPath: 'assets/icons/undo.png',
-                          isEnabled: false,
-                          isEnabledStream:
-                              _weekplanBloc.atLeastOneActivityMarked,
-                          dialogFunction: _buildUndoDialog),
+                        buttonText: 'Genoptag',
+                        buttonKey: 'GenoptagActivtiesButton',
+                        assetPath: 'assets/icons/undo.png',
+                        isEnabled: false,
+                        isEnabledStream: _weekplanBloc.atLeastOneActivityMarked,
+                        dialogFunction: _buildUndoDialog,
+                        key: const ValueKey<String>('value'),
+                      ),
                       BottomAppBarButton(
-                          buttonText: 'Aflys',
-                          buttonKey: 'CancelActivtiesButton',
-                          assetPath: 'assets/icons/cancel.png',
-                          isEnabled: false,
-                          isEnabledStream:
-                              _weekplanBloc.atLeastOneActivityMarked,
-                          dialogFunction: _buildCancelDialog),
+                        buttonText: 'Aflys',
+                        buttonKey: 'CancelActivtiesButton',
+                        assetPath: 'assets/icons/cancel.png',
+                        isEnabled: false,
+                        isEnabledStream: _weekplanBloc.atLeastOneActivityMarked,
+                        dialogFunction: _buildCancelDialog,
+                        key: const ValueKey<String>('value'),
+                      ),
                       BottomAppBarButton(
-                          buttonText: 'Kopier',
-                          buttonKey: 'CopyActivtiesButton',
-                          assetPath: 'assets/icons/copy.png',
-                          isEnabled: false,
-                          isEnabledStream:
-                              _weekplanBloc.atLeastOneActivityMarked,
-                          dialogFunction: _buildCopyDialog),
+                        buttonText: 'Kopier',
+                        buttonKey: 'CopyActivtiesButton',
+                        assetPath: 'assets/icons/copy.png',
+                        isEnabled: false,
+                        isEnabledStream: _weekplanBloc.atLeastOneActivityMarked,
+                        dialogFunction: _buildCopyDialog,
+                        key: const ValueKey<String>('value'),
+                      ),
                       BottomAppBarButton(
-                          buttonText: 'Slet',
-                          buttonKey: 'DeleteActivtiesButton',
-                          assetPath: 'assets/icons/delete.png',
-                          isEnabled: false,
-                          isEnabledStream:
-                              _weekplanBloc.atLeastOneActivityMarked,
-                          dialogFunction: _buildRemoveDialog)
+                        buttonText: 'Slet',
+                        buttonKey: 'DeleteActivtiesButton',
+                        assetPath: 'assets/icons/delete.png',
+                        isEnabled: false,
+                        isEnabledStream: _weekplanBloc.atLeastOneActivityMarked,
+                        dialogFunction: _buildRemoveDialog,
+                        key: const ValueKey<String>('value'),
+                      )
                     ],
                   )))
         ]));
@@ -255,29 +260,29 @@ class WeekplanScreen extends StatelessWidget {
   /// Builds the dialog box to confirm marking activities as canceled
   Future<Center?> _buildCancelDialog(BuildContext context) {
     return showDialog<Center>(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return GirafConfirmDialog(
-              title: 'Aflys aktiviteter',
-              description: 'Vil du markere ' +
-                  _weekplanBloc.getNumberOfMarkedActivities().toString() +
-                  '${_weekplanBloc.getNumberOfMarkedActivities() == 1 ? ' aktivitet' : ' aktiviteter'} som aflyst?',
-              confirmButtonText: 'Bekræft',
-              confirmButtonIcon:
-                  const ImageIcon(AssetImage('assets/icons/accept.png')),
-              confirmOnPressed: () {
-                _weekplanBloc
-                    .cancelMarkedActivities()
-                    .catchError((Object error) {
-                  buildErrorDialog(context, error);
-                });
-                _weekplanBloc.toggleEditMode();
-
-                // Closes the dialog box
-                Routes().pop(context);
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return GirafConfirmDialog(
+            title: 'Aflys aktiviteter',
+            description: 'Vil du markere ' +
+                _weekplanBloc.getNumberOfMarkedActivities().toString() +
+                '${_weekplanBloc.getNumberOfMarkedActivities() == 1 ? ' aktivitet' : ' aktiviteter'} som aflyst?',
+            confirmButtonText: 'Bekræft',
+            confirmButtonIcon:
+                const ImageIcon(AssetImage('assets/icons/accept.png')),
+            confirmOnPressed: () {
+              _weekplanBloc.cancelMarkedActivities().catchError((Object error) {
+                buildErrorDialog(context, error);
               });
-        });
+              _weekplanBloc.toggleEditMode();
+
+              // Closes the dialog box
+              Routes().pop(context);
+            },
+            key: const ValueKey<String>('value'));
+      },
+    );
   }
 
   Future<Center?> _buildUndoDialog(BuildContext context) {
@@ -301,7 +306,8 @@ class WeekplanScreen extends StatelessWidget {
 
                 // Closes the dialog box
                 Routes().pop(context);
-              });
+              },
+              key: const ValueKey<String>('value'));
         });
   }
 
@@ -329,7 +335,8 @@ class WeekplanScreen extends StatelessWidget {
 
                 // Closes the dialog box
                 Routes().pop(context);
-              });
+              },
+              key: const ValueKey<String>('value'));
         });
   }
 
@@ -356,13 +363,13 @@ class WeekplanScreen extends StatelessWidget {
         builder: (BuildContext context,
             AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
           if (weekModeSnapshot.hasData) {
-            final WeekplanMode role = weekModeSnapshot.data;
+            final WeekplanMode? role = weekModeSnapshot.data;
 
             if (role == WeekplanMode.guardian) {
               _weekplanBloc.clearWeekdayStreams();
               _weekplanBloc.setDaysToDisplay(7, 0);
 
-              for (int i = 0; i < weekModel.days.length; i++) {
+              for (int i = 0; i < weekModel.days!.length; i++) {
                 addDayToWeek(weekDays, i, defaultWeekColors[i]);
               }
               return Row(children: weekDays);
@@ -372,21 +379,22 @@ class WeekplanScreen extends StatelessWidget {
                 builder: (BuildContext context,
                     AsyncSnapshot<SettingsModel> settingsSnapshot) {
                   if (settingsSnapshot.hasData) {
-                    final SettingsModel _settingsModel = settingsSnapshot.data;
-                    int _daysToDisplay;
-                    bool _displayDaysRelative;
+                    final SettingsModel? _settingsModel = settingsSnapshot.data;
+                    late int _daysToDisplay;
+                    late bool _displayDaysRelative;
                     if (orientation == Orientation.portrait) {
-                      _daysToDisplay = _settingsModel.nrOfDaysToDisplayPortrait;
+                      _daysToDisplay =
+                          _settingsModel!.nrOfDaysToDisplayPortrait;
                       _displayDaysRelative =
                           _settingsModel.displayDaysRelativePortrait;
                     } else if (orientation == Orientation.landscape) {
                       _daysToDisplay =
-                          _settingsModel.nrOfDaysToDisplayLandscape;
+                          _settingsModel!.nrOfDaysToDisplayLandscape;
                       _displayDaysRelative =
                           _settingsModel.displayDaysRelativeLandscape;
                     }
-                    final int _activitiesToDisplay =
-                        _settingsModel.nrOfActivitiesToDisplay;
+                    final int? _activitiesToDisplay =
+                        _settingsModel!.nrOfActivitiesToDisplay;
                     // If the option of showing 1 or 2 days is chosen the
                     // _weekdayCounter must start from today's date
                     if (_displayDaysRelative) {
@@ -403,7 +411,7 @@ class WeekplanScreen extends StatelessWidget {
                         i < _daysToDisplay;
                         i++, _weekdayCounter++) {
                       // Get color from the citizen's chosen color theme
-                      final String dayColor = _settingsModel.weekDayColors
+                      final String dayColor = _settingsModel.weekDayColors!
                           .where((WeekdayColorModel w) =>
                               w.day == Weekday.values[_weekdayCounter])
                           .single
@@ -439,7 +447,7 @@ class WeekplanScreen extends StatelessWidget {
                         weekplanBloc: _weekplanBloc,
                         user: _user,
                         streamIndex: today,
-                        activitiesToDisplay: _activitiesToDisplay,
+                        activitiesToDisplay: _activitiesToDisplay!,
                       )));
                       return Row(
                         key: const Key('SingleWeekdayRow'),

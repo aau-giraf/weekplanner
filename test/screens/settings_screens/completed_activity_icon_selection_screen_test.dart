@@ -37,9 +37,9 @@ class MockUserApi extends Mock implements NavigatorObserver, UserApi {
 }
 
 void main() {
-  Api api;
-  SettingsBloc settingsBloc;
-  NavigatorObserver mockObserver;
+  late Api api;
+  late SettingsBloc settingsBloc;
+  late NavigatorObserver mockObserver;
 
   final DisplayNameModel user = DisplayNameModel(
       displayName: 'Mickey Mouse', id: '2', role: Role.Citizen.toString());
@@ -61,12 +61,11 @@ void main() {
   });
 
   testWidgets('Has completed activity screen been popped',
-    (WidgetTester tester) async{
+      (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
         home: CompletedActivityIconScreen(user),
         // ignore: always_specify_types
-        navigatorObservers: [mockObserver]
-    ));
+        navigatorObservers: [mockObserver]));
     verify(mockObserver.didPush(any, any));
 
     await tester.pumpAndSettle();
@@ -77,5 +76,4 @@ void main() {
     await tester.pump();
     verify(mockObserver.didPop(any, any));
   });
-
 }

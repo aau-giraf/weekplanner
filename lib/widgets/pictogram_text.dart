@@ -40,12 +40,12 @@ class PictogramText extends StatelessWidget {
               builder: (BuildContext context,
                   AsyncSnapshot<SettingsModel> settingsSnapshot) {
                 if (settingsSnapshot.hasData && weekModeSnapshot.hasData) {
-                  final WeekplanMode weekMode = weekModeSnapshot.data;
-                  final SettingsModel settings = settingsSnapshot.data;
+                  final WeekplanMode weekMode = weekModeSnapshot.data!;
+                  final SettingsModel settings = settingsSnapshot.data!;
                   final bool pictogramTextIsEnabled = settings.pictogramText;
                   if ((_isGuardianMode(weekMode) || pictogramTextIsEnabled) &&
                       settings.pictogramText == true) {
-                    if (_activity.isChoiceBoard) {
+                    if (_activity.isChoiceBoard!) {
                       return _buildPictogramText(
                           context, _activity.choiceBoardName);
                     } else {

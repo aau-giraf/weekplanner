@@ -44,8 +44,8 @@ class MockTakePictureBloc extends TakePictureWithCameraBloc {
 }
 
 void main() {
-  MockTakePictureBloc bloc;
-  Api api;
+  late MockTakePictureBloc bloc;
+  late Api api;
 
   setUp(() {
     api = Api('Any');
@@ -61,7 +61,8 @@ void main() {
   });
 
   testWidgets('Screen renders', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: TakePictureWithCamera()));
+    await tester.pumpWidget(MaterialApp(
+        home: TakePictureWithCamera(key: const ValueKey<String>('value'))));
     await tester.pumpAndSettle();
 
     expect(find.text('Tag billede med kamera'), findsOneWidget);

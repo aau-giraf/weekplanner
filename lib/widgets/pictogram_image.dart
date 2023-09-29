@@ -62,7 +62,8 @@ class PictogramImage extends StatelessWidget {
                   _notifyErrorOnDeleteDialog(context);
                 }
                 Routes().pop(context);
-              });
+              },
+              key: const ValueKey<String>('value'));
         });
   }
 
@@ -109,7 +110,7 @@ class PictogramImage extends StatelessWidget {
                                                     snapshot) =>
                                             snapshot.data ?? _loading)
                                   ]),
-                                  Text(pictogram.title),
+                                  Text(pictogram.title!),
                                 ])
                               : StreamBuilder<Image>(
                                   stream: _bloc.image,

@@ -19,7 +19,7 @@ class SettingsColorThemeCheckMarkButton extends SettingsSectionItem {
 
   @override
   Widget build(BuildContext context) {
-    Widget trailing;
+    Widget? trailing;
     if (hasCheckMark()) {
       trailing = const Icon(Icons.check, color: theme.GirafColors.black);
     } else {

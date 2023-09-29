@@ -41,8 +41,10 @@ class UploadImageFromPhone extends StatelessWidget {
       body: StreamBuilder<bool>(
           stream: _uploadFromGallery.isUploading,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            return snapshot.hasData && snapshot.data
-                ? LoadingSpinnerWidget()
+            return snapshot.hasData && snapshot.data!
+                ? const LoadingSpinnerWidget(
+                    key: ValueKey<String>('value'),
+                  )
                 : _buildBody(context);
           }),
     );
@@ -109,7 +111,7 @@ class UploadImageFromPhone extends StatelessWidget {
               stream: _uploadFromGallery.file,
               builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
                   snapshot.data != null
-                      ? _displayImage(snapshot.data)
+                      ? _displayImage(snapshot.data!)
                       : _displayIfNoImage()),
         )));
   }
@@ -122,6 +124,7 @@ class UploadImageFromPhone extends StatelessWidget {
         return const GirafNotifyDialog(
           title: 'Fejl',
           description: 'Upload af pictogram fejlede.',
+          key: ValueKey<String>('value'),
         );
       },
     );

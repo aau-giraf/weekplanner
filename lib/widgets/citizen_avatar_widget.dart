@@ -9,15 +9,14 @@ import 'package:weekplanner/style/font_size.dart';
 /// Citizen avatar used for choose citizen screen
 class CitizenAvatar extends StatelessWidget {
   /// Constructor for the citizens avatar
-  const CitizenAvatar({this.displaynameModel,
-    this.onPressed,
-    this.hideName = false});
+  const CitizenAvatar(
+      {this.displaynameModel, this.onPressed, this.hideName = false});
 
   /// Usermodel for displaying a user
-  final DisplayNameModel displaynameModel;
+  final DisplayNameModel? displaynameModel;
 
   /// Callback when pressed
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   /// Flag for hiding the username underneath the avatar
   final bool hideName;
@@ -51,11 +50,12 @@ class CitizenAvatar extends StatelessWidget {
                           child: CircleAvatar(
                             key: const Key('WidgetAvatar'),
                             radius: 20,
-                            backgroundImage: displaynameModel.icon != null
+                            backgroundImage: displaynameModel!.icon != null
                                 ? MemoryImage(
-                                    base64.decode(displaynameModel.icon))
+                                    base64.decode(displaynameModel!.icon!))
                                 : const AssetImage(
-                                    'assets/login_screen_background_image.png'),
+                                        'assets/login_screen_background_image.png')
+                                    as ImageProvider,
                           ),
                         ),
                       ),
@@ -68,17 +68,20 @@ class CitizenAvatar extends StatelessWidget {
                         maxHeight: _isTablet(query) ? 50.0 : 15.0,
                       ),
                       child: Center(
-                        child: !hideName ? AutoSizeText(
-                          displaynameModel.displayName.length <= 15
-                              ? displaynameModel.displayName
-                              : displaynameModel.displayName.substring(0, 14) +
-                                  '..',
-                          key: const Key('WidgetText'),
-                          style: TextStyle(
-                              fontSize: _isTablet(query)
-                                  ? GirafFont.large
-                                  : GirafFont.small),
-                        ) : Container(width: 0, height: 0),
+                        child: !hideName
+                            ? AutoSizeText(
+                                displaynameModel!.displayName!.length <= 15
+                                    ? displaynameModel!.displayName!
+                                    : displaynameModel!.displayName!
+                                            .substring(0, 14) +
+                                        '..',
+                                key: const Key('WidgetText'),
+                                style: TextStyle(
+                                    fontSize: _isTablet(query)
+                                        ? GirafFont.large
+                                        : GirafFont.small),
+                              )
+                            : Container(width: 0, height: 0),
                       ),
                     )
                   ],

@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/api_exception.dart';
@@ -13,7 +15,6 @@ import '../../style/custom_color.dart' as theme;
 
 /// Screen for changing password
 class ChangePasswordScreen extends StatelessWidget {
-  //ignore: must_be_immutable
   /// Constructor
   ChangePasswordScreen(DisplayNameModel user) : _user = user;
 
@@ -32,6 +33,10 @@ class ChangePasswordScreen extends StatelessWidget {
   final TextEditingController repeatNewPasswordCtrl = TextEditingController();
 
   final DisplayNameModel _user;
+  final AuthBloc authBloc = di.get<AuthBloc>();
+  final Api _api = di.get<Api>();
+  late BuildContext currentContext; //ignore: public_member_api_docs
+  bool loginStatus = false;
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +195,7 @@ class ChangePasswordScreen extends StatelessWidget {
     authBloc
         .authenticate(authBloc.loggedInUser.username, oldPassword)
         .then((dynamic result) {
-      StreamSubscription<bool> loginListener;
+      StreamSubscription<bool>? loginListener;
       loginListener = authBloc.loggedIn.listen((bool snapshot) {
         loginStatus = snapshot;
         if (snapshot) {
@@ -204,7 +209,7 @@ class ChangePasswordScreen extends StatelessWidget {
         }
 
         /// Stop listening for future logins
-        loginListener.cancel();
+        loginListener!.cancel();
       });
     }).catchError((Object error) {
       if (error is ApiException) {

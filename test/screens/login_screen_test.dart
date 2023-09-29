@@ -69,7 +69,7 @@ class MockAuthBloc extends Mock implements AuthBloc {
   final rx_dart.BehaviorSubject<bool> _loggedIn =
       rx_dart.BehaviorSubject<bool>.seeded(false);
 
-  String loggedInUsername;
+  late String loggedInUsername;
 
   @override
   Future<void> authenticate(String username, String password) async {
@@ -100,7 +100,7 @@ void main() {
       "DEBUG": false
     }
     ''';
-  MockAuthBloc bloc;
+  late MockAuthBloc bloc;
   setUp(() {
     bloc = MockAuthBloc();
     di.clearAll();

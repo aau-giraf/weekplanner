@@ -25,10 +25,10 @@ import '../test_image.dart';
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
-  PictogramBloc bloc;
-  Api api;
-  MockPictogramApi pictogramApi;
-  DisplayNameModel user;
+  late PictogramBloc bloc;
+  late Api api;
+  late MockPictogramApi pictogramApi;
+  late DisplayNameModel user;
 
   final PictogramModel pictogramModel = PictogramModel(
       id: 1,
@@ -47,7 +47,7 @@ void main() {
     user =
         DisplayNameModel(id: '1', displayName: 'Anders and', role: 'Guardian');
 
-    when(pictogramApi.getImage(pictogramModel.id))
+    when(pictogramApi.getImage(pictogramModel.id!))
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
     di.clearAll();

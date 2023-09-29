@@ -20,7 +20,7 @@ class PictogramPassword extends StatelessWidget {
   /// pictograms in the code.
 
   const PictogramPassword(
-      {Key key, required this.onPasswordChanged, required this.api})
+      {required Key key, required this.onPasswordChanged, required this.api})
       : super(key: key);
 
   /// This function returns the new password every time the password has been
@@ -66,7 +66,7 @@ class PictogramPassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Stream<List<PictogramModel>> _pictogramChoices = getStream(context);
+    final Stream<List<PictogramModel>?> _pictogramChoices = getStream(context);
     final GlobalKey<PictogramInputFieldState> inputFieldKey = GlobalKey();
     final PictogramInputField password = PictogramInputField(
         key: inputFieldKey, onPasswordChanged: onPasswordChanged);
@@ -78,10 +78,10 @@ class PictogramPassword extends StatelessWidget {
           Container(
               constraints: const BoxConstraints(
                   maxHeight: double.infinity, maxWidth: MAXWIDTH),
-              child: StreamBuilder<List<PictogramModel>>(
+              child: StreamBuilder<List<PictogramModel>?>(
                   stream: _pictogramChoices,
                   builder: (BuildContext context,
-                      AsyncSnapshot<List<PictogramModel>> snapshot) {
+                      AsyncSnapshot<List<PictogramModel>?> snapshot) {
                     if (snapshot.hasError) {
                       print(snapshot.error);
                       return const Text('Fejl i forbindelse med piktogrammer.');
@@ -90,8 +90,8 @@ class PictogramPassword extends StatelessWidget {
                           shrinkWrap: true,
                           crossAxisCount: 5,
                           physics: const NeverScrollableScrollPhysics(),
-                          children: snapshot.data
-                              .map<Widget>((PictogramModel pictogram) {
+                          children: snapshot.data!
+                              .map<Widget>((PictogramModel? pictogram) {
                             if (pictogram == null) {
                               return Container(
                                 height: 80,
@@ -101,8 +101,9 @@ class PictogramPassword extends StatelessWidget {
                             } else {
                               return PictogramImage(
                                   pictogram: pictogram,
-                                  onPressed: () => inputFieldKey.currentState
-                                      .addToPass(pictogram));
+                                  onPressed: () => inputFieldKey.currentState!
+                                      .addToPass(pictogram),
+                                  key: const ValueKey<String>('value'));
                             }
                           }).toList());
                     } else {

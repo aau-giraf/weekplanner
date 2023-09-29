@@ -7,7 +7,7 @@ import 'package:weekplanner/widgets/pictogram_image.dart';
 class PictogramInputField extends StatefulWidget {
   /// Shows the currently picked pictograms in either making pictogram code
   /// or logging in with it
-  const PictogramInputField({Key key, required this.onPasswordChanged})
+  const PictogramInputField({required Key key, required this.onPasswordChanged})
       : super(key: key);
 
   /// Function called when an input is changed to update save button
@@ -23,10 +23,10 @@ const double MAXWIDTH = 500;
 
 /// State for PassWordInputField
 class PictogramInputFieldState extends State<PictogramInputField> {
-  List<PictogramModel> _inputCode;
+  late List<PictogramModel?> _inputCode;
   @override
   void initState() {
-    _inputCode = List<PictogramModel>.filled(4, null);
+    _inputCode = List<PictogramModel?>.filled(4, null);
     super.initState();
   }
 
@@ -45,9 +45,9 @@ class PictogramInputFieldState extends State<PictogramInputField> {
 
   /// Validates whether all four needed pictograms have been input and returns
   /// value of password
-  String validateAndConvertPass() {
+  String? validateAndConvertPass() {
     String output = '';
-    for (PictogramModel m in _inputCode) {
+    for (PictogramModel? m in _inputCode) {
       if (m != null) {
         output += m.id.toString();
       } else {
@@ -62,7 +62,7 @@ class PictogramInputFieldState extends State<PictogramInputField> {
   List<Widget> passwordList() {
     final List<Widget> password = List<Widget>.filled(4, null);
     for (int i = 0; i < 4; i++) {
-      final PictogramModel pictogram = _inputCode[i];
+      final PictogramModel? pictogram = _inputCode[i];
       Widget widget;
       if (pictogram == null) {
         widget = Container(
@@ -73,7 +73,9 @@ class PictogramInputFieldState extends State<PictogramInputField> {
         );
       } else {
         widget = PictogramImage(
-            pictogram: pictogram, onPressed: () => removeFromPass(i));
+            pictogram: pictogram,
+            onPressed: () => removeFromPass(i),
+            key: const ValueKey<String>('value'));
       }
       password[i] = widget;
     }

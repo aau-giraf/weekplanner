@@ -13,7 +13,7 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/settings_screens/privacy_information_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
-SettingsModel mockSettings;
+late SettingsModel mockSettings;
 
 class MockUserApi extends Mock implements UserApi {
   @override
@@ -29,8 +29,8 @@ class MockUserApi extends Mock implements UserApi {
 }
 
 void main() {
-  Api api;
-  SettingsBloc settingsBloc;
+  late Api api;
+  late SettingsBloc settingsBloc;
 
   setUp(() {
     api = Api('any');
@@ -58,8 +58,7 @@ void main() {
   });
 
   testWidgets('Renders  PrivacyInformationScreen', (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(home: PrivacyInformationScreen()));
+    await tester.pumpWidget(MaterialApp(home: PrivacyInformationScreen()));
     expect(find.byType(PrivacyInformationScreen), findsOneWidget);
   });
 
@@ -67,16 +66,14 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: PrivacyInformationScreen()));
     expect(
         find.byWidgetPredicate((Widget widget) =>
-        widget is GirafAppBar && widget.title == 'Privatlivsinformation'),
+            widget is GirafAppBar && widget.title == 'Privatlivsinformation'),
         findsOneWidget);
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
-  testWidgets('Has ScrollView',
-          (WidgetTester tester) async {
-            await tester
-                .pumpWidget(MaterialApp(home: PrivacyInformationScreen()));
-            await tester.pumpAndSettle();
-            expect(find.byType(SingleChildScrollView), findsOneWidget);
-          });
+  testWidgets('Has ScrollView', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: PrivacyInformationScreen()));
+    await tester.pumpAndSettle();
+    expect(find.byType(SingleChildScrollView), findsOneWidget);
+  });
 }

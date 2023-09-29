@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:async';
 import 'dart:io';
 import 'package:api_client/api/api.dart';
@@ -17,7 +19,7 @@ import 'package:weekplanner/widgets/giraf_title_header.dart';
 import '../../style/custom_color.dart' as theme;
 
 /// Change username screen
-class ChangeUsernameScreen extends StatelessWidget {//ignore: must_be_immutable
+class ChangeUsernameScreen extends StatelessWidget {
   /// Constructor
   ChangeUsernameScreen(DisplayNameModel user) : _user = user {
     _settingsBloc.loadSettings(_user);
@@ -41,13 +43,16 @@ class ChangeUsernameScreen extends StatelessWidget {//ignore: must_be_immutable
   final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
   final Api _api = di.get<Api>();
   final DisplayNameModel _user;
-  BuildContext currentContext; //ignore: public_member_api_docs
+  late BuildContext currentContext; //ignore: public_member_api_docs
   bool loginStatus = false; //ignore: public_member_api_docs
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GirafAppBar(title: 'Skift brugernavn'),
+        appBar: GirafAppBar(
+          title: 'Skift brugernavn',
+          key: const ValueKey<String>('value'),
+        ),
         body: buildUsernameChange(context));
   }
 
@@ -142,12 +147,14 @@ class ChangeUsernameScreen extends StatelessWidget {//ignore: must_be_immutable
             title: const Center(
                 child: GirafTitleHeader(
               title: 'Verificer bruger',
+              key: ValueKey<String>('value'),
             )),
             content: Form(
               key: _innerForm,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: [//ignore: always_specify_types
+                children: <Widget>[
+                  //ignore: always_specify_types
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
                     child: Text(
@@ -171,7 +178,8 @@ class ChangeUsernameScreen extends StatelessWidget {//ignore: must_be_immutable
                   const Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [//ignore: always_specify_types
+                    children: <Widget>[
+                      //ignore: always_specify_types
                       GirafButton(
                           key: const Key(
                               'UsernameConfirmationDialogCancelButton'),
@@ -214,7 +222,7 @@ class ChangeUsernameScreen extends StatelessWidget {//ignore: must_be_immutable
         .authenticateFromPopUp(
             authBloc.loggedInUser.username, confirmUsernameCtrl.text)
         .then((dynamic result) {
-      StreamSubscription<bool> loginListener;
+      StreamSubscription<bool>? loginListener;
       loginListener = authBloc.loggedIn.listen((bool snapshot) {
         loginStatus = snapshot;
         if (snapshot) {
@@ -232,7 +240,7 @@ class ChangeUsernameScreen extends StatelessWidget {//ignore: must_be_immutable
         }
 
         /// Stop listening for future logins
-        loginListener.cancel();
+        loginListener!.cancel();
       });
     }).catchError((Object error) {
       if (error is ApiException) {
@@ -295,7 +303,7 @@ class ChangeUsernameScreen extends StatelessWidget {//ignore: must_be_immutable
 
   /// This method is used to extract a GirafUserModel object from the stream.
   Future<GirafUserModel> getGirafUser(Stream<GirafUserModel> stream) async {
-    GirafUserModel girafUser;
+    late GirafUserModel girafUser;
     await for (GirafUserModel value in stream) {
       girafUser = value;
     }

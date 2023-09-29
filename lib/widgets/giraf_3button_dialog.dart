@@ -31,7 +31,7 @@ class Giraf3ButtonDialog extends StatelessWidget {
 
   ///description of the dialogBox, displayed under the header, describing the
   ///encountered problem
-  final String description;
+  final String? description;
 
   ///text for option 1 button
   final String option1Text;
@@ -52,7 +52,7 @@ class Giraf3ButtonDialog extends StatelessWidget {
   final VoidCallback option2OnPressed;
 
   ///the method is call when the cancel button is pressed. Optional
-  final VoidCallback cancelOnPressed;
+  final VoidCallback? cancelOnPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +64,7 @@ class Giraf3ButtonDialog extends StatelessWidget {
       title: Center(
           child: GirafTitleHeader(
         title: title,
+        key: const ValueKey<String>('value'),
       )),
       content: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -129,7 +130,7 @@ class Giraf3ButtonDialog extends StatelessWidget {
                           color: theme.GirafColors.black),
                       onPressed: () {
                         if (cancelOnPressed != null) {
-                          cancelOnPressed();
+                          cancelOnPressed!();
                         }
 
                         Routes().pop(context);

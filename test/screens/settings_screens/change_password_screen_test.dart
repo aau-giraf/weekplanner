@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:async';
 import 'package:api_client/api/account_api.dart';
 import 'package:api_client/api/api.dart';
@@ -54,7 +56,7 @@ class MockAuthBloc extends Mock implements AuthBloc {
   final rx_dart.BehaviorSubject<bool> _loggedIn =
       rx_dart.BehaviorSubject<bool>.seeded(false);
 
-  String loggedInUsername;
+  late String loggedInUsername;
 
   @override
   Future<void> authenticate(String username, String password) async {
@@ -73,7 +75,7 @@ class MockAuthBloc extends Mock implements AuthBloc {
   }
 }
 
-class MockChangePasswordScreen extends ChangePasswordScreen {//ignore: must_be_immutable
+class MockChangePasswordScreen extends ChangePasswordScreen {
   MockChangePasswordScreen(DisplayNameModel user) : super(user);
   @override
   void changePassword(
@@ -81,7 +83,7 @@ class MockChangePasswordScreen extends ChangePasswordScreen {//ignore: must_be_i
     final MockAccountApi account = MockAccountApi();
     authBloc.authenticate('test', currentPasswordCtrl.text);
     authBloc.loggedIn.listen((bool snapshot) {
-      loginStatus = snapshot;
+      // var loginStatus = snapshot;
       if (snapshot == false) {
         createDialog('Forkert adgangskode.', 'The old password is wrong',
             const Key('WrongPassword'));
@@ -103,7 +105,7 @@ class MockChangePasswordScreen extends ChangePasswordScreen {//ignore: must_be_i
 }
 
 void main() {
-  Api api;
+  late Api api;
 
   final DisplayNameModel user = DisplayNameModel(
       displayName: 'John', role: Role.Citizen.toString(), id: '1');

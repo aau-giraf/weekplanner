@@ -1,4 +1,4 @@
-<# Specify analysis options.
+# Specify analysis options.
 #
 # Until there are meta linter rules, each desired lint must be explicitly enabled.
 # See: https://github.com/dart-lang/linter/issues/288
@@ -20,7 +20,7 @@
 
 analyzer:
   strong-mode:
-    implicit-dynamic: false
+    strict-raw-types: false
   errors:
     # treat missing required parameters as a warning (not a hint)
     missing_required_param: warning
@@ -97,7 +97,7 @@ linter:
     - hash_and_equals
     - implementation_imports
     # - invariant_booleans # too many false positives: https://github.com/dart-lang/linter/issues/811
-    - iterable_contains_unrelated_type
+    - collection_methods_unrelated_type
     # - join_return_with_assignment # not yet tested
     - library_names
     - library_prefixes

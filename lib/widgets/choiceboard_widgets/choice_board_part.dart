@@ -17,8 +17,7 @@ class ChoiceBoardPart extends StatelessWidget {
     _pictogramImageBloc.load(_pictogramModel);
   }
 
-  final PictogramImageBloc _pictogramImageBloc =
-      di.get<PictogramImageBloc>();
+  final PictogramImageBloc _pictogramImageBloc = di.get<PictogramImageBloc>();
 
   final PictogramModel _pictogramModel;
 
@@ -46,11 +45,10 @@ class ChoiceBoardPart extends StatelessWidget {
               Positioned(
                 top: 5,
                 right: 5,
-                child:
-                    DeletePictogramFromChoiceBoardButton(() {
+                child: DeletePictogramFromChoiceBoardButton(() {
                   _bloc.load(_activity, _user);
-                  _activity.pictograms.remove(_pictogramModel);
-                  if (_activity.pictograms.length == 1) {
+                  _activity.pictograms!.remove(_pictogramModel);
+                  if (_activity.pictograms!.length == 1) {
                     _activity.isChoiceBoard = false;
                     _bloc.getTitleWhenChoiceboardDeleted();
                   }

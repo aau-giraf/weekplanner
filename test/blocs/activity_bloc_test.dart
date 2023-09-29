@@ -18,13 +18,13 @@ class MockWeekApi extends Mock implements WeekApi {}
 class MockActivityApi extends Mock implements ActivityApi {}
 
 void main() {
-  ActivityBloc bloc;
+  late ActivityBloc bloc;
   Api api;
-  MockWeekApi weekApi;
-  MockActivityApi activityApi;
+  late MockWeekApi weekApi;
+  late MockActivityApi activityApi;
 
   final DisplayNameModel mockUser =
-  DisplayNameModel(id: '50', displayName: 'testUser202', role: null);
+      DisplayNameModel(id: '50', displayName: 'testUser202', role: null);
 
   final ActivityModel mockActivity = ActivityModel(
       id: 1,
@@ -50,13 +50,12 @@ void main() {
       weekYear: 2010);
 
   void setupApiCalls() {
-    when(weekApi.update(mockUser.id, mockWeekModel.weekYear,
-            mockWeekModel.weekNumber, mockWeekModel))
-        .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>
-        .seeded(mockWeekModel));
-    when(activityApi.update(mockActivity, mockUser.id))
-        .thenAnswer((_) => rx_dart.BehaviorSubject<ActivityModel>
-        .seeded(mockActivity));
+    when(weekApi.update(mockUser.id, mockWeekModel.weekYear!,
+            mockWeekModel.weekNumber!, mockWeekModel))
+        .thenAnswer(
+            (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(mockWeekModel));
+    when(activityApi.update(mockActivity, mockUser.id)).thenAnswer(
+        (_) => rx_dart.BehaviorSubject<ActivityModel>.seeded(mockActivity));
   }
 
   setUp(() {

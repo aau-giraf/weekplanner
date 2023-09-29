@@ -6,7 +6,7 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 class CopyDialogButtons extends StatelessWidget {
   /// Constructor to get required information
   const CopyDialogButtons({
-    Key key,
+    required Key key,
     required this.confirmButtonText,
     required this.confirmButtonIcon,
     required this.confirmOnPressed,

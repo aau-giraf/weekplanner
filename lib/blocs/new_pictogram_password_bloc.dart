@@ -13,23 +13,23 @@ class NewPictogramPasswordBloc extends BlocBase {
   NewPictogramPasswordBloc(this._api);
 
   final Api _api;
-  GirafUserModel _user;
+  late GirafUserModel _user;
 
   /// The username for the citizen that one is creating a password for.
-  String userName;
+  late String userName;
 
   /// The display name for the citizen that one is creating a password for.
-  String displayName;
+  late String displayName;
 
   /// The profile picture for the citizen that one is creating a password for.
-  Uint8List profilePicture;
+  late Uint8List profilePicture;
 
   /// Controller that contains the stream & sink of the pictogram password.
   final rx_dart.BehaviorSubject<String> pictogramPasswordController =
       rx_dart.BehaviorSubject<String>();
 
   /// To be called whenever somethings needs to be added to the controller.
-  Sink<String> get onPictogramPasswordChanged =>
+  Sink<String?> get onPictogramPasswordChanged =>
       pictogramPasswordController.sink;
 
   /// Streams a bool that tells whether the password is valid.
@@ -40,7 +40,7 @@ class NewPictogramPasswordBloc extends BlocBase {
   /// in the [PictogramPassword] widget.
   final StreamTransformer<String, bool> _passwordValidation =
       StreamTransformer<String, bool>.fromHandlers(
-          handleData: (String input, EventSink<bool> sink) {
+          handleData: (String? input, EventSink<bool> sink) {
     if (input == null) {
       sink.add(false);
     } else {
@@ -50,15 +50,15 @@ class NewPictogramPasswordBloc extends BlocBase {
 
   /// Creates a user with the given information.
   Stream<GirafUserModel> createCitizen() {
-    return _api.account.register(
-        userName, pictogramPasswordController.value, displayName,
-        profilePicture, departmentId: _user.department, role: Role.Citizen);
+    return _api.account.register(userName, pictogramPasswordController.value,
+        displayName, profilePicture,
+        departmentId: _user.department, role: Role.Citizen);
   }
 
   /// Initializes the bloc.
-  void initialize(String _userName, String _displayName,
-                  Uint8List _profilePicture) {
-    reset();
+  void initialize(
+      String _userName, String _displayName, Uint8List _profilePicture) {
+    //reset(); //FIXME
     userName = _userName;
     displayName = _displayName;
     profilePicture = _profilePicture;
@@ -68,12 +68,12 @@ class NewPictogramPasswordBloc extends BlocBase {
   }
 
   /// Resets the blocs variables, so that no information is stored.
-  void reset() {
-    userName = null;
-    displayName = null;
-    pictogramPasswordController.add(null);
-    _user = null;
-  }
+  // void reset() {
+  //   userName = null;
+  //   displayName = null;
+  //   pictogramPasswordController.add(null);
+  //   _user = null;
+  // } // FIXME: Deinitialize in another way
 
   @override
   void dispose() {

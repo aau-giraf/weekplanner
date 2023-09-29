@@ -9,12 +9,14 @@ class MockScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
           child: Column(
-            children: <Widget>[
-              GirafButton(
-                  key: const Key('FirstButton'),
-                  onPressed: () {notifyDialog(context);}),
-            ],
-          )),
+        children: <Widget>[
+          GirafButton(
+              key: const Key('FirstButton'),
+              onPressed: () {
+                notifyDialog(context);
+              }),
+        ],
+      )),
     );
   }
 
@@ -24,8 +26,10 @@ class MockScreen extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return const GirafNotifyDialog(
-              title: 'testTitle',
-              description: 'testDescription');
+            title: 'testTitle',
+            description: 'testDescription',
+            key: ValueKey<String>('value'),
+          );
         });
   }
 }
@@ -40,15 +44,14 @@ void main() {
   });
 
   testWidgets('Test if Notify Dialog is closed when tapping Okay button',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: MockScreen()));
-        await tester.tap(find.byKey(const Key('FirstButton')));
-        await tester.pump();
-        expect(find.byKey(const Key('NotifyDialogOkayButton')), findsOneWidget);
-        await tester.tap(find.byKey(const Key('NotifyDialogOkayButton')));
-        await tester.pump();
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: MockScreen()));
+    await tester.tap(find.byKey(const Key('FirstButton')));
+    await tester.pump();
+    expect(find.byKey(const Key('NotifyDialogOkayButton')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('NotifyDialogOkayButton')));
+    await tester.pump();
 
-        expect(find.byType(GirafNotifyDialog), findsNothing);
-      });
-
+    expect(find.byType(GirafNotifyDialog), findsNothing);
+  });
 }

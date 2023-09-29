@@ -32,16 +32,13 @@ class MockEditWeekplanBloc extends EditWeekplanBloc {
   Api api;
 
   @override
-  Stream<bool> get validTitleStream =>
-      Stream<bool>.value(acceptAllInputs);
+  Stream<bool> get validTitleStream => Stream<bool>.value(acceptAllInputs);
 
   @override
-  Stream<bool> get validYearStream =>
-      Stream<bool>.value(acceptAllInputs);
+  Stream<bool> get validYearStream => Stream<bool>.value(acceptAllInputs);
 
   @override
-  Stream<bool> get validWeekNumberStream =>
-      Stream<bool>.value(acceptAllInputs);
+  Stream<bool> get validWeekNumberStream => Stream<bool>.value(acceptAllInputs);
 
   @override
   Stream<PictogramModel> get thumbnailStream =>
@@ -71,14 +68,14 @@ final WeekModel mockWeek = WeekModel(
     weekYear: 2019);
 
 final DisplayNameModel mockUser =
-DisplayNameModel(displayName: 'test', role: 'test', id: 'test');
+    DisplayNameModel(displayName: 'test', role: 'test', id: 'test');
 
-WeekplansBloc mockWeekplanSelector;
+late WeekplansBloc mockWeekplanSelector;
 
 void main() {
-  MockEditWeekplanBloc mockBloc;
-  Api api;
-  bool savedWeekplan;
+  late MockEditWeekplanBloc mockBloc;
+  late Api api;
+  late bool savedWeekplan;
 
   setUp(() {
     api = Api('any');
@@ -86,7 +83,7 @@ void main() {
     api.pictogram = MockPictogramApi();
     savedWeekplan = false;
 
-    when(api.pictogram.getImage(mockPictogram.id))
+    when(api.pictogram.getImage(mockPictogram.id!))
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
     when(api.week.update(any, any, any, any)).thenAnswer((_) {
@@ -99,8 +96,8 @@ void main() {
         return Stream<List<WeekNameModel>>.value(<WeekNameModel>[
           WeekNameModel(
               name: mockWeek.name,
-              weekNumber: mockWeek.weekNumber,
-              weekYear: mockWeek.weekYear),
+              weekNumber: mockWeek.weekNumber!,
+              weekYear: mockWeek.weekYear!),
         ]);
       },
     );
@@ -321,10 +318,9 @@ void main() {
 
     testWidgets('Click on thumbnail redirects to pictogram search screen',
         (WidgetTester tester) async {
-
-          when(api.pictogram.getAll(page: 1,
-              pageSize: pageSize, query: '')).thenAnswer(
-                  (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
+      when(api.pictogram.getAll(page: 1, pageSize: pageSize, query: ''))
+          .thenAnswer((_) =>
+              rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
                   <PictogramModel>[mockPictogram]));
       mockBloc.acceptAllInputs = true;
       await tester.pumpWidget(
@@ -341,9 +337,8 @@ void main() {
 
       expect(find.byType(PictogramSearch), findsOneWidget);
 
-          await tester.pump(const Duration(milliseconds: 11000));
-
-        });
+      await tester.pump(const Duration(milliseconds: 11000));
+    });
   });
 
   group('Edit weekplan overwriting', () {
@@ -351,7 +346,7 @@ void main() {
         (WidgetTester tester) async {
       final WeekModel editWeekModel = WeekModel(
           name: mockWeek.name,
-          weekNumber: mockWeek.weekNumber + 1,
+          weekNumber: mockWeek.weekNumber! + 1,
           weekYear: mockWeek.weekYear,
           days: mockWeek.days,
           thumbnail: mockWeek.thumbnail);
@@ -397,7 +392,7 @@ void main() {
         (WidgetTester tester) async {
       final WeekModel editWeekModel = WeekModel(
           name: mockWeek.name,
-          weekNumber: mockWeek.weekNumber + 1,
+          weekNumber: mockWeek.weekNumber! + 1,
           weekYear: mockWeek.weekYear,
           days: mockWeek.days,
           thumbnail: mockWeek.thumbnail);
@@ -441,7 +436,7 @@ void main() {
         (WidgetTester tester) async {
       final WeekModel editWeekModel = WeekModel(
           name: mockWeek.name,
-          weekNumber: mockWeek.weekNumber + 1,
+          weekNumber: mockWeek.weekNumber! + 1,
           weekYear: mockWeek.weekYear,
           days: mockWeek.days,
           thumbnail: mockWeek.thumbnail);

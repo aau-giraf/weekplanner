@@ -11,12 +11,11 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/pictogram_password_widgets/pictogram_password_widget.dart';
 
-
 /// Screen for the creation of a pictogram password
 class NewPictogramPasswordScreen extends StatelessWidget {
   /// Constructor for the new pictogram password screen
-  NewPictogramPasswordScreen(String userName, String displayName,
-                             Uint8List profilePicture )
+  NewPictogramPasswordScreen(
+      String userName, String displayName, Uint8List profilePicture)
       : _bloc = di.get<NewPictogramPasswordBloc>() {
     _bloc.initialize(userName, displayName, profilePicture);
   }
@@ -28,20 +27,25 @@ class NewPictogramPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GirafAppBar(title: 'Ny bruger'),
+        appBar: GirafAppBar(
+          title: 'Ny bruger',
+          key: const ValueKey<String>('value'),
+        ),
         body: ListView(shrinkWrap: false, children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             child: StreamBuilder<bool>(
-                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              return Text('Opret piktogram kode til ${_bloc.displayName}',
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      color: GirafColors.grey,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold));
-            }),
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                return Text('Opret piktogram kode til ${_bloc.displayName}',
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: GirafColors.grey,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold));
+              },
+              stream: null,
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -51,6 +55,7 @@ class NewPictogramPasswordScreen extends StatelessWidget {
                   _bloc.onPictogramPasswordChanged.add(pass);
                 },
                 api: di.get<Api>(),
+                key: const ValueKey<String>('value'),
               ),
             ],
           ),
@@ -65,7 +70,7 @@ class NewPictogramPasswordScreen extends StatelessWidget {
                   isEnabled: false,
                   isEnabledStream: _bloc.validPictogramPasswordStream,
                   onPressed: () {
-                    _bloc.createCitizen().listen((GirafUserModel response) {
+                    _bloc.createCitizen().listen((GirafUserModel? response) {
                       if (response != null) {
                         // Pop twice, because this screen is on top
                         // of the NewCitizenScreen.
@@ -74,13 +79,14 @@ class NewPictogramPasswordScreen extends StatelessWidget {
 
                         // Maybe not needed, as the
                         // initialize method already resets
-                        _bloc.reset();
+                        //_bloc.reset();
                       }
                     }).onError((Object error) =>
                         _translator.catchApiError(error, context));
                   },
                 );
               },
+              stream: null,
             ),
           ),
         ]));

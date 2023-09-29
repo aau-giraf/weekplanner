@@ -30,7 +30,7 @@ class MockUserApi extends Mock implements UserApi {
 }
 
 void main() {
-  ChooseCitizenBloc bloc;
+  late ChooseCitizenBloc bloc;
   Api api;
   setUp(() {
     api = Api('any');

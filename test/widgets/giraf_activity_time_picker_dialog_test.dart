@@ -50,7 +50,11 @@ class MockScreen extends StatelessWidget {
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
-          return GirafActivityTimerPickerDialog(_activityModel, _mockTimerBloc);
+          return GirafActivityTimerPickerDialog(
+            _activityModel,
+            _mockTimerBloc,
+            key: const ValueKey<String>('value'),
+          );
         });
   }
 }
@@ -156,24 +160,22 @@ void main() {
       expect(b, true);
     });
     expect(
-        _activityModel.timer.fullLength,
+        _activityModel.timer!.fullLength,
         const Duration(hours: hours, minutes: minutes, seconds: seconds)
             .inMilliseconds);
   });
 
   testWidgets(
       'Test that wrong 0 time input on textfields prompts a notify dialog'
-          'with correct message', (WidgetTester tester) async {
+      'with correct message', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.tap(find.byKey(const Key('TimePickerOpenButton')));
     await tester.pump();
     await tester.enterText(find.byKey(const Key('TimerTextFieldKey')), '0');
     await tester.pump();
-    await tester.enterText(
-        find.byKey(const Key('MinutterTextFieldKey')), '0');
+    await tester.enterText(find.byKey(const Key('MinutterTextFieldKey')), '0');
     await tester.pump();
-    await tester.enterText(
-        find.byKey(const Key('SekunderTextFieldKey')), '0');
+    await tester.enterText(find.byKey(const Key('SekunderTextFieldKey')), '0');
     await tester.pump();
     await tester.tap(find.byKey(const Key('TimePickerDialogAcceptButton')));
     await tester.pump();
@@ -182,7 +184,7 @@ void main() {
 
   testWidgets(
       'Test that no input on textfields prompts a notify dialog'
-          'with correct message', (WidgetTester tester) async {
+      'with correct message', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.tap(find.byKey(const Key('TimePickerOpenButton')));
     await tester.pump();

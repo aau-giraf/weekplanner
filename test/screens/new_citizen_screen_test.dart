@@ -24,14 +24,14 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 /// where listen().onError could catch it
 class MockAccountApi extends AccountApi {
   MockAccountApi(PersistenceClient persist)
-      : super(HttpClient(baseUrl: null, persist: persist), persist);
+      : super(HttpClient(baseUrl: '', persist: persist), persist);
 
   /// override of the register function, which returns an error
   /// if 'username' == alreadyExists. Returns a normal GirafUserModel otherwise
   @override
   Stream<GirafUserModel> register(String username, String password,
       String displayName, Uint8List profilePicture,
-      {required int departmentId, required Role role}) {
+      {required int? departmentId, required Role? role}) {
     final Map<String, dynamic> body = <String, dynamic>{
       'username': username,
       'displayName': displayName,
@@ -131,8 +131,8 @@ class MockUserApi extends Mock implements UserApi {
 }
 
 void main() {
-  Api api;
-  MockNewCitizenBloc mockNewCitizenBloc;
+  late Api api;
+  late MockNewCitizenBloc mockNewCitizenBloc;
 
   setUp(() {
     api = MockApi('any');

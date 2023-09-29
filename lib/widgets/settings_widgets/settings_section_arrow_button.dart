@@ -5,8 +5,7 @@ import '../../style/custom_color.dart' as theme;
 /// SettingSection ArrowButton class
 class SettingsArrowButton extends SettingsSectionItem {
   /// Constructor
-  const SettingsArrowButton(this.text, this._callback,
-      {required this.titleTrailing});
+  const SettingsArrowButton(this.text, this._callback, {this.titleTrailing});
 
   /// Text on button
   final String text;
@@ -16,7 +15,7 @@ class SettingsArrowButton extends SettingsSectionItem {
 
   /// This is extra trailing that is added to the text
   /// The trailing will appear right before the arrow
-  final Widget titleTrailing;
+  final Widget? titleTrailing;
 
   @override
   ListTile build(BuildContext context) {
@@ -34,7 +33,7 @@ class SettingsArrowButton extends SettingsSectionItem {
   Widget buildTitle() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[Flexible(child: Text(text)), titleTrailing],
+      children: <Widget>[Flexible(child: Text(text)), titleTrailing!],
     );
   }
 }

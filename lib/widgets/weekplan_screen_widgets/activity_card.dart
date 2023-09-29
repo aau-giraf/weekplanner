@@ -51,8 +51,8 @@ class ActivityCard extends StatelessWidget {
       BuildContext context,
       AsyncSnapshot<WeekplanMode> weekModeSnapShot,
       AsyncSnapshot<SettingsModel> settingsSnapShot) {
-    final ActivityState _activityState = _activity.state;
-    if (!_activity.isChoiceBoard) {
+    final ActivityState? _activityState = _activity.state;
+    if (!_activity.isChoiceBoard!) {
       return Opacity(
         opacity: _shouldActivityBeVisible(weekModeSnapShot, settingsSnapShot)
             ? 1.0
@@ -72,10 +72,10 @@ class ActivityCard extends StatelessWidget {
                             width: MediaQuery.of(context).size.width,
                             height: MediaQuery.of(context).size.width,
                             child: FittedBox(
-                              child: _getPictogram(_activity.pictograms.first),
+                              child: _getPictogram(_activity.pictograms!.first),
                             ),
                           ),
-                          _buildActivityStateIcon(context, _activityState,
+                          _buildActivityStateIcon(context, _activityState!,
                               weekModeSnapShot, settingsSnapShot),
                           _buildTimerIcon(context, _activity),
                         ],
@@ -102,10 +102,10 @@ class ActivityCard extends StatelessWidget {
   bool _shouldActivityBeVisible(AsyncSnapshot<WeekplanMode> weekModeSnapShot,
       AsyncSnapshot<SettingsModel> settingsSnapShot) {
     if (weekModeSnapShot.hasData && settingsSnapShot.hasData) {
-      final WeekplanMode weekMode = weekModeSnapShot.data;
-      final SettingsModel settings = settingsSnapShot.data;
+      final WeekplanMode? weekMode = weekModeSnapShot.data;
+      final SettingsModel? settings = settingsSnapShot.data;
       if (weekMode == WeekplanMode.citizen &&
-          settings.completeMark == CompleteMark.Removed &&
+          settings!.completeMark == CompleteMark.Removed &&
           _activity.state == ActivityState.Completed) {
         return false;
       }
@@ -118,12 +118,12 @@ class ActivityCard extends StatelessWidget {
       BuildContext context,
       AsyncSnapshot<WeekplanMode> weekModeSnapShot,
       AsyncSnapshot<SettingsModel> settingsSnapShot) {
-    final ActivityState _activityState = _activity.state;
+    final ActivityState? _activityState = _activity.state;
     final List<Widget> pictograms = <Widget>[];
-    for (int i = 0; i < _activity.pictograms.length; i++) {
+    for (int i = 0; i < _activity.pictograms!.length; i++) {
       pictograms.add(
         SizedBox.expand(
-          child: FittedBox(child: _getPictogram(_activity.pictograms[i])),
+          child: FittedBox(child: _getPictogram(_activity.pictograms![i])),
         ),
       );
     }
@@ -157,7 +157,7 @@ class ActivityCard extends StatelessWidget {
                           ],
                         )),
                       ),
-                      _buildActivityStateIcon(context, _activityState,
+                      _buildActivityStateIcon(context, _activityState!,
                           weekModeSnapShot, settingsSnapShot),
                       _buildTimerIcon(context, _activity),
                     ],
@@ -226,8 +226,8 @@ class ActivityCard extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<TimerRunningMode> snapshot1) {
           if (weekModeSnapShot.hasData && settingsSnapShot.hasData) {
-            final WeekplanMode role = weekModeSnapShot.data;
-            final SettingsModel settings = settingsSnapShot.data;
+            final WeekplanMode? role = weekModeSnapShot.data;
+            final SettingsModel? settings = settingsSnapShot.data;
 
             switch (state) {
               case ActivityState.Normal:
@@ -248,7 +248,7 @@ class ActivityCard extends StatelessWidget {
                     size: MediaQuery.of(context).size.width,
                   );
                 } else if (role == WeekplanMode.citizen) {
-                  if (settings.completeMark == null) {
+                  if (settings!.completeMark == null) {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
@@ -293,7 +293,7 @@ class ActivityCard extends StatelessWidget {
                   );
                 }
                 if (role == WeekplanMode.citizen &&
-                    settings.nrOfActivitiesToDisplay > 1) {
+                    settings!.nrOfActivitiesToDisplay! > 1) {
                   return Icon(
                     Icons.brightness_1_outlined,
                     key: const Key('IconActive'),
@@ -328,7 +328,7 @@ class ActivityCard extends StatelessWidget {
         stream: timerBloc.timerIsInstantiated,
         builder:
             (BuildContext streamContext, AsyncSnapshot<bool> timerSnapshot) {
-          if (timerSnapshot.hasData && timerSnapshot.data) {
+          if (timerSnapshot.hasData && timerSnapshot.data!) {
             return _buildTimerAssetIcon();
           }
           return Container();
@@ -341,15 +341,15 @@ class ActivityCard extends StatelessWidget {
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
             AsyncSnapshot<SettingsModel> settingsSnapshot) {
-          String _iconPath;
+          late String _iconPath;
 
           if (settingsSnapshot.hasData) {
-            if (settingsSnapshot.data.defaultTimer == DefaultTimer.PieChart) {
+            if (settingsSnapshot.data!.defaultTimer == DefaultTimer.PieChart) {
               _iconPath = 'assets/timer/piechart_icon.png';
-            } else if (settingsSnapshot.data.defaultTimer ==
+            } else if (settingsSnapshot.data!.defaultTimer ==
                 DefaultTimer.Hourglass) {
               _iconPath = 'assets/timer/hourglass_icon.png';
-            } else if (settingsSnapshot.data.defaultTimer ==
+            } else if (settingsSnapshot.data!.defaultTimer ==
                 DefaultTimer.Numeric) {
               _iconPath = 'assets/timer/countdowntimer_icon.png';
             }

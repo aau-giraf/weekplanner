@@ -14,9 +14,9 @@ import 'package:weekplanner/di.dart';
 class MockWeekApi extends Mock implements WeekApi {}
 
 void main() {
-  NewWeekplanBloc bloc;
-  Api api;
-  final PictogramModel mockThumbnail = PictogramModel(
+  late NewWeekplanBloc bloc;
+  late Api api;
+  late final PictogramModel mockThumbnail = PictogramModel(
       id: 1,
       lastEdit: null,
       title: null,
@@ -24,7 +24,7 @@ void main() {
       imageUrl: 'http://any.tld',
       imageHash: null);
   final DisplayNameModel mockUser =
-  DisplayNameModel(displayName: 'User', id: '1', role: null);
+      DisplayNameModel(displayName: 'User', id: '1', role: null);
   final WeekModel mockWeek = WeekModel(
       thumbnail: mockThumbnail,
       days: null,
@@ -32,7 +32,7 @@ void main() {
       weekNumber: 1,
       weekYear: 2019);
 
-  WeekplansBloc mockWeekplanSelector;
+  late WeekplansBloc mockWeekplanSelector;
 
   setUp(() {
     api = Api('any');
@@ -47,8 +47,8 @@ void main() {
         return Stream<List<WeekNameModel>>.value(<WeekNameModel>[
           WeekNameModel(
               name: mockWeek.name,
-              weekNumber: mockWeek.weekNumber,
-              weekYear: mockWeek.weekYear),
+              weekNumber: mockWeek.weekNumber!,
+              weekYear: mockWeek.weekYear!),
         ]);
       },
     );
@@ -290,7 +290,7 @@ void main() {
     bloc.onYearChanged.add('2019');
     bloc.onWeekNumberChanged.add('42');
     bloc.onThumbnailChanged.add(mockThumbnail);
-    bloc.resetBloc();
+    // bloc.resetBloc(); //FIXME: is this needed?
     bloc.allInputsAreValidStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);

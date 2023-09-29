@@ -48,7 +48,7 @@ class GirafButton extends StatefulWidget {
   /// The function to be called when the button is pressed.
   /// The function must be a void funtion with no input parameters.
   /// If this is set to null, the button will be disabled.
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   /// Determines whether the button is enabled or disabled by default. If
   /// isEnabledStream is also supplied, the latest emitted item from the stream
@@ -59,7 +59,7 @@ class GirafButton extends StatefulWidget {
   /// A stream which tells whether the button should be enabled or disabled.
   /// If the stream emits a null value, the value of isEnabled will be used
   /// instead.
-  final Stream<bool> isEnabledStream;
+  final Stream<bool>? isEnabledStream;
 
   @override
   _GirafButtonState createState() => _GirafButtonState();
@@ -73,7 +73,7 @@ class _GirafButtonState extends State<GirafButton> {
     _isPressed = false;
     if (widget.isEnabledStream != null) {
       _isEnabledSubscription =
-          widget.isEnabledStream.listen(_handleIsEnabledStreamEvent);
+          widget.isEnabledStream!.listen(_handleIsEnabledStreamEvent);
     }
     super.initState();
   }
@@ -97,10 +97,10 @@ class _GirafButtonState extends State<GirafButton> {
   static const Color _borderPressed = theme.GirafColors.gradientPressedBorder;
   static const Color _borderDisabled = theme.GirafColors.gradientDisabledBorder;
 
-  bool _isPressed;
-  bool _isEnabled;
-  StreamSubscription<bool> _isEnabledSubscription;
-  Timer _timer;
+  bool? _isPressed;
+  bool? _isEnabled;
+  StreamSubscription<bool>? _isEnabledSubscription;
+  Timer? _timer;
 
   @override
   Widget build(BuildContext context) {
@@ -112,13 +112,13 @@ class _GirafButtonState extends State<GirafButton> {
         width: widget.width,
         height: widget.height,
         decoration: BoxDecoration(
-          gradient: _isEnabled
-              ? (_isPressed ? _gradientPressed : _gradientDefault)
+          gradient: _isEnabled!
+              ? (_isPressed! ? _gradientPressed : _gradientDefault)
               : _gradientDisabled,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-              color: _isEnabled
-                  ? (_isPressed ? _borderPressed : _borderDefault)
+              color: _isEnabled!
+                  ? (_isPressed! ? _borderPressed : _borderDefault)
                   : _borderDisabled,
               width: 1.2),
         ),
@@ -130,14 +130,14 @@ class _GirafButtonState extends State<GirafButton> {
   }
 
   void _onTapDown(TapDownDetails details) {
-    if (_isEnabled) {
+    if (_isEnabled!) {
       setState(() => _isPressed = true);
     }
   }
 
   void _onTapUp(TapUpDetails details) {
-    if (_isEnabled) {
-      widget.onPressed();
+    if (_isEnabled!) {
+      widget.onPressed!();
       // On a quick tap the pressed state is not shown, because the state
       // changes too fast, hence we introduce a delay.
       _timer = Timer(const Duration(milliseconds: 100),
@@ -146,12 +146,12 @@ class _GirafButtonState extends State<GirafButton> {
   }
 
   void _onTapCancel() {
-    if (_isEnabled) {
+    if (_isEnabled!) {
       setState(() => _isPressed = false);
     }
   }
 
-  void _handleIsEnabledStreamEvent(bool value) {
+  void _handleIsEnabledStreamEvent(bool? value) {
     // If a null value is emitted reset enabled state to default.
     value ??= widget.isEnabled;
 
@@ -201,7 +201,8 @@ class _GirafButtonState extends State<GirafButton> {
       );
     }
 
-    return null;
+    // return null;
+    throw Exception;
   }
 
   @override

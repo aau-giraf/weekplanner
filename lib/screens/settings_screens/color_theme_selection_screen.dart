@@ -13,25 +13,25 @@ import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart'
 /// This class is used to select the color theme for a citizen's weekplans
 class ColorThemeSelectorScreen extends StatelessWidget {
   /// Constructor
-  ColorThemeSelectorScreen({required DisplayNameModel user}) : _user = user {
-    _settingsBloc.loadSettings(_user);
+  ColorThemeSelectorScreen({required DisplayNameModel? user}) : _user = user {
+    _settingsBloc.loadSettings(_user!);
   }
 
   final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
-  final DisplayNameModel _user;
+  final DisplayNameModel? _user;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: GirafAppBar(
-          title: _user.displayName + ': Farver på ugeplan',
-        ),
+            title: _user!.displayName! + ': Farver på ugeplan',
+            key: const ValueKey<String>('value')),
         body: StreamBuilder<SettingsModel>(
             stream: _settingsBloc.settings,
             builder: (BuildContext context,
                 AsyncSnapshot<SettingsModel> settingsSnapshot) {
               if (settingsSnapshot.hasData) {
-                final SettingsModel _settingsModel = settingsSnapshot.data;
+                final SettingsModel _settingsModel = settingsSnapshot.data!;
                 return ListView(
                   children: <Widget>[
                     SettingsSection('Farvetema',
@@ -52,20 +52,20 @@ class ColorThemeSelectorScreen extends StatelessWidget {
 
     settingsList.add(SettingsColorThemeCheckMarkButton(
         WeekplanColorTheme().standardColorSetting(),
-        _settingsModel.weekDayColors,
+        _settingsModel.weekDayColors!,
         'Standard', () {
       Routes().pop(context, WeekplanColorTheme().standardColorSetting());
     }));
 
     settingsList.add(SettingsColorThemeCheckMarkButton(
         WeekplanColorTheme().blueWhiteColorSetting(),
-        _settingsModel.weekDayColors,
+        _settingsModel.weekDayColors!,
         'Blå/Hvid', () {
       Routes().pop(context, WeekplanColorTheme().blueWhiteColorSetting());
     }));
     settingsList.add(SettingsColorThemeCheckMarkButton(
         WeekplanColorTheme().greyWhiteColorSetting(),
-        _settingsModel.weekDayColors,
+        _settingsModel.weekDayColors!,
         'Grå/Hvid', () {
       Routes().pop(context, WeekplanColorTheme().greyWhiteColorSetting());
     }));

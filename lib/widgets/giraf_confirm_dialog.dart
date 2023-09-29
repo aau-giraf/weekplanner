@@ -12,7 +12,7 @@ class GirafConfirmDialog extends StatelessWidget {
   ///The dialog displays the title and description, with two buttons
   ///to either confirm the action, or cancel, which simply closes the dialog.
   const GirafConfirmDialog(
-      {Key key,
+      {required Key key,
       required this.title,
       this.description,
       this.descriptionRichText,
@@ -28,15 +28,15 @@ class GirafConfirmDialog extends StatelessWidget {
 
   ///description of the dialogBox, displayed under the header, describing the
   ///encountered problem
-  final String description;
+  final String? description;
 
   ///description of the dialogBox, displayed under the header, describing the
   ///encountered problem
   ///this version allows for formatting, such as text styling
-  final RichText descriptionRichText;
+  final RichText? descriptionRichText;
 
   ///text field for optional input
-  final TextField inputField;
+  final TextField? inputField;
 
   ///text on the confirm button, describing the confirmed action
   final String confirmButtonText;
@@ -48,7 +48,7 @@ class GirafConfirmDialog extends StatelessWidget {
   final VoidCallback confirmOnPressed;
 
   ///the method is call when the cancel button is pressed. Optional
-  final VoidCallback cancelOnPressed;
+  final VoidCallback? cancelOnPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +60,7 @@ class GirafConfirmDialog extends StatelessWidget {
       title: Center(
           child: GirafTitleHeader(
         title: title,
+        key: const ValueKey<String>('value'),
       )),
       content: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -110,7 +111,7 @@ class GirafConfirmDialog extends StatelessWidget {
                             color: theme.GirafColors.black),
                         onPressed: () {
                           if (cancelOnPressed != null) {
-                            cancelOnPressed();
+                            cancelOnPressed!();
                           }
 
                           Routes().pop(context);

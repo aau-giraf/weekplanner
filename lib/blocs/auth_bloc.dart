@@ -14,7 +14,7 @@ class AuthBloc extends BlocBase {
   AuthBloc(this._api);
 
   /// Store logged in user data.
-  GirafUserModel loggedInUser;
+  late GirafUserModel loggedInUser;
 
   final Api _api;
 
@@ -71,7 +71,7 @@ class AuthBloc extends BlocBase {
             setMode(WeekplanMode.citizen);
           }
           _loggedIn.add(status);
-          completer.complete(true);
+          completer.complete();
         }).onError((Object error) {
           completer.completeError(error);
         });
@@ -104,7 +104,7 @@ class AuthBloc extends BlocBase {
             setMode(WeekplanMode.citizen);
           }
           _loginAttempt.add(status);
-          completer.complete(true);
+          completer.complete();
         }).onError((Object error) {
           completer.completeError(error);
         });

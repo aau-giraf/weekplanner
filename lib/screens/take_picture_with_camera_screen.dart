@@ -36,15 +36,17 @@ class TakePictureWithCamera extends StatelessWidget {
     screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: GirafAppBar(
-        key: ValueKey<String>('pictureKey'),
+        key: const ValueKey<String>('pictureKey'),
         title: 'Tilføj fra kamera',
         appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.home: () {}},
       ),
       body: StreamBuilder<bool>(
           stream: _takePictureWithCamera.isUploading,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            return snapshot.hasData && snapshot.data
-                ? const LoadingSpinnerWidget()
+            return snapshot.hasData && snapshot.data!
+                ? const LoadingSpinnerWidget(
+                    key: ValueKey<String>('value'),
+                  )
                 : _buildBody(context);
           }),
     );
@@ -112,7 +114,7 @@ class TakePictureWithCamera extends StatelessWidget {
                 stream: _takePictureWithCamera.file,
                 builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
                     snapshot.data != null
-                        ? _displayImage(snapshot.data)
+                        ? _displayImage(snapshot.data!)
                         : _displayIfNoImage()),
           ),
         ));
@@ -126,6 +128,7 @@ class TakePictureWithCamera extends StatelessWidget {
         return const GirafNotifyDialog(
           title: 'Fejl',
           description: 'Upload af pictogram fejlede.',
+          key: ValueKey<String>('value'),
         );
       },
     );

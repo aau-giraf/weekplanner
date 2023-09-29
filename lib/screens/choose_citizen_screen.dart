@@ -48,7 +48,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
         child: Dialog(
           child: Scaffold(
             appBar: GirafAppBar(
-              key: ValueKey<String>('girafDialogKey'),
+              key: const ValueKey<String>('girafDialogKey'),
               title: 'Vælg borger',
               appBarIcons: <AppBarIcon, VoidCallback>{
                 AppBarIcon.logout: () {},
@@ -102,7 +102,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
   /// Builds the list of citizens together with the "add citizen" button
   List<Widget> _buildCitizenSelectionList(
       BuildContext context, AsyncSnapshot<List<DisplayNameModel>> snapshot) {
-    final List<Widget> list = (snapshot.data ?? [])
+    final List<Widget> list = (snapshot.data ?? <DisplayNameModel>[])
         .map<Widget>((DisplayNameModel user) => CitizenAvatar(
             displaynameModel: user,
             onPressed: () async {

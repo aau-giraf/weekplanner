@@ -21,7 +21,7 @@ class PictogramSearch extends StatefulWidget {
   const PictogramSearch({required this.user});
 
   /// The current authenticated user
-  final DisplayNameModel user;
+  final DisplayNameModel? user;
 
   @override
   _PictogramSearchState createState() => _PictogramSearchState();
@@ -40,7 +40,10 @@ class _PictogramSearchState extends State<PictogramSearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GirafAppBar(title: 'Piktogram'),
+        appBar: GirafAppBar(
+          title: 'Piktogram',
+          key: const ValueKey<String>('value'),
+        ),
         body: Column(
           children: <Widget>[
             Padding(
@@ -73,18 +76,21 @@ class _PictogramSearchState extends State<PictogramSearch> {
                           Expanded(
                               child: GridView.count(
                                   crossAxisCount: 4,
-                                  children: snapshot.data
+                                  children: snapshot.data!
                                       .map((PictogramModel pictogram) =>
                                           PictogramImage(
-                                              pictogram: pictogram,
-                                              haveRights: widget.user == null ||
-                                                      pictogram.userId == null
-                                                  ? false
-                                                  : pictogram.userId ==
-                                                      widget.user.id,
-                                              needsTitle: true,
-                                              onPressed: () => Routes()
-                                                  .pop(context, pictogram)))
+                                            pictogram: pictogram,
+                                            haveRights: widget.user == null ||
+                                                    pictogram.userId == null
+                                                ? false
+                                                : pictogram.userId ==
+                                                    widget.user!.id,
+                                            needsTitle: true,
+                                            onPressed: () => Routes()
+                                                .pop(context, pictogram),
+                                            key:
+                                                const ValueKey<String>('value'),
+                                          ))
                                       .toList(),
                                   controller: _bloc.sc)),
                           _bloc.loadingPictograms == true
@@ -134,21 +140,29 @@ class _PictogramSearchState extends State<PictogramSearch> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             BottomAppBarButton(
-                                buttonText: 'Tilføj fra galleri',
-                                buttonKey: 'TilføjFraGalleriButton',
-                                assetPath: 'assets/icons/gallery.png',
-                                dialogFunction: (BuildContext context) {
-                                  Routes()
-                                      .push(context, UploadImageFromPhone());
-                                }),
+                              buttonText: 'Tilføj fra galleri',
+                              buttonKey: 'TilføjFraGalleriButton',
+                              assetPath: 'assets/icons/gallery.png',
+                              dialogFunction: (BuildContext context) {
+                                Routes().push(
+                                    context,
+                                    UploadImageFromPhone(
+                                        key: const ValueKey<String>('value')));
+                              },
+                              key: const ValueKey<String>('value'),
+                            ),
                             BottomAppBarButton(
                                 buttonText: 'Tag billede',
                                 buttonKey: 'TagBilledeButton',
                                 assetPath: 'assets/icons/camera.png',
                                 dialogFunction: (BuildContext context) {
-                                  Routes()
-                                      .push(context, TakePictureWithCamera());
-                                })
+                                  Routes().push(
+                                      context,
+                                      TakePictureWithCamera(
+                                          key:
+                                              const ValueKey<String>('value')));
+                                },
+                                key: const ValueKey<String>('value'))
                           ])))
             ])));
   }

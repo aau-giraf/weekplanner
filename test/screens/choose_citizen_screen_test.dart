@@ -38,17 +38,21 @@ class MockUserApi extends Mock implements UserApi {
 class MockCitizens extends Mock implements UserApi {}
 
 void main() {
-  ChooseCitizenBloc bloc;
-  ToolbarBloc toolbarBloc;
-  Api api;
-  AuthBloc authBloc;
+  late ChooseCitizenBloc bloc;
+  late ToolbarBloc toolbarBloc;
+  late Api api;
+  late AuthBloc authBloc;
   setUp(() {
     di.clearAll();
     api = Api('any');
     authBloc = AuthBloc(api);
-    authBloc.loggedInUser = GirafUserModel(id: '1', role: Role.Guardian, 
-                              roleName: 'guardian', username: 'testUsername', 
-                              displayName: 'testDisplayname', department: 1);
+    authBloc.loggedInUser = GirafUserModel(
+        id: '1',
+        role: Role.Guardian,
+        roleName: 'guardian',
+        username: 'testUsername',
+        displayName: 'testDisplayname',
+        department: 1);
     api.user = MockUserApi();
     bloc = ChooseCitizenBloc(api);
     di.registerDependency<Api>(() => api);
@@ -58,7 +62,6 @@ void main() {
     di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
     di.registerDependency<ToolbarBloc>(() => toolbarBloc);
   });
-
 
   testWidgets('Renders ChooseCitizenScreen', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
@@ -96,7 +99,7 @@ void main() {
     final Role role = authBloc.loggedInUser.role;
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     await tester.pumpAndSettle();
-    if(role == Role.Guardian) {
+    if (role == Role.Guardian) {
       expect(find.byType(TextButton), findsNWidgets(1));
     } else {
       expect(find.byType(TextButton), findsNWidgets(0));

@@ -16,7 +16,7 @@ class InputFieldsWeekPlan extends StatefulWidget {
   /// Class created for keeping the input fields for the new and
   /// edit week plan screen consisten-t
   const InputFieldsWeekPlan(
-      {required this.bloc, required this.button, required this.weekModel});
+      {required this.bloc, required this.button, this.weekModel});
 
   /// This is the bloc used to control the input fields
   final NewWeekplanBloc bloc;
@@ -26,7 +26,7 @@ class InputFieldsWeekPlan extends StatefulWidget {
   final GirafButton button;
 
   /// This is the information from the current weekModel object
-  final WeekModel weekModel;
+  final WeekModel? weekModel;
 
   @override
   InputFieldsWeekPlanState createState() => InputFieldsWeekPlanState();
@@ -72,7 +72,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 key: const Key('WeekTitleTextFieldKey'),
                 onChanged: widget.bloc.onTitleChanged.add,
                 initialValue:
-                    widget.weekModel == null ? '' : widget.weekModel.name,
+                    widget.weekModel == null ? '' : widget.weekModel!.name,
                 keyboardType: TextInputType.text,
                 // To avoid emojis and other special characters
                 inputFormatters: <TextInputFormatter>[
@@ -99,11 +99,11 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 key: const Key('WeekYearTextFieldKey'),
                 keyboardType: TextInputType.number,
                 onChanged: widget.bloc.onYearChanged.add,
-                initialValue: widget.weekModel.weekYear.toString(),
+                initialValue: widget.weekModel!.weekYear.toString(),
                 style: _style,
                 decoration: InputDecoration(
                     labelText: 'År',
-                    errorText: (snapshot?.data == true)
+                    errorText: (snapshot.data == true)
                         ? null
                         : 'År skal angives som fire cifre',
                     border: const OutlineInputBorder(borderSide: BorderSide())),
@@ -123,11 +123,11 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 onChanged: widget.bloc.onWeekNumberChanged.add,
                 initialValue: widget.weekModel == null
                     ? ''
-                    : widget.weekModel.weekNumber.toString(),
+                    : widget.weekModel!.weekNumber.toString(),
                 style: _style,
                 decoration: InputDecoration(
                     labelText: 'Ugenummer',
-                    errorText: (snapshot?.data == true)
+                    errorText: (snapshot.data == true)
                         ? null
                         : 'Ugenummer skal være mellem 1 og 53',
                     border: const OutlineInputBorder(borderSide: BorderSide())),
@@ -154,7 +154,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
 
   Widget _buildThumbnail(
       BuildContext context, AsyncSnapshot<PictogramModel> snapshot) {
-    if (snapshot?.data == null) {
+    if (snapshot.data == null) {
       return GestureDetector(
         onTap: () => _openPictogramSearch(context, widget.bloc),
         child: Card(
@@ -172,10 +172,10 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
       );
     } else {
       return PictogramImage(
-        pictogram: snapshot.data,
-        onPressed: () => _openPictogramSearch(context, widget.bloc),
-        haveRights: false,
-      );
+          pictogram: snapshot.data!,
+          onPressed: () => _openPictogramSearch(context, widget.bloc),
+          haveRights: false,
+          key: const ValueKey<String>('value'));
     }
   }
 
@@ -186,7 +186,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
             const PictogramSearch(
               user: null,
             ))
-        .then((PictogramModel pictogram) {
+        .then((PictogramModel? pictogram) {
       if (pictogram != null) {
         bloc.onThumbnailChanged.add(pictogram);
       }

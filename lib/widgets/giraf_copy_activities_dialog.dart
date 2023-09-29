@@ -74,12 +74,13 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
                     ))
                   ],
                 ),
-                _buildCheckboxes(snapshot.data),
+                _buildCheckboxes(snapshot.data!),
                 CopyDialogButtons(
                     confirmButtonText: confirmButtonText,
                     confirmButtonIcon: confirmButtonIcon,
                     confirmOnPressed: confirmOnPressed,
-                    checkMarkValues: snapshot.data)
+                    checkMarkValues: snapshot.data!,
+                    key: const ValueKey<String>('value'))
               ],
             );
           }),
@@ -140,7 +141,7 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
     return CheckboxListTile(
       key: checkboxKey,
       value: value,
-      onChanged: (bool value) =>
+      onChanged: (bool? value) =>
           copyActivitiesBloc.toggleCheckboxState(weekday.index),
       title: Text(checkboxTitle),
       controlAffinity: ListTileControlAffinity.trailing,

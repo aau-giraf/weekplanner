@@ -11,16 +11,16 @@ import 'package:weekplanner/blocs/pictogram_bloc.dart';
 class MockPictogramApi extends Mock implements PictogramApi {
   @override
   Stream<PictogramModel> get(int id) async* {
-    final PictogramModel mockModel = PictogramModel(id: -1, title: 'test1',
-        accessLevel: AccessLevel.PUBLIC);
+    final PictogramModel mockModel =
+        PictogramModel(id: -1, title: 'test1', accessLevel: AccessLevel.PUBLIC);
     yield mockModel;
   }
 }
 
 void main() {
-  PictogramBloc bloc;
-  Api api;
-  MockPictogramApi pictogramApi;
+  late PictogramBloc bloc;
+  late Api api;
+  late MockPictogramApi pictogramApi;
 
   setUp(() {
     api = Api('any');
@@ -33,11 +33,10 @@ void main() {
     const String query = 'Kat';
     int count = 0;
 
-    when(pictogramApi.getAll(page: bloc.latestPage,
-        pageSize: pageSize, query: query)).thenAnswer(
-            (_) =>
-        rx_dart.BehaviorSubject<List<PictogramModel>>
-            .seeded(<PictogramModel>[]));
+    when(pictogramApi.getAll(
+            page: bloc.latestPage, pageSize: pageSize, query: query))
+        .thenAnswer((_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
+            <PictogramModel>[]));
 
     bloc.pictograms.listen((List<PictogramModel> response) {
       switch (count) {
@@ -45,8 +44,8 @@ void main() {
           expect(response, isNull);
           break;
         case 1:
-          verify(pictogramApi.getAll(page: bloc.latestPage,
-              pageSize: pageSize, query: query));
+          verify(pictogramApi.getAll(
+              page: bloc.latestPage, pageSize: pageSize, query: query));
           done();
           break;
       }

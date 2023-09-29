@@ -66,7 +66,7 @@ class WeekplanActivitiesColumn extends StatelessWidget {
         stream: weekplanBloc.getWeekdayStream(streamIndex),
         builder: (BuildContext context, AsyncSnapshot<WeekdayModel> snapshot) {
           if (snapshot.hasData) {
-            final WeekdayModel _dayModel = trimToActive(snapshot.data);
+            final WeekdayModel _dayModel = trimToActive(snapshot.data!);
 
             return Card(color: color, child: _day(_dayModel, context));
           } else {
@@ -182,7 +182,7 @@ class WeekplanActivitiesColumn extends StatelessWidget {
                                       AsyncSnapshot<bool> snapshot) {
                                     return Visibility(
                                       key: const Key('GreyDragVisibleKey'),
-                                      visible: snapshot.data,
+                                      visible: snapshot.data!,
                                       child: _dragTargetPlaceholder(
                                           index, weekday),
                                     );
@@ -194,7 +194,7 @@ class WeekplanActivitiesColumn extends StatelessWidget {
                                   builder: (BuildContext context,
                                       AsyncSnapshot<WeekplanMode> snapshot) {
                                     return _pictogramIconStack(context, index,
-                                        weekday, editModeSnapshot.data);
+                                        weekday, editModeSnapshot.data!);
                                   });
                             }
                           },
@@ -206,12 +206,12 @@ class WeekplanActivitiesColumn extends StatelessWidget {
         });
   }
 
-  DragTarget<Tuple2<ActivityModel, Weekday>> _dragTargetPlaceholder(
+  DragTarget<Tuple2<ActivityModel, Weekday?>> _dragTargetPlaceholder(
       int dropTargetIndex, WeekdayModel weekday) {
-    return DragTarget<Tuple2<ActivityModel, Weekday>>(
+    return DragTarget<Tuple2<ActivityModel, Weekday?>>(
       key: const Key('DragTargetPlaceholder'),
       builder: (BuildContext context,
-          List<Tuple2<ActivityModel, Weekday>> candidateData,
+          List<Tuple2<ActivityModel, Weekday?>?> candidateData,
           List<dynamic> rejectedData) {
         return const AspectRatio(
           aspectRatio: 1,
@@ -221,13 +221,13 @@ class WeekplanActivitiesColumn extends StatelessWidget {
           ),
         );
       },
-      onWillAccept: (Tuple2<ActivityModel, Weekday> data) {
+      onWillAccept: (Tuple2<ActivityModel, Weekday?>? data) {
         // Draggable can be dropped on every drop target
         return true;
       },
-      onAccept: (Tuple2<ActivityModel, Weekday> data) {
+      onAccept: (Tuple2<ActivityModel, Weekday?> data) {
         weekplanBloc.reorderActivities(
-            data.item1, data.item2, weekday.day, dropTargetIndex);
+            data.item1, data.item2!, weekday.day, dropTargetIndex);
       },
     );
   }
@@ -321,7 +321,7 @@ class WeekplanActivitiesColumn extends StatelessWidget {
       } else {
         weekplanBloc.addMarkedActivity(activities[index]);
       }
-    } else if (activities[index].isChoiceBoard &&
+    } else if (activities[index].isChoiceBoard! &&
         isCitizen &&
         !(activities[index].state == ActivityState.Canceled)) {
       showDialog<Center>(
@@ -336,7 +336,13 @@ class WeekplanActivitiesColumn extends StatelessWidget {
           .push(
               context,
               ShowActivityScreen(
-                  activities[index], user, weekplanBloc, _timerBloc, weekday))
+                activities[index],
+                user,
+                weekplanBloc,
+                _timerBloc,
+                weekday,
+                key: const ValueKey<String>('value'),
+              ))
           .whenComplete(() {
         weekplanBloc.getWeekday(weekday.day).catchError((Object error) {
           creatingNotifyDialog(error, context);

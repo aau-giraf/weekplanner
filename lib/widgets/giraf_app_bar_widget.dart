@@ -20,7 +20,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
   /// Used to store the icons that should be displayed in the appbar.
-  final Map<AppBarIcon, VoidCallback> appBarIcons;
+  final Map<AppBarIcon, VoidCallback>? appBarIcons;
 
   /// Contains the functionality of the toolbar.
   final ToolbarBloc toolbarBloc;
@@ -47,7 +47,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
             stream: toolbarBloc.visibleButtons,
             builder: (BuildContext context,
                 AsyncSnapshot<List<IconButton>> snapshot) {
-              return Row(children: snapshot.data);
+              return Row(children: snapshot.data!);
             }),
       ],
     );
