@@ -26,7 +26,7 @@ void main() {
    * Use the "environments.local.json" for running against your local web-api
    * For IOS users: change the SERVER_HOST in the environment.local file to "http://localhost:5000"
    */
-  environment.setFile('assets/environments.dev.json').whenComplete(() {
+  environment.setFile('assets/environments.local.json').whenComplete(() {
     _runApp();
   });
 }
@@ -42,7 +42,7 @@ void _runApp() {
   runApp(MaterialApp(
       title: 'Weekplanner',
       theme: ThemeData(fontFamily: 'Quicksand'),
-      //debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       home: StreamBuilder<bool>(
           initialData: false,
           stream: di.get<AuthBloc>().loggedIn.where((bool currentState) =>

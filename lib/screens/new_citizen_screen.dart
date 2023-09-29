@@ -15,11 +15,17 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 /// Role names for Weekplanner
 enum Roles {
   /// Guardian role
-  guardian,
+    guardian,
   /// Trustee  role
-  trustee,
-  /// Citizen role
-  citizen }
+    trustee,
+   /// Citizen role
+   citizen }
+
+Map<Roles, String> roleText = {
+  Roles.guardian: 'pædagog',
+  Roles.trustee: 'værge',
+  Roles.citizen: 'borger',
+};
 
 /// Screen for creating a new citizen
 // ignore: must_be_immutable
@@ -120,7 +126,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                             Expanded(
                               child: ListTile(
                                 key: const Key('guardianRadioButton'),
-                                title: const Text('Guardian'),
+                                title: const Text('Pædagog'),
                                 leading: Radio<Roles>(
                                   value: Roles.guardian,
                                   groupValue: _role,
@@ -137,7 +143,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                             Expanded(
                               child: ListTile(
                                 key: const Key('trusteeRadioButton'),
-                                title: const Text('Trustee'),
+                                title: const Text('Værge'),
                                 leading: Radio<Roles>(
                                   value: Roles.trustee,
                                   groupValue: _role,
@@ -154,7 +160,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                             Expanded(
                               child: ListTile(
                                 key: const Key('citizenRadioButton'),
-                                title: const Text('Citizen'),
+                                title: const Text('Borger'),
                                 leading: Radio<Roles>(
                                   value: Roles.citizen,
                                   groupValue: _role,
@@ -280,12 +286,12 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                     );
                   }),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            Padding( // edit
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
               //child: Text('Profil billede af borger (valgfri):'),
               child: AutoSizeText(
-                'Profil billede af borger (valgfri):',
-                style: TextStyle(fontSize: GirafFont.small),
+                'Profil billede af ${roleText[_role]} (valgfri):',
+                style: const TextStyle(fontSize: GirafFont.small),
               ),
             ),
       
