@@ -10,7 +10,7 @@ import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/weekday_color_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -84,7 +84,9 @@ void main() {
       weekDayColors: MockUserApi.createWeekDayColors(),
     );
 
-    when(api.user.updateSettings(any, any)).thenAnswer((_) {
+    when(api.user.updateSettings(any as String, any as SettingsModel)
+            as Function())
+        .thenAnswer((_) {
       return Stream<bool>.value(true);
     });
 
@@ -120,13 +122,13 @@ void main() {
     await tester
         .pumpWidget(MaterialApp(home: ColorThemeSelectorScreen(user: user)));
 
-    settingsBloc.settings.listen((SettingsModel response) {
+    settingsBloc.settings.listen((SettingsModel? response) {
       expect(response, isNotNull);
 
       final List<WeekdayColorModel> expectedList =
           MockUserApi.createWeekDayColors();
 
-      for (int i = 0; i < response.weekDayColors!.length; i++) {
+      for (int i = 0; i < response!.weekDayColors!.length; i++) {
         expect(response.weekDayColors?[i].hexColor == expectedList[i].hexColor,
             isTrue);
         expect(response.weekDayColors?[i].day == expectedList[i].day, isTrue);
@@ -206,7 +208,7 @@ void main() {
         home: ColorThemeSelectorScreen(user: user),
         // ignore: always_specify_types
         navigatorObservers: [mockObserver]));
-    verify(mockObserver.didPush(any, any));
+    verify(mockObserver.didPush(any as Route, any as Route?) as Function());
 
     await tester.pumpAndSettle();
     expect(find.byType(SettingsColorThemeCheckMarkButton), findsNWidgets(3));
@@ -214,6 +216,6 @@ void main() {
     await tester.pump();
     await tester.tap(find.byType(SettingsColorThemeCheckMarkButton).first);
     await tester.pump();
-    verify(mockObserver.didPop(any, any));
+    verify(mockObserver.didPop(any as Route, any as Route?) as Function());
   });
 }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -428,7 +429,8 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                                     widget._bloc.usernameController.value!,
                                     widget._bloc.displayNameController.value!,
                                     widget._bloc.encodePicture(
-                                        widget._bloc.fileController!.value),
+                                            widget._bloc.fileController!.value)
+                                        as Uint8List,
                                   )));
                     },
                   ),

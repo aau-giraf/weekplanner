@@ -14,7 +14,7 @@ class CopyResolveBloc extends NewWeekplanBloc {
   void initializeCopyResolverBloc(DisplayNameModel user, WeekModel weekModel) {
     super.initialize(user);
     // We just take the values out of the week model and put into our sink
-    super.onTitleChanged.add(weekModel.name);
+    super.onTitleChanged.add(weekModel.name!);
     super.onYearChanged.add(weekModel.weekYear.toString());
     super.onWeekNumberChanged.add(weekModel.weekNumber.toString());
     super.onThumbnailChanged.add(weekModel.thumbnail);
@@ -32,5 +32,4 @@ class CopyResolveBloc extends NewWeekplanBloc {
 
     return newWeekModel;
   }
-
 }

@@ -145,7 +145,7 @@ void main() {
     late String id;
     final Completer<bool> done = Completer<bool>();
     api.user.me().listen((GirafUserModel model) {
-      id = model.id;
+      id = model.id!;
       done.complete(true);
     });
 

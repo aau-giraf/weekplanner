@@ -15,7 +15,7 @@ import 'package:api_client/models/weekday_color_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -164,42 +164,47 @@ void main() {
     weekNameModelList.add(weekNameModel);
     weekNameModelList.add(weekNameModel2);
 
-    when(weekApi.getNames('testId')).thenAnswer((_) =>
+    when(weekApi.getNames('testId') as Function()).thenAnswer((_) =>
         rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
     when(weekApi.get(
-            'testId', weekNameModel.weekYear, weekNameModel.weekNumber))
+                'testId', weekNameModel.weekYear!, weekNameModel.weekNumber!)
+            as Function())
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
 
     when(weekApi.get(
-            'testId', weekModel1Copy.weekYear, weekModel1Copy.weekNumber))
+                'testId', weekModel1Copy.weekYear!, weekModel1Copy.weekNumber!)
+            as Function())
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(emptyWeekmodel));
     when(weekApi.get(
-            'testId', weekNameModel2.weekYear, weekNameModel2.weekNumber))
+                'testId', weekNameModel2.weekYear!, weekNameModel2.weekNumber!)
+            as Function())
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel2));
 
-    when(weekApi.get('testId', weekModel1.weekYear, weekModel1.weekNumber))
+    when(weekApi.get('testId', weekModel1.weekYear!, weekModel1.weekNumber!)
+            as Function())
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
 
     when(weekApi.get(
-            'testId', mockWeekModel.weekYear, mockWeekModel.weekNumber))
+                'testId', mockWeekModel.weekYear!, mockWeekModel.weekNumber!)
+            as Function())
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(mockWeekModel));
 
     when(weekApi.update('testId', weekModel1Copy.weekYear!,
-            weekModel1Copy.weekNumber!, any))
+            weekModel1Copy.weekNumber!, any as WeekModel) as Function())
         .thenAnswer((_) {
       return rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1Copy);
     });
 
-    when(weekApi.delete(mockUser.id, any, any))
+    when(weekApi.delete(mockUser.id!, any as int, any as int) as Function())
         .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
 
-    when(pictogramApi.getImage(any))
+    when(pictogramApi.getImage(any as int) as Function())
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
   }
 
@@ -361,7 +366,7 @@ void main() {
     await tester.tap(find.byKey(const Key('ShowOldWeeks')));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
+    expect(find.byKey(Key(weekModel1.name!)), findsOneWidget);
 
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
@@ -370,7 +375,7 @@ void main() {
     // is in fact not marked
     expect(bloc.getMarkedWeekModels().contains(weekModel1), false);
 
-    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.tap(find.byKey(Key(weekModel1.name!)));
     await tester.pumpAndSettle();
 
     // After we have marked the week plan weekModel1 we check that it
@@ -389,8 +394,8 @@ void main() {
     await tester.tap(find.byKey(const Key('ShowOldWeeks')));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
-    expect(find.byKey(Key(weekModel2.name)), findsOneWidget);
+    expect(find.byKey(Key(weekModel1.name!)), findsOneWidget);
+    expect(find.byKey(Key(weekModel2.name!)), findsOneWidget);
 
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
@@ -399,9 +404,9 @@ void main() {
     expect(bloc.getMarkedWeekModels().contains(weekModel1), false);
     expect(bloc.getMarkedWeekModels().contains(weekModel2), false);
 
-    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.tap(find.byKey(Key(weekModel1.name!)));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(Key(weekModel2.name)));
+    await tester.tap(find.byKey(Key(weekModel2.name!)));
     await tester.pumpAndSettle();
 
     // After we have marked the week plans we check that they are in fact marked
@@ -448,7 +453,7 @@ void main() {
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.tap(find.byKey(Key(weekModel1.name!)));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('DeleteActivtiesButton')));
@@ -479,7 +484,7 @@ void main() {
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.tap(find.byKey(Key(weekModel1.name!)));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('DeleteActivtiesButton')));
@@ -502,15 +507,15 @@ void main() {
     await tester.tap(find.byKey(const Key('ShowOldWeeks')));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
-    expect(find.byKey(Key(weekModel2.name)), findsOneWidget);
+    expect(find.byKey(Key(weekModel1.name!)), findsOneWidget);
+    expect(find.byKey(Key(weekModel2.name!)), findsOneWidget);
 
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.tap(find.byKey(Key(weekModel1.name!)));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(Key(weekModel2.name)));
+    await tester.tap(find.byKey(Key(weekModel2.name!)));
     await tester.pumpAndSettle();
 
     // Checks that the two marked week model are in fact marked
@@ -537,18 +542,18 @@ void main() {
     await tester.tap(find.byKey(const Key('ShowOldWeeks')));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
+    expect(find.byKey(Key(weekModel1.name!)), findsOneWidget);
 
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.tap(find.byKey(Key(weekModel1.name!)));
     await tester.pumpAndSettle();
 
     // Checks that the marked week model is in fact marked
     expect(bloc.getMarkedWeekModels().contains(weekModel1), true);
 
-    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.tap(find.byKey(Key(weekModel1.name!)));
     await tester.pumpAndSettle();
 
     // Checks that after marking/tapping the week plan again, the
@@ -570,7 +575,7 @@ void main() {
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.tap(find.byKey(Key(weekModel1.name!)));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('EditButtonKey')));
@@ -593,10 +598,10 @@ void main() {
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.tap(find.byKey(Key(weekModel1.name!)));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(Key(weekModel2.name)));
+    await tester.tap(find.byKey(Key(weekModel2.name!)));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('EditButtonKey')));
@@ -633,7 +638,7 @@ void main() {
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.tap(find.byKey(Key(weekModel1.name!)));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('CopyWeekplanButton')));
@@ -660,8 +665,8 @@ void main() {
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(Key(weekModel1.name)));
-    await tester.tap(find.byKey(Key(weekModel2.name)));
+    await tester.tap(find.byKey(Key(weekModel1.name!)));
+    await tester.tap(find.byKey(Key(weekModel2.name!)));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('CopyWeekplanButton')));
@@ -692,7 +697,7 @@ void main() {
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.tap(find.byKey(Key(weekModel1.name!)));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('CopyWeekplanButton')));
@@ -716,7 +721,7 @@ void main() {
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.tap(find.byKey(Key(weekModel1.name!)));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('CopyWeekplanButton')));
@@ -736,7 +741,7 @@ void main() {
     mockWeekNameModelList.add(weekNameModel);
     mockWeekNameModelList.add(weekNameModel2);
 
-    when(weekApi.getNames('testId')).thenAnswer((_) =>
+    when(weekApi.getNames('testId') as Function()).thenAnswer((_) =>
         rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(
             mockWeekNameModelList));
 
@@ -749,11 +754,11 @@ void main() {
     await tester.tap(find.byKey(const Key('ShowOldWeeks')));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
-    expect(find.byKey(Key(mockWeekModel.name)), findsNothing);
-    expect(find.byKey(Key(weekModel2.name)), findsOneWidget);
+    expect(find.byKey(Key(weekModel1.name!)), findsOneWidget);
+    expect(find.byKey(Key(mockWeekModel.name!)), findsNothing);
+    expect(find.byKey(Key(weekModel2.name!)), findsOneWidget);
 
-    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.tap(find.byKey(Key(weekModel1.name!)));
     await tester.pumpAndSettle();
 
     mockWeekNameModelList.add(WeekNameModel(
@@ -764,9 +769,9 @@ void main() {
     await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
-    expect(find.byKey(Key(mockWeekModel.name)), findsOneWidget);
-    expect(find.byKey(Key(weekModel2.name)), findsOneWidget);
+    expect(find.byKey(Key(weekModel1.name!)), findsOneWidget);
+    expect(find.byKey(Key(mockWeekModel.name!)), findsOneWidget);
+    expect(find.byKey(Key(weekModel2.name!)), findsOneWidget);
   });
 
   testWidgets('Test if hide/show old weeks button works',

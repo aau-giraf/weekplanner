@@ -7,7 +7,7 @@ import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -102,7 +102,7 @@ void main() {
         home: TimeRepresentationScreen(user),
         // ignore: always_specify_types
         navigatorObservers: [mockObserver]));
-    verify(mockObserver.didPush(any, any));
+    verify(mockObserver.didPush(any as Route, any as Route?) as Function());
 
     await tester.pumpAndSettle();
     expect(find.byType(SettingsCheckMarkButton), findsNWidgets(3));
@@ -110,6 +110,6 @@ void main() {
     await tester.pump();
     await tester.tap(find.byType(SettingsCheckMarkButton).first);
     await tester.pump();
-    verify(mockObserver.didPop(any, any));
+    verify(mockObserver.didPop(any as Route, any as Route?) as Function());
   });
 }

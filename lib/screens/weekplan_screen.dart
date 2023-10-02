@@ -58,10 +58,10 @@ class WeekplanScreen extends StatelessWidget {
           if (weekModeSnapshot.data == WeekplanMode.citizen) {
             _weekplanBloc.setEditMode(false);
           }
-          return StreamBuilder<SettingsModel>(
+          return StreamBuilder<SettingsModel?>(
               stream: _settingsBloc.settings,
               builder: (BuildContext context,
-                  AsyncSnapshot<SettingsModel> settingsSnapshot) {
+                  AsyncSnapshot<SettingsModel?> settingsSnapshot) {
                 if (settingsSnapshot.hasData) {
                   final SettingsModel? _settingsModel = settingsSnapshot.data;
                   return WillPopScope(
@@ -69,7 +69,7 @@ class WeekplanScreen extends StatelessWidget {
                     child: Scaffold(
                       appBar: GirafAppBar(
                         key: const ValueKey<String>('settings'),
-                        title: _user.displayName! + ' - ' + _week.name,
+                        title: _user.displayName! + ' - ' + _week.name!,
                         appBarIcons: (weekModeSnapshot.data ==
                                 WeekplanMode.guardian)
                             ? <AppBarIcon, VoidCallback>{
@@ -374,24 +374,24 @@ class WeekplanScreen extends StatelessWidget {
               }
               return Row(children: weekDays);
             } else if (role == WeekplanMode.citizen) {
-              return StreamBuilder<SettingsModel>(
+              return StreamBuilder<SettingsModel?>(
                 stream: _settingsBloc.settings,
                 builder: (BuildContext context,
-                    AsyncSnapshot<SettingsModel> settingsSnapshot) {
+                    AsyncSnapshot<SettingsModel?> settingsSnapshot) {
                   if (settingsSnapshot.hasData) {
                     final SettingsModel? _settingsModel = settingsSnapshot.data;
                     late int _daysToDisplay;
                     late bool _displayDaysRelative;
                     if (orientation == Orientation.portrait) {
                       _daysToDisplay =
-                          _settingsModel!.nrOfDaysToDisplayPortrait;
+                          _settingsModel!.nrOfDaysToDisplayPortrait!;
                       _displayDaysRelative =
-                          _settingsModel.displayDaysRelativePortrait;
+                          _settingsModel.displayDaysRelativePortrait!;
                     } else if (orientation == Orientation.landscape) {
                       _daysToDisplay =
-                          _settingsModel!.nrOfDaysToDisplayLandscape;
+                          _settingsModel!.nrOfDaysToDisplayLandscape!;
                       _displayDaysRelative =
-                          _settingsModel.displayDaysRelativeLandscape;
+                          _settingsModel.displayDaysRelativeLandscape!;
                     }
                     final int? _activitiesToDisplay =
                         _settingsModel!.nrOfActivitiesToDisplay;
@@ -415,7 +415,7 @@ class WeekplanScreen extends StatelessWidget {
                           .where((WeekdayColorModel w) =>
                               w.day == Weekday.values[_weekdayCounter])
                           .single
-                          .hexColor
+                          .hexColor!
                           .replaceFirst('#', '0xff');
                       addDayToWeek(weekDays, i, Color(int.parse(dayColor)));
                       if (_daysToDisplay == 2 && _weekdayCounter == 6) {

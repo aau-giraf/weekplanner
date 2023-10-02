@@ -13,7 +13,7 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/models/user_week_model.dart';
@@ -77,18 +77,27 @@ void main() {
     api.user = MockUserApi();
     api.week = MockWeekApi();
     api.activity = MockActivityApi();
-    when(api.week.update(any, any, any, any)).thenAnswer((Invocation inv) {
+    when(api.week
+                .update(any as String, any as int, any as int, any as WeekModel)
+            as Function())
+        .thenAnswer((Invocation inv) {
       return Stream<WeekModel>.value(inv.positionalArguments[3]);
     });
 
-    when(api.week.get(any, any, any)).thenAnswer((Invocation inv) {
+    when(api.week.get(any as String, any as int, any as int) as Function())
+        .thenAnswer((Invocation inv) {
       return Stream<WeekModel>.value(week);
     });
-    when(api.week.getDay(any, any, any, any)).thenAnswer((Invocation inv) {
+    when(api.week.getDay(any as String, any as int, any as int, any as Weekday)
+            as Function())
+        .thenAnswer((Invocation inv) {
       return Stream<WeekdayModel>.value(week.days!.singleWhere(
           (WeekdayModel day) => day.day == inv.positionalArguments[3]));
     });
-    when(api.week.updateDay(any, any, any, any)).thenAnswer((Invocation inv) {
+    when(api.week.updateDay(
+                any as String, any as int, any as int, any as WeekdayModel)
+            as Function())
+        .thenAnswer((Invocation inv) {
       return Stream<WeekdayModel>.value(inv.positionalArguments[3]);
     });
 
@@ -100,7 +109,8 @@ void main() {
     weekplanBloc.userWeek.listen((UserWeekModel response) {
       expect(response, isNotNull);
       expect(response.week, equals(week));
-      verify(api.week.get(user.id, week.weekYear, week.weekNumber));
+      verify(api.week.get(user.id!, week.weekYear!, week.weekNumber!)
+          as Function());
       done();
     });
   }));
@@ -235,13 +245,15 @@ void main() {
           lastEdit: null,
           title: 'test123')
     ], id: 2, isChoiceBoard: null, order: null, state: null);
-    week.days![0].activities.add(activity);
+    week.days![0].activities!.add(activity);
     weekplanBloc.getWeek(week, user).whenComplete(() {
       weekplanBloc.setDaysToDisplay(1, 0);
       weekplanBloc.addWeekdayStream();
       weekplanBloc.addMarkedActivity(activity);
       weekplanBloc.deleteMarkedActivities();
-      verify(api.week.updateDay(any, any, any, any));
+      verify(api.week.updateDay(
+              any as String, any as int, any as int, any as WeekdayModel)
+          as Function());
       done();
     });
   }));
@@ -289,9 +301,11 @@ void main() {
       weekplanBloc.addMarkedActivity(activity);
       weekplanBloc.copyMarkedActivities(
           <bool>[false, false, false, false, true, false, false]);
-      verify(api.week.updateDay(any, any, any, any));
+      verify(api.week.updateDay(
+              any as String, any as int, any as int, any as WeekdayModel)
+          as Function());
       weekplanBloc.getWeekdayStream(4).listen((WeekdayModel weekday) {
-        expect(weekday.activities.length, 1);
+        expect(weekday.activities!.length, 1);
       });
     });
     done();
@@ -338,9 +352,11 @@ void main() {
       }
       weekplanBloc.addMarkedActivity(activity);
       weekplanBloc.cancelMarkedActivities();
-      verify(api.week.updateDay(any, any, any, any));
+      verify(api.week.updateDay(
+              any as String, any as int, any as int, any as WeekdayModel)
+          as Function());
       weekplanBloc.getWeekdayStream(0).listen((WeekdayModel weekday) {
-        expect(weekday.activities.first.state, ActivityState.Canceled);
+        expect(weekday.activities!.first.state, ActivityState.Canceled);
       });
     });
     done();
@@ -389,9 +405,11 @@ void main() {
       weekplanBloc.addMarkedActivity(activity);
       weekplanBloc.undoMarkedActivities();
       weekplanBloc.getWeekdayStream(0).listen((WeekdayModel weekday) {
-        expect(weekday.activities.first.state, ActivityState.Active);
+        expect(weekday.activities!.first.state, ActivityState.Active);
       });
-      verify(api.week.updateDay(any, any, any, any));
+      verify(api.week.updateDay(
+              any as String, any as int, any as int, any as WeekdayModel)
+          as Function());
     });
     done();
   }));
@@ -426,10 +444,12 @@ void main() {
         weekplanBloc.addWeekdayStream();
       }
       weekplanBloc.addActivity(activity, 0).whenComplete(() {
-        verify(api.week.updateDay(any, any, any, any));
+        verify(api.week.updateDay(
+                any as String, any as int, any as int, any as WeekdayModel)
+            as Function());
         weekplanBloc.getWeekdayStream(0).listen((WeekdayModel weekday) {
-          expect(weekday.activities.length, 1);
-          expect(weekday.activities.first, activity);
+          expect(weekday.activities!.length, 1);
+          expect(weekday.activities!.first, activity);
         });
       });
     });
@@ -455,8 +475,8 @@ void main() {
 
     final ActivityModel modelToMove = ActivityModel(
         id: 1, pictograms: null, order: 0, state: null, isChoiceBoard: false);
-    week.days![0].activities.add(modelToMove);
-    week.days![1].activities.add(ActivityModel(
+    week.days![0].activities!.add(modelToMove);
+    week.days![1].activities!.add(ActivityModel(
         id: 2, pictograms: null, order: 0, state: null, isChoiceBoard: false));
 
     weekplanBloc.getWeek(week, user).whenComplete(() {
@@ -468,14 +488,16 @@ void main() {
           .reorderActivities(modelToMove, Weekday.Monday, Weekday.Tuesday, 1)
           .whenComplete(() {
         weekplanBloc.getWeekdayStream(1).listen((WeekdayModel weekday) {
-          expect(weekday.activities[0].id, 2);
-          expect(weekday.activities[1].id, modelToMove.id);
-          expect(weekday.activities.length, 2);
+          expect(weekday.activities![0].id, 2);
+          expect(weekday.activities![1].id, modelToMove.id);
+          expect(weekday.activities!.length, 2);
         });
         weekplanBloc.getWeekdayStream(0).listen((WeekdayModel weekday) {
-          expect(weekday.activities.length, 0);
+          expect(weekday.activities!.length, 0);
         });
-        verify(api.week.updateDay(any, any, any, any));
+        verify(api.week.updateDay(
+                any as String, any as int, any as int, any as WeekdayModel)
+            as Function());
       });
     });
     done();
@@ -501,12 +523,12 @@ void main() {
     final ActivityModel modelToMove = ActivityModel(
         id: 1, pictograms: null, order: 0, state: null, isChoiceBoard: false);
 
-    week.days![0].activities.add(modelToMove);
+    week.days![0].activities!.add(modelToMove);
 
-    week.days![0].activities.add(ActivityModel(
+    week.days![0].activities!.add(ActivityModel(
         id: 2, pictograms: null, order: 1, state: null, isChoiceBoard: false));
 
-    week.days![0].activities.add(ActivityModel(
+    week.days![0].activities!.add(ActivityModel(
         id: 3, pictograms: null, order: 2, state: null, isChoiceBoard: false));
 
     weekplanBloc.getWeek(week, user).whenComplete(() {
@@ -518,14 +540,16 @@ void main() {
           .reorderActivities(modelToMove, Weekday.Monday, Weekday.Monday, 2)
           .whenComplete(() {
         weekplanBloc.getWeekdayStream(0).listen((WeekdayModel weekday) {
-          expect(weekday.activities[0].id, 2);
-          expect(weekday.activities[0].order, 0);
-          expect(weekday.activities[1].id, 3);
-          expect(weekday.activities[1].order, 1);
-          expect(weekday.activities[2].id, 1);
-          expect(weekday.activities[2].order, 2);
+          expect(weekday.activities![0].id, 2);
+          expect(weekday.activities![0].order, 0);
+          expect(weekday.activities![1].id, 3);
+          expect(weekday.activities![1].order, 1);
+          expect(weekday.activities![2].id, 1);
+          expect(weekday.activities![2].order, 2);
         });
-        verify(api.week.updateDay(any, any, any, any));
+        verify(api.week.updateDay(
+                any as String, any as int, any as int, any as WeekdayModel)
+            as Function());
       });
     });
     done();

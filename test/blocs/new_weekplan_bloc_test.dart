@@ -6,7 +6,7 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -38,11 +38,14 @@ void main() {
     api = Api('any');
     api.week = MockWeekApi();
 
-    when(api.week.update(any, any, any, any)).thenAnswer((_) {
+    when(api.week
+                .update(any as String, any as int, any as int, any as WeekModel)
+            as Function())
+        .thenAnswer((_) {
       return Stream<WeekModel>.value(mockWeek);
     });
 
-    when(api.week.getNames(any)).thenAnswer(
+    when(api.week.getNames(any as String) as Function()).thenAnswer(
       (_) {
         return Stream<List<WeekNameModel>>.value(<WeekNameModel>[
           WeekNameModel(
@@ -53,7 +56,8 @@ void main() {
       },
     );
 
-    when(api.week.get(any, any, any)).thenAnswer(
+    when(api.week.get(any as String, any as int, any as int) as Function())
+        .thenAnswer(
       (_) {
         return Stream<WeekModel>.value(mockWeek);
       },
@@ -81,7 +85,9 @@ void main() {
               existingWeekPlans: mockWeekplanSelector.weekNameModels)
           .then(
         (WeekModel w) {
-          verify(api.week.update(any, any, any, any));
+          verify(api.week.update(
+                  any as String, any as int, any as int, any as WeekModel)
+              as Function());
           done();
         },
       );
@@ -90,7 +96,7 @@ void main() {
 
   test('Should save the new weekplan even when there are no existing', async(
     (DoneFn done) {
-      when(api.week.getNames(any)).thenAnswer(
+      when(api.week.getNames(any as String) as Function()).thenAnswer(
           (_) => Stream<List<WeekNameModel>>.value(<WeekNameModel>[]));
 
       mockWeekplanSelector = WeekplansBloc(api);
@@ -106,7 +112,9 @@ void main() {
               existingWeekPlans: mockWeekplanSelector.weekNameModels)
           .then(
         (WeekModel w) {
-          verify(api.week.update(any, any, any, any));
+          verify(api.week.update(
+                  any as String, any as int, any as int, any as WeekModel)
+              as Function());
           done();
         },
       );

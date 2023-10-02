@@ -32,9 +32,9 @@ class PictogramPassword extends StatelessWidget {
 
   /// Returns the list of possible pictograms for use in the password
   /// as a stream
-  Stream<List<PictogramModel>> getStream(BuildContext context) async* {
-    final List<PictogramModel> list =
-        List<PictogramModel>.filled(CHOSENPICTOGRAMS.length, null);
+  Stream<List<PictogramModel?>?> getStream(BuildContext context) async* {
+    final List<PictogramModel?> list =
+        List<PictogramModel?>.filled(CHOSENPICTOGRAMS.length, null);
     yield list;
     try {
       for (int i = 0; i < list.length; i++) {
@@ -66,7 +66,7 @@ class PictogramPassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Stream<List<PictogramModel>?> _pictogramChoices = getStream(context);
+    final Stream<List<PictogramModel?>?> _pictogramChoices = getStream(context);
     final GlobalKey<PictogramInputFieldState> inputFieldKey = GlobalKey();
     final PictogramInputField password = PictogramInputField(
         key: inputFieldKey, onPasswordChanged: onPasswordChanged);
@@ -78,10 +78,10 @@ class PictogramPassword extends StatelessWidget {
           Container(
               constraints: const BoxConstraints(
                   maxHeight: double.infinity, maxWidth: MAXWIDTH),
-              child: StreamBuilder<List<PictogramModel>?>(
+              child: StreamBuilder<List<PictogramModel?>?>(
                   stream: _pictogramChoices,
                   builder: (BuildContext context,
-                      AsyncSnapshot<List<PictogramModel>?> snapshot) {
+                      AsyncSnapshot<List<PictogramModel?>?> snapshot) {
                     if (snapshot.hasError) {
                       print(snapshot.error);
                       return const Text('Fejl i forbindelse med piktogrammer.');

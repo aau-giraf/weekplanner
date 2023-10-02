@@ -8,7 +8,7 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 //import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
@@ -84,7 +84,7 @@ void main() {
     api.week = MockWeekApi();
     api.user = MockUserApi();
 
-    when(api.week.update('testId', 2020, 3, any))
+    when(api.week.update('testId', 2020, 3, any as WeekModel) as Function())
         .thenAnswer((Invocation answer) {
       final WeekModel inputWeek = answer.positionalArguments[3];
       final WeekNameModel weekNameModel =
@@ -94,7 +94,7 @@ void main() {
       return Stream<WeekModel>.value(weekplan1);
     });
 
-    when(api.week.get('testId', 2020, 3)).thenAnswer((_) {
+    when(api.week.get('testId', 2020, 3) as Function()).thenAnswer((_) {
       for (WeekNameModel week in weekNameModelList) {
         final bool isEqual = week.weekYear == 2020 && week.weekNumber == 3;
         if (isEqual) {
@@ -105,19 +105,21 @@ void main() {
           thumbnail: null, name: '2020 - 3', weekYear: 2020, weekNumber: 3));
     });
 
-    when(api.week
-            .get('testId', weekNameModel.weekYear, weekNameModel.weekNumber))
+    when(api.week.get(
+                'testId', weekNameModel.weekYear!, weekNameModel.weekNumber!)
+            as Function())
         .thenAnswer((_) {
       return Stream<WeekModel>.value(weekplan1);
     });
 
-    when(api.week
-            .get('testId', weekNameModel2.weekYear, weekNameModel2.weekNumber))
+    when(api.week.get(
+                'testId', weekNameModel2.weekYear!, weekNameModel2.weekNumber!)
+            as Function())
         .thenAnswer((_) {
       return Stream<WeekModel>.value(weekplan2);
     });
 
-    when(api.week.getNames('testId')).thenAnswer((_) {
+    when(api.week.getNames('testId') as Function()).thenAnswer((_) {
       return Stream<List<WeekNameModel>>.value(weekNameModelList);
     });
 
@@ -152,7 +154,7 @@ void main() {
 
     expect(find.text(weekplan1.weekNumber.toString()), findsOneWidget);
     expect(find.text(weekplan1.weekYear.toString()), findsOneWidget);
-    expect(find.text(weekplan1.name), findsOneWidget);
+    expect(find.text(weekplan1.name!), findsOneWidget);
 
     await tester.enterText(
         find.byKey(const Key('WeekNumberTextFieldKey')), '3');

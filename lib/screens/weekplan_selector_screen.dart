@@ -229,7 +229,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
         builder:
             (BuildContext context, AsyncSnapshot<bool> inEditModeSnapshot) {
           return GestureDetector(
-              key: Key(weekplan.name),
+              key: Key(weekplan.name!),
               onTap: () =>
                   handleOnTap(context, weekplan, inEditModeSnapshot.data!),
               child: ColorFiltered(
@@ -256,7 +256,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                     Expanded(child: LayoutBuilder(builder:
                         (BuildContext context, BoxConstraints constraints) {
                       return AutoSizeText(
-                        weekplan.name,
+                        weekplan.name!,
                         style: const TextStyle(fontSize: GirafFont.small),
                         maxLines: 1,
                         minFontSize: 14,

@@ -26,10 +26,10 @@ class ColorThemeSelectorScreen extends StatelessWidget {
         appBar: GirafAppBar(
             title: _user!.displayName! + ': Farver på ugeplan',
             key: const ValueKey<String>('value')),
-        body: StreamBuilder<SettingsModel>(
+        body: StreamBuilder<SettingsModel?>(
             stream: _settingsBloc.settings,
             builder: (BuildContext context,
-                AsyncSnapshot<SettingsModel> settingsSnapshot) {
+                AsyncSnapshot<SettingsModel?> settingsSnapshot) {
               if (settingsSnapshot.hasData) {
                 final SettingsModel _settingsModel = settingsSnapshot.data!;
                 return ListView(

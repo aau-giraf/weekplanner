@@ -89,7 +89,7 @@ class MockChangePasswordScreen extends ChangePasswordScreen {
             const Key('WrongPassword'));
       } else if (snapshot) {
         account
-            .changePasswordWithOld(user.id, oldPassword, newPassword)
+            .changePasswordWithOld(user.id!, oldPassword, newPassword)
             .listen((bool response) {
           if (response) {
             createDialog('Kodeord ændret', 'Dit kodeord er blevet ændret',

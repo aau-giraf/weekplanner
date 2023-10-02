@@ -8,7 +8,7 @@ import 'package:api_client/models/week_name_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 
@@ -49,40 +49,46 @@ void main() {
     weekModelList.add(weekModel1);
     weekNameModelList.add(weekNameModel1);
 
-    when(weekApi.getNames('test')).thenAnswer((_) =>
+    when(weekApi.getNames('test') as Function()).thenAnswer((_) =>
         rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
     when(weekApi.get(
-            'test', weekNameModel1.weekYear, weekNameModel1.weekNumber))
+                'test', weekNameModel1.weekYear!, weekNameModel1.weekNumber!)
+            as Function())
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
 
     when(weekApi.get(
-            'test', weekNameModel2.weekYear, weekNameModel2.weekNumber))
+                'test', weekNameModel2.weekYear!, weekNameModel2.weekNumber!)
+            as Function())
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel2));
 
     when(weekApi.get(
-            'test', weekNameModel3.weekYear, weekNameModel3.weekNumber))
+                'test', weekNameModel3.weekYear!, weekNameModel3.weekNumber!)
+            as Function())
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel3));
 
     when(weekApi.get(
-            'test', weekNameModel4.weekYear, weekNameModel4.weekNumber))
+                'test', weekNameModel4.weekYear!, weekNameModel4.weekNumber!)
+            as Function())
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel4));
 
     when(weekApi.get(
-            'test', weekNameModel5.weekYear, weekNameModel5.weekNumber))
+                'test', weekNameModel5.weekYear!, weekNameModel5.weekNumber!)
+            as Function())
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel5));
 
     when(weekApi.get(
-            'test', weekNameModel6.weekYear, weekNameModel6.weekNumber))
+                'test', weekNameModel6.weekYear!, weekNameModel6.weekNumber!)
+            as Function())
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel6));
 
-    when(weekApi.delete(mockUser.id, any, any))
+    when(weekApi.delete(mockUser.id!, any as int, any as int) as Function())
         .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
   }
 
@@ -202,12 +208,12 @@ void main() {
     final List<WeekNameModel> weekNameModelList = <WeekNameModel>[
       weekNameModel1
     ];
-    when(weekApi.get(
-            mockUser.id, weekNameModel1.weekYear, weekNameModel1.weekNumber))
+    when(weekApi.get(mockUser.id!, weekNameModel1.weekYear!,
+            weekNameModel1.weekNumber!) as Function())
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
 
-    when(weekApi.getNames(mockUser.id)).thenAnswer((_) =>
+    when(weekApi.getNames(mockUser.id!) as Function()).thenAnswer((_) =>
         rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
     bloc.load(mockUser);
@@ -234,12 +240,12 @@ void main() {
     final List<WeekNameModel> weekNameModelList = <WeekNameModel>[
       weekNameModel6
     ];
-    when(weekApi.get(
-            mockUser.id, weekNameModel6.weekYear, weekNameModel6.weekNumber))
+    when(weekApi.get(mockUser.id!, weekNameModel6.weekYear!,
+            weekNameModel6.weekNumber!) as Function())
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel6));
 
-    when(weekApi.getNames(mockUser.id)).thenAnswer((_) =>
+    when(weekApi.getNames(mockUser.id!) as Function()).thenAnswer((_) =>
         rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
     bloc.load(mockUser);

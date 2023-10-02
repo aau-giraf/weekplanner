@@ -37,10 +37,10 @@ class ActivityCard extends StatelessWidget {
         stream: _authBloc.mode,
         builder: (BuildContext context,
             AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-          return StreamBuilder<SettingsModel>(
+          return StreamBuilder<SettingsModel?>(
               stream: _settingsBloc.settings,
               builder: (BuildContext context,
-                  AsyncSnapshot<SettingsModel> settingsSnapshot) {
+                  AsyncSnapshot<SettingsModel?> settingsSnapshot) {
                 return _buildActivityCard(
                     context, weekModeSnapshot, settingsSnapshot);
               });
@@ -50,7 +50,7 @@ class ActivityCard extends StatelessWidget {
   Widget _buildActivityCard(
       BuildContext context,
       AsyncSnapshot<WeekplanMode> weekModeSnapShot,
-      AsyncSnapshot<SettingsModel> settingsSnapShot) {
+      AsyncSnapshot<SettingsModel?> settingsSnapShot) {
     final ActivityState? _activityState = _activity.state;
     if (!_activity.isChoiceBoard!) {
       return Opacity(
@@ -100,7 +100,7 @@ class ActivityCard extends StatelessWidget {
   }
 
   bool _shouldActivityBeVisible(AsyncSnapshot<WeekplanMode> weekModeSnapShot,
-      AsyncSnapshot<SettingsModel> settingsSnapShot) {
+      AsyncSnapshot<SettingsModel?> settingsSnapShot) {
     if (weekModeSnapShot.hasData && settingsSnapShot.hasData) {
       final WeekplanMode? weekMode = weekModeSnapShot.data;
       final SettingsModel? settings = settingsSnapShot.data;
@@ -117,7 +117,7 @@ class ActivityCard extends StatelessWidget {
   Widget buildChoiceBoardActivityCard(
       BuildContext context,
       AsyncSnapshot<WeekplanMode> weekModeSnapShot,
-      AsyncSnapshot<SettingsModel> settingsSnapShot) {
+      AsyncSnapshot<SettingsModel?> settingsSnapShot) {
     final ActivityState? _activityState = _activity.state;
     final List<Widget> pictograms = <Widget>[];
     for (int i = 0; i < _activity.pictograms!.length; i++) {
@@ -220,7 +220,7 @@ class ActivityCard extends StatelessWidget {
       BuildContext context,
       ActivityState state,
       AsyncSnapshot<WeekplanMode> weekModeSnapShot,
-      AsyncSnapshot<SettingsModel> settingsSnapShot) {
+      AsyncSnapshot<SettingsModel?> settingsSnapShot) {
     return StreamBuilder<TimerRunningMode>(
         stream: _timerBloc.timerRunningMode,
         builder:
@@ -337,10 +337,10 @@ class ActivityCard extends StatelessWidget {
 
   /// Build timer icon.
   Widget _buildTimerAssetIcon() {
-    return StreamBuilder<SettingsModel>(
+    return StreamBuilder<SettingsModel?>(
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
-            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+            AsyncSnapshot<SettingsModel?> settingsSnapshot) {
           late String _iconPath;
 
           if (settingsSnapshot.hasData) {

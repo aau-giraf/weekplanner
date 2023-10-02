@@ -377,7 +377,7 @@ class ShowActivityScreen extends StatelessWidget {
 
   /// Builds the activity widget.
   Card buildActivity(BuildContext context) {
-    String inputtext = _activity.choiceBoardName;
+    String inputtext = _activity.choiceBoardName!;
     return Card(
         child: Column(children: <Widget>[
       const Center(child: Padding(padding: EdgeInsets.all(8.0))),
@@ -475,10 +475,10 @@ class ShowActivityScreen extends StatelessWidget {
   /// The widget to show, in the case that a timer has been initiated,
   /// showing the progression for the timer in both citizen and guardian mode.
   Widget _timerIsInitiatedWidget() {
-    return StreamBuilder<SettingsModel>(
+    return StreamBuilder<SettingsModel?>(
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
-            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+            AsyncSnapshot<SettingsModel?> settingsSnapshot) {
           late Widget _returnWidget;
 
           if (settingsSnapshot.hasData) {
@@ -528,10 +528,10 @@ class ShowActivityScreen extends StatelessWidget {
       BuildContext overallContext,
       AsyncSnapshot<bool> timerInitSnapshot,
       AsyncSnapshot<WeekplanMode> modeSnapshot) {
-    return StreamBuilder<SettingsModel>(
+    return StreamBuilder<SettingsModel?>(
       stream: _settingsBloc.settings,
       builder: (BuildContext timerButtonsContext,
-          AsyncSnapshot<SettingsModel> settingsSnapshot) {
+          AsyncSnapshot<SettingsModel?> settingsSnapshot) {
         return Visibility(
           visible: timerInitSnapshot.hasData ? timerInitSnapshot.data! : false,
           key: const Key('TimerOverallButtonVisibilityKey'),
@@ -560,7 +560,7 @@ class ShowActivityScreen extends StatelessWidget {
       BuildContext overallContext,
       AsyncSnapshot<bool> timerInitSnapshot,
       AsyncSnapshot<WeekplanMode> modeSnapshot,
-      AsyncSnapshot<SettingsModel> settingsSnapshot) {
+      AsyncSnapshot<SettingsModel?> settingsSnapshot) {
     return StreamBuilder<TimerRunningMode>(
         stream: _timerBloc.timerRunningMode,
         builder: (BuildContext timerRunningContext,
@@ -568,7 +568,7 @@ class ShowActivityScreen extends StatelessWidget {
           return Visibility(
             visible: modeSnapshot.data == WeekplanMode.guardian ||
                 ((settingsSnapshot.hasData &&
-                        !settingsSnapshot.data!.lockTimerControl)
+                        !settingsSnapshot.data!.lockTimerControl!)
                     ? true
                     : (timerRunningSnapshot.hasData &&
                         (timerRunningSnapshot.data ==
@@ -627,11 +627,11 @@ class ShowActivityScreen extends StatelessWidget {
       BuildContext overallContext,
       AsyncSnapshot<bool> timerInitSnapshot,
       AsyncSnapshot<WeekplanMode> modeSnapshot,
-      AsyncSnapshot<SettingsModel> settingsSnapshot) {
+      AsyncSnapshot<SettingsModel?> settingsSnapshot) {
     return Visibility(
       visible: modeSnapshot.data == WeekplanMode.guardian ||
           (settingsSnapshot.hasData &&
-              !settingsSnapshot.data!.lockTimerControl),
+              !settingsSnapshot.data!.lockTimerControl!),
       child: Flexible(
         child: GirafButton(
           key: const Key('TimerStopButtonKey'),
@@ -665,7 +665,7 @@ class ShowActivityScreen extends StatelessWidget {
       BuildContext overallContext,
       AsyncSnapshot<bool> timerInitSnapshot,
       AsyncSnapshot<WeekplanMode> modeSnapshot,
-      AsyncSnapshot<SettingsModel> settingsSnapshot) {
+      AsyncSnapshot<SettingsModel?> settingsSnapshot) {
     return Visibility(
       // The delete button is only visible when in guardian mode,
       // since a citizen should not be able to delete the timer.

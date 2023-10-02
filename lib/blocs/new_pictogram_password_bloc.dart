@@ -52,7 +52,7 @@ class NewPictogramPasswordBloc extends BlocBase {
   Stream<GirafUserModel> createCitizen() {
     return _api.account.register(userName, pictogramPasswordController.value,
         displayName, profilePicture,
-        departmentId: _user.department, role: Role.Citizen);
+        departmentId: _user.department!, role: Role.Citizen);
   }
 
   /// Initializes the bloc.

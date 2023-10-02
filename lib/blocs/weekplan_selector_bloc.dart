@@ -64,7 +64,8 @@ class WeekplansBloc extends BlocBase {
     _user = user;
     _addWeekplan = addWeekplan;
     weekNameModels.listen(getAllWeekInfo);
-    _api.week.getNames(_user.id).listen(_weekNameModelsList.add);
+    _api.week.getNames(_user.id!).listen(
+        _weekNameModelsList.add as void Function(List<WeekNameModel>? event)?);
   }
 
   /// Gets all the information for a [Weekmodel].
@@ -80,7 +81,7 @@ class WeekplansBloc extends BlocBase {
       weekPlans.add(WeekModel(name: 'Tilføj ugeplan'));
     }
 
-    if (weekPlanNames.isEmpty) {
+    if (weekPlanNames!.isEmpty) {
       _weekModel.add(weekPlans);
       return;
     }
@@ -127,18 +128,18 @@ class WeekplansBloc extends BlocBase {
   /// Old weekplans are stored in [oldWeekDetails]
   /// and current/upcoming weekplans are stored in [weekDetails]
   void getWeekDetails(
-      List<WeekNameModel> weekPlanNames,
-      List<Stream<WeekModel>> weekDetails,
-      List<Stream<WeekModel>> oldWeekDetails) {
+      List<WeekNameModel?> weekPlanNames,
+      List<Stream<WeekModel?>> weekDetails,
+      List<Stream<WeekModel?>> oldWeekDetails) {
     // Loops through all weekplans and sort them into old and upcoming weekplans
-    for (WeekNameModel weekPlanName in weekPlanNames) {
-      if (isWeekDone(weekPlanName)) {
+    for (WeekNameModel? weekPlanName in weekPlanNames) {
+      if (isWeekDone(weekPlanName!)) {
         oldWeekDetails.add(_api.week
-            .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
+            .get(_user.id!, weekPlanName.weekYear!, weekPlanName.weekNumber!)
             .take(1));
       } else {
         weekDetails.add(_api.week
-            .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
+            .get(_user.id!, weekPlanName.weekYear!, weekPlanName.weekNumber!)
             .take(1));
       }
     }
@@ -229,9 +230,9 @@ class WeekplansBloc extends BlocBase {
     final int currentYear = DateTime.now().year;
     final int currentWeek = getCurrentWeekNum();
 
-    if (weekPlan.weekYear < currentYear ||
+    if (weekPlan.weekYear! < currentYear ||
         (weekPlan.weekYear == currentYear &&
-            weekPlan.weekNumber < currentWeek)) {
+            weekPlan.weekNumber! < currentWeek)) {
       return true;
     }
     return false;
@@ -271,7 +272,7 @@ class WeekplansBloc extends BlocBase {
     // Updates the weekplan in the database
     for (WeekModel weekModel in _markedWeekModels.value) {
       _api.week
-          .delete(_user.id, weekModel.weekYear, weekModel.weekNumber)
+          .delete(_user.id!, weekModel.weekYear!, weekModel.weekNumber!)
           .listen((bool deleted) {
         if (deleted) {
           // Checks if its an old or upcoming weekplan
@@ -307,7 +308,7 @@ class WeekplansBloc extends BlocBase {
   /// This method deletes the given week model from the database
   void deleteWeek(List<WeekModel> weekModels, WeekModel weekModel) {
     _api.week
-        .delete(_user.id, weekModel.weekYear, weekModel.weekNumber)
+        .delete(_user.id!, weekModel.weekYear!, weekModel.weekNumber!)
         .listen((bool deleted) {
       if (deleted) {
         weekModels.remove(weekModel);
@@ -334,8 +335,8 @@ class WeekplansBloc extends BlocBase {
 
     final Completer<WeekModel> completer = Completer<WeekModel>();
     _api.week
-        .get(_user.id, marked.weekYear, marked.weekNumber)
-        .listen((WeekModel weekModel) => completer.complete(weekModel));
+        .get(_user.id!, marked.weekYear!, marked.weekNumber!)
+        .listen((WeekModel? weekModel) => completer.complete(weekModel));
 
     return completer.future;
   }
@@ -346,8 +347,8 @@ class WeekplansBloc extends BlocBase {
     for (WeekModel weekModel in _markedWeekModels.value) {
       final Completer<WeekModel> completer = Completer<WeekModel>();
       _api.week
-          .get(_user.id, weekModel.weekYear, weekModel.weekNumber)
-          .listen((WeekModel weekModel) => completer.complete(weekModel));
+          .get(_user.id!, weekModel.weekYear!, weekModel.weekNumber!)
+          .listen((WeekModel? weekModel) => completer.complete(weekModel));
       weekList.add(await completer.future);
     }
     return weekList;

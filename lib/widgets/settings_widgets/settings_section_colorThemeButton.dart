@@ -29,7 +29,8 @@ class SettingsColorThemeCheckMarkButton extends SettingsSectionItem {
     return ListTile(
       title: Row(
         children: <Widget>[
-          ThemeBox.fromHexValues(_expected[0].hexColor, _expected[1].hexColor),
+          ThemeBox.fromHexValues(
+              _expected[0].hexColor!, _expected[1].hexColor!),
           Text(text),
         ],
       ),

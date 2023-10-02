@@ -42,9 +42,9 @@ class MockWeekApi extends Mock implements WeekApi {
   }
 
   @override
-  Stream<WeekModel> get(String? id, int? year, int? weekNumber) {
+  Stream<WeekModel?> get(String? id, int? year, int? weekNumber) {
     // return null so there are no conflicts
-    return Stream<WeekModel>.value(null);
+    return Stream<WeekModel?>.value(null);
   }
 }
 

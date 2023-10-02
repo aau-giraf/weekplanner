@@ -58,7 +58,7 @@ class ActivityBloc extends BlocBase {
     }
 
     _subscription = activityModelStream.listen((ActivityModel activity) {
-      _weekplanBloc.getWeekday(_weekday.day);
+      _weekplanBloc.getWeekday(_weekday.day!);
     });
   }
 
@@ -92,7 +92,7 @@ class ActivityBloc extends BlocBase {
   /// Update the Activity with the new state.
   void update() {
     _api.activity
-        .update(_activityModel, _user.id)
+        .update(_activityModel, _user.id!)
         .listen((ActivityModel activityModel) {
       _activityModel = activityModel;
       _activityModelStream.add(activityModel);
@@ -147,7 +147,7 @@ class ActivityBloc extends BlocBase {
   Future<void> getAlternateName() {
     final Completer<AlternateNameModel> f = Completer<AlternateNameModel>();
     _api.alternateName
-        .get(_user.id, _activityModel.pictograms!.first.id!)
+        .get(_user.id!, _activityModel.pictograms!.first.id!)
         .listen((Object result) {
       _alternateName = result as AlternateNameModel?;
       f.complete();

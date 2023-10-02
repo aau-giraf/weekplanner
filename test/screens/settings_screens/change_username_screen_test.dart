@@ -67,7 +67,7 @@ class MockChangeUsernameScreen extends ChangeUsernameScreen {
   @override
   void confirmUser(Stream<GirafUserModel> girafUser) {
     authBloc.authenticateFromPopUp(
-        authBloc.loggedInUser.username, confirmUsernameCtrl.text);
+        authBloc.loggedInUser.username!, confirmUsernameCtrl.text);
 
     authBloc.loggedIn.listen((bool snapshot) {
       loginStatus = snapshot;

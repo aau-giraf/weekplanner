@@ -258,9 +258,9 @@ void main() {
           d,
           1 -
               (1 /
-                  activityModel.timer!.fullLength *
-                  (activityModel.timer!.fullLength -
-                      activityModel.timer!.progress)));
+                  activityModel.timer!.fullLength! *
+                  (activityModel.timer!.fullLength! -
+                      activityModel.timer!.progress!)));
       done();
     });
 

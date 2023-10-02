@@ -60,7 +60,8 @@ class PictogramInputFieldState extends State<PictogramInputField> {
   /// Returns the list of widgets that is the currently input pictograms
   /// or empty boxes
   List<Widget> passwordList() {
-    final List<Widget> password = List<Widget>.filled(4, null);
+    final List<Widget> password =
+        List<Widget>.filled(4, ErrorWidget(const Stream.empty()));
     for (int i = 0; i < 4; i++) {
       final PictogramModel? pictogram = _inputCode[i];
       Widget widget;

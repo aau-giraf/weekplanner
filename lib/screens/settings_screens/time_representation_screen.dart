@@ -27,10 +27,10 @@ class TimeRepresentationScreen extends StatelessWidget {
         appBar: GirafAppBar(
             title: _user.displayName! + ': indstillinger',
             key: const ValueKey<String>('value')),
-        body: StreamBuilder<SettingsModel>(
+        body: StreamBuilder<SettingsModel?>(
             stream: _settingsBloc.settings,
             builder: (BuildContext context,
-                AsyncSnapshot<SettingsModel> settingsSnapshot) {
+                AsyncSnapshot<SettingsModel?> settingsSnapshot) {
               if (settingsSnapshot.hasData) {
                 final SettingsModel _settingsModel = settingsSnapshot.data!;
 
@@ -50,7 +50,7 @@ class TimeRepresentationScreen extends StatelessWidget {
                           _settingsModel.defaultTimer, 'Nedtælling', () {
                         _settingsModel.defaultTimer = DefaultTimer.Numeric;
                         _settingsBloc
-                            .updateSettings(_user.id, _settingsModel)
+                            .updateSettings(_user.id!, _settingsModel)
                             .listen((_) {
                           Routes().pop(context, DefaultTimer.Numeric);
                         });

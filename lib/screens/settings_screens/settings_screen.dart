@@ -64,10 +64,10 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildThemeSection(BuildContext context) {
-    return StreamBuilder<SettingsModel>(
+    return StreamBuilder<SettingsModel?>(
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
-            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+            AsyncSnapshot<SettingsModel?> settingsSnapshot) {
           if (settingsSnapshot.hasData) {
             final SettingsModel settingsModel = settingsSnapshot.data!;
             return SettingsSection('Tema', <SettingsSectionItem>[
@@ -77,21 +77,21 @@ class SettingsScreen extends StatelessWidget {
                 settingsModel.weekDayColors =
                     result as List<WeekdayColorModel>?;
                 _settingsBloc
-                    .updateSettings(_user!.id, settingsModel)
+                    .updateSettings(_user!.id!, settingsModel)
                     .listen((_) {
                   _settingsBloc.loadSettings(_user!);
                 });
               },
                   titleTrailing: ThemeBox.fromHexValues(
-                      settingsModel.weekDayColors![0].hexColor,
-                      settingsModel.weekDayColors![1].hexColor)),
+                      settingsModel.weekDayColors![0].hexColor!,
+                      settingsModel.weekDayColors![1].hexColor!)),
               SettingsArrowButton('Tegn for udførelse', () async {
                 final Object? result = await Routes()
                     .push(context, CompletedActivityIconScreen(_user!));
                 if (result != null) {
-                  settingsModel.completeMark = result as CompleteMark?;
+                  settingsModel.completeMark = result as CompleteMark;
                   _settingsBloc
-                      .updateSettings(_user!.id, settingsModel)
+                      .updateSettings(_user!.id!, settingsModel)
                       .listen((_) {
                     _settingsBloc.loadSettings(_user!);
                   });
@@ -119,10 +119,10 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildWeekPlanSection(BuildContext context) {
-    return StreamBuilder<SettingsModel>(
+    return StreamBuilder<SettingsModel?>(
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
-            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+            AsyncSnapshot<SettingsModel?> settingsSnapshot) {
           if (settingsSnapshot.hasData) {
             final SettingsModel settingsModel = settingsSnapshot.data!;
             return SettingsSection('Ugeplan', <SettingsSectionItem>[
@@ -134,7 +134,7 @@ class SettingsScreen extends StatelessWidget {
                   if (result != null) {
                     settingsModel.nrOfDaysToDisplayPortrait = result as int;
                     _settingsBloc
-                        .updateSettings(_user!.id, settingsModel)
+                        .updateSettings(_user!.id!, settingsModel)
                         .listen((_) {
                       _settingsBloc.loadSettings(_user!);
                     });
@@ -151,7 +151,7 @@ class SettingsScreen extends StatelessWidget {
                   if (result != null) {
                     settingsModel.nrOfDaysToDisplayLandscape = result as int;
                     _settingsBloc
-                        .updateSettings(_user!.id, settingsModel)
+                        .updateSettings(_user!.id!, settingsModel)
                         .listen((_) {
                       _settingsBloc.loadSettings(_user!);
                     });
@@ -161,19 +161,20 @@ class SettingsScreen extends StatelessWidget {
                     nrOfDaysToString(settingsModel.nrOfDaysToDisplayLandscape)),
               ),
               SettingsCheckMarkButton.fromBoolean(
-                  settingsModel.pictogramText, 'Piktogram tekst er synlig', () {
-                settingsModel.pictogramText = !settingsModel.pictogramText;
+                  settingsModel.pictogramText!, 'Piktogram tekst er synlig',
+                  () {
+                settingsModel.pictogramText = !settingsModel.pictogramText!;
                 _settingsBloc
-                    .updateSettings(_user!.id, settingsModel)
+                    .updateSettings(_user!.id!, settingsModel)
                     .listen((_) {
                   _settingsBloc.loadSettings(_user!);
                 });
               }),
               SettingsCheckMarkButton.fromBoolean(
-                  settingsModel.showPopup, 'Vis bekræftelse popups', () {
-                settingsModel.showPopup = !settingsModel.showPopup;
+                  settingsModel.showPopup!, 'Vis bekræftelse popups', () {
+                settingsModel.showPopup = !settingsModel.showPopup!;
                 _settingsBloc
-                    .updateSettings(_user!.id, settingsModel)
+                    .updateSettings(_user!.id!, settingsModel)
                     .listen((_) {
                   _settingsBloc.loadSettings(_user!);
                 });
@@ -222,19 +223,19 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildTimerSection(BuildContext context) {
-    return StreamBuilder<SettingsModel>(
+    return StreamBuilder<SettingsModel?>(
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
-            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+            AsyncSnapshot<SettingsModel?> settingsSnapshot) {
           if (settingsSnapshot.hasData) {
             final SettingsModel _settingsModel = settingsSnapshot.data!;
             return SettingsSection('Tid', <SettingsSectionItem>[
               SettingsCheckMarkButton.fromBoolean(
-                  _settingsModel.lockTimerControl, 'Lås tidsstyring', () {
+                  _settingsModel.lockTimerControl!, 'Lås tidsstyring', () {
                 _settingsModel.lockTimerControl =
-                    !_settingsModel.lockTimerControl;
+                    !_settingsModel.lockTimerControl!;
                 _settingsBloc
-                    .updateSettings(_user!.id, _settingsModel)
+                    .updateSettings(_user!.id!, _settingsModel)
                     .listen((_) {
                   _settingsBloc.loadSettings(_user!);
                 });
@@ -250,21 +251,21 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _buildUserSettings(BuildContext context) {
     String input = '';
-    return StreamBuilder<SettingsModel>(
+    return StreamBuilder<SettingsModel?>(
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
-            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+            AsyncSnapshot<SettingsModel?> settingsSnapshot) {
           if (settingsSnapshot.hasData) {
             final SettingsModel settingsModel = settingsSnapshot.data!;
             return SettingsSection(
                 'Bruger indstillinger', <SettingsSectionItem>[
               SettingsCheckMarkButton.fromBoolean(
-                  settingsModel.showSettingsForCitizen,
+                  settingsModel.showSettingsForCitizen!,
                   'Giv borger adgang til deres indstillinger.', () {
                 settingsModel.showSettingsForCitizen =
-                    !settingsModel.showSettingsForCitizen;
+                    !settingsModel.showSettingsForCitizen!;
                 _settingsBloc
-                    .updateSettings(_user!.id, settingsModel)
+                    .updateSettings(_user!.id!, settingsModel)
                     .listen((_) {
                   _settingsBloc.loadSettings(_user!);
                 });
@@ -276,7 +277,7 @@ class SettingsScreen extends StatelessWidget {
                       .push(context, ChangeUsernameScreen(_user!));
                   if (result != null) {
                     _settingsBloc
-                        .updateSettings(_user!.id, settingsModel)
+                        .updateSettings(_user!.id!, settingsModel)
                         .listen((_) {
                       _settingsBloc.loadSettings(_user!);
                     });
@@ -290,7 +291,7 @@ class SettingsScreen extends StatelessWidget {
                       .push(context, ChangePasswordScreen(_user!));
                   if (result != null) {
                     _settingsBloc
-                        .updateSettings(_user!.id, settingsModel)
+                        .updateSettings(_user!.id!, settingsModel)
                         .listen((_) {
                       _settingsBloc.loadSettings(_user!);
                     });
@@ -341,7 +342,7 @@ class SettingsScreen extends StatelessWidget {
                           //if the correct name is written delete the user,
                           // else provide an error
                           if (input == _user!.displayName) {
-                            _settingsBloc.deleteUser(_user!.id);
+                            _settingsBloc.deleteUser(_user!.id!);
                             Routes().goHome(context);
                           } else {
                             showDialog<String>(
@@ -369,10 +370,10 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildPrivacySection() {
-    return StreamBuilder<SettingsModel>(
+    return StreamBuilder<SettingsModel?>(
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
-            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+            AsyncSnapshot<SettingsModel?> settingsSnapshot) {
           return SettingsSection('Privatliv', <SettingsSectionItem>[
             SettingsArrowButton(
               'Privatlivsinformationer',
@@ -385,10 +386,10 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildTimeRepresentationSettings(BuildContext context) {
-    return StreamBuilder<SettingsModel>(
+    return StreamBuilder<SettingsModel?>(
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
-            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+            AsyncSnapshot<SettingsModel?> settingsSnapshot) {
           if (settingsSnapshot.hasData) {
             final DefaultTimer? userTimer = settingsSnapshot.data!.defaultTimer;
             final SettingsModel settingsModel = settingsSnapshot.data!;
@@ -398,9 +399,9 @@ class SettingsScreen extends StatelessWidget {
                 () async {
                   final Object? result = await Routes()
                       .push(context, TimeRepresentationScreen(_user!));
-                  settingsModel.defaultTimer = result as DefaultTimer?;
+                  settingsModel.defaultTimer = result as DefaultTimer;
                   _settingsBloc
-                      .updateSettings(_user!.id, settingsModel)
+                      .updateSettings(_user!.id!, settingsModel)
                       .listen((_) {
                     _settingsBloc.loadSettings(_user!);
                   });

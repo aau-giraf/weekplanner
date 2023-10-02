@@ -193,14 +193,14 @@ class ChangePasswordScreen extends StatelessWidget {
       DisplayNameModel user, String oldPassword, String newPassword) {
     //Checks if user is logged in
     authBloc
-        .authenticate(authBloc.loggedInUser.username, oldPassword)
+        .authenticate(authBloc.loggedInUser.username!, oldPassword)
         .then((dynamic result) {
       StreamSubscription<bool>? loginListener;
       loginListener = authBloc.loggedIn.listen((bool snapshot) {
         loginStatus = snapshot;
         if (snapshot) {
           _api.account
-              .changePasswordWithOld(user.id, oldPassword, newPassword)
+              .changePasswordWithOld(user.id!, oldPassword, newPassword)
               .listen((_) {})
               .onDone(() {
             createDialog('Kodeord ændret', 'Dit kodeord er blevet ændret',

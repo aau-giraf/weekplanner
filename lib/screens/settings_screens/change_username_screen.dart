@@ -220,7 +220,7 @@ class ChangeUsernameScreen extends StatelessWidget {
     /// This authenticates the user with username and password.
     authBloc
         .authenticateFromPopUp(
-            authBloc.loggedInUser.username, confirmUsernameCtrl.text)
+            authBloc.loggedInUser.username!, confirmUsernameCtrl.text)
         .then((dynamic result) {
       StreamSubscription<bool>? loginListener;
       loginListener = authBloc.loggedIn.listen((bool snapshot) {
@@ -284,7 +284,7 @@ class ChangeUsernameScreen extends StatelessWidget {
     } else if (newUsernameCtrl.text == '') {
       creatingErrorDialog('Udfyld venligst nyt brugernavn', 'NewUsernameEmpty');
     } else if (newUsernameCtrl.text != girafUser.username) {
-      usernameConfirmationDialog(_api.user.get(_user.id));
+      usernameConfirmationDialog(_api.user.get(_user.id!));
     }
   }
 

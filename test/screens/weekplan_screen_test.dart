@@ -110,7 +110,7 @@ void main() {
       mockActivities[0].state = ActivityState.Normal;
       mockActivities[0].isChoiceBoard = true;
       mockActivities[0].pictograms = mockPictograms;
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
 
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
@@ -130,7 +130,7 @@ void main() {
       mockActivities[0].state = ActivityState.Normal;
       mockActivities[0].isChoiceBoard = true;
       mockActivities[0].pictograms = mockPictograms;
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
         mockWeek,
@@ -216,8 +216,8 @@ void main() {
 
     Future<void> _activitiesGetACard(WidgetTester tester) async {
       // We add an activity to monday and one to tuesday
-      mockWeek.days![0].activities.add(mockActivities[0]);
-      mockWeek.days![1].activities.add(mockActivities[1]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
+      mockWeek.days![1].activities!.add(mockActivities[1]);
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
         mockWeek,
@@ -232,7 +232,7 @@ void main() {
 
     Future<void> _tappingActivityWhenNotEditingPushesActivityScreen(
         WidgetTester tester) async {
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
         mockWeek,
@@ -248,7 +248,7 @@ void main() {
 
     Future<void> _tappingActivityWhenEditingSelectsActivity(
         WidgetTester tester) async {
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
         mockWeek,
@@ -273,7 +273,7 @@ void main() {
     }
 
     Future<void> _markingActivityRendersBlackBox(WidgetTester tester) async {
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
 
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
@@ -396,7 +396,7 @@ void main() {
 
     Future<void> _cancelActivityButtonOpensDialogWhenActivitySelected(
         WidgetTester tester) async {
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
         mockWeek,
@@ -429,7 +429,7 @@ void main() {
 
     Future<void> _copyActivityButtonOpensDialogWhenActivitySelected(
         WidgetTester tester) async {
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
         mockWeek,
@@ -462,7 +462,7 @@ void main() {
 
     Future<void> _deleteActivityButtonOpensDialogWhenActivitySelected(
         WidgetTester tester) async {
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
         mockWeek,
@@ -494,7 +494,7 @@ void main() {
     }
 
     Future<void> _cancellingAnActivityWorks(WidgetTester tester) async {
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
         mockWeek,
@@ -527,8 +527,8 @@ void main() {
         WidgetTester tester) async {
       mockSettings.nrOfDaysToDisplayLandscape = 1;
       final int weekDay = DateTime.now().weekday.toInt() - 1;
-      mockWeek.days![weekDay].activities.add(mockActivities[0]);
-      mockWeek.days![weekDay].activities.add(mockActivities[1]);
+      mockWeek.days![weekDay].activities!.add(mockActivities[0]);
+      mockWeek.days![weekDay].activities!.add(mockActivities[1]);
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
         mockWeek,
@@ -585,7 +585,7 @@ void main() {
     Future<void> _resumingAnActivityWorks(WidgetTester tester) async {
       //Create a cancel activity
       mockActivities[0].state = ActivityState.Canceled;
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
         mockWeek,
@@ -614,7 +614,7 @@ void main() {
     }
 
     Future<void> _copyingAnActivityWorks(WidgetTester tester) async {
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
         mockWeek,
@@ -623,8 +623,8 @@ void main() {
       )));
       await tester.pumpAndSettle();
 
-      expect(mockWeek.days![0].activities.length, 1);
-      expect(mockWeek.days![1].activities.length, 0);
+      expect(mockWeek.days![0].activities!.length, 1);
+      expect(mockWeek.days![1].activities!.length, 0);
 
       // Toggle edit mode by pressing the edit mode button
       await tester.tap(find.byTooltip('Rediger'));
@@ -647,12 +647,12 @@ void main() {
       await tester.tap(find.byKey(const Key('DialogConfirmButton')));
       await tester.pumpAndSettle();
 
-      expect(mockWeek.days![0].activities.length, 1);
-      expect(mockWeek.days![1].activities.length, 1);
+      expect(mockWeek.days![0].activities!.length, 1);
+      expect(mockWeek.days![1].activities!.length, 1);
     }
 
     Future<void> _deletingAnActivityWorks(WidgetTester tester) async {
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
         mockWeek,
@@ -661,7 +661,7 @@ void main() {
       )));
       await tester.pumpAndSettle();
 
-      expect(mockWeek.days![0].activities.length, 1);
+      expect(mockWeek.days![0].activities!.length, 1);
 
       // Toggle edit mode by pressing the edit mode button
       await tester.tap(find.byTooltip('Rediger'));
@@ -681,7 +681,7 @@ void main() {
       await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
       await tester.pumpAndSettle();
 
-      expect(mockWeek.days![0].activities.length, 0);
+      expect(mockWeek.days![0].activities!.length, 0);
     }
 
     Future<void> _hasSevenSelectAllButtons(WidgetTester tester) async {
@@ -719,8 +719,8 @@ void main() {
     Future<void> _marksAllAndUnmarksAllActivitiesForGivenDay(
         WidgetTester tester) async {
       // Adding two activities too monday
-      mockWeek.days![0].activities.add(mockActivities[0]);
-      mockWeek.days![0].activities.add(mockActivities[1]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[1]);
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
         mockWeek,
@@ -838,7 +838,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.pumpAndSettle();
       for (WeekdayColorModel dayColor in mockSettings.weekDayColors!) {
-        expectColorDayMatch(dayColor.day, dayColor.hexColor);
+        expectColorDayMatch(dayColor.day!, dayColor.hexColor!);
       }
     }
 
@@ -848,7 +848,7 @@ void main() {
       mockSettings.pictogramText = true;
 
       // Add an activity to the week we want to look at in the weekPlan screen
-      mockWeek.days![4].activities.add(mockActivities[0]);
+      mockWeek.days![4].activities!.add(mockActivities[0]);
 
       // Build the weekPlan screen
       await tester.pumpWidget(MaterialApp(
@@ -862,7 +862,7 @@ void main() {
       expect(find.byType(PictogramText), findsOneWidget);
 
       // Get the title of the activity
-      final String title = mockActivities[0].title;
+      final String title = mockActivities[0].title!;
 
       expect(
           find.text(title[0].toUpperCase() + title.substring(1).toLowerCase()),
@@ -959,7 +959,7 @@ void main() {
       mockActivities[0].state = ActivityState.Completed;
 
       // Added the activity that is completed with checkmark
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
 
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
@@ -978,7 +978,7 @@ void main() {
       mockActivities[0].state = ActivityState.Canceled;
 
       // Added Cancelled activity with a cross
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
 
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
@@ -995,7 +995,7 @@ void main() {
     Future<void> _timerIconDisplayedCorrectlyInGuardianMode(
         WidgetTester tester) async {
       // Activity with a timer
-      mockWeek.days![0].activities.add(mockActivities[2]);
+      mockWeek.days![0].activities!.add(mockActivities[2]);
 
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
@@ -1020,7 +1020,7 @@ void main() {
       mockSettings.completeMark = CompleteMark.Checkmark;
       mockActivities[0].state = ActivityState.Completed;
       // Added the activity that is completed with checkmark
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
         mockWeek,
@@ -1039,7 +1039,7 @@ void main() {
       mockSettings.completeMark = CompleteMark.MovedRight;
       mockActivities[0].state = ActivityState.Completed;
       // Added the activity that is completed with checkmark
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
         mockWeek,
@@ -1061,7 +1061,7 @@ void main() {
       mockSettings.completeMark = CompleteMark.Removed;
       mockActivities[0].state = ActivityState.Completed;
       // Added the activity that is completed with checkmark
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
         mockWeek,
@@ -1082,7 +1082,7 @@ void main() {
       mockSettings.completeMark = CompleteMark.Removed;
       mockActivities[0].state = ActivityState.Normal;
       // Added the activity that is completed with checkmark
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(
         mockWeek,
@@ -1122,10 +1122,10 @@ void main() {
       mockSettings.showOnlyActivities = true;
       mockSettings.nrOfActivitiesToDisplay = 2;
       final int weekDay = DateTime.now().weekday.toInt() - 1;
-      mockWeek.days![weekDay].activities.add(mockActivities[0]);
-      mockWeek.days![weekDay].activities.add(mockActivities[1]);
-      mockWeek.days![weekDay].activities.add(mockActivities[2]);
-      mockWeek.days![weekDay].activities.add(mockActivities[3]);
+      mockWeek.days![weekDay].activities!.add(mockActivities[0]);
+      mockWeek.days![weekDay].activities!.add(mockActivities[1]);
+      mockWeek.days![weekDay].activities!.add(mockActivities[2]);
+      mockWeek.days![weekDay].activities!.add(mockActivities[3]);
 
       await tester.pumpWidget(MaterialApp(
         home: WeekplanScreen(
@@ -1149,10 +1149,10 @@ void main() {
       final int weekDay = DateTime.now().weekday.toInt() - 1;
       mockActivities[0].state = ActivityState.Completed;
       mockActivities[2].state = ActivityState.Canceled;
-      mockWeek.days![weekDay].activities.add(mockActivities[0]);
-      mockWeek.days![weekDay].activities.add(mockActivities[1]);
-      mockWeek.days![weekDay].activities.add(mockActivities[2]);
-      mockWeek.days![weekDay].activities.add(mockActivities[3]);
+      mockWeek.days![weekDay].activities!.add(mockActivities[0]);
+      mockWeek.days![weekDay].activities!.add(mockActivities[1]);
+      mockWeek.days![weekDay].activities!.add(mockActivities[2]);
+      mockWeek.days![weekDay].activities!.add(mockActivities[3]);
 
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(mockWeek, user,
@@ -1166,7 +1166,7 @@ void main() {
       authBloc.setMode(WeekplanMode.guardian);
       mockSettings.pictogramText = true;
       mockActivities[3].title = 'NameTest';
-      mockWeek.days![4].activities.add(mockActivities[3]);
+      mockWeek.days![4].activities!.add(mockActivities[3]);
 
       // Build the weekPlan screen
       await tester.pumpWidget(MaterialApp(
@@ -1183,7 +1183,7 @@ void main() {
       mockActivities[0].state = ActivityState.Canceled;
 
       // Added Cancelled activity with a cross
-      mockWeek.days![0].activities.add(mockActivities[0]);
+      mockWeek.days![0].activities!.add(mockActivities[0]);
 
       await tester.pumpWidget(MaterialApp(
           home: WeekplanScreen(mockWeek, user,
@@ -1264,14 +1264,14 @@ void main() {
       mockActivities[2].state = ActivityState.Normal;
       mockActivities[2].timer!.paused = true;
       mockActivities[2].timer!.fullLength = 100;
-      mockWeek.days![0].activities.add(mockActivities[2]);
+      mockWeek.days![0].activities!.add(mockActivities[2]);
       authBloc.setMode(WeekplanMode.citizen);
       final WeekplanScreen weekplanScreen =
           WeekplanScreen(mockWeek, user, key: const ValueKey<String>('value'));
       await tester.pumpWidget(MaterialApp(home: weekplanScreen));
 
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(Key(mockWeek.days![0].day.index.toString() +
+      await tester.tap(find.byKey(Key(mockWeek.days![0].day!.index.toString() +
           mockActivities[2].id.toString())));
       await tester.pumpAndSettle();
 
@@ -1288,15 +1288,16 @@ void main() {
         WidgetTester tester) async {
       await tester.runAsync(() async {
         mockActivities[0].state = ActivityState.Normal;
-        mockWeek.days![0].activities.add(mockActivities[0]);
+        mockWeek.days![0].activities!.add(mockActivities[0]);
         authBloc.setMode(WeekplanMode.citizen);
         final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user,
             key: const ValueKey<String>('value'));
         await tester.pumpWidget(MaterialApp(home: weekplanScreen));
 
         await tester.pumpAndSettle();
-        await tester.tap(find.byKey(Key(mockWeek.days![0].day.index.toString() +
-            mockActivities[0].id.toString())));
+        await tester.tap(find.byKey(Key(
+            mockWeek.days![0].day!.index.toString() +
+                mockActivities[0].id.toString())));
         await tester.pumpAndSettle();
         expect(find.byKey(const Key('IconComplete')), findsOneWidget);
       });
@@ -1311,20 +1312,22 @@ void main() {
         mockActivities[2].state = ActivityState.Normal;
         mockActivities[2].timer!.paused = true;
         mockActivities[2].timer!.fullLength = 100;
-        mockWeek.days![0].activities.add(mockActivities[2]);
+        mockWeek.days![0].activities!.add(mockActivities[2]);
         authBloc.setMode(WeekplanMode.citizen);
         final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user,
             key: const ValueKey<String>('value'));
         await tester.pumpWidget(MaterialApp(home: weekplanScreen));
 
         await tester.pumpAndSettle();
-        await tester.tap(find.byKey(Key(mockWeek.days![0].day.index.toString() +
-            mockActivities[2].id.toString())));
+        await tester.tap(find.byKey(Key(
+            mockWeek.days![0].day!.index.toString() +
+                mockActivities[2].id.toString())));
         await tester.pumpAndSettle();
 
         expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
-        await tester.tap(find.byKey(Key(mockWeek.days![0].day.index.toString() +
-            mockActivities[2].id.toString())));
+        await tester.tap(find.byKey(Key(
+            mockWeek.days![0].day!.index.toString() +
+                mockActivities[2].id.toString())));
 
         expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
         // ignore: always_specify_types
@@ -1334,7 +1337,7 @@ void main() {
 
           expect(find.byKey(const Key('IconComplete')), findsOneWidget);
           await tester.tap(find.byKey(Key(
-              mockWeek.days![0].day.index.toString() +
+              mockWeek.days![0].day!.index.toString() +
                   mockActivities[2].id.toString())));
 
           expect(find.byKey(const Key('IconComplete')), findsOneWidget);
@@ -1402,7 +1405,7 @@ void main() {
 }
 
 Color getColorFromWeekdayColorModel(WeekdayColorModel weekdayColorModel) {
-  final String hexColor = weekdayColorModel.hexColor;
+  final String hexColor = weekdayColorModel.hexColor!;
   hexColor.replaceFirst('#', '0xff');
 
   return Color(int.parse(hexColor));

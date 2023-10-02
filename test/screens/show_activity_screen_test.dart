@@ -23,7 +23,7 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -210,7 +210,7 @@ final DisplayNameModel mockUser =
     DisplayNameModel(id: '42', displayName: 'mockUser', role: null);
 final DisplayNameModel mockUser2 =
     DisplayNameModel(id: '43', displayName: 'mockUser2', role: null);
-final ActivityModel mockActivity = mockWeek.days![0].activities[0];
+final ActivityModel mockActivity = mockWeek.days![0].activities![0];
 
 WeekdayModel mockWeekDayModel() {
   return WeekdayModel(activities: <ActivityModel>[
@@ -325,11 +325,11 @@ void main() {
   late WeekplanBloc weekplanBloc;
 
   void setupApiCalls() {
-    when(weekApi.update(
-            mockUser.id, mockWeek.weekYear!, mockWeek.weekNumber!, mockWeek))
+    when(weekApi.update(mockUser.id!, mockWeek.weekYear!, mockWeek.weekNumber!,
+            mockWeek) as Function())
         .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>.seeded(mockWeek));
 
-    when(api.user.getSettings(any)).thenAnswer((_) {
+    when(api.user.getSettings(any as String) as Function()).thenAnswer((_) {
       return Stream<SettingsModel>.value(mockSettings);
     });
   }
@@ -929,7 +929,7 @@ void main() {
   testWidgets('Only have a play button for timer when lockTimerControl is true',
       (WidgetTester tester) async {
     await tester.runAsync(() async {
-      when(api.user.getSettings(any)).thenAnswer((_) {
+      when(api.user.getSettings(any as String) as Function()).thenAnswer((_) {
         return Stream<SettingsModel>.value(mockSettings2);
       });
       authBloc.setMode(WeekplanMode.citizen);
@@ -997,7 +997,7 @@ void main() {
   testWidgets(
       'No buttons for timer when an activity with a completed timer is chosen',
       (WidgetTester tester) async {
-    when(api.user.getSettings(any)).thenAnswer((_) {
+    when(api.user.getSettings(any as String) as Function()).thenAnswer((_) {
       return Stream<SettingsModel>.value(mockSettings2);
     });
     authBloc.setMode(WeekplanMode.citizen);

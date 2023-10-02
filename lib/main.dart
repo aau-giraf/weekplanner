@@ -14,7 +14,7 @@ import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 final Api _api = di.get<Api>();
-final AuthBloc _authBloc = di.get<AuthBloc>();
+final AuthBloc? _authBloc = di.get<AuthBloc>();
 
 void main() {
   // Register all dependencies for injector
@@ -66,13 +66,13 @@ void _runApp() {
 
             if (loggedIn) {
               // Show screen dependent on logged in role
-              switch (_authBloc.loggedInUser.role) {
+              switch (_authBloc!.loggedInUser.role) {
                 case Role.Citizen:
                   return WeekplanSelectorScreen(
                     DisplayNameModel(
-                      displayName: _authBloc.loggedInUser.displayName,
-                      role: describeEnum(_authBloc.loggedInUser.role),
-                      id: _authBloc.loggedInUser.id,
+                      displayName: _authBloc!.loggedInUser.displayName,
+                      role: describeEnum(_authBloc!.loggedInUser.role!),
+                      id: _authBloc!.loggedInUser.id,
                     ),
                   );
                 default:

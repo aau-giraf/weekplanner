@@ -91,7 +91,7 @@ class PictogramBloc extends BlocBase {
       });
       _api.pictogram
           .getAll(page: latestPage, pageSize: pageSize, query: query)
-          .listen((List<PictogramModel> results) {
+          .listen((List<PictogramModel>? results) {
         _resultPlaceholder = results;
         latestPictograms = _resultPlaceholder!;
         latestQuery = query;

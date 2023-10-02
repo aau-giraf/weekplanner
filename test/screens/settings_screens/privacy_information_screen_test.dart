@@ -5,7 +5,7 @@ import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -46,7 +46,9 @@ void main() {
         pictogramText: false,
         lockTimerControl: false);
 
-    when(api.user.updateSettings(any, any)).thenAnswer((_) {
+    when(api.user.updateSettings(any as String, any as SettingsModel)
+            as Function())
+        .thenAnswer((_) {
       return Stream<bool>.value(true);
     });
 

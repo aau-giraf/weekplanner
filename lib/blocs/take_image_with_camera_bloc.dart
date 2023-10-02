@@ -71,9 +71,15 @@ class TakePictureWithCameraBloc extends BlocBase {
     _file.add(file);
   }
 
-  Uint8List _encodePng(File file) {
-    return encodePng(copyResize(decodeImage(file.readAsBytesSync()),
-        width: 512)); // 512 bytes chosen as a reasonable input size.
+  /// Encodes the given file into an integer list.
+  List<int>? encodePicture(File? file) {
+    if (file != null) {
+      final image = decodeImage(file.readAsBytesSync());
+      if (image != null) {
+        return encodePng(copyResize(image, width: 512));
+      }
+    }
+    return null;
   }
 
   /// Creates a [PictogramModel]
@@ -86,7 +92,8 @@ class TakePictureWithCameraBloc extends BlocBase {
       title: _pictogramName,
     ))
         .flatMap((PictogramModel pictogram) {
-      return _api.pictogram.updateImage(pictogram.id!, _encodePng(_file.value));
+      return _api.pictogram
+          .updateImage(pictogram.id!, encodePicture(_file.value) as Uint8List);
     }).map((PictogramModel pictogram) {
       _isUploading.add(false);
       return pictogram;

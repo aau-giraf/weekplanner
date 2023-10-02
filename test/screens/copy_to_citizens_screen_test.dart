@@ -13,7 +13,7 @@ import 'package:api_client/models/week_name_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
@@ -95,7 +95,7 @@ void main() {
     api.user = MockUserApi();
     api.week = MockWeekApi();
 
-    when(api.week.getNames(any)).thenAnswer((_) {
+    when(api.week.getNames(any as String) as Function()).thenAnswer((_) {
       return Stream<List<WeekNameModel>>.value(<WeekNameModel>[]);
     });
 

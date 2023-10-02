@@ -113,7 +113,7 @@ class TimerBloc extends BlocBase {
     _timerRunningModeStream.add(TimerRunningMode.initialized);
 
     _api.activity
-        .updateTimer(_activityModel, _user.id)
+        .updateTimer(_activityModel, _user.id!)
         .listen((ActivityModel activity) {
       _activityModel = activity;
     });
@@ -149,14 +149,14 @@ class TimerBloc extends BlocBase {
       if (_activityModel.timer != null) {
         // Calculates the end time of the timer
         final DateTime endTime = _activityModel.timer!.startTime!.add(Duration(
-            milliseconds: _activityModel.timer!.fullLength -
-                _activityModel.timer!.progress));
+            milliseconds: _activityModel.timer!.fullLength! -
+                _activityModel.timer!.progress!));
         // Checks if the timer is running
         if ((_activityModel.timer!.startTime!.isBefore(DateTime.now()) ||
                 _activityModel.timer!.startTime!
                     .isAtSameMomentAs(DateTime.now())) &&
             DateTime.now().isBefore(endTime) &&
-            !_activityModel.timer!.paused) {
+            !_activityModel.timer!.paused!) {
           _timerRunningModeStream.add(TimerRunningMode.running);
 
           _stopwatch = Stopwatch();
@@ -169,20 +169,20 @@ class TimerBloc extends BlocBase {
 
           // Do an initial update
           updateTimerProgress(_countDown!);
-        } else if (_activityModel.timer!.paused) {
+        } else if (_activityModel.timer!.paused!) {
           _timerRunningModeStream.add(TimerRunningMode.initialized);
           _timerProgressStream.add(1 -
               (1 /
-                  _activityModel.timer!.fullLength *
-                  (_activityModel.timer!.fullLength -
-                      _activityModel.timer!.progress)));
+                  _activityModel.timer!.fullLength! *
+                  (_activityModel.timer!.fullLength! -
+                      _activityModel.timer!.progress!)));
 
           _timerProgressNumeric.add(_durationToTimestamp(Duration(
-              milliseconds: _activityModel.timer!.fullLength -
-                  _activityModel.timer!.progress)));
+              milliseconds: _activityModel.timer!.fullLength! -
+                  _activityModel.timer!.progress!)));
 
-          if (_activityModel.timer!.progress >=
-              _activityModel.timer!.fullLength) {
+          if (_activityModel.timer!.progress! >=
+              _activityModel.timer!.fullLength!) {
             _timerRunningModeStream.add(TimerRunningMode.completed);
           }
         } else {
@@ -204,15 +204,15 @@ class TimerBloc extends BlocBase {
   /// Updates the timer in the database accordingly.
   void playTimer() {
     // Makes sure that a timer exists
-    if (_activityModel.timer != null && _activityModel.timer!.paused) {
+    if (_activityModel.timer != null && _activityModel.timer!.paused!) {
       _activityModel.timer!.paused = false;
       _activityModel.timer!.startTime = DateTime.now();
       _activityModel.timer!.progress = 0;
       _stopwatch = Stopwatch();
       // Calculates the end time
       final DateTime _endTime = _activityModel.timer!.startTime!.add(Duration(
-          milliseconds: _activityModel.timer!.fullLength -
-              _activityModel.timer!.progress));
+          milliseconds: _activityModel.timer!.fullLength! -
+              _activityModel.timer!.progress!));
       _countDown = CountdownTimer(
           _endTime.difference(_activityModel.timer!.startTime!),
           Duration(milliseconds: _updatePeriod),
@@ -230,7 +230,7 @@ class TimerBloc extends BlocBase {
       _timerRunningModeStream.add(TimerRunningMode.running);
 
       _api.activity
-          .updateTimer(_activityModel, _user.id)
+          .updateTimer(_activityModel, _user.id!)
           .listen((ActivityModel activity) {
         _activityModel = activity;
       });
@@ -242,13 +242,13 @@ class TimerBloc extends BlocBase {
     // please somebody fix this
     _timerProgressStream.add((1 -
                 (1 /
-                    _activityModel.timer!.fullLength *
+                    _activityModel.timer!.fullLength! *
                     c.remaining.inMilliseconds)) >
             1
         ? 1
         : (1 -
             (1 /
-                _activityModel.timer!.fullLength *
+                _activityModel.timer!.fullLength! *
                 c.remaining.inMilliseconds)));
     _timerProgressNumeric.add(_durationToTimestamp(c.remaining));
   }
@@ -264,15 +264,15 @@ class TimerBloc extends BlocBase {
     // First make sure that a timer exists and it is running
     if (_activityModel.timer != null &&
         _timerStream != null &&
-        !_activityModel.timer!.paused) {
+        !_activityModel.timer!.paused!) {
       _activityModel.timer!.paused = true;
-      _activityModel.timer!.progress = _activityModel.timer!.fullLength -
+      _activityModel.timer!.progress = _activityModel.timer!.fullLength! -
           _countDown!.remaining.inMilliseconds;
       _resetCounterAndStopwatch();
       _timerRunningModeStream.add(TimerRunningMode.paused);
 
       _api.activity
-          .updateTimer(_activityModel, _user.id)
+          .updateTimer(_activityModel, _user.id!)
           .listen((ActivityModel activity) {
         _activityModel = activity;
       });
@@ -289,10 +289,10 @@ class TimerBloc extends BlocBase {
       _timerRunningModeStream.add(TimerRunningMode.stopped);
       _timerProgressStream.add(0);
       _timerProgressNumeric.add(_durationToTimestamp(
-          Duration(milliseconds: _activityModel.timer!.fullLength)));
+          Duration(milliseconds: _activityModel.timer!.fullLength!)));
 
       _api.activity
-          .updateTimer(_activityModel, _user.id)
+          .updateTimer(_activityModel, _user.id!)
           .listen((ActivityModel activity) {
         _activityModel = activity;
       });
@@ -306,7 +306,7 @@ class TimerBloc extends BlocBase {
     _timerInstantiatedStream.add(false);
 
     _api.activity
-        .updateTimer(_activityModel, _user.id)
+        .updateTimer(_activityModel, _user.id!)
         .listen((ActivityModel activity) {
       _activityModel = activity;
     });

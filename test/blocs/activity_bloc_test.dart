@@ -50,11 +50,11 @@ void main() {
       weekYear: 2010);
 
   void setupApiCalls() {
-    when(weekApi.update(mockUser.id, mockWeekModel.weekYear!,
+    when(weekApi.update(mockUser.id!, mockWeekModel.weekYear!,
             mockWeekModel.weekNumber!, mockWeekModel))
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(mockWeekModel));
-    when(activityApi.update(mockActivity, mockUser.id)).thenAnswer(
+    when(activityApi.update(mockActivity, mockUser.id!)).thenAnswer(
         (_) => rx_dart.BehaviorSubject<ActivityModel>.seeded(mockActivity));
   }
 

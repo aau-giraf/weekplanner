@@ -115,7 +115,7 @@ class NewWeekplanBloc extends BlocBase {
   /// Saves the entered information to the database.
   Future<WeekModel> saveWeekplan({
     required BuildContext? screenContext,
-    required Stream<List<WeekNameModel>> existingWeekPlans,
+    required Stream<List<WeekNameModel?>> existingWeekPlans,
   }) async {
     if (weekUser == null) {
       // ignore: null_argument_to_non_null_type
@@ -158,7 +158,7 @@ class NewWeekplanBloc extends BlocBase {
     final Completer<WeekModel> saveCompleter = Completer<WeekModel>();
     if (doOverwrite) {
       weekApi.week
-          .update(weekUser!.id, _weekModel.weekYear!, _weekModel.weekNumber!,
+          .update(weekUser!.id!, _weekModel.weekYear!, _weekModel.weekNumber!,
               _weekModel)
           .take(1)
           .listen(saveCompleter.complete);
@@ -173,7 +173,7 @@ class NewWeekplanBloc extends BlocBase {
   /// Returns a [Future] that resolves to true if there is a matching week plan
   /// with the same year and week number.
   Future<bool> hasExisitingMatchingWeekplan({
-    required Stream<List<WeekNameModel>> existingWeekPlans,
+    required Stream<List<WeekNameModel?>> existingWeekPlans,
     required int year,
     required int weekNumber,
   }) {
@@ -181,9 +181,9 @@ class NewWeekplanBloc extends BlocBase {
 
     bool hasMatch = false;
 
-    existingWeekPlans.take(1).listen((List<WeekNameModel> existingPlans) {
-      for (WeekNameModel existingPlan in existingPlans) {
-        if (existingPlan.weekYear == year &&
+    existingWeekPlans.take(1).listen((List<WeekNameModel?> existingPlans) {
+      for (WeekNameModel? existingPlan in existingPlans) {
+        if (existingPlan!.weekYear == year &&
             existingPlan.weekNumber == weekNumber) {
           hasMatch = true;
         }

@@ -7,7 +7,7 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
@@ -83,15 +83,18 @@ void main() {
     api.pictogram = MockPictogramApi();
     savedWeekplan = false;
 
-    when(api.pictogram.getImage(mockPictogram.id!))
+    when(api.pictogram.getImage(mockPictogram.id!) as Function())
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
-    when(api.week.update(any, any, any, any)).thenAnswer((_) {
+    when(api.week
+                .update(any as String, any as int, any as int, any as WeekModel)
+            as Function())
+        .thenAnswer((_) {
       savedWeekplan = true;
       return Stream<WeekModel>.value(mockWeek);
     });
 
-    when(api.week.getNames(any)).thenAnswer(
+    when(api.week.getNames(any as String) as Function()).thenAnswer(
       (_) {
         return Stream<List<WeekNameModel>>.value(<WeekNameModel>[
           WeekNameModel(
@@ -102,7 +105,8 @@ void main() {
       },
     );
 
-    when(api.week.get(any, any, any)).thenAnswer(
+    when(api.week.get(any as String, any as int, any as int) as Function())
+        .thenAnswer(
       (_) {
         return Stream<WeekModel>.value(mockWeek);
       },
@@ -305,7 +309,8 @@ void main() {
 
   testWidgets('Click on thumbnail redirects to pictogram search screen',
       (WidgetTester tester) async {
-    when(api.pictogram.getAll(page: 1, pageSize: pageSize, query: ''))
+    when(api.pictogram.getAll(page: 1, pageSize: pageSize, query: '')
+            as Function())
         .thenAnswer((_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[mockPictogram]));
     mockBloc.acceptAllInputs = true;
@@ -351,7 +356,7 @@ void main() {
 
   testWidgets('Week plan is created even when there are no existing plans',
       (WidgetTester tester) async {
-    when(api.week.getNames(any)).thenAnswer(
+    when(api.week.getNames(any as String) as Function()).thenAnswer(
         (_) => Stream<List<WeekNameModel>>.value(<WeekNameModel>[]));
 
     mockWeekplanSelector = WeekplansBloc(api);
@@ -393,7 +398,7 @@ void main() {
 
     await tester.pump();
     await tester.enterText(
-        find.byKey(const Key('WeekTitleTextFieldKey')), mockWeek.name);
+        find.byKey(const Key('WeekTitleTextFieldKey')), mockWeek.name!);
     await tester.enterText(find.byKey(const Key('WeekYearTextFieldKey')),
         mockWeek.weekYear.toString());
     await tester.enterText(find.byKey(const Key('WeekNumberTextFieldKey')),
@@ -427,7 +432,7 @@ void main() {
 
     await tester.pump();
     await tester.enterText(
-        find.byKey(const Key('WeekTitleTextFieldKey')), mockWeek.name);
+        find.byKey(const Key('WeekTitleTextFieldKey')), mockWeek.name!);
     await tester.enterText(find.byKey(const Key('WeekYearTextFieldKey')),
         mockWeek.weekYear.toString());
     await tester.enterText(find.byKey(const Key('WeekNumberTextFieldKey')),
@@ -462,7 +467,7 @@ void main() {
 
     await tester.pump();
     await tester.enterText(
-        find.byKey(const Key('WeekTitleTextFieldKey')), mockWeek.name);
+        find.byKey(const Key('WeekTitleTextFieldKey')), mockWeek.name!);
     await tester.enterText(find.byKey(const Key('WeekYearTextFieldKey')),
         mockWeek.weekYear.toString());
     await tester.enterText(find.byKey(const Key('WeekNumberTextFieldKey')),

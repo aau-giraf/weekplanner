@@ -118,17 +118,17 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
 
   Widget _displayPictogram(
       BuildContext context, List<Widget> pictograms, int index) {
-    return StreamBuilder<SettingsModel>(
+    return StreamBuilder<SettingsModel?>(
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
-            AsyncSnapshot<SettingsModel> settingSnapshot) {
+            AsyncSnapshot<SettingsModel?> settingSnapshot) {
           return SizedBox(
             height: MediaQuery.of(context).size.height * 0.2,
             width: MediaQuery.of(context).size.height * 0.2,
             child: FittedBox(
               child: GestureDetector(
                   onTap: () {
-                    if (settingSnapshot.data!.showPopup) {
+                    if (settingSnapshot.data!.showPopup!) {
                       _selectPictogramFromChoiceBoardPopup(
                               context, pictograms, index)
                           .then((_) {

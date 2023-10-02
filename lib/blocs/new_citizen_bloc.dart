@@ -146,11 +146,14 @@ class NewCitizenBloc extends BlocBase {
   }
 
   /// Encodes the given file into an integer list.
-  Uint8List encodePicture(File? file) {
-    return file != null
-        ? encodePng(copyResize(decodeImage(file.readAsBytesSync()),
-            width: 512)) // 512 bytes chosen as a reasonable input size.
-        : null;
+  List<int>? encodePicture(File? file) {
+    if (file != null) {
+      final image = decodeImage(file.readAsBytesSync());
+      if (image != null) {
+        return encodePng(copyResize(image, width: 512));
+      }
+    }
+    return null;
   }
 
   /// Method called with information about the new citizen.
@@ -159,8 +162,8 @@ class NewCitizenBloc extends BlocBase {
       usernameController.value!,
       passwordController.value!,
       displayNameController.value!,
-      encodePicture(fileController!.value),
-      departmentId: _user!.department,
+      encodePicture(fileController!.value) as Uint8List,
+      departmentId: _user!.department!,
       role: Role.Citizen,
     );
   }
@@ -171,8 +174,8 @@ class NewCitizenBloc extends BlocBase {
         usernameController.value!,
         passwordController.value!,
         displayNameController.value!,
-        encodePicture(fileController!.value),
-        departmentId: _user!.department,
+        encodePicture(fileController!.value) as Uint8List,
+        departmentId: _user!.department!,
         role: Role.Trustee);
   }
 
@@ -182,8 +185,8 @@ class NewCitizenBloc extends BlocBase {
         usernameController.value!,
         passwordController.value!,
         displayNameController.value!,
-        encodePicture(fileController!.value),
-        departmentId: _user!.department,
+        encodePicture(fileController!.value) as Uint8List,
+        departmentId: _user!.department!,
         role: Role.Guardian);
   }
 
@@ -259,7 +262,7 @@ class NewCitizenBloc extends BlocBase {
     passwordVerifyController.sink.add(null);
     usePictogramPasswordController.sink.add(false);
     _user = null;
-    fileController!.add(null);
+    fileController!.add(null as File);
   }
 
   @override
