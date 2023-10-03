@@ -8,9 +8,7 @@ class PrivacyInformationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GirafAppBar(
-            title: 'Privatlivsinformation',
-            key: const ValueKey<String>('value')),
+        appBar: GirafAppBar(title: 'Privatlivsinformation', key: UniqueKey()),
         body: SingleChildScrollView(
             child: Column(children: <Widget>[
           Container(

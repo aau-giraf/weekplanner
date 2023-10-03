@@ -103,7 +103,7 @@ class PictogramPassword extends StatelessWidget {
                                   pictogram: pictogram,
                                   onPressed: () => inputFieldKey.currentState!
                                       .addToPass(pictogram),
-                                  key: const ValueKey<String>('value'));
+                                  key: UniqueKey());
                             }
                           }).toList());
                     } else {

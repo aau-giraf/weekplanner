@@ -63,7 +63,7 @@ class PictogramImage extends StatelessWidget {
                 }
                 Routes().pop(context);
               },
-              key: const ValueKey<String>('value'));
+              key: UniqueKey());
         });
   }
 

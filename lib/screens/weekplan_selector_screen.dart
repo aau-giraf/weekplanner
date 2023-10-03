@@ -78,8 +78,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
 
   // Entire screen
   Widget _buildWeekplanColumnview(BuildContext context) {
-    final Stream<List<WeekModel>> weekModels = widget._weekBloc.weekModels;
-    final Stream<List<WeekModel>> oldWeekModels =
+    final Stream<List<WeekModel?>> weekModels = widget._weekBloc.weekModels;
+    final Stream<List<WeekModel?>> oldWeekModels =
         widget._weekBloc.oldWeekModels;
     // Container which holds all of the UI elements on the screen
     return Container(
@@ -156,16 +156,16 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
   }
 
   Widget _buildWeekplanGridview(BuildContext context,
-      Stream<List<WeekModel>> weekModels, bool isUpcomingWeekplan) {
-    List<WeekModel> initial = <WeekModel>[WeekModel(name: 'Tilføj ugeplan')];
+      Stream<List<WeekModel?>> weekModels, bool isUpcomingWeekplan) {
+    List<WeekModel?> initial = <WeekModel>[WeekModel(name: 'Tilføj ugeplan')];
     if (!isUpcomingWeekplan) {
       initial = <WeekModel>[];
     }
-    return StreamBuilder<List<WeekModel>>(
+    return StreamBuilder<List<WeekModel?>>(
         initialData: initial,
         stream: weekModels,
         builder: (BuildContext context,
-            AsyncSnapshot<List<WeekModel>> weekplansSnapshot) {
+            AsyncSnapshot<List<WeekModel?>> weekplansSnapshot) {
           return StreamBuilder<List<WeekModel>>(
               stream: widget._weekBloc.markedWeekModels,
               builder: (BuildContext context,
@@ -181,10 +181,11 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                         MediaQuery.of(context).size.width / 100 * 1.5,
                     mainAxisSpacing:
                         MediaQuery.of(context).size.width / 100 * 1.5,
-                    children: weekplansSnapshot.data!.map((WeekModel weekplan) {
+                    children:
+                        weekplansSnapshot.data!.map((WeekModel? weekplan) {
                       return _buildWeekPlanSelector(
                           context,
-                          weekplan,
+                          weekplan!,
                           markedWeeksSnapshot.hasData &&
                               markedWeeksSnapshot.data!.contains(weekplan),
                           isUpcomingWeekplan);
@@ -324,7 +325,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
               WeekplanScreen(
                 weekplan,
                 widget._user,
-                key: const ValueKey<String>('value'),
+                key: UniqueKey(),
               ))
           .then((_) => widget._weekBloc.load(widget._user, true));
     }
@@ -396,10 +397,10 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
   Future<void> _pushEditWeekPlan(BuildContext context) async {
     final int markedCount = widget._weekBloc.getNumberOfMarkedWeekModels();
     bool reload = false;
-    widget._weekBloc.oldWeekModels.listen((List<WeekModel> list) {
+    widget._weekBloc.oldWeekModels.listen((List<WeekModel?> list) {
       reload = list.length < 2;
     });
-    widget._weekBloc.weekModels.listen((List<WeekModel> list) {
+    widget._weekBloc.weekModels.listen((List<WeekModel?> list) {
       reload |= list.length < 3;
     });
     if (markedCount > 1) {
@@ -408,10 +409,10 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
           barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
-            return const GirafNotifyDialog(
+            return GirafNotifyDialog(
               title: 'Fejl',
               description: description,
-              key: ValueKey<String>('value'),
+              key: UniqueKey(),
             );
           });
       return;
@@ -459,7 +460,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                   Routes().push(context,
                       CopyToCitizensScreen(weekModelList, widget._user));
                 },
-                key: const ValueKey<String>('value'));
+                key: UniqueKey());
           });
     } else {
       final List<WeekModel> weekModelList =
@@ -492,7 +493,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                 });
               },
               option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
-              key: const ValueKey<String>('value'),
+              key: UniqueKey(),
             );
           });
     }
@@ -523,7 +524,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                 // Closes the dialog box
                 Routes().pop(context);
               },
-              key: const ValueKey<String>('value'));
+              key: UniqueKey());
         });
   }
 }

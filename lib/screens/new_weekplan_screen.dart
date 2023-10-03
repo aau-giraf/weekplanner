@@ -48,8 +48,7 @@ class NewWeekplanScreen extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: GirafAppBar(
-          title: 'Ny ugeplan', key: const ValueKey<String>('value')),
+      appBar: GirafAppBar(title: 'Ny ugeplan', key: UniqueKey()),
       body: InputFieldsWeekPlan(
         bloc: _bloc,
         button: saveButton,

@@ -76,7 +76,7 @@ class PictogramInputFieldState extends State<PictogramInputField> {
         widget = PictogramImage(
             pictogram: pictogram,
             onPressed: () => removeFromPass(i),
-            key: const ValueKey<String>('value'));
+            key: UniqueKey());
       }
       password[i] = widget;
     }

@@ -52,7 +52,7 @@ class MockScreen extends StatelessWidget {
         AppBarIcon.logout: () {},
         AppBarIcon.changeToGuardian: () {},
       },
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     ));
   }
 }
@@ -154,7 +154,7 @@ void main() {
   testWidgets('Has toolbar with title', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
       title: 'Ugeplan',
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -167,7 +167,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
       title: 'Ugeplan',
       appBarIcons: null,
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -179,7 +179,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
       title: 'Ugeplan',
       appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.accept: () {}},
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -192,7 +192,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
       title: 'Ugeplan',
       appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.add: () {}},
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -205,7 +205,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
       title: 'Ugeplan',
       appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.addTimer: () {}},
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -218,7 +218,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
       title: 'Ugeplan',
       appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.back: () {}},
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -231,7 +231,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
       title: 'Ugeplan',
       appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.burgerMenu: () {}},
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -244,7 +244,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
       title: 'Ugeplan',
       appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.camera: () {}},
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -257,7 +257,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
       title: 'Ugeplan',
       appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.cancel: () {}},
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -273,7 +273,7 @@ void main() {
       appBarIcons: <AppBarIcon, VoidCallback>{
         AppBarIcon.changeToCitizen: () {}
       },
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -289,7 +289,7 @@ void main() {
       appBarIcons: <AppBarIcon, VoidCallback>{
         AppBarIcon.changeToGuardian: () {}
       },
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -302,7 +302,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
       title: 'Ugeplan',
       appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.copy: () {}},
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -315,7 +315,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
       title: 'Ugeplan',
       appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.delete: () {}},
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -328,7 +328,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
       title: 'Ugeplan',
       appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.edit: () {}},
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -341,7 +341,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
       title: 'Ugeplan',
       appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.help: () {}},
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -354,7 +354,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
       title: 'Ugeplan',
       appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.home: () {}},
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -367,7 +367,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
       title: 'Ugeplan',
       appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.logout: () {}},
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -380,7 +380,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
       title: 'Ugeplan',
       appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.profile: () {}},
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     );
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -393,7 +393,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
         title: 'Ugeplan',
         appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.redo: () {}},
-        key: const ValueKey<String>('value'));
+        key: UniqueKey());
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -405,7 +405,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
         title: 'Ugeplan',
         appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.save: () {}},
-        key: const ValueKey<String>('value'));
+        key: UniqueKey());
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -417,7 +417,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
         title: 'Ugeplan',
         appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.search: () {}},
-        key: const ValueKey<String>('value'));
+        key: UniqueKey());
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -429,7 +429,7 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
         title: 'Ugeplan',
         appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.settings: () {}},
-        key: const ValueKey<String>('value'));
+        key: UniqueKey());
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();

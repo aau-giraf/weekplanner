@@ -31,7 +31,7 @@ class NewWeekplanBloc extends BlocBase {
   /// This field is used to get the userId. Accessed in
   /// [edit_weekplan_bloc].
   @protected
-  late DisplayNameModel? weekUser;
+  DisplayNameModel? weekUser;
 
   /// This field controls the title input field
   @protected

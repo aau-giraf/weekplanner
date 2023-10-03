@@ -67,14 +67,14 @@ void _runApp() {
             if (loggedIn) {
               // Show screen dependent on logged in role
               switch (_authBloc!.loggedInUser.role) {
-                case Role.Citizen:
-                  return WeekplanSelectorScreen(
-                    DisplayNameModel(
-                      displayName: _authBloc!.loggedInUser.displayName,
-                      role: describeEnum(_authBloc!.loggedInUser.role!),
-                      id: _authBloc!.loggedInUser.id,
-                    ),
-                  );
+                // case Role.Citizen:
+                //   return WeekplanSelectorScreen(
+                //     DisplayNameModel(
+                //       displayName: _authBloc!.loggedInUser.displayName,
+                //       role: describeEnum(_authBloc!.loggedInUser.role!),
+                //       id: _authBloc!.loggedInUser.id,
+                //     ),
+                //   );
                 default:
                   return ChooseCitizenScreen();
               }

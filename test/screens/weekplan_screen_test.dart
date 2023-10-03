@@ -99,7 +99,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
       expect(find.byType(WeekplanScreen), findsOneWidget);
@@ -116,7 +116,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -135,7 +135,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -151,7 +151,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
       expect(find.byType(GirafAppBar), findsOneWidget);
@@ -162,7 +162,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
       expect(find.byTooltip('Rediger'), findsOneWidget);
@@ -173,7 +173,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -207,7 +207,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
       // After tapping the button edit mode should be true
@@ -222,7 +222,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -237,7 +237,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -253,7 +253,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -279,7 +279,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -298,7 +298,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
 
       await tester.pumpAndSettle();
@@ -339,7 +339,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -401,7 +401,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -434,7 +434,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -467,7 +467,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -499,7 +499,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -533,7 +533,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -590,7 +590,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -619,7 +619,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -657,7 +657,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -689,7 +689,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -705,7 +705,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -725,7 +725,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -751,7 +751,7 @@ void main() {
       final WeekplanScreen weekplanScreen = WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       );
 
       await tester.pumpWidget(MaterialApp(home: weekplanScreen));
@@ -767,7 +767,7 @@ void main() {
       final WeekplanScreen weekplanScreen = WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       );
 
       await tester.pumpWidget(MaterialApp(home: weekplanScreen));
@@ -783,7 +783,7 @@ void main() {
       final WeekplanScreen weekplanScreen = WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       );
       await tester.pumpWidget(MaterialApp(home: weekplanScreen));
       await tester.pumpAndSettle();
@@ -797,7 +797,7 @@ void main() {
       final WeekplanScreen weekplanScreen = WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       );
       await tester.pumpWidget(MaterialApp(home: weekplanScreen));
       await tester.pumpAndSettle();
@@ -833,7 +833,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
       await tester.pumpAndSettle();
@@ -855,7 +855,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -876,7 +876,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -903,7 +903,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -941,7 +941,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -965,7 +965,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -984,7 +984,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -1001,7 +1001,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -1025,7 +1025,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -1044,7 +1044,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -1066,7 +1066,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -1087,7 +1087,7 @@ void main() {
           home: WeekplanScreen(
         mockWeek,
         user,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )));
       await tester.pumpAndSettle();
 
@@ -1108,7 +1108,7 @@ void main() {
     //       home: WeekplanScreen(
     //     mockWeek,
     //     user,
-    //     key: ValueKey<String>('value'),
+    //     key: UniqueKey(),
     //   )));
     //   await tester.pumpAndSettle();
 
@@ -1131,9 +1131,9 @@ void main() {
         home: WeekplanScreen(
           mockWeek,
           user,
-          key: const ValueKey<String>('value'),
+          key: UniqueKey(),
         ),
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       ));
       await tester.pumpAndSettle();
 
@@ -1154,9 +1154,8 @@ void main() {
       mockWeek.days![weekDay].activities!.add(mockActivities[2]);
       mockWeek.days![weekDay].activities!.add(mockActivities[3]);
 
-      await tester.pumpWidget(MaterialApp(
-          home: WeekplanScreen(mockWeek, user,
-              key: const ValueKey<String>('value'))));
+      await tester.pumpWidget(
+          MaterialApp(home: WeekplanScreen(mockWeek, user, key: UniqueKey())));
       await tester.pumpAndSettle();
 
       expect(find.byType(ActivityCard), findsNWidgets(2));
@@ -1169,9 +1168,8 @@ void main() {
       mockWeek.days![4].activities!.add(mockActivities[3]);
 
       // Build the weekPlan screen
-      await tester.pumpWidget(MaterialApp(
-          home: WeekplanScreen(mockWeek, user,
-              key: const ValueKey<String>('value'))));
+      await tester.pumpWidget(
+          MaterialApp(home: WeekplanScreen(mockWeek, user, key: UniqueKey())));
       await tester.pumpAndSettle();
       await tester.ensureVisible(find.text('Nametest'));
       expect(find.text('Nametest'), findsOneWidget);
@@ -1185,9 +1183,8 @@ void main() {
       // Added Cancelled activity with a cross
       mockWeek.days![0].activities!.add(mockActivities[0]);
 
-      await tester.pumpWidget(MaterialApp(
-          home: WeekplanScreen(mockWeek, user,
-              key: const ValueKey<String>('value'))));
+      await tester.pumpWidget(
+          MaterialApp(home: WeekplanScreen(mockWeek, user, key: UniqueKey())));
       await tester.pumpAndSettle();
 
       // Find cross (cancelled) icon by key
@@ -1201,7 +1198,7 @@ void main() {
 
       authBloc.setMode(WeekplanMode.citizen);
       final WeekplanScreen weekplanScreen =
-          WeekplanScreen(mockWeek, user, key: const ValueKey<String>('value'));
+          WeekplanScreen(mockWeek, user, key: UniqueKey());
       await tester.pumpWidget(MaterialApp(home: weekplanScreen));
       await tester.pumpAndSettle();
 
@@ -1267,7 +1264,7 @@ void main() {
       mockWeek.days![0].activities!.add(mockActivities[2]);
       authBloc.setMode(WeekplanMode.citizen);
       final WeekplanScreen weekplanScreen =
-          WeekplanScreen(mockWeek, user, key: const ValueKey<String>('value'));
+          WeekplanScreen(mockWeek, user, key: UniqueKey());
       await tester.pumpWidget(MaterialApp(home: weekplanScreen));
 
       await tester.pumpAndSettle();
@@ -1290,8 +1287,8 @@ void main() {
         mockActivities[0].state = ActivityState.Normal;
         mockWeek.days![0].activities!.add(mockActivities[0]);
         authBloc.setMode(WeekplanMode.citizen);
-        final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user,
-            key: const ValueKey<String>('value'));
+        final WeekplanScreen weekplanScreen =
+            WeekplanScreen(mockWeek, user, key: UniqueKey());
         await tester.pumpWidget(MaterialApp(home: weekplanScreen));
 
         await tester.pumpAndSettle();
@@ -1314,8 +1311,8 @@ void main() {
         mockActivities[2].timer!.fullLength = 100;
         mockWeek.days![0].activities!.add(mockActivities[2]);
         authBloc.setMode(WeekplanMode.citizen);
-        final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user,
-            key: const ValueKey<String>('value'));
+        final WeekplanScreen weekplanScreen =
+            WeekplanScreen(mockWeek, user, key: UniqueKey());
         await tester.pumpWidget(MaterialApp(home: weekplanScreen));
 
         await tester.pumpAndSettle();

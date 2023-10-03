@@ -43,10 +43,10 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
           titlePadding: const EdgeInsets.all(0.0),
           shape: Border.all(
               color: theme.GirafColors.transparentDarkGrey, width: 5.0),
-          title: const Center(
+          title: Center(
               child: GirafTitleHeader(
             title: 'Vælg aktivitet',
-            key: ValueKey<String>('value'),
+            key: UniqueKey(),
           )),
           content: Column(
             mainAxisAlignment: MainAxisAlignment.center,

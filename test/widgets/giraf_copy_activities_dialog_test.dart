@@ -40,7 +40,7 @@ class MockScreen extends StatelessWidget {
                 checkboxValues = days;
                 Routes().pop(context);
               },
-              key: const ValueKey<String>('value'));
+              key: UniqueKey());
         });
   }
 }

@@ -34,7 +34,7 @@ class MockScreen extends StatelessWidget {
               confirmOnPressed: () {
                 Routes().pop(context);
               },
-              key: const ValueKey<String>('value'));
+              key: UniqueKey());
         });
   }
 }

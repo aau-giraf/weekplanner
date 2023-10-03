@@ -236,7 +236,7 @@ class MockScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShowActivityScreen(
         activity, mockUser, weekplanBloc, timerBloc, weekdayModel,
-        key: const ValueKey<String>('value'));
+        key: UniqueKey());
   }
 }
 
@@ -364,14 +364,14 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
   });
 
   testWidgets('Has Giraf App Bar', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
 
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
@@ -380,7 +380,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump(Duration.zero);
 
     expect(find.byKey(Key(mockActivity.id.toString())), findsOneWidget);
@@ -390,7 +390,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump();
 
     expect(find.byKey(const Key('ButtonBarRender')), findsOneWidget);
@@ -402,7 +402,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump();
 
     expect(find.byKey(const Key('CancelStateToggleButton')), findsOneWidget);
@@ -414,7 +414,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump();
 
     expect(find.byKey(const Key('CompleteStateToggleButton')), findsOneWidget);
@@ -426,7 +426,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump();
 
     expect(find.byKey(const Key('CancelStateToggleButton')), findsNothing);
@@ -438,7 +438,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(
             mockActivity, mockUser, weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump();
 
     expect(find.byKey(const Key('IconComplete')), findsOneWidget);
@@ -450,7 +450,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(
             mockActivity, mockUser, weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump();
 
     expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
@@ -462,7 +462,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump();
 
     expect(find.byKey(const Key('IconCompleted')), findsNothing);
@@ -475,7 +475,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(
             mockActivity, mockUser, weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CompleteStateToggleButton')));
@@ -490,7 +490,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(
             mockActivity, mockUser, weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CancelStateToggleButton')));
@@ -506,7 +506,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(
             mockActivity, mockUser, weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CompleteStateToggleButton')));
@@ -521,7 +521,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump();
 
     expect(find.byKey(const Key('AddChoiceBoardButtonKey')), findsOneWidget);
@@ -533,7 +533,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump();
 
     expect(find.byKey(const Key('AddChoiceBoardButtonKey')), findsNothing);
@@ -547,7 +547,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(
             mockActivity, mockUser, weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump();
 
     expect(find.byKey(const Key('AddChoiceBoardButtonKey')), findsNothing);
@@ -560,7 +560,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(
             mockActivity, mockUser, weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump();
 
     expect(find.byKey(const Key('AddChoiceBoardButtonKey')), findsOneWidget);
@@ -576,7 +576,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump(const Duration(milliseconds: 100));
 
     expect(find.text('Tilføj Valgmulighed'), findsOneWidget);
@@ -592,7 +592,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
@@ -609,7 +609,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(
             mockActivity, mockUser, weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump();
 
     expect(find.byKey(const Key('ChoiceBoardPart')), findsNothing);
@@ -625,7 +625,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(
             mockActivity, mockUser, weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump();
 
     expect(find.byKey(const Key('ChoiceBoardPart')), findsNWidgets(2));
@@ -641,7 +641,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(
             mockActivity, mockUser, weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump();
 
     expect(find.byKey(const Key('ChoiceBoardPart')), findsNWidgets(3));
@@ -657,7 +657,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(
             mockActivity, mockUser, weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump();
 
     expect(find.byKey(const Key('ChoiceBoardPart')), findsNWidgets(4));
@@ -871,7 +871,7 @@ void main() {
       weekplanBloc,
       timerBloc,
       mockWeekDayModel(),
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     )));
 
     expect(find.byKey(const Key('OverallTimerBoxKey')), findsNothing);
@@ -1044,7 +1044,7 @@ void main() {
       weekplanBloc,
       timerBloc,
       mockWeekDayModel(),
-      key: const ValueKey<String>('value'),
+      key: UniqueKey(),
     )));
     await tester.pump();
     expect(find.byKey(const Key('ChoiceBoardNameText')), findsOneWidget);
@@ -1058,7 +1058,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(
             mockActivity, mockUser, weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pump();
     await tester.enterText(
         find.byKey(const Key('ChoiceBoardNameText')), 'nametest');
@@ -1077,7 +1077,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(activistModel, mockUser, weekplanBloc,
             timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CancelStateToggleButton')));
@@ -1098,7 +1098,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('SavePictogramTextForCitizenBtn')),
@@ -1113,7 +1113,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('GetStandardPictogramTextForCitizenBtn')),
@@ -1128,7 +1128,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('AlternateNameTextField')), findsOneWidget);
@@ -1142,7 +1142,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pumpAndSettle();
 
     expect(
@@ -1157,7 +1157,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('GetStandardPictogramTextForCitizenBtn')),
@@ -1172,7 +1172,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pumpAndSettle();
 
     expect(
@@ -1187,7 +1187,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('GetStandardPictogramTextForCitizenBtn')),
@@ -1203,7 +1203,7 @@ void main() {
       await tester.pumpWidget(MaterialApp(
           home: ShowActivityScreen(mockActivity, mockUser2, weekplanBloc,
               timerBloc, mockWeekDayModel(),
-              key: const ValueKey<String>('value'))));
+              key: UniqueKey())));
 
       await tester.pump();
 
@@ -1226,7 +1226,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser2,
             weekplanBloc, timerBloc, mockWeekDayModel(),
-            key: const ValueKey<String>('value'))));
+            key: UniqueKey())));
 
     // Change activity title before getting original
     await tester.pump();

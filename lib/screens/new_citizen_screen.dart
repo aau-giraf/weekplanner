@@ -82,7 +82,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
     return Scaffold(
       appBar: GirafAppBar(
         title: 'Ny bruger',
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       ),
       body: SingleChildScrollView(
         child: Column(

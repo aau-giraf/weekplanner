@@ -61,8 +61,8 @@ void main() {
   });
 
   testWidgets('Screen renders', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
-        home: TakePictureWithCamera(key: const ValueKey<String>('value'))));
+    await tester
+        .pumpWidget(MaterialApp(home: TakePictureWithCamera(key: UniqueKey())));
     await tester.pumpAndSettle();
 
     expect(find.text('Tag billede med kamera'), findsOneWidget);

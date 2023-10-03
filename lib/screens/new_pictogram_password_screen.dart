@@ -29,7 +29,7 @@ class NewPictogramPasswordScreen extends StatelessWidget {
     return Scaffold(
         appBar: GirafAppBar(
           title: 'Ny bruger',
-          key: const ValueKey<String>('value'),
+          key: UniqueKey(),
         ),
         body: ListView(shrinkWrap: false, children: <Widget>[
           Padding(
@@ -55,7 +55,7 @@ class NewPictogramPasswordScreen extends StatelessWidget {
                   _bloc.onPictogramPasswordChanged.add(pass);
                 },
                 api: di.get<Api>(),
-                key: const ValueKey<String>('value'),
+                key: UniqueKey(),
               ),
             ],
           ),

@@ -345,7 +345,7 @@ class WeekplanActivitiesColumn extends StatelessWidget {
                 weekplanBloc,
                 _timerBloc,
                 weekday,
-                key: const ValueKey<String>('value'),
+                key: UniqueKey(),
               ))
           .whenComplete(() {
         weekplanBloc.getWeekday(weekday.day!).catchError((Object error) {

@@ -42,7 +42,7 @@ class _PictogramSearchState extends State<PictogramSearch> {
     return Scaffold(
         appBar: GirafAppBar(
           title: 'Piktogram',
-          key: const ValueKey<String>('value'),
+          key: UniqueKey(),
         ),
         body: Column(
           children: <Widget>[
@@ -88,8 +88,7 @@ class _PictogramSearchState extends State<PictogramSearch> {
                                             needsTitle: true,
                                             onPressed: () => Routes()
                                                 .pop(context, pictogram),
-                                            key:
-                                                const ValueKey<String>('value'),
+                                            key: UniqueKey(),
                                           ))
                                       .toList(),
                                   controller: _bloc.sc)),
@@ -144,12 +143,10 @@ class _PictogramSearchState extends State<PictogramSearch> {
                               buttonKey: 'TilføjFraGalleriButton',
                               assetPath: 'assets/icons/gallery.png',
                               dialogFunction: (BuildContext context) {
-                                Routes().push(
-                                    context,
-                                    UploadImageFromPhone(
-                                        key: const ValueKey<String>('value')));
+                                Routes().push(context,
+                                    UploadImageFromPhone(key: UniqueKey()));
                               },
-                              key: const ValueKey<String>('value'),
+                              key: UniqueKey(),
                             ),
                             BottomAppBarButton(
                                 buttonText: 'Tag billede',
@@ -159,10 +156,10 @@ class _PictogramSearchState extends State<PictogramSearch> {
                                   Routes().push(
                                       context,
                                       TakePictureWithCamera(
-                                          key:
-                                              const ValueKey<String>('value')));
+                                        key: UniqueKey(),
+                                      ));
                                 },
-                                key: const ValueKey<String>('value'))
+                                key: UniqueKey())
                           ])))
             ])));
   }

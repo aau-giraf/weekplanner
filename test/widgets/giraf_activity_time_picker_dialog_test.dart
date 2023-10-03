@@ -53,7 +53,7 @@ class MockScreen extends StatelessWidget {
           return GirafActivityTimerPickerDialog(
             _activityModel,
             _mockTimerBloc,
-            key: const ValueKey<String>('value'),
+            key: UniqueKey(),
           );
         });
   }

@@ -521,7 +521,7 @@ class WeekplanDayColumn extends StatelessWidget {
               context,
               ShowActivityScreen(activities[index], user, weekplanBloc,
                   _timerBloc[index], weekday,
-                  key: const ValueKey<String>('value')))
+                  key: UniqueKey()))
           .whenComplete(() {
         weekplanBloc.getWeekday(weekday.day!).catchError((Object error) {
           creatingNotifyDialog(error, context);

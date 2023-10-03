@@ -99,7 +99,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 key: const Key('WeekYearTextFieldKey'),
                 keyboardType: TextInputType.number,
                 onChanged: widget.bloc.onYearChanged.add,
-                initialValue: widget.weekModel!.weekYear.toString(),
+                initialValue: widget.weekModel?.weekYear.toString(),
                 style: _style,
                 decoration: InputDecoration(
                     labelText: 'År',
@@ -175,7 +175,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
           pictogram: snapshot.data!,
           onPressed: () => _openPictogramSearch(context, widget.bloc),
           haveRights: false,
-          key: const ValueKey<String>('value'));
+          key: UniqueKey());
     }
   }
 

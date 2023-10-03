@@ -205,7 +205,7 @@ class ToolbarBloc extends BlocBase {
                     Routes().pop(context);
                   },
                   title: 'Skift til borger',
-                  key: const ValueKey<String>('value'),
+                  key: UniqueKey(),
                 );
               });
         });
@@ -348,7 +348,7 @@ class ToolbarBloc extends BlocBase {
                   _authBloc.logout();
                   Routes().goHome(context);
                 },
-                key: const ValueKey<String>('value'),
+                key: UniqueKey(),
               );
             });
       },

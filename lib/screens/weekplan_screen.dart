@@ -197,7 +197,7 @@ class WeekplanScreen extends StatelessWidget {
                         isEnabled: false,
                         isEnabledStream: _weekplanBloc.atLeastOneActivityMarked,
                         dialogFunction: _buildUndoDialog,
-                        key: const ValueKey<String>('value'),
+                        key: UniqueKey(),
                       ),
                       BottomAppBarButton(
                         buttonText: 'Aflys',
@@ -206,7 +206,7 @@ class WeekplanScreen extends StatelessWidget {
                         isEnabled: false,
                         isEnabledStream: _weekplanBloc.atLeastOneActivityMarked,
                         dialogFunction: _buildCancelDialog,
-                        key: const ValueKey<String>('value'),
+                        key: UniqueKey(),
                       ),
                       BottomAppBarButton(
                         buttonText: 'Kopier',
@@ -215,7 +215,7 @@ class WeekplanScreen extends StatelessWidget {
                         isEnabled: false,
                         isEnabledStream: _weekplanBloc.atLeastOneActivityMarked,
                         dialogFunction: _buildCopyDialog,
-                        key: const ValueKey<String>('value'),
+                        key: UniqueKey(),
                       ),
                       BottomAppBarButton(
                         buttonText: 'Slet',
@@ -224,7 +224,7 @@ class WeekplanScreen extends StatelessWidget {
                         isEnabled: false,
                         isEnabledStream: _weekplanBloc.atLeastOneActivityMarked,
                         dialogFunction: _buildRemoveDialog,
-                        key: const ValueKey<String>('value'),
+                        key: UniqueKey(),
                       )
                     ],
                   )))
@@ -280,7 +280,7 @@ class WeekplanScreen extends StatelessWidget {
               // Closes the dialog box
               Routes().pop(context);
             },
-            key: const ValueKey<String>('value'));
+            key: UniqueKey());
       },
     );
   }
@@ -307,7 +307,7 @@ class WeekplanScreen extends StatelessWidget {
                 // Closes the dialog box
                 Routes().pop(context);
               },
-              key: const ValueKey<String>('value'));
+              key: UniqueKey());
         });
   }
 
@@ -336,7 +336,7 @@ class WeekplanScreen extends StatelessWidget {
                 // Closes the dialog box
                 Routes().pop(context);
               },
-              key: const ValueKey<String>('value'));
+              key: UniqueKey());
         });
   }
 

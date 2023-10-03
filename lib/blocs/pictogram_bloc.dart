@@ -58,7 +58,7 @@ class PictogramBloc extends BlocBase {
       rx_dart.BehaviorSubject<List<PictogramModel>>();
 
   final Api _api;
-  late Timer? _debounceTimer;
+  Timer? _debounceTimer;
 
   /// Initializes a search for [query].
   ///

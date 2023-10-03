@@ -60,7 +60,7 @@ class GirafConfirmDialog extends StatelessWidget {
       title: Center(
           child: GirafTitleHeader(
         title: title,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )),
       content: Column(
         mainAxisAlignment: MainAxisAlignment.start,

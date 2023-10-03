@@ -46,7 +46,7 @@ class CopyToCitizensScreen extends StatelessWidget {
             appBar: GirafAppBar(
               title: 'Vælg borger',
               appBarIcons: const <AppBarIcon, VoidCallback>{},
-              key: const ValueKey<String>('value'),
+              key: UniqueKey(),
             ),
             body: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -215,7 +215,7 @@ class CopyToCitizensScreen extends StatelessWidget {
               });
             },
             option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
-            key: const ValueKey<String>('value'),
+            key: UniqueKey(),
           );
         });
   }
@@ -254,7 +254,7 @@ class CopyToCitizensScreen extends StatelessWidget {
             },
             confirmButtonIcon:
                 const ImageIcon(AssetImage('assets/icons/copy.png')),
-            key: const ValueKey<String>('value'),
+            key: UniqueKey(),
           );
         });
   }

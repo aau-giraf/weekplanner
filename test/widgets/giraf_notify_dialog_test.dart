@@ -28,7 +28,7 @@ class MockScreen extends StatelessWidget {
           return const GirafNotifyDialog(
             title: 'testTitle',
             description: 'testDescription',
-            key: ValueKey<String>('value'),
+            key: UniqueKey(),
           );
         });
   }

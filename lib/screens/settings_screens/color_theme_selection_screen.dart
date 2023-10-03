@@ -25,7 +25,7 @@ class ColorThemeSelectorScreen extends StatelessWidget {
     return Scaffold(
         appBar: GirafAppBar(
             title: _user!.displayName! + ': Farver på ugeplan',
-            key: const ValueKey<String>('value')),
+            key: UniqueKey()),
         body: StreamBuilder<SettingsModel?>(
             stream: _settingsBloc.settings,
             builder: (BuildContext context,

@@ -20,8 +20,7 @@ class UserSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GirafAppBar(
-            title: 'Indstillinger', key: const ValueKey<String>('value')),
+        appBar: GirafAppBar(title: 'Indstillinger', key: UniqueKey()),
         body: _buildAllSettings(context));
   }
 

@@ -114,7 +114,7 @@ class ShowActivityScreen extends StatelessWidget {
           appBarIcons: (mode == WeekplanMode.guardian)
               ? <AppBarIcon, VoidCallback>{AppBarIcon.changeToCitizen: () {}}
               : <AppBarIcon, VoidCallback>{AppBarIcon.changeToGuardian: () {}},
-          key: const ValueKey<String>('value'),
+          key: UniqueKey(),
         ),
         body: childContainer);
   }
@@ -709,7 +709,7 @@ class ShowActivityScreen extends StatelessWidget {
           return GirafActivityTimerPickerDialog(
             _activity,
             _timerBloc,
-            key: const ValueKey<String>('value'),
+            key: UniqueKey(),
           );
         });
   }

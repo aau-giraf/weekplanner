@@ -51,7 +51,7 @@ class ChangeUsernameScreen extends StatelessWidget {
     return Scaffold(
         appBar: GirafAppBar(
           title: 'Skift brugernavn',
-          key: const ValueKey<String>('value'),
+          key: UniqueKey(),
         ),
         body: buildUsernameChange(context));
   }
@@ -144,10 +144,10 @@ class ChangeUsernameScreen extends StatelessWidget {
         builder: (BuildContext context) {
           return AlertDialog(
             titlePadding: const EdgeInsets.all(0.0),
-            title: const Center(
+            title: Center(
                 child: GirafTitleHeader(
               title: 'Verificer bruger',
-              key: ValueKey<String>('value'),
+              key: UniqueKey(),
             )),
             content: Form(
               key: _innerForm,

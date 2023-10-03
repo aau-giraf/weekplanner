@@ -27,8 +27,7 @@ class CompletedActivityIconScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: GirafAppBar(
-            title: _user.displayName! + ': indstillinger',
-            key: const ValueKey<String>('value')),
+            title: _user.displayName! + ': indstillinger', key: UniqueKey()),
         body: StreamBuilder<SettingsModel?>(
             stream: _settingsBloc.settings,
             builder: (BuildContext context,

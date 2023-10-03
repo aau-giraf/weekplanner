@@ -79,7 +79,7 @@ class CopyResolveScreen extends StatelessWidget {
     return Scaffold(
       appBar: GirafAppBar(
         title: 'Kopier ugeplan',
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       ),
       body: InputFieldsWeekPlan(
           bloc: _bloc, button: saveButton, weekModel: weekModel),

@@ -42,8 +42,8 @@ class UploadImageFromPhone extends StatelessWidget {
           stream: _uploadFromGallery.isUploading,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             return snapshot.hasData && snapshot.data!
-                ? const LoadingSpinnerWidget(
-                    key: ValueKey<String>('value'),
+                ? LoadingSpinnerWidget(
+                    key: UniqueKey(),
                   )
                 : _buildBody(context);
           }),
@@ -121,10 +121,10 @@ class UploadImageFromPhone extends StatelessWidget {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return const GirafNotifyDialog(
+        return GirafNotifyDialog(
           title: 'Fejl',
           description: 'Upload af pictogram fejlede.',
-          key: ValueKey<String>('value'),
+          key: UniqueKey(),
         );
       },
     );

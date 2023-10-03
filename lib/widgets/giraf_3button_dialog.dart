@@ -64,7 +64,7 @@ class Giraf3ButtonDialog extends StatelessWidget {
       title: Center(
           child: GirafTitleHeader(
         title: title,
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       )),
       content: Padding(
         padding: const EdgeInsets.all(10.0),

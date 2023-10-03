@@ -71,7 +71,7 @@ void main() {
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
       home: UploadImageFromPhone(
-        key: const ValueKey<String>('value'),
+        key: UniqueKey(),
       ),
     ));
     await tester.pumpAndSettle();

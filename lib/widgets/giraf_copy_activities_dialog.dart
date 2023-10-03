@@ -80,7 +80,7 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
                     confirmButtonIcon: confirmButtonIcon,
                     confirmOnPressed: confirmOnPressed,
                     checkMarkValues: snapshot.data!,
-                    key: const ValueKey<String>('value'))
+                    key: UniqueKey())
               ],
             );
           }),

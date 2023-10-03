@@ -44,8 +44,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GirafAppBar(
-            title: 'Indstillinger', key: const ValueKey<String>('value')),
+        appBar: GirafAppBar(title: 'Indstillinger', key: UniqueKey()),
         body: _buildAllSettings(context));
   }
 
@@ -348,15 +347,15 @@ class SettingsScreen extends StatelessWidget {
                             showDialog<String>(
                               context: context,
                               builder: (BuildContext context) =>
-                                  const GirafNotifyDialog(
+                                  GirafNotifyDialog(
                                       title: 'Fejl',
                                       description: 'Det indtastede navn'
                                           ' er forkert!',
-                                      key: ValueKey<String>('value')),
+                                      key: UniqueKey()),
                             );
                           }
                         },
-                        key: const ValueKey<String>('value'),
+                        key: UniqueKey(),
                       );
                     });
               })
