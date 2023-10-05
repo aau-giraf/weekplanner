@@ -82,9 +82,7 @@ class ActivityCard extends StatelessWidget {
                       ),
                       Stack(
                         alignment: AlignmentDirectional.topStart,
-                        children: <Widget>[
-                          _buildAvatarIcon(context),
-                        ],
+                        children: const <Widget>[],
                       ),
                     ],
                   ),
@@ -166,9 +164,7 @@ class ActivityCard extends StatelessWidget {
                   ),
                   Stack(
                       alignment: AlignmentDirectional.topStart,
-                      children: <Widget>[
-                        _buildAvatarIcon(context),
-                      ])
+                      children: const <Widget>[])
                 ],
               ),
               PictogramText(_activity, _user),
@@ -397,7 +393,7 @@ class ActivityCard extends StatelessWidget {
         });
   }
 
-  Widget _buildAvatarIcon(BuildContext context) {
+  /*Widget _buildAvatarIcon(BuildContext context) {
     return Container(
         width: 400,
         height: 400,
@@ -408,6 +404,7 @@ class ActivityCard extends StatelessWidget {
               radius: 20,
               backgroundImage:
                   AssetImage('assets/login_screen_background_image.png')),
-        ));
-  }
+        )
+    );
+  }*/
 }
