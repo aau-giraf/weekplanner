@@ -90,6 +90,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
     widget.screenHeight = MediaQuery.of(context).size.height;
     widget.screenWidth = MediaQuery.of(context).size.width;
 
+
     return Scaffold(
       appBar: GirafAppBar(
         title: 'Ny bruger',
@@ -108,10 +109,10 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                       key: const Key('displayNameField'),
                       decoration: InputDecoration(
                         border:
-                            const OutlineInputBorder(borderSide: BorderSide()),
+                        const OutlineInputBorder(borderSide: BorderSide()),
                         labelText: 'Navn',
                         errorText: (snapshot?.data == true) &&
-                                widget._bloc.displayNameController.value != null
+                            widget._bloc.displayNameController.value != null
                             ? null
                             : 'Navn skal udfyldes',
                       ),
@@ -195,13 +196,13 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                       key: const Key('usernameField'),
                       decoration: InputDecoration(
                         border:
-                            const OutlineInputBorder(borderSide: BorderSide()),
+                        const OutlineInputBorder(borderSide: BorderSide()),
                         labelText: 'Brugernavn',
                         errorText: (snapshot?.data == true) &&
-                                widget._bloc.usernameController.value != null
+                            widget._bloc.usernameController.value != null
                             ? null
-                            // cant make it shorter because of the string
-                            // ignore: lines_longer_than_80_chars
+                        // cant make it shorter because of the string
+                        // ignore: lines_longer_than_80_chars
                             : 'Brugernavn er tomt eller indeholder et ugyldigt tegn',
                       ),
                       onChanged: widget._bloc.onUsernameChange.add,
@@ -214,7 +215,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                 const Text('Brug piktogram kode?'),
                 Padding(
                     padding:
-                        const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                    const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
                     child: StreamBuilder<Object>(
                         stream: null,
                         builder: (BuildContext context,
@@ -225,14 +226,14 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                                   ._bloc.usePictogramPasswordController.value,
                               onChanged: _role == Roles.citizen
                                   ? (bool value) {
-                                      setState(() {
-                                        isSwitchOpen = value; //???????????
-                                        widget
-                                            ._bloc.onUsePictogramPasswordChange
-                                            .add(value);
-                                        isButtonSaveVisible = !value;
-                                      });
-                                    }
+                                setState(() {
+                                  isSwitchOpen = value; 
+                                  widget
+                                      ._bloc.onUsePictogramPasswordChange
+                                      .add(value);
+                                  isButtonSaveVisible = !value;
+                                });
+                              }
                                   : null);
                         }))
               ],
@@ -245,20 +246,20 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                       (BuildContext context, AsyncSnapshot<bool> snapshot) {
                     return Visibility(
                       visible:
-                          !widget._bloc.usePictogramPasswordController.value,
+                      !widget._bloc.usePictogramPasswordController.value,
                       child: TextFormField(
                         key: const Key('passwordField'),
                         enabled:
-                            !widget._bloc.usePictogramPasswordController.value,
+                        !widget._bloc.usePictogramPasswordController.value,
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(
                               borderSide: BorderSide()),
                           labelText: 'Kodeord',
                           errorText: (snapshot?.data == true) &&
-                                  widget._bloc.passwordController.value != null
+                              widget._bloc.passwordController.value != null
                               ? null
-                              // cant make it shorter because of the string
-                              // ignore: lines_longer_than_80_chars
+                          // cant make it shorter because of the string
+                          // ignore: lines_longer_than_80_chars
                               : 'Kodeord må ikke indeholde mellemrum eller være tom',
                         ),
                         onChanged: widget._bloc.onPasswordChange.add,
@@ -275,11 +276,11 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                       (BuildContext context, AsyncSnapshot<bool> snapshot) {
                     return Visibility(
                       visible:
-                          !widget._bloc.usePictogramPasswordController.value,
+                      !widget._bloc.usePictogramPasswordController.value,
                       child: TextFormField(
                         key: const Key('passwordVerifyField'),
                         enabled:
-                            !widget._bloc.usePictogramPasswordController.value,
+                        !widget._bloc.usePictogramPasswordController.value,
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(
                               borderSide: BorderSide()),
@@ -310,9 +311,9 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                   stream: widget._bloc.file,
                   builder:
                       (BuildContext context, AsyncSnapshot<File> snapshot) =>
-                          snapshot.data != null
-                              ? widget._displayImage(snapshot.data)
-                              : widget._displayIfNoImage()),
+                  snapshot.data != null
+                      ? widget._displayImage(snapshot.data)
+                      : widget._displayIfNoImage()),
             ),
 
             Row(
@@ -321,42 +322,42 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
               children: <Widget>[
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                  const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
 
                   /// Add from gallery button
                   child: GirafButton(
                     key: const Key('TilføjFraGalleriButton'),
                     icon:
-                        const ImageIcon(AssetImage('assets/icons/gallery.png')),
+                    const ImageIcon(AssetImage('assets/icons/gallery.png')),
                     text: 'Tilføj fra galleri',
                     onPressed: widget._bloc.chooseImageFromGallery,
                     child: StreamBuilder<File>(
                         stream: widget._bloc.file,
                         builder: (BuildContext context,
-                                AsyncSnapshot<File> snapshot) =>
-                            snapshot.data != null
-                                ? widget._displayImage(snapshot.data)
-                                : widget._displayIfNoImage()),
+                            AsyncSnapshot<File> snapshot) =>
+                        snapshot.data != null
+                            ? widget._displayImage(snapshot.data)
+                            : widget._displayIfNoImage()),
                   ),
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                  const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
 
                   /// Take picture button
                   child: GirafButton(
                     key: const Key('TagBillede'),
                     icon:
-                        const ImageIcon(AssetImage('assets/icons/camera.png')),
+                    const ImageIcon(AssetImage('assets/icons/camera.png')),
                     text: 'Tag billede',
                     onPressed: widget._bloc.takePictureWithCamera,
                     child: StreamBuilder<File>(
                         stream: widget._bloc.file,
                         builder: (BuildContext context,
-                                AsyncSnapshot<File> snapshot) =>
-                            snapshot.data != null
-                                ? widget._displayImage(snapshot.data)
-                                : widget._displayIfNoImage()),
+                            AsyncSnapshot<File> snapshot) =>
+                        snapshot.data != null
+                            ? widget._displayImage(snapshot.data)
+                            : widget._displayIfNoImage()),
                   ),
                 ),
               ],
@@ -365,90 +366,84 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
               child: Visibility(
                 visible: isButtonSaveVisible,
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Container(
-                    width: 180,
-                    height: 38,
-                    child: GirafButton(
-                      key: const Key('saveButton'),
-                      icon:
-                          const ImageIcon(AssetImage('assets/icons/save.png')),
-                      text: 'Gem bruger',
-                      isEnabled: false,
-                      isEnabledStream: widget._bloc.allInputsAreValidStream,
-                      onPressed: () {
-                        switch (_role) {
-                          case Roles.guardian:
-                            widget._bloc
-                                .createGuardian()
-                                .listen((GirafUserModel response) {
-                              if (response != null) {
-                                previousRoute(response);
-                              }
-                            }).onError((Object error) =>
-                                    _translator.catchApiError(error, context));
-                            break;
-                          case Roles.trustee:
-                            widget._bloc
-                                .createTrustee()
-                                .listen((GirafUserModel response) {
-                              if (response != null) {
-                                previousRoute(response);
-                              }
-                            }).onError((Object error) =>
-                                    _translator.catchApiError(error, context));
-                            break;
-                          case Roles.citizen:
-                            widget._bloc
-                                .createCitizen()
-                                .listen((GirafUserModel response) {
-                              if (response != null) {
-                                previousRoute(response);
-                              }
-                            }).onError((Object error) =>
-                                    _translator.catchApiError(error, context));
-                            break;
-                        }
-                      },
-                    ),
+                  padding:  const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                  child: GirafButton(
+                    key: const Key('saveButton'),
+                    icon:
+                    const ImageIcon(AssetImage('assets/icons/save.png')),
+                    text: 'Gem bruger',
+                    isEnabled: false,
+                    isEnabledStream: widget._bloc.allInputsAreValidStream,
+                    onPressed: () {
+                      switch (_role) {
+                        case Roles.guardian:
+                          widget._bloc
+                              .createGuardian()
+                              .listen((GirafUserModel response) {
+                            if (response != null) {
+                              previousRoute(response);
+                            }
+                          }).onError((Object error) =>
+                              _translator.catchApiError(error, context));
+                          break;
+                        case Roles.trustee:
+                          widget._bloc
+                              .createTrustee()
+                              .listen((GirafUserModel response) {
+                            if (response != null) {
+                              previousRoute(response);
+                            }
+                          }).onError((Object error) =>
+                              _translator.catchApiError(error, context));
+                          break;
+                        case Roles.citizen:
+                          widget._bloc
+                              .createCitizen()
+                              .listen((GirafUserModel response) {
+                            if (response != null) {
+                              previousRoute(response);
+                            }
+                          }).onError((Object error) =>
+                              _translator.catchApiError(error, context));
+                          break;
+                      }
+                    },
                   ),
                 ),
               ),
             ),
 
+
             Center(
               child: Visibility(
                 visible: isSwitchOpen,
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Container(
-                    width: 180,
-                    height: 38,
-                    child: GirafButton(
-                      key: const Key('nextButton'),
-                      icon: const ImageIcon(
-                          AssetImage('assets/icons/accept.png')),
-                      text: 'Videre',
-                      isEnabled: false,
-                      isEnabledStream: widget._bloc.validUsePictogramStream,
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            // ignore: always_specify_types
-                            MaterialPageRoute<void>(
-                                builder: (BuildContext context) =>
-                                    NewPictogramPasswordScreen(
-                                      widget._bloc.usernameController.value,
-                                      widget._bloc.displayNameController.value,
-                                      widget._bloc.encodePicture(
-                                          widget._bloc.fileController.value),
-                                    )));
-                      },
-                    ),
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                  child: GirafButton(
+                    key: const Key('nextButton'),
+                    icon: const ImageIcon(
+                        AssetImage('assets/icons/accept.png')),
+                    text: 'Videre',
+                    isEnabled: false,
+                    isEnabledStream: widget._bloc.validUsePictogramStream,
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          // ignore: always_specify_types
+                          MaterialPageRoute<void>(
+                              builder: (BuildContext context) =>
+                                  NewPictogramPasswordScreen(
+                                    widget._bloc.usernameController.value,
+                                    widget._bloc.displayNameController.value,
+                                    widget._bloc.encodePicture(
+                                        widget._bloc.fileController.value),
+                                  )));
+                    },
                   ),
                 ),
               ),
             ),
+
           ],
         ),
       ),
