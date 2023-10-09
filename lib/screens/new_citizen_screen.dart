@@ -80,11 +80,9 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
     widget._bloc.resetBloc();
   }
 
-  bool isButtonSaveEnabled = false;
+  bool isButtonSaveEnabled = true;
   bool isButtonContinueEnabled = false;
-  bool isSwitchOpen = false;
-  bool isButtonSaveVisible = true;
-
+  
   @override
   Widget build(BuildContext context) {
     widget.screenHeight = MediaQuery.of(context).size.height;
@@ -227,11 +225,11 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                               onChanged: _role == Roles.citizen
                                   ? (bool value) {
                                 setState(() {
-                                  isSwitchOpen = value; 
+                                  isButtonContinueEnabled = value;
                                   widget
                                       ._bloc.onUsePictogramPasswordChange
                                       .add(value);
-                                  isButtonSaveVisible = !value;
+                                  isButtonSaveEnabled = !value;
                                 });
                               }
                                   : null);
@@ -364,7 +362,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
             ),
             Center(
               child: Visibility(
-                visible: isButtonSaveVisible,
+                visible: isButtonSaveEnabled,
                 child: Padding(
                   padding:  const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                   child: GirafButton(
@@ -416,7 +414,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
 
             Center(
               child: Visibility(
-                visible: isSwitchOpen,
+                visible: isButtonContinueEnabled,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                   child: GirafButton(
