@@ -146,7 +146,7 @@ void main() {
   testWidgets('NumberOfActivitiesScreen button changes screen',
       (WidgetTester tester) async {
     // Tests couldn't find some buttons, so screen size is increased
-    tester.binding.window.physicalSizeTestValue = Size(1080, 1920);
+    tester.binding.window.physicalSizeTestValue = const Size(1080, 1920);
     tester.binding.window.devicePixelRatioTestValue = 1.0;
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     await tester.pumpAndSettle();
@@ -226,7 +226,7 @@ void main() {
   testWidgets('Settings has TimerControl checkbox without a checkmark',
       (WidgetTester tester) async {
     // Tests couldn't find some buttons, so screen size is increased
-    tester.binding.window.physicalSizeTestValue = Size(1080, 1920);
+    tester.binding.window.physicalSizeTestValue = const Size(1080, 1920);
     tester.binding.window.devicePixelRatioTestValue = 1.0;
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     //await tester.ensureVisible(find.text('Lås tidsstyring'));
