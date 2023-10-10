@@ -25,9 +25,9 @@ enum Roles {
 }
 
 Map<Roles, String> roleText = {
-  Roles.guardian: 'pædagog',
-  Roles.trustee: 'værge',
-  Roles.citizen: 'borger',
+  Roles.guardian: 'Pædagog',
+  Roles.trustee: 'Værge',
+  Roles.citizen: 'Borger',
 };
 
 /// Screen for creating a new citizen
@@ -82,7 +82,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
 
   bool isButtonSaveEnabled = true;
   bool isButtonContinueEnabled = false;
-  
+
   @override
   Widget build(BuildContext context) {
     widget.screenHeight = MediaQuery.of(context).size.height;
