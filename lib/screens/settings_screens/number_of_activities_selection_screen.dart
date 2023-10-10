@@ -42,7 +42,8 @@ class NumberOfActivitiesScreen extends StatelessWidget {
                 return ListView(
                   children: <Widget>[
                     SettingsSection(
-                        'Hvor mange aktiviteter skal vises på vis kun aktiviter',
+                        'Hvor mange aktiviteter skal vises'
+                        'på vis kun aktiviter',
                         <SettingsSectionItem>[
                           SettingsCheckMarkButton(
                               1, _nrOfActivitiesToDisplay, '1 aktivitet', () {

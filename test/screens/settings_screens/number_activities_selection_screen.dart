@@ -161,6 +161,7 @@ void main() {
   });
 
   testWidgets('settings screen has been popped', (WidgetTester tester) async {
+    // Tests couldn't find some buttons, so screen size is increased
     tester.binding.window.physicalSizeTestValue = Size(1080, 1920);
     tester.binding.window.devicePixelRatioTestValue = 1.0;
     await tester.pumpWidget(MaterialApp(

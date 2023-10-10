@@ -258,7 +258,8 @@ class WeekplanScreen extends StatelessWidget {
               title: 'Aflys aktiviteter',
               description: 'Vil du markere ' +
                   _weekplanBloc.getNumberOfMarkedActivities().toString() +
-                  '${_weekplanBloc.getNumberOfMarkedActivities() == 1 ? ' aktivitet' : ' aktiviteter'} som aflyst?',
+                  '${_weekplanBloc.getNumberOfMarkedActivities() == 1
+                   ? ' aktivitet' : ' aktiviteter'} som aflyst?',
               confirmButtonText: 'Bekræft',
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/accept.png')),
@@ -285,7 +286,8 @@ class WeekplanScreen extends StatelessWidget {
               title: 'Genoptag',
               description: 'Vil du genoptage ' +
                   _weekplanBloc.getNumberOfMarkedActivities().toString() +
-                  '${_weekplanBloc.getNumberOfMarkedActivities() == 1 ? ' aktivitet' : ' aktiviteter'}?',
+                  '${_weekplanBloc.getNumberOfMarkedActivities() == 1
+                   ? ' aktivitet' : ' aktiviteter'}?',
               confirmButtonText: 'Genoptag',
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/undo.png')),
@@ -311,7 +313,8 @@ class WeekplanScreen extends StatelessWidget {
               title: 'Slet aktiviteter',
               description: 'Vil du slette ' +
                   _weekplanBloc.getNumberOfMarkedActivities().toString() +
-                  '${_weekplanBloc.getNumberOfMarkedActivities() == 1 ? ' aktivitet' : ' aktiviteter'}?',
+                  '${_weekplanBloc.getNumberOfMarkedActivities() == 1
+                   ? ' aktivitet' : ' aktiviteter'}?',
               confirmButtonText: 'Slet',
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/delete.png')),

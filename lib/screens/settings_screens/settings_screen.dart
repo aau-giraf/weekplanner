@@ -298,7 +298,8 @@ class SettingsScreen extends StatelessWidget {
           }
           throw Exception(nrOfActivitiesToDisplay.toString() +
               ' is not a valid '
-                  'value for nrOfActivitiesToDisplay. It must be either 1 through 10');
+                  'value for nrOfActivitiesToDisplay.'
+                  'It must be either 1 through 10');
         }
     }
   }
