@@ -81,7 +81,7 @@ class WeekplansBloc extends BlocBase {
       weekPlans.add(WeekModel(name: 'Tilføj ugeplan'));
     }
 
-    if (weekPlanNames!.isEmpty) {
+    if (weekPlanNames.isEmpty) {
       _weekModel.add(weekPlans);
       return;
     }
@@ -204,7 +204,7 @@ class WeekplansBloc extends BlocBase {
       if (a!.name == 'Tilføj ugeplan') {
         return -1;
       }
-      if (a!.weekYear == b!.weekYear) {
+      if (a.weekYear == b!.weekYear) {
         return a.weekNumber!.compareTo(b.weekNumber!);
       } else {
         return a.weekYear!.compareTo(b.weekYear!);

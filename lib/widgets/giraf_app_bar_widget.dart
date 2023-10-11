@@ -8,16 +8,13 @@ import 'package:weekplanner/widgets/giraf_title_header.dart';
 /// Toolbar of the application.
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Toolbar of the application.
-  GirafAppBar(
-      {required Key key,
-      required this.title,
-      this.appBarIcons = const <AppBarIcon, VoidCallback>{}})
+  GirafAppBar({Key? key, this.title, this.appBarIcons})
       : toolbarBloc = di.get<ToolbarBloc>(),
         preferredSize = const Size.fromHeight(56.0),
         super(key: key);
 
   /// Used to store the title of the toolbar.
-  final String title;
+  final String? title;
 
   /// Used to store the icons that should be displayed in the appbar.
   final Map<AppBarIcon, VoidCallback>? appBarIcons;
@@ -34,12 +31,10 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
       iconTheme: const IconThemeData(
         color: GirafColors.black,
       ),
-      title: Text(title,
+      title: Text(title ?? '',
           overflow: TextOverflow.clip,
           style: const TextStyle(color: GirafColors.black)),
-      flexibleSpace: const GirafTitleHeader(
-        key: ValueKey<String>('titleHeaderKey'),
-      ),
+      flexibleSpace: const GirafTitleHeader(),
       actions: <Widget>[
         StreamBuilder<List<IconButton>>(
             initialData: const <IconButton>[],

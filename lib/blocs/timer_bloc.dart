@@ -58,9 +58,9 @@ class TimerBloc extends BlocBase {
   /// minutes at index 1 and seconds at index 2.
   Stream<List<int>> get timerProgressNumeric => _timerProgressNumeric.stream;
 
-  late CountdownTimer? _countDown;
-  late StreamSubscription<CountdownTimer>? _timerStream;
-  late Stopwatch? _stopwatch;
+  CountdownTimer? _countDown;
+  StreamSubscription<CountdownTimer>? _timerStream;
+  Stopwatch? _stopwatch;
 
   // Audio player used for ding sound.
   static final AudioPlayer _volumePlayer = AudioPlayer();

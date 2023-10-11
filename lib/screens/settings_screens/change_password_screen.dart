@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, public_member_api_docs
 
 import 'dart:async';
 import 'package:api_client/api/api.dart';
@@ -35,7 +35,7 @@ class ChangePasswordScreen extends StatelessWidget {
   final DisplayNameModel _user;
   final AuthBloc authBloc = di.get<AuthBloc>();
   final Api _api = di.get<Api>();
-  late BuildContext currentContext; //ignore: public_member_api_docs
+  late BuildContext currentContext;
   bool loginStatus = false;
 
   @override

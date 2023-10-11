@@ -73,7 +73,7 @@ class UploadFromGalleryBloc extends BlocBase {
   /// Encodes the given file into an integer list.
   List<int>? encodePicture(File? file) {
     if (file != null) {
-      final image = decodeImage(file.readAsBytesSync());
+      final Image? image = decodeImage(file.readAsBytesSync());
       if (image != null) {
         return encodePng(copyResize(image, width: 512));
       }

@@ -107,7 +107,7 @@ void main() {
       expect(response, equals(weekNameModelList));
     });
 
-    bloc.oldWeekModels.listen((List<WeekModel> response) {
+    bloc.oldWeekModels.listen((List<WeekModel?> response) {
       expect(response, isNotNull);
       expect(response, equals(weekModelList));
       done();
@@ -221,7 +221,7 @@ void main() {
     expect(bloc.getNumberOfMarkedWeekModels(), 1);
 
     int count = 0;
-    bloc.weekModels.listen((List<WeekModel> userWeekModels) {
+    bloc.weekModels.listen((List<WeekModel?> userWeekModels) {
       if (count == 0) {
         bloc.deleteMarkedWeekModels();
         count++;
@@ -253,7 +253,7 @@ void main() {
     expect(bloc.getNumberOfMarkedWeekModels(), 1);
 
     int count = 0;
-    bloc.weekModels.listen((List<WeekModel> userWeekModels) {
+    bloc.weekModels.listen((List<WeekModel?> userWeekModels) {
       if (count == 0) {
         bloc.deleteMarkedWeekModels();
         count++;

@@ -1,7 +1,4 @@
 import 'package:api_client/api/api.dart';
-import 'package:api_client/models/displayname_model.dart';
-import 'package:api_client/models/enums/role_enum.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/bootstrap.dart';
@@ -10,7 +7,6 @@ import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/screens/login_screen.dart';
-import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 final Api _api = di.get<Api>();

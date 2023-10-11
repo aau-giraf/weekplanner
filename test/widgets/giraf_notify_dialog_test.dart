@@ -25,7 +25,7 @@ class MockScreen extends StatelessWidget {
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
-          return const GirafNotifyDialog(
+          return GirafNotifyDialog(
             title: 'testTitle',
             description: 'testDescription',
             key: UniqueKey(),
