@@ -20,7 +20,7 @@ class WeekplansBloc extends BlocBase {
   /// This is a stream where all the future [WeekModel] are put in,
   /// and this is the stream to listen to,
   /// when wanting information about weekplans.
-  Stream<List<WeekModel?>> get weekModels => _weekModel.stream;
+  Stream<List<WeekModel>> get weekModels => _weekModel.stream;
 
   /// The stream that emits whether in editMode or not
   Stream<bool> get editMode => _editMode.stream;
@@ -28,16 +28,16 @@ class WeekplansBloc extends BlocBase {
   /// The stream that emits the marked activities
   Stream<List<WeekModel>> get markedWeekModels => _markedWeekModels.stream;
 
-  final rx_dart.BehaviorSubject<List<WeekModel?>> _weekModel =
-      rx_dart.BehaviorSubject<List<WeekModel?>>();
+  final rx_dart.BehaviorSubject<List<WeekModel>> _weekModel =
+      rx_dart.BehaviorSubject<List<WeekModel>>();
 
-  final rx_dart.BehaviorSubject<List<WeekModel?>> _oldWeekModel =
-      rx_dart.BehaviorSubject<List<WeekModel?>>();
+  final rx_dart.BehaviorSubject<List<WeekModel>> _oldWeekModel =
+      rx_dart.BehaviorSubject<List<WeekModel>>();
 
   /// This is a stream where all the old [WeekModel] are put in,
   /// and this is the stream to listen to,
   /// when wanting information about weekplans.
-  Stream<List<WeekModel?>> get oldWeekModels => _oldWeekModel.stream;
+  Stream<List<WeekModel>> get oldWeekModels => _oldWeekModel.stream;
 
   final rx_dart.BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
       rx_dart.BehaviorSubject<List<WeekNameModel>>();
@@ -74,7 +74,7 @@ class WeekplansBloc extends BlocBase {
   /// The upcoming weekplans are published in [_weekModel].
   /// Old weekplans are published in [_oldWeekModel].
   void getAllWeekInfo(List<WeekNameModel> weekPlanNames) {
-    final List<WeekModel?> weekPlans = <WeekModel>[];
+    final List<WeekModel> weekPlans = <WeekModel>[];
 
     // This is used by weekplan_selector_screen for adding a new weekplan.
     if (_addWeekplan) {
@@ -86,33 +86,33 @@ class WeekplansBloc extends BlocBase {
       return;
     }
 
-    final List<Stream<WeekModel?>> weekDetails = <Stream<WeekModel?>>[];
-    final List<Stream<WeekModel?>> oldWeekDetails = <Stream<WeekModel?>>[];
+    final List<Stream<WeekModel>> weekDetails = <Stream<WeekModel>>[];
+    final List<Stream<WeekModel>> oldWeekDetails = <Stream<WeekModel>>[];
 
     getWeekDetails(weekPlanNames, weekDetails, oldWeekDetails);
 
-    final Stream<List<WeekModel?>> getWeekPlans =
+    final Stream<List<WeekModel>> getWeekPlans =
         reformatWeekDetailsToObservableList(weekDetails);
 
-    final Stream<List<WeekModel?>> getOldWeekPlans =
+    final Stream<List<WeekModel>> getOldWeekPlans =
         reformatWeekDetailsToObservableList(oldWeekDetails);
 
     getWeekPlans
         .take(1)
-        .map((List<WeekModel?> plans) => weekPlans + plans)
+        .map((List<WeekModel> plans) => weekPlans + plans)
         .map(_sortWeekPlans)
         .listen(_weekModel.add);
 
     getOldWeekPlans
         .take(1)
-        .map((List<WeekModel?> plans) => plans)
+        .map((List<WeekModel> plans) => plans)
         .map(_sortOldWeekPlans)
         .listen(_oldWeekModel.add);
   }
 
   /// Reformats [weekDetails] and [oldWeekDetails] into an Observable List
-  Stream<List<WeekModel?>> reformatWeekDetailsToObservableList(
-      List<Stream<WeekModel?>> details) {
+  Stream<List<WeekModel>> reformatWeekDetailsToObservableList(
+      List<Stream<WeekModel>> details) {
     // ignore: always_specify_types
     return details.isEmpty
         // Ignore type specification; Stream<WeekModel>
@@ -120,7 +120,7 @@ class WeekplansBloc extends BlocBase {
         // ignore: always_specify_types
         ? const Stream.empty()
         : details.length == 1
-            ? details[0].map((WeekModel? plan) => <WeekModel?>[plan])
+            ? details[0].map((WeekModel plan) => <WeekModel>[plan])
             : rx_dart.Rx.combineLatestList(details);
   }
 
@@ -129,8 +129,8 @@ class WeekplansBloc extends BlocBase {
   /// and current/upcoming weekplans are stored in [weekDetails]
   void getWeekDetails(
       List<WeekNameModel?> weekPlanNames,
-      List<Stream<WeekModel?>> weekDetails,
-      List<Stream<WeekModel?>> oldWeekDetails) {
+      List<Stream<WeekModel>> weekDetails,
+      List<Stream<WeekModel>> oldWeekDetails) {
     // Loops through all weekplans and sort them into old and upcoming weekplans
     for (WeekNameModel? weekPlanName in weekPlanNames) {
       if (isWeekDone(weekPlanName!)) {
@@ -199,12 +199,12 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// Upcoming weekplans is sorted in ascending order
-  List<WeekModel?> _sortWeekPlans(List<WeekModel?> list) {
-    list.sort((WeekModel? a, WeekModel? b) {
-      if (a!.name == 'Tilføj ugeplan') {
+  List<WeekModel> _sortWeekPlans(List<WeekModel> list) {
+    list.sort((WeekModel a, WeekModel b) {
+      if (a.name == 'Tilføj ugeplan') {
         return -1;
       }
-      if (a.weekYear == b!.weekYear) {
+      if (a.weekYear == b.weekYear) {
         return a.weekNumber!.compareTo(b.weekNumber!);
       } else {
         return a.weekYear!.compareTo(b.weekYear!);
@@ -214,9 +214,9 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// Old weekplans needs to be sorted in descending order
-  List<WeekModel?> _sortOldWeekPlans(List<WeekModel?> list) {
-    list.toList().sort((WeekModel? a, WeekModel? b) {
-      if (a!.weekYear == b!.weekYear) {
+  List<WeekModel> _sortOldWeekPlans(List<WeekModel> list) {
+    list.toList().sort((WeekModel a, WeekModel b) {
+      if (a.weekYear == b.weekYear) {
         return b.weekNumber!.compareTo(a.weekNumber!);
       } else {
         return b.weekYear!.compareTo(a.weekYear!);
@@ -265,9 +265,9 @@ class WeekplansBloc extends BlocBase {
 
   /// Delete the marked week models when the trash button is clicked
   void deleteMarkedWeekModels() {
-    final List<WeekModel?>? localWeekModels =
+    final List<WeekModel>? localWeekModels =
         _weekModel.hasValue ? _weekModel.value : null;
-    final List<WeekModel?>? oldLocalWeekModels =
+    final List<WeekModel>? oldLocalWeekModels =
         _oldWeekModel.hasValue ? _oldWeekModel.value.toList() : null;
     // Updates the weekplan in the database
     for (WeekModel weekModel in _markedWeekModels.value) {
@@ -292,9 +292,9 @@ class WeekplansBloc extends BlocBase {
   /// This method deletes the given week model from the database after checking
   /// if it's an old weekplan or an upcoming
   void deleteWeekModel(WeekModel weekModel) {
-    final List<WeekModel?>? localWeekModels =
+    final List<WeekModel>? localWeekModels =
         _weekModel.hasValue ? _weekModel.value : null;
-    final List<WeekModel?>? oldLocalWeekModels =
+    final List<WeekModel>? oldLocalWeekModels =
         _oldWeekModel.hasValue ? _oldWeekModel.value : null;
 
     if (localWeekModels != null && localWeekModels.contains(weekModel)) {
@@ -306,7 +306,7 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// This method deletes the given week model from the database
-  void deleteWeek(List<WeekModel?> weekModels, WeekModel weekModel) {
+  void deleteWeek(List<WeekModel> weekModels, WeekModel weekModel) {
     _api.week
         .delete(_user.id!, weekModel.weekYear!, weekModel.weekNumber!)
         .listen((bool deleted) {
@@ -336,7 +336,7 @@ class WeekplansBloc extends BlocBase {
     final Completer<WeekModel> completer = Completer<WeekModel>();
     _api.week
         .get(_user.id!, marked.weekYear!, marked.weekNumber!)
-        .listen((WeekModel? weekModel) => completer.complete(weekModel));
+        .listen((WeekModel weekModel) => completer.complete(weekModel));
 
     return completer.future;
   }
@@ -348,7 +348,7 @@ class WeekplansBloc extends BlocBase {
       final Completer<WeekModel> completer = Completer<WeekModel>();
       _api.week
           .get(_user.id!, weekModel.weekYear!, weekModel.weekNumber!)
-          .listen((WeekModel? weekModel) => completer.complete(weekModel));
+          .listen((WeekModel weekModel) => completer.complete(weekModel));
       weekList.add(await completer.future);
     }
     return weekList;

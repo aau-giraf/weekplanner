@@ -7,7 +7,7 @@ import 'package:api_client/persistence/persistence_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/new_pictogram_password_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';

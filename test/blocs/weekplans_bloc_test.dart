@@ -107,7 +107,7 @@ void main() {
       expect(response, equals(weekNameModelList));
     });
 
-    bloc.oldWeekModels.listen((List<WeekModel?> response) {
+    bloc.oldWeekModels.listen((List<WeekModel> response) {
       expect(response, isNotNull);
       expect(response, equals(weekModelList));
       done();
@@ -208,12 +208,12 @@ void main() {
     final List<WeekNameModel> weekNameModelList = <WeekNameModel>[
       weekNameModel1
     ];
-    when(weekApi.get(mockUser.id!, weekNameModel1.weekYear!,
-            weekNameModel1.weekNumber!) as Function())
+    when(() => weekApi.get(
+            mockUser.id!, weekNameModel1.weekYear!, weekNameModel1.weekNumber!))
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
 
-    when(weekApi.getNames(mockUser.id!) as Function()).thenAnswer((_) =>
+    when(() => weekApi.getNames(mockUser.id!)).thenAnswer((_) =>
         rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
     bloc.load(mockUser);
@@ -221,7 +221,7 @@ void main() {
     expect(bloc.getNumberOfMarkedWeekModels(), 1);
 
     int count = 0;
-    bloc.weekModels.listen((List<WeekModel?> userWeekModels) {
+    bloc.weekModels.listen((List<WeekModel> userWeekModels) {
       if (count == 0) {
         bloc.deleteMarkedWeekModels();
         count++;
@@ -240,12 +240,12 @@ void main() {
     final List<WeekNameModel> weekNameModelList = <WeekNameModel>[
       weekNameModel6
     ];
-    when(weekApi.get(mockUser.id!, weekNameModel6.weekYear!,
-            weekNameModel6.weekNumber!) as Function())
+    when(() => weekApi.get(
+            mockUser.id!, weekNameModel6.weekYear!, weekNameModel6.weekNumber!))
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel6));
 
-    when(weekApi.getNames(mockUser.id!) as Function()).thenAnswer((_) =>
+    when(() => weekApi.getNames(mockUser.id!)).thenAnswer((_) =>
         rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
     bloc.load(mockUser);
@@ -253,7 +253,7 @@ void main() {
     expect(bloc.getNumberOfMarkedWeekModels(), 1);
 
     int count = 0;
-    bloc.weekModels.listen((List<WeekModel?> userWeekModels) {
+    bloc.weekModels.listen((List<WeekModel> userWeekModels) {
       if (count == 0) {
         bloc.deleteMarkedWeekModels();
         count++;

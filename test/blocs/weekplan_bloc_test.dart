@@ -4,6 +4,7 @@ import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
@@ -17,6 +18,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/models/user_week_model.dart';
+
+import '../screens/show_activity_screen_test.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
@@ -47,10 +50,15 @@ class MockActivityApi extends Mock implements ActivityApi {
 }
 
 void main() {
-  late WeekplanBloc weekplanBloc;
-  late Api api;
+  setUpAll(() {
+    registerFallbackValue(WeekModel());
+    registerFallbackValue(mockWeekDayModel());
+    registerFallbackValue(Weekday.Monday);
+  });
 
-  late WeekModel week;
+  Api api = Api('any');
+  WeekplanBloc weekplanBloc = WeekplanBloc(api);
+  late WeekModel week = WeekModel();
 
   final DisplayNameModel user = DisplayNameModel(
       role: Role.Guardian.toString(), displayName: 'User', id: '1');
@@ -60,8 +68,8 @@ void main() {
         thumbnail: PictogramModel(
             imageUrl: null,
             imageHash: null,
-            accessLevel: null,
-            title: null,
+            accessLevel: AccessLevel.PRIVATE,
+            title: 'null',
             id: null,
             lastEdit: null),
         days: <WeekdayModel>[
@@ -77,26 +85,20 @@ void main() {
     api.user = MockUserApi();
     api.week = MockWeekApi();
     api.activity = MockActivityApi();
-    when(api.week
-                .update(any as String, any as int, any as int, any as WeekModel)
-            as Function())
+    when(() => api.week.update(any(), any(), any(), any()))
         .thenAnswer((Invocation inv) {
       return Stream<WeekModel>.value(inv.positionalArguments[3]);
     });
 
-    when(api.week.get(any as String, any as int, any as int) as Function())
-        .thenAnswer((Invocation inv) {
+    when(() => api.week.get(any(), any(), any())).thenAnswer((Invocation inv) {
       return Stream<WeekModel>.value(week);
     });
-    when(api.week.getDay(any as String, any as int, any as int, any as Weekday)
-            as Function())
+    when(() => api.week.getDay(any(), any(), any(), any()))
         .thenAnswer((Invocation inv) {
       return Stream<WeekdayModel>.value(week.days!.singleWhere(
           (WeekdayModel day) => day.day == inv.positionalArguments[3]));
     });
-    when(api.week.updateDay(
-                any as String, any as int, any as int, any as WeekdayModel)
-            as Function())
+    when(() => api.week.updateDay(any(), any(), any(), any()))
         .thenAnswer((Invocation inv) {
       return Stream<WeekdayModel>.value(inv.positionalArguments[3]);
     });
@@ -109,8 +111,7 @@ void main() {
     weekplanBloc.userWeek.listen((UserWeekModel response) {
       expect(response, isNotNull);
       expect(response.week, equals(week));
-      verify(api.week.get(user.id!, week.weekYear!, week.weekNumber!)
-          as Function());
+      verify(() => api.week.get(user.id!, week.weekYear!, week.weekNumber!));
       done();
     });
   }));
@@ -120,13 +121,13 @@ void main() {
     final ActivityModel activityModel =
         ActivityModel(pictograms: <PictogramModel>[
       PictogramModel(
-          accessLevel: null,
+          accessLevel: AccessLevel.PRIVATE,
           id: null,
           imageHash: null,
           imageUrl: null,
           lastEdit: null,
           title: 'test')
-    ], id: 1, isChoiceBoard: null, order: null, state: null);
+    ], id: 1, isChoiceBoard: true, order: 0, state: ActivityState.Normal);
 
     weekplanBloc.markedActivities
         .skip(1)
@@ -144,24 +145,24 @@ void main() {
     final ActivityModel firstActivityModel =
         ActivityModel(pictograms: <PictogramModel>[
       PictogramModel(
-          accessLevel: null,
+          accessLevel: AccessLevel.PRIVATE,
           id: null,
           imageHash: null,
           imageUrl: null,
           lastEdit: null,
           title: 'test')
-    ], id: 1, isChoiceBoard: null, order: null, state: null);
+    ], id: 1, isChoiceBoard: true, order: 0, state: ActivityState.Normal);
 
     final ActivityModel secondActivityModel =
         ActivityModel(pictograms: <PictogramModel>[
       PictogramModel(
-          accessLevel: null,
+          accessLevel: AccessLevel.PRIVATE,
           id: null,
           imageHash: null,
           imageUrl: null,
           lastEdit: null,
           title: 'test123')
-    ], id: 2, isChoiceBoard: null, order: null, state: null);
+    ], id: 2, isChoiceBoard: true, order: 0, state: ActivityState.Normal);
 
     // Add marked activities to the list to prepare for the removal
     weekplanBloc.addMarkedActivity(firstActivityModel);
@@ -181,13 +182,13 @@ void main() {
   test('Clears list of marked activities', async((DoneFn done) {
     weekplanBloc.addMarkedActivity(ActivityModel(pictograms: <PictogramModel>[
       PictogramModel(
-          accessLevel: null,
+          accessLevel: AccessLevel.PRIVATE,
           id: null,
           imageHash: null,
           imageUrl: null,
           lastEdit: null,
           title: 'test')
-    ], id: 123, isChoiceBoard: null, order: null, state: null));
+    ], id: 123, isChoiceBoard: true, order: 0, state: ActivityState.Normal));
 
     weekplanBloc.markedActivities
         .skip(1)
@@ -203,13 +204,13 @@ void main() {
       async((DoneFn done) {
     final ActivityModel activity = ActivityModel(pictograms: <PictogramModel>[
       PictogramModel(
-          accessLevel: null,
+          accessLevel: AccessLevel.PRIVATE,
           id: null,
           imageHash: null,
           imageUrl: null,
           lastEdit: null,
           title: 'test123')
-    ], id: 2, isChoiceBoard: null, order: null, state: null);
+    ], id: 2, isChoiceBoard: true, order: 0, state: ActivityState.Normal);
 
     weekplanBloc.markedActivities
         .skip(1)
@@ -238,22 +239,20 @@ void main() {
 
     final ActivityModel activity = ActivityModel(pictograms: <PictogramModel>[
       PictogramModel(
-          accessLevel: null,
+          accessLevel: AccessLevel.PRIVATE,
           id: null,
           imageHash: null,
           imageUrl: null,
           lastEdit: null,
           title: 'test123')
-    ], id: 2, isChoiceBoard: null, order: null, state: null);
+    ], id: 2, isChoiceBoard: true, order: 0, state: ActivityState.Normal);
     week.days![0].activities!.add(activity);
     weekplanBloc.getWeek(week, user).whenComplete(() {
       weekplanBloc.setDaysToDisplay(1, 0);
       weekplanBloc.addWeekdayStream();
       weekplanBloc.addMarkedActivity(activity);
       weekplanBloc.deleteMarkedActivities();
-      verify(api.week.updateDay(
-              any as String, any as int, any as int, any as WeekdayModel)
-          as Function());
+      verify(() => api.week.updateDay(any(), any(), any(), any()));
       done();
     });
   }));
@@ -265,20 +264,20 @@ void main() {
 
     final ActivityModel activity = ActivityModel(pictograms: <PictogramModel>[
       PictogramModel(
-          accessLevel: null,
+          accessLevel: AccessLevel.PRIVATE,
           id: null,
           imageHash: null,
           imageUrl: null,
           lastEdit: null,
           title: 'test123')
-    ], id: 2, isChoiceBoard: null, order: null, state: null);
+    ], id: 2, isChoiceBoard: true, order: 0, state: ActivityState.Normal);
 
     week = WeekModel(
         thumbnail: PictogramModel(
             imageUrl: null,
             imageHash: null,
-            accessLevel: null,
-            title: null,
+            accessLevel: AccessLevel.PRIVATE,
+            title: 'null',
             id: null,
             lastEdit: null),
         days: <WeekdayModel>[
@@ -301,9 +300,7 @@ void main() {
       weekplanBloc.addMarkedActivity(activity);
       weekplanBloc.copyMarkedActivities(
           <bool>[false, false, false, false, true, false, false]);
-      verify(api.week.updateDay(
-              any as String, any as int, any as int, any as WeekdayModel)
-          as Function());
+      verify(() => api.week.updateDay(any(), any(), any(), any())).called(1);
       weekplanBloc.getWeekdayStream(4).listen((WeekdayModel weekday) {
         expect(weekday.activities!.length, 1);
       });
@@ -317,20 +314,20 @@ void main() {
 
     final ActivityModel activity = ActivityModel(pictograms: <PictogramModel>[
       PictogramModel(
-          accessLevel: null,
+          accessLevel: AccessLevel.PRIVATE,
           id: null,
           imageHash: null,
           imageUrl: null,
           lastEdit: null,
           title: 'test123')
-    ], id: 2, isChoiceBoard: null, order: null, state: ActivityState.Normal);
+    ], id: 2, isChoiceBoard: true, order: 0, state: ActivityState.Normal);
 
     week = WeekModel(
         thumbnail: PictogramModel(
             imageUrl: null,
             imageHash: null,
-            accessLevel: null,
-            title: null,
+            accessLevel: AccessLevel.PRIVATE,
+            title: 'null',
             id: null,
             lastEdit: null),
         days: <WeekdayModel>[
@@ -352,9 +349,7 @@ void main() {
       }
       weekplanBloc.addMarkedActivity(activity);
       weekplanBloc.cancelMarkedActivities();
-      verify(api.week.updateDay(
-              any as String, any as int, any as int, any as WeekdayModel)
-          as Function());
+      verify(() => api.week.updateDay(any(), any(), any(), any()));
       weekplanBloc.getWeekdayStream(0).listen((WeekdayModel weekday) {
         expect(weekday.activities!.first.state, ActivityState.Canceled);
       });
@@ -369,20 +364,20 @@ void main() {
 
     final ActivityModel activity = ActivityModel(pictograms: <PictogramModel>[
       PictogramModel(
-          accessLevel: null,
+          accessLevel: AccessLevel.PRIVATE,
           id: null,
           imageHash: null,
           imageUrl: null,
           lastEdit: null,
           title: 'test123')
-    ], id: 2, isChoiceBoard: null, order: null, state: ActivityState.Canceled);
+    ], id: 2, isChoiceBoard: true, order: 0, state: ActivityState.Canceled);
 
     week = WeekModel(
         thumbnail: PictogramModel(
             imageUrl: null,
             imageHash: null,
-            accessLevel: null,
-            title: null,
+            accessLevel: AccessLevel.PRIVATE,
+            title: 'null',
             id: null,
             lastEdit: null),
         days: <WeekdayModel>[
@@ -407,9 +402,7 @@ void main() {
       weekplanBloc.getWeekdayStream(0).listen((WeekdayModel weekday) {
         expect(weekday.activities!.first.state, ActivityState.Active);
       });
-      verify(api.week.updateDay(
-              any as String, any as int, any as int, any as WeekdayModel)
-          as Function());
+      verify(() => api.week.updateDay(any(), any(), any(), any()));
     });
     done();
   }));
@@ -431,11 +424,11 @@ void main() {
         role: Role.Guardian.toString(), displayName: 'User', id: '1');
 
     final ActivityModel activity = ActivityModel(
-        order: null,
-        isChoiceBoard: null,
-        state: null,
-        id: null,
-        pictograms: null,
+        order: 0,
+        isChoiceBoard: false,
+        state: ActivityState.Normal,
+        id: 1,
+        pictograms: <PictogramModel>[],
         title: '');
 
     weekplanBloc.getWeek(week, user).whenComplete(() {
@@ -444,9 +437,7 @@ void main() {
         weekplanBloc.addWeekdayStream();
       }
       weekplanBloc.addActivity(activity, 0).whenComplete(() {
-        verify(api.week.updateDay(
-                any as String, any as int, any as int, any as WeekdayModel)
-            as Function());
+        verify(() => api.week.updateDay(any(), any(), any(), any()));
         weekplanBloc.getWeekdayStream(0).listen((WeekdayModel weekday) {
           expect(weekday.activities!.length, 1);
           expect(weekday.activities!.first, activity);
@@ -461,8 +452,8 @@ void main() {
         thumbnail: PictogramModel(
             imageUrl: null,
             imageHash: null,
-            accessLevel: null,
-            title: null,
+            accessLevel: AccessLevel.PRIVATE,
+            title: 'null',
             id: null,
             lastEdit: null),
         days: <WeekdayModel>[
@@ -474,10 +465,18 @@ void main() {
         weekYear: 2019);
 
     final ActivityModel modelToMove = ActivityModel(
-        id: 1, pictograms: null, order: 0, state: null, isChoiceBoard: false);
+        id: 1,
+        pictograms: <PictogramModel>[],
+        order: 0,
+        state: ActivityState.Normal,
+        isChoiceBoard: false);
     week.days![0].activities!.add(modelToMove);
     week.days![1].activities!.add(ActivityModel(
-        id: 2, pictograms: null, order: 0, state: null, isChoiceBoard: false));
+        id: 2,
+        pictograms: <PictogramModel>[],
+        order: 0,
+        state: ActivityState.Normal,
+        isChoiceBoard: false));
 
     weekplanBloc.getWeek(week, user).whenComplete(() {
       weekplanBloc.setDaysToDisplay(2, 0);
@@ -495,9 +494,7 @@ void main() {
         weekplanBloc.getWeekdayStream(0).listen((WeekdayModel weekday) {
           expect(weekday.activities!.length, 0);
         });
-        verify(api.week.updateDay(
-                any as String, any as int, any as int, any as WeekdayModel)
-            as Function());
+        verify(() => api.week.updateDay(any(), any(), any(), any()));
       });
     });
     done();
@@ -508,8 +505,8 @@ void main() {
         thumbnail: PictogramModel(
             imageUrl: null,
             imageHash: null,
-            accessLevel: null,
-            title: null,
+            accessLevel: AccessLevel.PRIVATE,
+            title: 'null',
             id: null,
             lastEdit: null),
         days: <WeekdayModel>[
@@ -521,15 +518,27 @@ void main() {
         weekYear: 2019);
 
     final ActivityModel modelToMove = ActivityModel(
-        id: 1, pictograms: null, order: 0, state: null, isChoiceBoard: false);
+        id: 1,
+        pictograms: <PictogramModel>[],
+        order: 0,
+        state: ActivityState.Normal,
+        isChoiceBoard: false);
 
     week.days![0].activities!.add(modelToMove);
 
     week.days![0].activities!.add(ActivityModel(
-        id: 2, pictograms: null, order: 1, state: null, isChoiceBoard: false));
+        id: 2,
+        pictograms: <PictogramModel>[],
+        order: 1,
+        state: ActivityState.Normal,
+        isChoiceBoard: false));
 
     week.days![0].activities!.add(ActivityModel(
-        id: 3, pictograms: null, order: 2, state: null, isChoiceBoard: false));
+        id: 3,
+        pictograms: <PictogramModel>[],
+        order: 2,
+        state: ActivityState.Normal,
+        isChoiceBoard: false));
 
     weekplanBloc.getWeek(week, user).whenComplete(() {
       weekplanBloc.setDaysToDisplay(2, 0);
@@ -547,9 +556,7 @@ void main() {
           expect(weekday.activities![2].id, 1);
           expect(weekday.activities![2].order, 2);
         });
-        verify(api.week.updateDay(
-                any as String, any as int, any as int, any as WeekdayModel)
-            as Function());
+        verify(() => api.week.updateDay(any(), any(), any(), any()));
       });
     });
     done();
@@ -570,7 +577,11 @@ void main() {
       'marked', async((DoneFn done) {
     // Creating the activity that will be added
     final ActivityModel testActivity = ActivityModel(
-        id: 1, pictograms: null, order: 0, state: null, isChoiceBoard: false);
+        id: 1,
+        pictograms: <PictogramModel>[],
+        order: 0,
+        state: ActivityState.Normal,
+        isChoiceBoard: false);
 
     weekplanBloc.addMarkedActivity(testActivity);
 

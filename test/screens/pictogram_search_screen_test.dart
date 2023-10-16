@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -34,7 +35,7 @@ void main() {
       id: 1,
       lastEdit: null,
       title: 'kat',
-      accessLevel: null,
+      accessLevel: AccessLevel.PROTECTED,
       imageUrl: 'http://any.tld',
       imageHash: null,
       userId: '1');

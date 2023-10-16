@@ -96,8 +96,8 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
   /// This is a function
   Widget displayPictograms(BuildContext context) {
     final List<Widget> pictograms = <Widget>[];
-    for (int i = 0; i < _activity.pictograms!.length; i++) {
-      pictograms.add(_getPictogram(_activity.pictograms![i]));
+    for (int i = 0; i < _activity.pictograms.length; i++) {
+      pictograms.add(_getPictogram(_activity.pictograms[i]));
     }
 
     final List<Widget> pictogramImages = <Widget>[];
@@ -165,7 +165,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
               key: const Key('PictogramSelectorConfirmDialog'),
               title: 'Vælg aktivitet',
               description: 'Vil du vælge aktiviteten ' +
-                  _activity.pictograms![index].title!,
+                  _activity.pictograms[index].title,
               confirmButtonText: 'Ja',
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/accept.png')),
@@ -181,7 +181,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
   void _selectPictogramFromChoiceboard(BuildContext context, int index) {
     _activity.isChoiceBoard = false;
     final List<PictogramModel> _pictogramModels = <PictogramModel>[
-      _activity.pictograms![index]
+      _activity.pictograms[index]
     ];
     _activity.pictograms = _pictogramModels;
 

@@ -16,7 +16,7 @@ class UploadFromGalleryBloc extends BlocBase {
   ///
   UploadFromGalleryBloc(this._api);
   final Api _api;
-  late String? _pictogramName;
+  late String _pictogramName;
 
   /// Publishes the image file, while it is nut null
   Stream<File> get file => _file.stream.where((File? f) => f != null);
@@ -53,7 +53,7 @@ class UploadFromGalleryBloc extends BlocBase {
 
   /// Checks if the input fields are filled out
   void _checkInput() {
-    if (_pictogramName != null && _pictogramName!.isNotEmpty) {
+    if (_pictogramName.isNotEmpty) {
       _isInputValid.add(true);
     } else {
       _isInputValid.add(false);

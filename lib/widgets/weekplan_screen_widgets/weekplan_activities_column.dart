@@ -325,7 +325,7 @@ class WeekplanActivitiesColumn extends StatelessWidget {
       } else {
         weekplanBloc.addMarkedActivity(activities[index]);
       }
-    } else if (activities[index].isChoiceBoard! &&
+    } else if (activities[index].isChoiceBoard &&
         isCitizen &&
         !(activities[index].state == ActivityState.Canceled)) {
       showDialog<Center>(

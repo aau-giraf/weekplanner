@@ -33,7 +33,7 @@ class NewWeekplanScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () async {
-        final WeekModel? newWeekPlan = await _bloc.saveWeekplan(
+        final WeekModel newWeekPlan = await _bloc.saveWeekplan(
           screenContext: context,
           existingWeekPlans: existingWeekPlans,
         );
@@ -52,6 +52,7 @@ class NewWeekplanScreen extends StatelessWidget {
       body: InputFieldsWeekPlan(
         bloc: _bloc,
         button: saveButton,
+        weekModel: WeekModel(),
       ),
     );
   }

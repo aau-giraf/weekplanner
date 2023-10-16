@@ -45,7 +45,7 @@ class PictogramText extends StatelessWidget {
                   final bool pictogramTextIsEnabled = settings.pictogramText!;
                   if ((_isGuardianMode(weekMode) || pictogramTextIsEnabled) &&
                       settings.pictogramText == true) {
-                    if (_activity.isChoiceBoard!) {
+                    if (_activity.isChoiceBoard) {
                       return _buildPictogramText(
                           context, _activity.choiceBoardName!);
                     } else {

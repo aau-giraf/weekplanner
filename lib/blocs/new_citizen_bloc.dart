@@ -16,7 +16,7 @@ class NewCitizenBloc extends BlocBase {
   NewCitizenBloc(this._api);
 
   final Api _api;
-  late GirafUserModel? _user;
+  GirafUserModel? _user;
 
   /// This field controls the display name input field
   final rx_dart.BehaviorSubject<String?> displayNameController =
@@ -162,7 +162,7 @@ class NewCitizenBloc extends BlocBase {
       usernameController.value!,
       passwordController.value!,
       displayNameController.value!,
-      encodePicture(fileController!.value) as Uint8List,
+      encodePicture(fileController!.valueOrNull),
       departmentId: _user!.department!,
       role: Role.Citizen,
     );
@@ -174,7 +174,7 @@ class NewCitizenBloc extends BlocBase {
         usernameController.value!,
         passwordController.value!,
         displayNameController.value!,
-        encodePicture(fileController!.value) as Uint8List,
+        encodePicture(fileController!.valueOrNull),
         departmentId: _user!.department!,
         role: Role.Trustee);
   }
@@ -185,7 +185,7 @@ class NewCitizenBloc extends BlocBase {
         usernameController.value!,
         passwordController.value!,
         displayNameController.value!,
-        encodePicture(fileController!.value) as Uint8List,
+        encodePicture(fileController!.valueOrNull),
         departmentId: _user!.department!,
         role: Role.Guardian);
   }
@@ -256,13 +256,13 @@ class NewCitizenBloc extends BlocBase {
 
   ///Resets bloc so no information is stored
   void resetBloc() {
-    displayNameController.sink.add(null);
-    usernameController.sink.add(null);
-    passwordController.sink.add(null);
-    passwordVerifyController.sink.add(null);
-    usePictogramPasswordController.sink.add(false);
-    _user = null;
-    fileController!.add(null as File);
+    // displayNameController.sink.add(null);
+    // usernameController.sink.add(null);
+    // passwordController.sink.add(null);
+    // passwordVerifyController.sink.add(null);
+    // usePictogramPasswordController.sink.add(false);
+    // _user = null;
+    // fileController!.add(null as File);
   }
 
   @override

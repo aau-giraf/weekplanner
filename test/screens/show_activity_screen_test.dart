@@ -125,7 +125,7 @@ class MockActivityBloc extends Mock implements ActivityBloc {
   ///Method to get the standard tile from the pictogram
   @override
   void getStandardTitle() {
-    mockActivity.title = mockActivity.pictograms!.first.title!;
+    mockActivity.title = mockActivity.pictograms.first.title;
     update();
   }
 
@@ -203,7 +203,7 @@ final List<ActivityModel> mockActivities = <ActivityModel>[
       order: 0,
       isChoiceBoard: false,
       pictograms: <PictogramModel>[mockPictograms[1]],
-      title: mockPictograms[1].title!)
+      title: mockPictograms[1].title)
 ];
 
 final DisplayNameModel mockUser =
@@ -220,7 +220,7 @@ WeekdayModel mockWeekDayModel() {
         order: 0,
         isChoiceBoard: false,
         pictograms: <PictogramModel>[mockPictograms[1]],
-        title: mockPictograms[1].title!)
+        title: mockPictograms[1].title)
   ], day: Weekday.Monday);
 }
 
@@ -247,7 +247,7 @@ ActivityModel makeNewActivityModel() {
       order: 0,
       isChoiceBoard: false,
       pictograms: <PictogramModel>[mockPictograms.first],
-      title: mockPictograms.first.title!);
+      title: mockPictograms.first.title);
 }
 
 ActivityModel makeNewCompletedActitvyModel() {
@@ -257,7 +257,7 @@ ActivityModel makeNewCompletedActitvyModel() {
       order: 0,
       isChoiceBoard: false,
       pictograms: <PictogramModel>[mockPictograms.first],
-      title: mockPictograms.first.title!);
+      title: mockPictograms.first.title);
 }
 
 ActivityModel mockActivityModelWithTimer() {
@@ -272,7 +272,7 @@ ActivityModel mockActivityModelWithTimer() {
           progress: 0,
           fullLength: const Duration(seconds: 5).inMilliseconds,
           paused: true),
-      title: mockPictograms.first.title!);
+      title: mockPictograms.first.title);
 }
 
 ActivityModel mockActivityModelWithCompletedTimer() {

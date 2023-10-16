@@ -4,6 +4,7 @@ import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
@@ -110,8 +111,8 @@ void main() {
   final PictogramModel pictogramModel = PictogramModel(
       id: 1,
       lastEdit: null,
-      title: null,
-      accessLevel: null,
+      title: 'null',
+      accessLevel: AccessLevel.PRIVATE,
       imageUrl: 'http://any.tld',
       imageHash: null);
 

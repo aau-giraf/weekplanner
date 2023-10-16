@@ -7,7 +7,7 @@ import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 
 class MockUserApi extends Mock implements UserApi {
@@ -42,9 +42,9 @@ class MockWeekApi extends Mock implements WeekApi {
   }
 
   @override
-  Stream<WeekModel?> get(String? id, int? year, int? weekNumber) {
+  Stream<WeekModel> get(String? id, int? year, int? weekNumber) {
     // return null so there are no conflicts
-    return Stream<WeekModel?>.value(null);
+    return Stream<WeekModel>.value(WeekModel());
   }
 }
 

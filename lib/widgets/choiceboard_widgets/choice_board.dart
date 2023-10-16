@@ -20,9 +20,9 @@ class ChoiceBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<ChoiceBoardPart> _parts = <ChoiceBoardPart>[];
 
-    for (int i = 0; i < _activity.pictograms!.length; i++) {
+    for (int i = 0; i < _activity.pictograms.length; i++) {
       _parts.add(
-          ChoiceBoardPart(_activity.pictograms![i], _bloc, _activity, _user));
+          ChoiceBoardPart(_activity.pictograms[i], _bloc, _activity, _user));
     }
 
     return GridView.count(
