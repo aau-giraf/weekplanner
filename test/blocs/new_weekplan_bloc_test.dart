@@ -23,7 +23,7 @@ void main() {
 
   Api api = Api('baseUrl');
   NewWeekplanBloc bloc = NewWeekplanBloc(api);
-  late final PictogramModel mockThumbnail = PictogramModel(
+  final PictogramModel mockThumbnail = PictogramModel(
       id: 1,
       lastEdit: null,
       title: 'null',
@@ -39,7 +39,7 @@ void main() {
       weekNumber: 1,
       weekYear: 2019);
 
-  late WeekplansBloc mockWeekplanSelector;
+  WeekplansBloc mockWeekplanSelector = WeekplansBloc(api);
 
   setUp(() {
     api = Api('any');
@@ -297,7 +297,7 @@ void main() {
     bloc.onYearChanged.add('2019');
     bloc.onWeekNumberChanged.add('42');
     bloc.onThumbnailChanged.add(mockThumbnail);
-    // bloc.resetBloc(); //FIXME: is this needed?
+    bloc.resetBloc();
     bloc.allInputsAreValidStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);

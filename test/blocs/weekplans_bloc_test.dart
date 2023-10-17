@@ -15,9 +15,9 @@ import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 class MockWeekApi extends Mock implements WeekApi {}
 
 void main() {
-  late WeekplansBloc bloc;
-  late Api api;
-  late MockWeekApi weekApi;
+  Api api = Api('baseUrl');
+  WeekplansBloc bloc = WeekplansBloc(api);
+  MockWeekApi weekApi = MockWeekApi();
 
   final List<WeekNameModel> weekNameModelList = <WeekNameModel>[];
   final WeekNameModel weekNameModel1 =
@@ -42,64 +42,48 @@ void main() {
   final DisplayNameModel mockUser =
       DisplayNameModel(displayName: 'test', id: 'test', role: 'test');
 
-  void setupApiCalls() {
-    weekNameModelList.clear();
-    weekModelList.clear();
-
-    weekModelList.add(weekModel1);
-    weekNameModelList.add(weekNameModel1);
-
-    when(weekApi.getNames('test') as Function()).thenAnswer((_) =>
-        rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
-
-    when(weekApi.get(
-                'test', weekNameModel1.weekYear!, weekNameModel1.weekNumber!)
-            as Function())
-        .thenAnswer(
-            (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
-
-    when(weekApi.get(
-                'test', weekNameModel2.weekYear!, weekNameModel2.weekNumber!)
-            as Function())
-        .thenAnswer(
-            (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel2));
-
-    when(weekApi.get(
-                'test', weekNameModel3.weekYear!, weekNameModel3.weekNumber!)
-            as Function())
-        .thenAnswer(
-            (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel3));
-
-    when(weekApi.get(
-                'test', weekNameModel4.weekYear!, weekNameModel4.weekNumber!)
-            as Function())
-        .thenAnswer(
-            (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel4));
-
-    when(weekApi.get(
-                'test', weekNameModel5.weekYear!, weekNameModel5.weekNumber!)
-            as Function())
-        .thenAnswer(
-            (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel5));
-
-    when(weekApi.get(
-                'test', weekNameModel6.weekYear!, weekNameModel6.weekNumber!)
-            as Function())
-        .thenAnswer(
-            (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel6));
-
-    when(weekApi.delete(mockUser.id!, any as int, any as int) as Function())
-        .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
-  }
-
   setUp(() {
     api = Api('any');
     weekApi = MockWeekApi();
     api.week = weekApi;
     bloc = WeekplansBloc(api);
 
-    setupApiCalls();
+    weekNameModelList.clear();
+    weekModelList.clear();
+
+    weekModelList.add(weekModel1);
+    weekNameModelList.add(weekNameModel1);
   });
+
+  when(() => weekApi.getNames('test')).thenAnswer((_) =>
+      rx_dart.BehaviorSubject<List<WeekNameModel>?>.seeded(weekNameModelList));
+
+  when(() => weekApi.get(
+          'test', weekNameModel1.weekYear!, weekNameModel1.weekNumber!))
+      .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
+
+  when(() => weekApi.get(
+          'test', weekNameModel2.weekYear!, weekNameModel2.weekNumber!))
+      .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel2));
+
+  when(() => weekApi.get(
+          'test', weekNameModel3.weekYear!, weekNameModel3.weekNumber!))
+      .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel3));
+
+  when(() => weekApi.get(
+          'test', weekNameModel4.weekYear!, weekNameModel4.weekNumber!))
+      .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel4));
+
+  when(() => weekApi.get(
+          'test', weekNameModel5.weekYear!, weekNameModel5.weekNumber!))
+      .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel5));
+
+  when(() => weekApi.get(
+          'test', weekNameModel6.weekYear!, weekNameModel6.weekNumber!))
+      .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel6));
+
+  when(() => weekApi.delete(mockUser.id!, any(), any()))
+      .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
 
   test('Should be able to load weekplans for a user', async((DoneFn done) {
     bloc.weekNameModels.listen((List<WeekNameModel> response) {

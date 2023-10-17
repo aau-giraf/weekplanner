@@ -20,23 +20,23 @@ class NewCitizenBloc extends BlocBase {
 
   /// This field controls the display name input field
   final rx_dart.BehaviorSubject<String?> displayNameController =
-      rx_dart.BehaviorSubject<String>();
+      rx_dart.BehaviorSubject<String?>();
 
   /// This field controls the username input field
   final rx_dart.BehaviorSubject<String?> usernameController =
-      rx_dart.BehaviorSubject<String>();
+      rx_dart.BehaviorSubject<String?>();
 
   /// This field controls the password input field
   final rx_dart.BehaviorSubject<String?> passwordController =
-      rx_dart.BehaviorSubject<String>();
+      rx_dart.BehaviorSubject<String?>();
 
   /// This field controls the password verification input field
   final rx_dart.BehaviorSubject<String?> passwordVerifyController =
-      rx_dart.BehaviorSubject<String>();
+      rx_dart.BehaviorSubject<String?>();
 
   /// This field controls the switch for pictogram password
   final rx_dart.BehaviorSubject<bool?> usePictogramPasswordController =
-      rx_dart.BehaviorSubject<bool>();
+      rx_dart.BehaviorSubject<bool?>();
 
   /// This controller handles the profile picture
   final rx_dart.BehaviorSubject<File>? fileController =
@@ -81,7 +81,7 @@ class NewCitizenBloc extends BlocBase {
 
   /// Validation stream for password validation
   Stream<bool> get validPasswordVerificationStream {
-    Stream<String> firstStream;
+    Stream<String?> firstStream;
 
     if (passwordController.hasValue) {
       firstStream = passwordController as Stream<String>;
@@ -90,10 +90,10 @@ class NewCitizenBloc extends BlocBase {
       firstStream = const Stream<String>.empty();
     }
 
-    return rx_dart.Rx.combineLatest2<String, String, bool>(
+    return rx_dart.Rx.combineLatest2<String?, String?, bool>(
       firstStream,
       passwordVerifyController as Stream<String>,
-      (String a, String b) => a == b,
+      (String? a, String? b) => a == b,
     );
   }
 
@@ -214,7 +214,7 @@ class NewCitizenBloc extends BlocBase {
   /// Stream for display name validation
   final StreamTransformer<String, bool> _displayNameValidation =
       StreamTransformer<String, bool>.fromHandlers(
-          handleData: (String? input, EventSink<bool> sink) {
+          handleData: (String input, EventSink<bool> sink) {
     if (input == null || input.isEmpty) {
       sink.add(false);
     } else {
@@ -225,7 +225,7 @@ class NewCitizenBloc extends BlocBase {
   /// Stream for username validation
   final StreamTransformer<String, bool> _usernameValidation =
       StreamTransformer<String, bool>.fromHandlers(
-          handleData: (String? input, EventSink<bool> sink) {
+          handleData: (String input, EventSink<bool> sink) {
     if (input == null || input.isEmpty) {
       sink.add(false);
     } else {
@@ -239,7 +239,7 @@ class NewCitizenBloc extends BlocBase {
   /// Stream for password validation
   final StreamTransformer<String, bool> _passwordValidation =
       StreamTransformer<String, bool>.fromHandlers(
-          handleData: (String? input, EventSink<bool> sink) {
+          handleData: (String input, EventSink<bool> sink) {
     if (input == null || input.isEmpty) {
       sink.add(false);
     } else {

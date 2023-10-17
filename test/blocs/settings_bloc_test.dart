@@ -28,7 +28,13 @@ class MockUserApi extends Mock implements UserApi {
   }
 }
 
+class MockSettingsModel extends Mock implements SettingsModel {}
+
 void main() {
+  setUpAll(() {
+    registerFallbackValue(MockSettingsModel());
+  });
+
   Api api = Api('any');
   SettingsBloc settingsBloc = SettingsBloc(api);
 

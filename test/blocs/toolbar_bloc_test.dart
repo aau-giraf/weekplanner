@@ -8,8 +8,9 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 
 void main() {
-  late ToolbarBloc bloc;
-  late Api api;
+  Api api = Api('baseUrl');
+  ToolbarBloc bloc = ToolbarBloc();
+  AuthBloc authBloc = AuthBloc(api);
 
   setUp(() {
     di.clearAll();

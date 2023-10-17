@@ -25,8 +25,8 @@ class MockUserApi extends Mock implements UserApi {
 class MockAccountApi extends Mock implements AccountApi {}
 
 void main() {
-  late NewPictogramPasswordBloc bloc;
-  late Api api;
+  Api api = Api('baseUrl');
+  NewPictogramPasswordBloc bloc = NewPictogramPasswordBloc(api);
 
   final GirafUserModel user = GirafUserModel(
       id: '1',

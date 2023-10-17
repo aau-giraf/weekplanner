@@ -98,17 +98,17 @@ void main() {
     done();
   }));
 
-  // test('No inputs are valid', async((DoneFn done) {
-  //   bloc.onUsernameChange.add(null);
-  //   bloc.onPasswordChange.add(null);
-  //   bloc.onPasswordVerifyChange.add(null);
-  //   bloc.onDisplayNameChange.add(null);
-  //   bloc.allInputsAreValidStream.listen((bool isValid) {
-  //     expect(isValid, isNotNull);
-  //     expect(isValid, false);
-  //   });
-  //   done();
-  // })); //TODO: Fix timeout
+  test('No inputs are valid', async((DoneFn done) {
+    bloc.onUsernameChange.add(null);
+    bloc.onPasswordChange.add(null);
+    bloc.onPasswordVerifyChange.add(null);
+    bloc.onDisplayNameChange.add(null);
+    bloc.allInputsAreValidStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+    });
+    done();
+  }));
 
   test('resetBloc test', async((DoneFn done) {
     bloc.onUsernameChange.add(user.username);
@@ -159,17 +159,17 @@ void main() {
     done();
   }));
 
-  // test('All inputs are not valid - Display name', async((DoneFn done) {
-  //   bloc.onUsernameChange.add(user.username);
-  //   bloc.onPasswordChange.add('1234');
-  //   bloc.onPasswordVerifyChange.add('1234');
-  //   bloc.onDisplayNameChange.add(null);
-  //   bloc.allInputsAreValidStream.listen((bool isValid) {
-  //     expect(isValid, isNotNull);
-  //     expect(isValid, false);
-  //   });
-  //   done();
-  // }));
+  test('All inputs are not valid - Display name', async((DoneFn done) {
+    bloc.onUsernameChange.add(user.username);
+    bloc.onPasswordChange.add('1234');
+    bloc.onPasswordVerifyChange.add('1234');
+    bloc.onDisplayNameChange.add(null);
+    bloc.allInputsAreValidStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+    });
+    done();
+  }));
 
   test('All inputs are not valid - username', async((DoneFn done) {
     bloc.onUsernameChange.add('');
@@ -240,14 +240,14 @@ void main() {
     });
   }));
 
-  // test('Username is null', async((DoneFn done) {
-  //   bloc.onUsernameChange.add(null);
-  //   bloc.validUsernameStream.listen((bool isValid) {
-  //     expect(isValid, isNotNull);
-  //     expect(isValid, false);
-  //     done();
-  //   });
-  // }));
+  test('Username is null', async((DoneFn done) {
+    bloc.onUsernameChange.add(null);
+    bloc.validUsernameStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
 
   test('Display name validation', async((DoneFn done) {
     bloc.onDisplayNameChange.add(user.displayName);
@@ -276,14 +276,14 @@ void main() {
     });
   }));
 
-  // test('Display name is null', async((DoneFn done) {
-  //   bloc.onDisplayNameChange.add(null);
-  //   bloc.validDisplayNameStream.listen((bool isValid) {
-  //     expect(isValid, isNotNull);
-  //     expect(isValid, false);
-  //     done();
-  //   });
-  // }));
+  test('Display name is null', async((DoneFn done) {
+    bloc.onDisplayNameChange.add(null);
+    bloc.validDisplayNameStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
 
   test('Password validation', async((DoneFn done) {
     bloc.onPasswordChange.add('1234');
@@ -330,25 +330,25 @@ void main() {
     });
   }));
 
-  // test('Password is null', async((DoneFn done) {
-  //   bloc.onPasswordChange.add(null);
-  //   bloc.validPasswordStream.listen((bool isValid) {
-  //     expect(isValid, isNotNull);
-  //     expect(isValid, false);
-  //     done();
-  //   });
-  // }));
+  test('Password is null', async((DoneFn done) {
+    bloc.onPasswordChange.add(null);
+    bloc.validPasswordStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
 
-  // test('PasswordVerification is null, but password is missing',
-  //     async((DoneFn done) {
-  //   bloc.onPasswordChange.add('');
-  //   bloc.onPasswordVerifyChange.add(null);
-  //   bloc.validPasswordVerificationStream.listen((bool isValid) {
-  //     expect(isValid, isNotNull);
-  //     expect(isValid, false);
-  //     done();
-  //   });
-  // }));
+  test('PasswordVerification is null, but password is missing',
+      async((DoneFn done) {
+    bloc.onPasswordChange.add('');
+    bloc.onPasswordVerifyChange.add(null);
+    bloc.validPasswordVerificationStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
 
   test('PasswordVerification is filled, but password is missing',
       async((DoneFn done) {
@@ -382,16 +382,16 @@ void main() {
     });
   }));
 
-  // test('PasswordVerification is filled, but password is null',
-  //     async((DoneFn done) {
-  //   bloc.onPasswordChange.add(null);
-  //   bloc.onPasswordVerifyChange.add('1234');
-  //   bloc.validPasswordVerificationStream.listen((bool isValid) {
-  //     expect(isValid, isNotNull);
-  //     expect(isValid, false);
-  //     done();
-  //   });
-  // }));
+  test('PasswordVerification is filled, but password is null',
+      async((DoneFn done) {
+    bloc.onPasswordChange.add(null);
+    bloc.onPasswordVerifyChange.add('1234');
+    bloc.validPasswordVerificationStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
 
   test('PasswordVerification and password match 1', async((DoneFn done) {
     bloc.onPasswordChange.add('1234');
@@ -413,15 +413,15 @@ void main() {
     });
   }));
 
-  // test('PasswordVerification and password match 3', async((DoneFn done) {
-  //   bloc.onPasswordChange.add(null);
-  //   bloc.onPasswordVerifyChange.add(null);
-  //   bloc.validPasswordVerificationStream.listen((bool isValid) {
-  //     expect(isValid, isNotNull);
-  //     expect(isValid, true);
-  //     done();
-  //   });
-  // }));
+  test('PasswordVerification and password match 3', async((DoneFn done) {
+    bloc.onPasswordChange.add(null);
+    bloc.onPasswordVerifyChange.add(null);
+    bloc.validPasswordVerificationStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, true);
+      done();
+    });
+  }));
 
   test('PasswordVerification and password match 4', async((DoneFn done) {
     bloc.onPasswordChange.add('');

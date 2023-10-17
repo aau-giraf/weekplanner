@@ -18,9 +18,9 @@ class MockPictogramApi extends Mock implements PictogramApi {
 }
 
 void main() {
-  late PictogramBloc bloc;
-  late Api api;
-  late MockPictogramApi pictogramApi;
+  Api api = Api('baseUrl');
+  PictogramBloc bloc = PictogramBloc(api);
+  MockPictogramApi pictogramApi = MockPictogramApi();
 
   setUp(() {
     api = Api('any');
@@ -41,7 +41,8 @@ void main() {
     bloc.pictograms.listen((List<PictogramModel> response) {
       switch (count) {
         case 0:
-          expect(response, isNull);
+          expect(response, isEmpty);
+          done();
           break;
         case 1:
           verify(() => pictogramApi.getAll(

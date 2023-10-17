@@ -25,8 +25,8 @@ class NewPictogramPasswordBloc extends BlocBase {
   late Uint8List profilePicture;
 
   /// Controller that contains the stream & sink of the pictogram password.
-  final rx_dart.BehaviorSubject<String> pictogramPasswordController =
-      rx_dart.BehaviorSubject<String>();
+  final rx_dart.BehaviorSubject<String?> pictogramPasswordController =
+      rx_dart.BehaviorSubject<String?>();
 
   /// To be called whenever somethings needs to be added to the controller.
   Sink<String?> get onPictogramPasswordChanged =>
@@ -50,7 +50,7 @@ class NewPictogramPasswordBloc extends BlocBase {
 
   /// Creates a user with the given information.
   Stream<GirafUserModel> createCitizen() {
-    return _api.account.register(userName, pictogramPasswordController.value,
+    return _api.account.register(userName, pictogramPasswordController.value!,
         displayName, profilePicture,
         departmentId: _user.department!, role: Role.Citizen);
   }
