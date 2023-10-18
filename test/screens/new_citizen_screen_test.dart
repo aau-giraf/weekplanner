@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:api_client/api/account_api.dart';
 import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/api/user_api.dart';

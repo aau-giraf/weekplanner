@@ -66,11 +66,11 @@ class _PictogramSearchState extends State<PictogramSearch> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: StreamBuilder<List<PictogramModel>>(
+                child: StreamBuilder<List<PictogramModel>?>(
                     stream: _bloc.pictograms,
                     initialData: const <PictogramModel>[],
                     builder: (BuildContext context,
-                        AsyncSnapshot<List<PictogramModel>> snapshot) {
+                        AsyncSnapshot<List<PictogramModel>?> snapshot) {
                       if (snapshot.hasData) {
                         return Column(children: <Widget>[
                           Expanded(

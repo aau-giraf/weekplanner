@@ -38,10 +38,10 @@ void main() {
         .thenAnswer((_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[]));
 
-    bloc.pictograms.listen((List<PictogramModel> response) {
+    bloc.pictograms.listen((List<PictogramModel>? response) {
       switch (count) {
         case 0:
-          expect(response, isEmpty);
+          expect(response, isNull);
           done();
           break;
         case 1:

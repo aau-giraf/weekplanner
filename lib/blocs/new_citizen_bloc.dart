@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
@@ -39,14 +38,15 @@ class NewCitizenBloc extends BlocBase {
       rx_dart.BehaviorSubject<bool?>();
 
   /// This controller handles the profile picture
-  final rx_dart.BehaviorSubject<File>? fileController =
-      rx_dart.BehaviorSubject<File>();
+  final rx_dart.BehaviorSubject<File?> fileController =
+      rx_dart.BehaviorSubject<File?>();
 
   /// Publishes the image file, while it is not null
-  Stream<File> get file => fileController!.stream.where((File? f) => f != null);
+  Stream<File?>? get file =>
+      fileController.stream.where((File? f) => f != null);
 
   /// Publishes if the input fields are filled
-  Stream<bool> get isInputValid => _isInputValid.stream;
+  Stream<bool?> get isInputValid => _isInputValid.stream;
 
   final rx_dart.BehaviorSubject<bool> _isInputValid =
       rx_dart.BehaviorSubject<bool>.seeded(false);
@@ -84,7 +84,7 @@ class NewCitizenBloc extends BlocBase {
     Stream<String?> firstStream;
 
     if (passwordController.hasValue) {
-      firstStream = passwordController as Stream<String>;
+      firstStream = passwordController;
     } else {
       // If passwordController doesn't have a value, create an empty stream.
       firstStream = const Stream<String>.empty();
@@ -92,7 +92,7 @@ class NewCitizenBloc extends BlocBase {
 
     return rx_dart.Rx.combineLatest2<String?, String?, bool>(
       firstStream,
-      passwordVerifyController as Stream<String>,
+      passwordVerifyController,
       (String? a, String? b) => a == b,
     );
   }
@@ -132,13 +132,13 @@ class NewCitizenBloc extends BlocBase {
     });
   }
 
-  void _publishImage(File file) {
-    fileController!.add(file);
+  void _publishImage(File? file) {
+    fileController.add(file);
   }
 
   /// Checks if the input fields are filled out
   void _checkInput() {
-    if (fileController!.value != null) {
+    if (fileController.value != null) {
       _isInputValid.add(true);
     } else {
       _isInputValid.add(false);
@@ -162,7 +162,7 @@ class NewCitizenBloc extends BlocBase {
       usernameController.value!,
       passwordController.value!,
       displayNameController.value!,
-      encodePicture(fileController!.valueOrNull),
+      encodePicture(fileController.valueOrNull),
       departmentId: _user!.department!,
       role: Role.Citizen,
     );
@@ -174,7 +174,7 @@ class NewCitizenBloc extends BlocBase {
         usernameController.value!,
         passwordController.value!,
         displayNameController.value!,
-        encodePicture(fileController!.valueOrNull),
+        encodePicture(fileController.valueOrNull),
         departmentId: _user!.department!,
         role: Role.Trustee);
   }
@@ -185,7 +185,7 @@ class NewCitizenBloc extends BlocBase {
         usernameController.value!,
         passwordController.value!,
         displayNameController.value!,
-        encodePicture(fileController!.valueOrNull),
+        encodePicture(fileController.valueOrNull),
         departmentId: _user!.department!,
         role: Role.Guardian);
   }
@@ -212,9 +212,9 @@ class NewCitizenBloc extends BlocBase {
           (bool a, bool b, bool c) => a && b && c).asBroadcastStream();
 
   /// Stream for display name validation
-  final StreamTransformer<String, bool> _displayNameValidation =
-      StreamTransformer<String, bool>.fromHandlers(
-          handleData: (String input, EventSink<bool> sink) {
+  final StreamTransformer<String?, bool> _displayNameValidation =
+      StreamTransformer<String?, bool>.fromHandlers(
+          handleData: (String? input, EventSink<bool> sink) {
     if (input == null || input.isEmpty) {
       sink.add(false);
     } else {
@@ -223,9 +223,9 @@ class NewCitizenBloc extends BlocBase {
   });
 
   /// Stream for username validation
-  final StreamTransformer<String, bool> _usernameValidation =
-      StreamTransformer<String, bool>.fromHandlers(
-          handleData: (String input, EventSink<bool> sink) {
+  final StreamTransformer<String?, bool> _usernameValidation =
+      StreamTransformer<String?, bool>.fromHandlers(
+          handleData: (String? input, EventSink<bool> sink) {
     if (input == null || input.isEmpty) {
       sink.add(false);
     } else {
@@ -237,9 +237,9 @@ class NewCitizenBloc extends BlocBase {
   });
 
   /// Stream for password validation
-  final StreamTransformer<String, bool> _passwordValidation =
-      StreamTransformer<String, bool>.fromHandlers(
-          handleData: (String input, EventSink<bool> sink) {
+  final StreamTransformer<String?, bool> _passwordValidation =
+      StreamTransformer<String?, bool>.fromHandlers(
+          handleData: (String? input, EventSink<bool> sink) {
     if (input == null || input.isEmpty) {
       sink.add(false);
     } else {
@@ -256,13 +256,13 @@ class NewCitizenBloc extends BlocBase {
 
   ///Resets bloc so no information is stored
   void resetBloc() {
-    // displayNameController.sink.add(null);
-    // usernameController.sink.add(null);
-    // passwordController.sink.add(null);
-    // passwordVerifyController.sink.add(null);
-    // usePictogramPasswordController.sink.add(false);
-    // _user = null;
-    // fileController!.add(null as File);
+    displayNameController.sink.add(null);
+    usernameController.sink.add(null);
+    passwordController.sink.add(null);
+    passwordVerifyController.sink.add(null);
+    usePictogramPasswordController.sink.add(false);
+    _user = null;
+    fileController.add(null);
   }
 
   @override
@@ -272,7 +272,7 @@ class NewCitizenBloc extends BlocBase {
     passwordController.close();
     passwordVerifyController.close();
     usePictogramPasswordController.close();
-    fileController!.close();
+    fileController.close();
     _isInputValid.close();
   }
 }

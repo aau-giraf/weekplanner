@@ -13,16 +13,16 @@ class NewPictogramPasswordBloc extends BlocBase {
   NewPictogramPasswordBloc(this._api);
 
   final Api _api;
-  late GirafUserModel _user;
+  GirafUserModel _user = GirafUserModel();
 
   /// The username for the citizen that one is creating a password for.
-  late String userName;
+  late String? userName;
 
   /// The display name for the citizen that one is creating a password for.
-  late String displayName;
+  late String? displayName;
 
   /// The profile picture for the citizen that one is creating a password for.
-  late Uint8List profilePicture;
+  late List<int>? profilePicture;
 
   /// Controller that contains the stream & sink of the pictogram password.
   final rx_dart.BehaviorSubject<String?> pictogramPasswordController =
@@ -38,8 +38,8 @@ class NewPictogramPasswordBloc extends BlocBase {
 
   /// This validation method just null-checks, as there is validation
   /// in the [PictogramPassword] widget.
-  final StreamTransformer<String, bool> _passwordValidation =
-      StreamTransformer<String, bool>.fromHandlers(
+  final StreamTransformer<String?, bool> _passwordValidation =
+      StreamTransformer<String?, bool>.fromHandlers(
           handleData: (String? input, EventSink<bool> sink) {
     if (input == null) {
       sink.add(false);
@@ -50,15 +50,15 @@ class NewPictogramPasswordBloc extends BlocBase {
 
   /// Creates a user with the given information.
   Stream<GirafUserModel> createCitizen() {
-    return _api.account.register(userName, pictogramPasswordController.value!,
-        displayName, profilePicture,
+    return _api.account.register(userName!, pictogramPasswordController.value!,
+        displayName!, profilePicture,
         departmentId: _user.department!, role: Role.Citizen);
   }
 
   /// Initializes the bloc.
   void initialize(
       String _userName, String _displayName, Uint8List _profilePicture) {
-    //reset(); //FIXME
+    reset();
     userName = _userName;
     displayName = _displayName;
     profilePicture = _profilePicture;
@@ -68,12 +68,12 @@ class NewPictogramPasswordBloc extends BlocBase {
   }
 
   /// Resets the blocs variables, so that no information is stored.
-  // void reset() {
-  //   userName = null;
-  //   displayName = null;
-  //   pictogramPasswordController.add(null);
-  //   _user = null;
-  // } // FIXME: Deinitialize in another way
+  void reset() {
+    userName = null;
+    displayName = null;
+    pictogramPasswordController.add(null);
+    _user = GirafUserModel();
+  }
 
   @override
   void dispose() {

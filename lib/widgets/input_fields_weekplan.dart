@@ -143,7 +143,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
           key: const Key('WeekThumbnailKey'),
           width: MediaQuery.of(context).size.width / 2,
           height: 200,
-          child: StreamBuilder<PictogramModel>(
+          child: StreamBuilder<PictogramModel?>(
             stream: widget.bloc.thumbnailStream,
             builder: _buildThumbnail,
           ),
@@ -153,7 +153,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
   }
 
   Widget _buildThumbnail(
-      BuildContext context, AsyncSnapshot<PictogramModel> snapshot) {
+      BuildContext context, AsyncSnapshot<PictogramModel?> snapshot) {
     if (snapshot.data == null) {
       return GestureDetector(
         onTap: () => _openPictogramSearch(context, widget.bloc),

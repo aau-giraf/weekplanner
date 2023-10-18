@@ -607,7 +607,7 @@ class ShowActivityScreen extends StatelessWidget {
                         break;
                       }
                     default:
-                      break; //FIXME: case here?
+                      break;
                   }
                 },
                 icon: (timerRunningSnapshot.hasData
@@ -778,7 +778,6 @@ class ShowActivityScreen extends StatelessWidget {
                       );
 
                       if (_activity.isChoiceBoard.toString() != '') {
-                        // FIXME: dunno if .toString works here
                         return Container(
                             child: Row(children: <Widget>[cancelButton]));
                       } else {

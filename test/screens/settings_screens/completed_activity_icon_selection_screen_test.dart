@@ -66,7 +66,7 @@ void main() {
         home: CompletedActivityIconScreen(user),
         // ignore: always_specify_types
         navigatorObservers: [mockObserver]));
-    verify(mockObserver.didPush(any as Route, any as Route?) as Function());
+    verify(() => mockObserver.didPush(any(), any()));
 
     await tester.pumpAndSettle();
     expect(find.byType(SettingsCheckMarkButton), findsNWidgets(3));
@@ -74,6 +74,6 @@ void main() {
     await tester.pump();
     await tester.tap(find.byType(SettingsCheckMarkButton).first);
     await tester.pump();
-    verify(mockObserver.didPop(any as Route, any as Route?) as Function());
+    verify(() => mockObserver.didPop(any(), any()));
   });
 }

@@ -91,7 +91,7 @@ void main() {
 
     await tester.pump(const Duration(milliseconds: 41000));
 
-    bloc.pictograms.listen((List<PictogramModel> images) async {
+    bloc.pictograms.listen((List<PictogramModel>? images) async {
       await tester.pump();
       expect(find.byType(PictogramImage), findsNWidgets(1));
       done.complete(true);
@@ -137,7 +137,7 @@ void main() {
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
-    bloc.pictograms.listen((List<PictogramModel> images) async {
+    bloc.pictograms.listen((List<PictogramModel>? images) async {
       await tester.pump();
       expect(find.byType(CircularProgressIndicator), findsNothing);
 
@@ -166,7 +166,7 @@ void main() {
 
     await tester.pump(const Duration(milliseconds: 11000));
 
-    bloc.pictograms.listen((List<PictogramModel> images) async {
+    bloc.pictograms.listen((List<PictogramModel>? images) async {
       await tester.pump();
       expect(find.byType(PictogramImage), findsOneWidget);
       done.complete(true);
@@ -200,11 +200,11 @@ void main() {
     await tester.enterText(find.byType(TextField), query);
     await tester.pump(const Duration(milliseconds: 11000));
 
-    bloc.pictograms.listen((List<PictogramModel> images) async {
+    bloc.pictograms.listen((List<PictogramModel>? images) async {
       await tester.tap(find.byType(PictogramImage));
       await tester.pump();
 
-      verify(mockObserver.didPop(any as Route, any as Route?) as Function());
+      verify(() => mockObserver.didPop(any(), any()));
 
       final Finder imageFinder = find.byType(PictogramImage);
       final Finder matchFinder =

@@ -32,7 +32,7 @@ class PictogramBloc extends BlocBase {
   /// The null value is used as a way to communicate loading. That is, if you
   /// receive null from this stream, you know to discard your previous results
   /// and display a loading indicator
-  Stream<List<PictogramModel>> get pictograms => _pictograms.stream;
+  Stream<List<PictogramModel>?> get pictograms => _pictograms.stream;
 
   /// This is the pictograms received from the latest search function call.
   ///
@@ -54,8 +54,8 @@ class PictogramBloc extends BlocBase {
   /// Boolean used to specify if more pictograms are able to be loaded.
   bool reachedLastPictogram = false;
 
-  final rx_dart.BehaviorSubject<List<PictogramModel>> _pictograms =
-      rx_dart.BehaviorSubject<List<PictogramModel>>();
+  final rx_dart.BehaviorSubject<List<PictogramModel>?> _pictograms =
+      rx_dart.BehaviorSubject<List<PictogramModel>?>();
 
   final Api _api;
   Timer? _debounceTimer;
@@ -78,7 +78,7 @@ class PictogramBloc extends BlocBase {
       _debounceTimer!.cancel();
     }
 
-    // _pictograms.add(null);//FIXME
+    _pictograms.add(null);
     late List<PictogramModel>? _resultPlaceholder;
     _debounceTimer = Timer(const Duration(milliseconds: _debounceTime), () {
       //Timer for sending an error if getting pictogram results takes too long
