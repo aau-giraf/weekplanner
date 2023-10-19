@@ -64,7 +64,7 @@ class NewWeekplanBloc extends BlocBase {
 
   /// Emits a [WeekNameModel] when it has a title, year, and week.
   /// If any input is invalid, emits null.
-  Stream<WeekNameModel?> get newWeekPlan => rx_dart.Rx.combineLatest4(
+  Stream<WeekNameModel> get newWeekPlan => rx_dart.Rx.combineLatest4(
       allInputsAreValidStream,
       titleController.stream,
       yearController.stream,
@@ -115,7 +115,7 @@ class NewWeekplanBloc extends BlocBase {
   /// Saves the entered information to the database.
   Future<WeekModel> saveWeekplan({
     required BuildContext? screenContext,
-    required Stream<List<WeekNameModel>?>? existingWeekPlans,
+    required Stream<List<WeekNameModel>?> existingWeekPlans,
   }) async {
     if (weekUser == null) {
       // ignore: null_argument_to_non_null_type
@@ -173,7 +173,7 @@ class NewWeekplanBloc extends BlocBase {
   /// Returns a [Future] that resolves to true if there is a matching week plan
   /// with the same year and week number.
   Future<bool> hasExisitingMatchingWeekplan({
-    required Stream<List<WeekNameModel>?>? existingWeekPlans,
+    required Stream<List<WeekNameModel>?> existingWeekPlans,
     required int year,
     required int weekNumber,
   }) {
@@ -237,11 +237,11 @@ class NewWeekplanBloc extends BlocBase {
     thumbnailController.sink.add(null);
   }
 
-  WeekNameModel? _combineWeekNameModel(
+  WeekNameModel _combineWeekNameModel(
       bool isValid, String? name, String? year, String? week) {
-    if (!isValid) {
-      return null;
-    }
+    // if (!isValid) {
+    //   return null;
+    // }
     return WeekNameModel(
         name: name, weekYear: int.parse(year!), weekNumber: int.parse(week!));
   }

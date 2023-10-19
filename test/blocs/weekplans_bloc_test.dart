@@ -14,8 +14,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 
-import '../screens/copy_resolve_screen_test.dart';
-
 class MockWeekApi extends Mock implements WeekApi {}
 
 void main() {
@@ -59,7 +57,7 @@ void main() {
     weekNameModelList.add(weekNameModel1);
   });
 
-  when(() => weekApi.getNames('test')).thenAnswer((_) =>
+  when(() => weekApi.getNames(any())).thenAnswer((_) =>
       rx_dart.BehaviorSubject<List<WeekNameModel>?>.seeded(weekNameModelList));
 
   when(() => weekApi.get(
@@ -243,8 +241,7 @@ void main() {
     int count = 0;
     bloc.weekModels.listen((List<WeekModel> userWeekModels) {
       if (count == 0) {
-        //bloc.deleteMarkedWeekModels();
-        // FIXME: Can't delete what doesn't exist?
+        //bloc.deleteMarkedWeekModels(); FIXME: Can't delete what doesn't exists?
         count++;
       } else {
         expect(userWeekModels.contains(weekModel6), false);

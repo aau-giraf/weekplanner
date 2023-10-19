@@ -64,7 +64,6 @@ class WeekplansBloc extends BlocBase {
     _user = user;
     _addWeekplan = addWeekplan;
     weekNameModels.listen(getAllWeekInfo);
-
     _api.week.getNames(_user.id!).listen(_weekNameModelsList.add);
   }
 

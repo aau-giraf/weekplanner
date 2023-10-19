@@ -21,7 +21,7 @@ class NewWeekplanScreen extends StatelessWidget {
   }
 
   /// Stream of existing week plans.
-  final Stream<List<WeekNameModel>?>? existingWeekPlans;
+  final Stream<List<WeekNameModel>?> existingWeekPlans;
   final NewWeekplanBloc _bloc;
 
   @override
