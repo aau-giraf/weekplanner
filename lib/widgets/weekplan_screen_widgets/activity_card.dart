@@ -82,7 +82,9 @@ class ActivityCard extends StatelessWidget {
                       ),
                       Stack(
                         alignment: AlignmentDirectional.topStart,
-                        children: const <Widget>[],
+                        children: <Widget>[
+                          _buildAvatarIcon(context,weekModeSnapShot.data),
+                        ],
                       ),
                     ],
                   ),
@@ -147,15 +149,15 @@ class ActivityCard extends StatelessWidget {
                         height: MediaQuery.of(context).size.width,
                         child: FittedBox(
                             child: Stack(
-                          alignment: AlignmentDirectional.center,
-                          children: <Widget>[
-                            SizedBox(
-                                key: const Key('WeekPlanScreenChoiceBoard'),
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.width,
-                                child: returnGridView(pictograms)),
-                          ],
-                        )),
+                              alignment: AlignmentDirectional.center,
+                              children: <Widget>[
+                                SizedBox(
+                                    key: const Key('WeekPlanScreenChoiceBoard'),
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.width,
+                                    child: returnGridView(pictograms)),
+                              ],
+                            )),
                       ),
                       _buildActivityStateIcon(context, _activityState,
                           weekModeSnapShot, settingsSnapShot),
@@ -164,7 +166,9 @@ class ActivityCard extends StatelessWidget {
                   ),
                   Stack(
                       alignment: AlignmentDirectional.topStart,
-                      children: const <Widget>[])
+                      children: <Widget>[
+                        _buildAvatarIcon(context,weekModeSnapShot.data),
+                      ])
                 ],
               ),
               PictogramText(_activity, _user),
@@ -181,15 +185,15 @@ class ActivityCard extends StatelessWidget {
         crossAxisCount: 2,
         children: List<Widget>.generate(
           list.length,
-          (int index) {
+              (int index) {
             return Padding(
               padding: const EdgeInsets.all(15.0),
               child: Container(
                 decoration: BoxDecoration(
                     border: Border.all(
-                  color: Colors.black,
-                  width: 5,
-                )),
+                      color: Colors.black,
+                      width: 5,
+                    )),
                 child: list[index],
               ),
             );
@@ -333,21 +337,21 @@ class ActivityCard extends StatelessWidget {
                   );
                 }
 
-            break;
-          default:
+                break;
+              default:
+                return Container(
+                  width: 0,
+                  height: 0
+                  ,
+                );
+            }
+          }
+          //If no settings/role have been loaded then we just make an empty overlay
           return Container(
-          width: 0,
-          height: 0
-          ,
+            width: 0,
+            height: 0,
           );
-        }
-        }
-      //If no settings/role have been loaded then we just make an empty overlay
-      return Container(
-        width: 0,
-        height: 0,
-      );
-    });
+        });
   }
 
   Widget _buildTimerIcon(BuildContext context, ActivityModel activity) {
@@ -393,18 +397,24 @@ class ActivityCard extends StatelessWidget {
         });
   }
 
-  /*Widget _buildAvatarIcon(BuildContext context) {
-    return Container(
+  Widget _buildAvatarIcon(BuildContext context, WeekplanMode userRole) {
+    if (userRole == WeekplanMode.guardian || userRole == WeekplanMode.trustee) {
+      return Container(
         width: 400,
         height: 400,
         child: Container(
           margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
           child: const CircleAvatar(
-              key: Key('PlaceholderAvatar'),
-              radius: 20,
-              backgroundImage:
-                  AssetImage('assets/login_screen_background_image.png')),
-        )
-    );
-  }*/
+            key: Key('PlaceholderAvatar'),
+            radius: 20,
+            backgroundImage: AssetImage('assets/login_screen_background_image.png'),
+          ),
+        ),
+      );
+    } else {
+      return Container(); // Return an empty container when
+                          // the role is "citizen."
+    }
+  }
+
 }
