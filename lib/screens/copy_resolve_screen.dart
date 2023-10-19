@@ -24,7 +24,7 @@ class CopyResolveScreen extends StatelessWidget {
     required this.currentUser,
     required this.weekModel,
     required this.forThisCitizen,
-    this.copyBloc, // FIXME: Might be required
+    this.copyBloc,
   }) : _bloc = di.get<CopyResolveBloc>() {
     _bloc.initializeCopyResolverBloc(currentUser, weekModel);
     copyBloc ??= di.get<CopyWeekplanBloc>();

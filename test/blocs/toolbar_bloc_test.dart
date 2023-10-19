@@ -7,10 +7,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 
 void main() {
   Api api = Api('baseUrl');
-  ToolbarBloc bloc = ToolbarBloc();
+  late ToolbarBloc bloc;
 
   setUp(() {
     di.clearAll();
@@ -27,32 +28,32 @@ void main() {
       done();
     });
     bloc.updateIcons(null, null);
-  })); // FIXME: Timout
+  }));
 
-  // test('Defined icon is added to stream', async((DoneFn done) {
-  //   final Map<AppBarIcon, VoidCallback> icons = <AppBarIcon, VoidCallback>{
-  //     AppBarIcon.undo: () {}
-  //   };
+  test('Defined icon is added to stream', async((DoneFn done) {
+    final Map<AppBarIcon, VoidCallback> icons = <AppBarIcon, VoidCallback>{
+      AppBarIcon.undo: () {}
+    };
 
-  //   bloc.visibleButtons.skip(1).listen((List<IconButton> response) {
-  //     expect(response.length, 1);
-  //     done();
-  //   });
+    bloc.visibleButtons.skip(1).listen((List<IconButton> response) {
+      expect(response.length, 1);
+      done();
+    });
 
-  //   bloc.updateIcons(icons, null);
-  // })); FIXME: Timeout
+    bloc.updateIcons(icons, null);
+  }));
 
-  // test('Defined icons are added to stream', async((DoneFn done) {
-  //   final Map<AppBarIcon, VoidCallback> icons = <AppBarIcon, VoidCallback>{
-  //     AppBarIcon.undo: () {},
-  //     AppBarIcon.search: () {}
-  //   };
+  test('Defined icons are added to stream', async((DoneFn done) {
+    final Map<AppBarIcon, VoidCallback> icons = <AppBarIcon, VoidCallback>{
+      AppBarIcon.undo: () {},
+      AppBarIcon.search: () {}
+    };
 
-  //   bloc.visibleButtons.skip(1).listen((List<IconButton> response) {
-  //     expect(response.length, 2);
-  //     done();
-  //   });
+    bloc.visibleButtons.skip(1).listen((List<IconButton> response) {
+      expect(response.length, 2);
+      done();
+    });
 
-  //   bloc.updateIcons(icons, null);
-  // })); FIXME: Timeout
+    bloc.updateIcons(icons, null);
+  }));
 }

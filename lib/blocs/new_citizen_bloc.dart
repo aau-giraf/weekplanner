@@ -35,7 +35,7 @@ class NewCitizenBloc extends BlocBase {
 
   /// This field controls the switch for pictogram password
   final rx_dart.BehaviorSubject<bool?> usePictogramPasswordController =
-      rx_dart.BehaviorSubject<bool?>();
+      rx_dart.BehaviorSubject<bool>();
 
   /// This controller handles the profile picture
   final rx_dart.BehaviorSubject<File?> fileController =

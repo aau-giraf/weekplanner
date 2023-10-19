@@ -15,7 +15,7 @@ class WeekplansBloc extends BlocBase {
 
   /// This is a stream where all the [WeekNameModel] are put in,
   ///to be used when getting the [WeekModel].
-  Stream<List<WeekNameModel>> get weekNameModels => _weekNameModelsList.stream;
+  Stream<List<WeekNameModel>?> get weekNameModels => _weekNameModelsList.stream;
 
   /// This is a stream where all the future [WeekModel] are put in,
   /// and this is the stream to listen to,
@@ -39,8 +39,8 @@ class WeekplansBloc extends BlocBase {
   /// when wanting information about weekplans.
   Stream<List<WeekModel>> get oldWeekModels => _oldWeekModel.stream;
 
-  final rx_dart.BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
-      rx_dart.BehaviorSubject<List<WeekNameModel>>();
+  final rx_dart.BehaviorSubject<List<WeekNameModel>?> _weekNameModelsList =
+      rx_dart.BehaviorSubject<List<WeekNameModel>?>();
 
   final rx_dart.BehaviorSubject<bool> _editMode =
       rx_dart.BehaviorSubject<bool>.seeded(false);
@@ -64,8 +64,8 @@ class WeekplansBloc extends BlocBase {
     _user = user;
     _addWeekplan = addWeekplan;
     weekNameModels.listen(getAllWeekInfo);
-    _api.week.getNames(_user.id!).listen(
-        _weekNameModelsList.add as void Function(List<WeekNameModel>? event)?);
+
+    _api.week.getNames(_user.id!).listen(_weekNameModelsList.add);
   }
 
   /// Gets all the information for a [Weekmodel].
@@ -73,7 +73,7 @@ class WeekplansBloc extends BlocBase {
   /// needed for getting all [WeekModel]'s.
   /// The upcoming weekplans are published in [_weekModel].
   /// Old weekplans are published in [_oldWeekModel].
-  void getAllWeekInfo(List<WeekNameModel> weekPlanNames) {
+  void getAllWeekInfo(List<WeekNameModel>? weekPlanNames) {
     final List<WeekModel> weekPlans = <WeekModel>[];
 
     // This is used by weekplan_selector_screen for adding a new weekplan.
@@ -81,7 +81,7 @@ class WeekplansBloc extends BlocBase {
       weekPlans.add(WeekModel(name: 'Tilføj ugeplan'));
     }
 
-    if (weekPlanNames.isEmpty) {
+    if (weekPlanNames!.isEmpty) {
       _weekModel.add(weekPlans);
       return;
     }
@@ -128,12 +128,12 @@ class WeekplansBloc extends BlocBase {
   /// Old weekplans are stored in [oldWeekDetails]
   /// and current/upcoming weekplans are stored in [weekDetails]
   void getWeekDetails(
-      List<WeekNameModel?> weekPlanNames,
+      List<WeekNameModel>? weekPlanNames,
       List<Stream<WeekModel>> weekDetails,
       List<Stream<WeekModel>> oldWeekDetails) {
     // Loops through all weekplans and sort them into old and upcoming weekplans
-    for (WeekNameModel? weekPlanName in weekPlanNames) {
-      if (isWeekDone(weekPlanName!)) {
+    for (WeekNameModel weekPlanName in weekPlanNames!) {
+      if (isWeekDone(weekPlanName)) {
         oldWeekDetails.add(_api.week
             .get(_user.id!, weekPlanName.weekYear!, weekPlanName.weekNumber!)
             .take(1));
@@ -226,12 +226,12 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// Checks if a week is in the past/expired
-  bool isWeekDone(WeekNameModel weekPlan) {
+  bool isWeekDone(WeekNameModel? weekPlan) {
     final int currentYear = DateTime.now().year;
     final int currentWeek = getCurrentWeekNum();
 
-    if (weekPlan.weekYear! < currentYear ||
-        (weekPlan.weekYear == currentYear &&
+    if (weekPlan!.weekYear! < currentYear ||
+        (weekPlan!.weekYear == currentYear &&
             weekPlan.weekNumber! < currentWeek)) {
       return true;
     }
