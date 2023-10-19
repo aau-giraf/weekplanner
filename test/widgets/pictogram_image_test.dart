@@ -50,6 +50,18 @@ void main() {
     when(() => pictogramApi.getImage(pictogramModel.id!))
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
+    // when(pictogramApi.getImage(pictogramModel.id!)).thenAnswer((_) =>
+    //   (int id) {
+    //     // Return the Stream<Image> based on the provided ID
+    //     if (id == pictogramModel.id) {
+    //       // Return the stream with the sample image
+    //       return Stream<Image>.fromIterable([sampleImage]);
+    //     } else {
+    //       // Handle other cases if needed
+    //       throw Exception('Invalid pictogram ID');
+    //     }
+    //   });
+
     di.clearAll();
     di.registerDependency<PictogramImageBloc>(() => bloc);
   });

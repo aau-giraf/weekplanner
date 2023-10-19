@@ -34,7 +34,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(title ?? '',
           overflow: TextOverflow.clip,
           style: const TextStyle(color: GirafColors.black)),
-      flexibleSpace: const GirafTitleHeader(),
+      flexibleSpace: const GirafTitleHeader(title: ''),
       actions: <Widget>[
         StreamBuilder<List<IconButton>>(
             initialData: const <IconButton>[],
