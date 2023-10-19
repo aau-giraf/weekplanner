@@ -129,35 +129,45 @@ void main() {
     await waiter.future;
   });
 
-  testWidgets('shows delete button when haveRights ',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(PictogramImage(
-      pictogram: pictogramModel,
-      onPressed: () {},
-      haveRights: true,
-      key: const ValueKey<String>('haveRightsKey'),
-    ));
-    expect(find.byType(GirafButton), findsOneWidget);
+testWidgets('shows delete button when haveRights',
+    (WidgetTester tester) async {
+  await tester.pumpWidget(MaterialApp(
+    home: SingleChildScrollView(
+      child: PictogramImage(
+        pictogram: pictogramModel,
+        onPressed: () {},
+        haveRights: true,
+        key: const ValueKey<String>('haveRightsKey'),
+      ),
+    ),
+  )); 
+  expect(find.byType(GirafButton), findsOneWidget);
+});
+
+
+testWidgets('show delete button when comparing ids',
+    (WidgetTester tester) async {
+  late String id;
+  final Completer<bool> done = Completer<bool>();
+  api.user.me().listen((GirafUserModel model) {
+    id = model.id!;
+    done.complete(true);
   });
 
-  testWidgets('show delete button when comparing ids',
-      (WidgetTester tester) async {
-    late String id;
-    final Completer<bool> done = Completer<bool>();
-    api.user.me().listen((GirafUserModel model) {
-      id = model.id!;
-      done.complete(true);
-    });
+  await done.future;
+  await tester.pumpWidget(MaterialApp(
+    home: SingleChildScrollView(
+      child: PictogramImage(
+        pictogram: pictogramModel,
+        onPressed: () {},
+        haveRights: pictogramModel.userId == id,
+        key: const ValueKey<String>('pictogramImageTestKey'),
+      ),
+    ),
+  ));
+  expect(find.byType(GirafButton), findsOneWidget);
+});
 
-    await done.future;
-    await tester.pumpWidget(PictogramImage(
-      pictogram: pictogramModel,
-      onPressed: () {},
-      haveRights: pictogramModel.userId == id,
-      key: const ValueKey<String>('pictogramImageTestKey'),
-    ));
-    expect(find.byType(GirafButton), findsOneWidget);
-  });
 
   testWidgets('deletebutton is not shown when image is not owned',
       (WidgetTester tester) async {

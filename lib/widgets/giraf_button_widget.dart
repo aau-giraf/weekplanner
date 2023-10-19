@@ -168,42 +168,47 @@ class _GirafButtonState extends State<GirafButton> {
     }
   }
 
-  Widget _buildWidgetsOnButton() {
-    final TextStyle textStyle = TextStyle(
-        color: theme.GirafColors.black,
-        fontSize: widget.fontSize,
-        fontWeight: widget.fontWeight);
+Widget _buildWidgetsOnButton() {
+  final TextStyle textStyle = TextStyle(
+    color: theme.GirafColors.black,
+    fontSize: widget.fontSize,
+    fontWeight: widget.fontWeight,
+  );
 
-    if (widget.text != '' && widget.icon != '') {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          widget.icon,
-          const SizedBox(
-            width: 5,
-          ),
-          Text(
-            widget.text,
-            style: textStyle,
-          ),
-        ],
-      );
-    } else if (widget.text != '') {
-      return Center(
-          child: AutoSizeText(
-        widget.text,
-        style: textStyle,
-        minFontSize: 5,
-      ));
-    } else if (widget.icon != '') {
-      return Center(
-        child: widget.icon,
-      );
-    }
+  List<Widget> children = [];
 
-    // return null;
-    throw Exception;
+  if (widget.icon != null) {
+    children.add(FittedBox(child: widget.icon));
   }
+
+  if (widget.text.isNotEmpty) {
+    if (children.isNotEmpty) {
+      children.add(SizedBox(width: 5));
+    }
+    children.add(
+      FittedBox( 
+        child: Text(
+          widget.text,
+          style: textStyle,
+        ),
+      ));
+  }
+
+  if (children.isEmpty) {
+    throw Exception("Invalid widget configuration");
+  }
+
+  return Center(
+    child: ListView(
+      scrollDirection: Axis.horizontal,
+      children: children,
+    ),
+  );
+}
+
+
+
+
 
   @override
   void dispose() {

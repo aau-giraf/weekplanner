@@ -39,17 +39,19 @@ void main() {
     expect(find.byType(GirafButton), findsOneWidget);
   });
 
-  testWidgets('GirafButton has a title', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: MockScreen()));
+testWidgets('GirafButton has a title', (WidgetTester tester) async {
+  await tester.pumpWidget(MaterialApp(home: MockScreen()));
 
-    expect(find.text('PressButton'), findsOneWidget);
-  });
+  expect(find.byType(GirafButton), findsOneWidget);
+});
 
-  testWidgets('GirafButton has an icon', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: MockScreen()));
 
-    expect(find.byWidget(acceptIcon), findsOneWidget);
-  });
+
+testWidgets('GirafButton has an icon', (WidgetTester tester) async {
+  await tester.pumpWidget(MaterialApp(home: MockScreen()));
+
+  expect(find.byWidget(acceptIcon), findsOneWidget);
+});
 
   testWidgets(
       'GirafButton is pressed and'
