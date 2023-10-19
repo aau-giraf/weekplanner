@@ -16,7 +16,7 @@ class InputFieldsWeekPlan extends StatefulWidget {
   /// Class created for keeping the input fields for the new and
   /// edit week plan screen consisten-t
   const InputFieldsWeekPlan(
-      {required this.bloc, required this.button, this.weekModel});
+      {required this.bloc, required this.button, required this.weekModel});
 
   /// This is the bloc used to control the input fields
   final NewWeekplanBloc bloc;
@@ -26,7 +26,7 @@ class InputFieldsWeekPlan extends StatefulWidget {
   final GirafButton button;
 
   /// This is the information from the current weekModel object
-  final WeekModel? weekModel;
+  final WeekModel weekModel;
 
   @override
   InputFieldsWeekPlanState createState() => InputFieldsWeekPlanState();
@@ -72,7 +72,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 key: const Key('WeekTitleTextFieldKey'),
                 onChanged: widget.bloc.onTitleChanged.add,
                 initialValue:
-                    widget.weekModel == null ? '' : widget.weekModel!.name,
+                    widget.weekModel == null ? '' : widget.weekModel.name,
                 keyboardType: TextInputType.text,
                 // To avoid emojis and other special characters
                 inputFormatters: <TextInputFormatter>[
@@ -99,7 +99,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 key: const Key('WeekYearTextFieldKey'),
                 keyboardType: TextInputType.number,
                 onChanged: widget.bloc.onYearChanged.add,
-                initialValue: widget.weekModel?.weekYear.toString(),
+                initialValue: widget.weekModel.weekYear.toString(),
                 style: _style,
                 decoration: InputDecoration(
                     labelText: 'År',
@@ -123,7 +123,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 onChanged: widget.bloc.onWeekNumberChanged.add,
                 initialValue: widget.weekModel == null
                     ? ''
-                    : widget.weekModel!.weekNumber.toString(),
+                    : widget.weekModel.weekNumber.toString(),
                 style: _style,
                 decoration: InputDecoration(
                     labelText: 'Ugenummer',
@@ -143,7 +143,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
           key: const Key('WeekThumbnailKey'),
           width: MediaQuery.of(context).size.width / 2,
           height: 200,
-          child: StreamBuilder<PictogramModel>(
+          child: StreamBuilder<PictogramModel?>(
             stream: widget.bloc.thumbnailStream,
             builder: _buildThumbnail,
           ),
@@ -153,7 +153,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
   }
 
   Widget _buildThumbnail(
-      BuildContext context, AsyncSnapshot<PictogramModel> snapshot) {
+      BuildContext context, AsyncSnapshot<PictogramModel?> snapshot) {
     if (snapshot.data == null) {
       return GestureDetector(
         onTap: () => _openPictogramSearch(context, widget.bloc),

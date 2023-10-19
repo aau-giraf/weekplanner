@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:api_client/api/account_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
@@ -26,8 +24,12 @@ class MockUserApi extends Mock implements UserApi {
 class MockAccountApi extends Mock implements AccountApi {}
 
 void main() {
-  late NewCitizenBloc bloc;
-  late Api api;
+  setUpAll(() {
+    registerFallbackValue(Role.Unknown);
+  });
+
+  Api api = Api('any');
+  NewCitizenBloc bloc = NewCitizenBloc(api);
 
   final GirafUserModel user = GirafUserModel(
       id: '1',
@@ -44,11 +46,9 @@ void main() {
     bloc = NewCitizenBloc(api);
     bloc.initialize();
 
-    when(api.account.register(
-            any as String, any as String, any as String, any as Uint8List,
-            departmentId: any(named: 'departmentId'),
-            role: any(named: 'role')) as Function())
-        .thenAnswer((_) {
+    when(() => api.account.register(any(), any(), any(), any(),
+        departmentId: any(named: 'departmentId'),
+        role: any(named: 'role'))).thenAnswer((_) {
       return Stream<GirafUserModel>.value(user);
     });
   });
@@ -60,7 +60,7 @@ void main() {
     bloc.onDisplayNameChange.add(user.displayName);
     bloc.createCitizen();
 
-    verify(bloc.createCitizen() as Function());
+    verify(() => bloc.createCitizen());
     done();
   }));
 
@@ -71,7 +71,7 @@ void main() {
     bloc.onDisplayNameChange.add(user.displayName);
     bloc.createGuardian();
 
-    verify(bloc.createGuardian() as Function());
+    verify(() => bloc.createGuardian());
     done();
   }));
 
@@ -82,7 +82,7 @@ void main() {
     bloc.onDisplayNameChange.add(user.displayName);
     bloc.createTrustee();
 
-    verify(bloc.createTrustee() as Function());
+    verify(() => bloc.createTrustee());
     done();
   }));
 

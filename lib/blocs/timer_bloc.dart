@@ -320,9 +320,9 @@ class TimerBloc extends BlocBase {
       _timerStream!.cancel();
     }
 
-    // _stopwatch = null;
-    // _countDown = null;
-    // _timerStream = null; //FIXME
+    _stopwatch = null;
+    _countDown = null;
+    _timerStream = null;
   }
 
   @override

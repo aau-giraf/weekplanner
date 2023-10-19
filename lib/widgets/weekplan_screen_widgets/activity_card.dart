@@ -52,7 +52,7 @@ class ActivityCard extends StatelessWidget {
       AsyncSnapshot<WeekplanMode> weekModeSnapShot,
       AsyncSnapshot<SettingsModel?> settingsSnapShot) {
     final ActivityState? _activityState = _activity.state;
-    if (!_activity.isChoiceBoard!) {
+    if (!_activity.isChoiceBoard) {
       return Opacity(
         opacity: _shouldActivityBeVisible(weekModeSnapShot, settingsSnapShot)
             ? 1.0
@@ -72,7 +72,7 @@ class ActivityCard extends StatelessWidget {
                             width: MediaQuery.of(context).size.width,
                             height: MediaQuery.of(context).size.width,
                             child: FittedBox(
-                              child: _getPictogram(_activity.pictograms!.first),
+                              child: _getPictogram(_activity.pictograms.first),
                             ),
                           ),
                           _buildActivityStateIcon(context, _activityState!,
@@ -120,10 +120,10 @@ class ActivityCard extends StatelessWidget {
       AsyncSnapshot<SettingsModel?> settingsSnapShot) {
     final ActivityState? _activityState = _activity.state;
     final List<Widget> pictograms = <Widget>[];
-    for (int i = 0; i < _activity.pictograms!.length; i++) {
+    for (int i = 0; i < _activity.pictograms.length; i++) {
       pictograms.add(
         SizedBox.expand(
-          child: FittedBox(child: _getPictogram(_activity.pictograms![i])),
+          child: FittedBox(child: _getPictogram(_activity.pictograms[i])),
         ),
       );
     }

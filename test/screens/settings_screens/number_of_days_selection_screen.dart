@@ -177,7 +177,7 @@ void main() {
         home: NumberOfDaysScreen(user, true, null),
         navigatorObservers: [mockObserver] //ignore: always_specify_types
         ));
-    verify(mockObserver.didPush(any as Route, any as Route?) as Function());
+    verify(() => mockObserver.didPush(any(), any()));
 
     await tester.pumpAndSettle();
     expect(find.byType(SettingsCheckMarkButton), findsNWidgets(4));
@@ -185,7 +185,7 @@ void main() {
     await tester.pump();
     await tester.tap(find.byType(SettingsCheckMarkButton).last);
     await tester.pump();
-    verify(mockObserver.didPop(any as Route, any as Route?) as Function());
+    verify(() => mockObserver.didPop(any(), any()));
   });
 
   testWidgets('Landscape settings screen has been popped',
@@ -194,7 +194,7 @@ void main() {
         home: NumberOfDaysScreen(user, false, null),
         navigatorObservers: [mockObserver] //ignore: always_specify_types
         ));
-    verify(mockObserver.didPush(any as Route, any as Route?) as Function());
+    verify(() => mockObserver.didPush(any(), any()));
 
     await tester.pumpAndSettle();
     expect(find.byType(SettingsCheckMarkButton), findsNWidgets(4));
@@ -202,6 +202,6 @@ void main() {
     await tester.pump();
     await tester.tap(find.byType(SettingsCheckMarkButton).last);
     await tester.pump();
-    verify(mockObserver.didPop(any as Route, any as Route?) as Function());
+    verify(() => mockObserver.didPop(any(), any()));
   });
 }

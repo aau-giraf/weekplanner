@@ -39,7 +39,7 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
             .update(
                 user.id!, weekModel.weekYear!, weekModel.weekNumber!, weekModel)
             .take(1)
-            .listen((WeekModel? weekModel) {
+            .listen((WeekModel weekModel) {
           final bool done = weekModel != null;
           callCompleter.complete(done);
         });
@@ -55,11 +55,11 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
       DisplayNameModel user, WeekModel weekModel) async {
     bool daysAreEmpty = true;
 
-    final WeekModel? response = await _api.week
+    final WeekModel response = await _api.week
         .get(user.id!, weekModel.weekYear!, weekModel.weekNumber!)
         .first;
 
-    if (response!.days == null) {
+    if (response.days == null) {
       return false;
     }
 

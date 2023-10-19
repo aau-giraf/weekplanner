@@ -1,15 +1,21 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/access_level_enum.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
 
 void main() {
-  late CopyResolveBloc bloc;
-  late Api api;
-  late final WeekModel oldWeekmodel =
-      WeekModel(name: 'test', weekNumber: 23, weekYear: 2020);
+  Api api = Api('any');
+  CopyResolveBloc bloc = CopyResolveBloc(api);
+  final WeekModel oldWeekmodel = WeekModel(
+      thumbnail:
+          PictogramModel(title: 'title', accessLevel: AccessLevel.PRIVATE),
+      name: 'test',
+      weekNumber: 23,
+      weekYear: 2020);
 
   final DisplayNameModel mockUser =
       DisplayNameModel(displayName: 'testName', role: 'testRole', id: 'testId');

@@ -24,7 +24,7 @@ class GirafButton extends StatefulWidget {
     // ignore: avoid_unused_constructor_parameters
     this.isEnabledStream = const Stream<bool>.empty(),
     // ignore: avoid_unused_constructor_parameters
-    StreamBuilder<File>? child,
+    StreamBuilder<File?>? child,
   }) : super(key: key);
 
   /// The text placed at the center of the button.

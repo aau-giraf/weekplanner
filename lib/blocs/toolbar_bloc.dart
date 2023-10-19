@@ -14,6 +14,8 @@ import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import '../style/custom_color.dart' as theme;
 
+final AuthBloc _authBloc = di.get<AuthBloc>();
+
 /// Contains the functionality of the toolbar.
 class ToolbarBloc extends BlocBase {
   /// If the confirm button in popup is clickable.
@@ -25,19 +27,17 @@ class ToolbarBloc extends BlocBase {
   /// The current visibility of the edit-button.
   Stream<List<IconButton>> get visibleButtons => _visibleButtons.stream;
 
-  final AuthBloc _authBloc = di.get<AuthBloc>();
-
   //// Based on a list of the enum AppBarIcon this method populates a list of IconButtons to render in the nav-bar
   void updateIcons(
       Map<AppBarIcon, VoidCallback>? icons, BuildContext? context) {
-    List<IconButton> _iconsToAdd;
+    List<IconButton>? _iconsToAdd;
     _iconsToAdd = <IconButton>[];
 
     // Assigns a map to icons, if icons is null.
-    icons = <AppBarIcon, VoidCallback>{AppBarIcon.logout: () {}};
+    icons ??= <AppBarIcon, VoidCallback>{AppBarIcon.logout: () {}};
 
     for (AppBarIcon icon in icons.keys) {
-      _addIconButton(_iconsToAdd, icon, icons[icon]!, context!);
+      _addIconButton(_iconsToAdd, icon, icons[icon], context);
     }
 
     _visibleButtons.add(_iconsToAdd);
@@ -45,73 +45,73 @@ class ToolbarBloc extends BlocBase {
 
   /// Find the icon picture based on the input enum
   void _addIconButton(List<IconButton> _iconsToAdd, AppBarIcon icon,
-      VoidCallback callback, BuildContext context) {
+      VoidCallback? callback, BuildContext? context) {
     switch (icon) {
       case AppBarIcon.accept:
-        _iconsToAdd.add(_createIconAccept(callback));
+        _iconsToAdd.add(_createIconAccept(callback!));
         break;
       case AppBarIcon.add:
-        _iconsToAdd.add(_createIconAdd(callback));
+        _iconsToAdd.add(_createIconAdd(callback!));
         break;
       case AppBarIcon.addTimer:
-        _iconsToAdd.add(_createIconAddTimer(callback));
+        _iconsToAdd.add(_createIconAddTimer(callback!));
         break;
       case AppBarIcon.back:
-        _iconsToAdd.add(_createIconBack(context));
+        _iconsToAdd.add(_createIconBack(context!));
         break;
       case AppBarIcon.burgerMenu:
-        _iconsToAdd.add(_createIconBurgermenu(callback));
+        _iconsToAdd.add(_createIconBurgermenu(callback!));
         break;
       case AppBarIcon.camera:
-        _iconsToAdd.add(_createIconCamera(callback));
+        _iconsToAdd.add(_createIconCamera(callback!));
         break;
       case AppBarIcon.cancel:
-        _iconsToAdd.add(_createIconCancel(callback));
+        _iconsToAdd.add(_createIconCancel(callback!));
         break;
       case AppBarIcon.changeToCitizen:
-        _iconsToAdd.add(_createIconChangeToCitizen(context));
+        _iconsToAdd.add(_createIconChangeToCitizen(context!));
         break;
       case AppBarIcon.changeToGuardian:
-        _iconsToAdd.add(_createIconChangeToGuardian(context));
+        _iconsToAdd.add(_createIconChangeToGuardian(context!));
         break;
       case AppBarIcon.copy:
-        _iconsToAdd.add(_createIconCopy(callback));
+        _iconsToAdd.add(_createIconCopy(callback!));
         break;
       case AppBarIcon.delete:
-        _iconsToAdd.add(_createIconDelete(callback));
+        _iconsToAdd.add(_createIconDelete(callback!));
         break;
       case AppBarIcon.edit:
-        _iconsToAdd.add(_createIconEdit(callback));
+        _iconsToAdd.add(_createIconEdit(callback!));
         break;
       case AppBarIcon.help:
-        _iconsToAdd.add(_createIconHelp(callback));
+        _iconsToAdd.add(_createIconHelp(callback!));
         break;
       case AppBarIcon.home:
-        _iconsToAdd.add(_createIconHome(callback));
+        _iconsToAdd.add(_createIconHome(callback!));
         break;
       case AppBarIcon.logout:
         _iconsToAdd.add(_createIconLogout(context));
         break;
       case AppBarIcon.profile:
-        _iconsToAdd.add(_createIconProfile(callback));
+        _iconsToAdd.add(_createIconProfile(callback!));
         break;
       case AppBarIcon.redo:
-        _iconsToAdd.add(_createIconRedo(callback));
+        _iconsToAdd.add(_createIconRedo(callback!));
         break;
       case AppBarIcon.save:
-        _iconsToAdd.add(_createIconSave(callback));
+        _iconsToAdd.add(_createIconSave(callback!));
         break;
       case AppBarIcon.search:
-        _iconsToAdd.add(_createIconSearch(callback));
+        _iconsToAdd.add(_createIconSearch(callback!));
         break;
       case AppBarIcon.settings:
-        _iconsToAdd.add(_createIconSettings(callback));
+        _iconsToAdd.add(_createIconSettings(callback!));
         break;
       case AppBarIcon.undo:
-        _iconsToAdd.add(_createIconUndo(callback));
+        _iconsToAdd.add(_createIconUndo(callback!));
         break;
       case AppBarIcon.gallery:
-        _iconsToAdd.add(_createIconGallery(callback));
+        _iconsToAdd.add(_createIconGallery(callback!));
         break;
       default:
         throw Exception('IconButton not implemented');
@@ -329,14 +329,14 @@ class ToolbarBloc extends BlocBase {
     );
   }
 
-  IconButton _createIconLogout(BuildContext context) {
+  IconButton _createIconLogout(BuildContext? context) {
     return IconButton(
       icon: Image.asset('assets/icons/logout.png'),
       tooltip: 'Log ud',
       onPressed: () {
         showDialog<Center>(
             barrierDismissible: false,
-            context: context,
+            context: context!,
             builder: (BuildContext context) {
               return GirafConfirmDialog(
                 title: 'Log ud',

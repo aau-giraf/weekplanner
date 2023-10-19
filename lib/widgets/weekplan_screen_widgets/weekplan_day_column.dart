@@ -503,7 +503,7 @@ class WeekplanDayColumn extends StatelessWidget {
       } else {
         weekplanBloc.addMarkedActivity(activities[index]);
       }
-    } else if (activities[index].isChoiceBoard! &&
+    } else if (activities[index].isChoiceBoard &&
         isCitizen &&
         !(activities[index].state == ActivityState.Canceled)) {
       showDialog<Center>(
@@ -595,7 +595,7 @@ class WeekplanDayColumn extends StatelessWidget {
                                       order: weekday.activities!.length,
                                       state: ActivityState.Normal,
                                       isChoiceBoard: false,
-                                      title: object.title!),
+                                      title: object.title),
                                   weekday.day!.index);
                             }
                           });

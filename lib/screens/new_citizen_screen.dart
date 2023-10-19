@@ -41,13 +41,13 @@ class NewCitizenScreen extends StatefulWidget {
 
   final NewCitizenBloc _bloc;
 
-  Widget _displayImage(File image) {
+  Widget _displayImage(File? image) {
     return Container(
       //margin: const EdgeInsets.all(10.0),
       child: CircleAvatar(
         key: const Key('WidgetAvatar'),
         radius: 200,
-        backgroundImage: FileImage(image),
+        backgroundImage: FileImage(image!),
       ),
     );
   }
@@ -320,10 +320,10 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                         const ImageIcon(AssetImage('assets/icons/gallery.png')),
                     text: 'Tilføj fra galleri',
                     onPressed: widget._bloc.chooseImageFromGallery,
-                    child: StreamBuilder<File>(
+                    child: StreamBuilder<File?>(
                         stream: widget._bloc.file,
                         builder: (BuildContext context,
-                            AsyncSnapshot<File> snapshot) {
+                            AsyncSnapshot<File?> snapshot) {
                           final File? fileData = snapshot
                               .data; // Store the data in a local variable
                           return fileData != null
@@ -344,10 +344,10 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                           AssetImage('assets/icons/camera.png')),
                       text: 'Tag billede',
                       onPressed: widget._bloc.takePictureWithCamera,
-                      child: StreamBuilder<File>(
+                      child: StreamBuilder<File?>(
                           stream: widget._bloc.file,
                           builder: (BuildContext context,
-                              AsyncSnapshot<File> snapshot) {
+                              AsyncSnapshot<File?> snapshot) {
                             final File? fileData = snapshot
                                 .data; // Store the data in a local variable
                             return fileData != null
@@ -429,7 +429,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                                     widget._bloc.usernameController.value!,
                                     widget._bloc.displayNameController.value!,
                                     widget._bloc.encodePicture(
-                                            widget._bloc.fileController!.value)
+                                            widget._bloc.fileController.value)
                                         as Uint8List,
                                   )));
                     },

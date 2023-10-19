@@ -2,6 +2,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
@@ -56,7 +57,7 @@ final PictogramModel mockPictogram = PictogramModel(
     id: 1,
     lastEdit: null,
     title: 'title',
-    accessLevel: null,
+    accessLevel: AccessLevel.PROTECTED,
     imageUrl: 'http://any.tld',
     imageHash: null);
 

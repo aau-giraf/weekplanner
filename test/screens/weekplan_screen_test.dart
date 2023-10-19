@@ -16,7 +16,7 @@ import 'package:api_client/models/weekday_color_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/activity_bloc.dart';
@@ -932,7 +932,7 @@ void main() {
     }
 
     Future<void> _addActivityButtonsWork(WidgetTester tester) async {
-      when(api.pictogram.getAll(page: 1, pageSize: pageSize, query: ''))
+      when(() => api.pictogram.getAll(page: 1, pageSize: pageSize, query: ''))
           .thenAnswer((_) =>
               rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
                   <PictogramModel>[mockPictograms[0]]));

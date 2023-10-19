@@ -61,8 +61,8 @@ class WeekplanBloc extends BlocBase {
   Future<void> getWeek(WeekModel week, DisplayNameModel user) async {
     _api.week
         .get(user.id!, week.weekYear!, week.weekNumber!)
-        .listen((WeekModel? loadedWeek) {
-      _week = loadedWeek!;
+        .listen((WeekModel loadedWeek) {
+      _week = loadedWeek;
       _userWeek.add(UserWeekModel(loadedWeek, user));
     }).onError((Object error) {
       return Future<void>.error(error);
@@ -74,8 +74,8 @@ class WeekplanBloc extends BlocBase {
   Future<void> loadWeek(DisplayNameModel user) async {
     _api.week
         .get(user.id!, _week.weekYear!, _week.weekNumber!)
-        .listen((WeekModel? loadedWeek) {
-      _userWeek.add(UserWeekModel(loadedWeek!, user));
+        .listen((WeekModel loadedWeek) {
+      _userWeek.add(UserWeekModel(loadedWeek, user));
       _week = loadedWeek;
       for (int i = 0; i < _daysToDisplay; i++) {
         _weekDayStreams[i].add(loadedWeek.days![i - _firstDay]);
@@ -293,7 +293,7 @@ class WeekplanBloc extends BlocBase {
     int dayLength = _week.days![dayFrom.index].activities!.length;
 
     final List<WeekdayModel> daysToUpdate = <WeekdayModel>[];
-    for (int i = activity.order!; i < dayLength; i++) {
+    for (int i = activity.order; i < dayLength; i++) {
       final ActivityModel activityAtIndex =
           _week.days![dayTo.index].activities![i];
 
@@ -312,7 +312,7 @@ class WeekplanBloc extends BlocBase {
     // Inserts into dayTo, the day that the pictogram is inserted to
     dayLength = _week.days![dayTo.index].activities!.length;
 
-    for (int i = activity.order!; i < dayLength; i++) {
+    for (int i = activity.order; i < dayLength; i++) {
       final ActivityModel activityAtIndex =
           _week.days![dayTo.index].activities![i];
 
@@ -322,7 +322,7 @@ class WeekplanBloc extends BlocBase {
     if (dayFrom != dayTo) {
       daysToUpdate.add(_week.days![dayTo.index]);
     }
-    _week.days![dayTo.index].activities!.insert(activity.order!, activity);
+    _week.days![dayTo.index].activities!.insert(activity.order, activity);
 
     updateWeekdays(daysToUpdate).catchError((Object error) {
       return Future<void>.error(error);

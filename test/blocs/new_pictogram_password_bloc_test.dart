@@ -25,8 +25,8 @@ class MockUserApi extends Mock implements UserApi {
 class MockAccountApi extends Mock implements AccountApi {}
 
 void main() {
-  late NewPictogramPasswordBloc bloc;
-  late Api api;
+  Api api = Api('baseUrl');
+  NewPictogramPasswordBloc bloc = NewPictogramPasswordBloc(api);
 
   final GirafUserModel user = GirafUserModel(
       id: '1',
@@ -36,6 +36,10 @@ void main() {
       displayName: 'Birgit',
       username: 'b1337');
 
+  setUpAll(() {
+    registerFallbackValue(Role.Unknown);
+  });
+
   setUp(() {
     api = Api('any');
     api.user = MockUserApi();
@@ -43,11 +47,9 @@ void main() {
     bloc = NewPictogramPasswordBloc(api);
     bloc.initialize('testUser', 'testName', Uint8List(1));
 
-    when(api.account.register(
-            any as String, any as String, any as String, any as Uint8List,
-            departmentId: any(named: 'departmentId'),
-            role: any(named: 'role')) as Function())
-        .thenAnswer((_) {
+    when(() => api.account.register(any(), any(), any(), any(),
+        departmentId: any(named: 'departmentId'),
+        role: any(named: 'role'))).thenAnswer((_) {
       return Stream<GirafUserModel>.value(user);
     });
   });
@@ -56,7 +58,7 @@ void main() {
     bloc.onPictogramPasswordChanged.add('1111');
     bloc.createCitizen();
 
-    verify(bloc.createCitizen() as Function());
+    verify(() => bloc.createCitizen());
     done();
   }));
 

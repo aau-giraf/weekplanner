@@ -12,7 +12,7 @@ import 'package:api_client/models/settings_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
@@ -58,7 +58,7 @@ void main() {
       order: 0,
       state: ActivityState.Normal,
       isChoiceBoard: false,
-      title: pictogramModel.title!);
+      title: pictogramModel.title);
 
   setUp(() {
     di.clearAll();
@@ -95,7 +95,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(Container), findsOneWidget);
-    final String title = pictogramModel.title!;
+    final String title = pictogramModel.title;
     expect(find.text(title.toUpperCase()), findsNothing);
   });
 

@@ -23,7 +23,7 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_color_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 
 import 'test_image.dart';
@@ -60,8 +60,8 @@ class MockData {
         thumbnail: PictogramModel(
             imageUrl: null,
             imageHash: null,
-            accessLevel: null,
-            title: null,
+            accessLevel: AccessLevel.PRIVATE,
+            title: 'null',
             id: null,
             lastEdit: null),
         days: <WeekdayModel>[
@@ -161,7 +161,7 @@ class MockData {
                 imageUrl: null,
                 lastEdit: null)
           ],
-          title: mockPictograms.first.title!),
+          title: mockPictograms.first.title),
       ActivityModel(
           id: 1,
           state: ActivityState.Normal,
@@ -176,7 +176,7 @@ class MockData {
                 imageUrl: null,
                 lastEdit: null)
           ],
-          title: mockPictograms.first.title!),
+          title: mockPictograms.first.title),
       ActivityModel(
           id: 2,
           state: ActivityState.Normal,
@@ -196,7 +196,7 @@ class MockData {
               progress: 0,
               fullLength: 10,
               paused: true),
-          title: mockPictograms.first.title!),
+          title: mockPictograms.first.title),
       ActivityModel(
           id: 3,
           state: ActivityState.Normal,
@@ -219,7 +219,7 @@ class MockData {
                 imageUrl: null,
                 lastEdit: null)
           ],
-          title: mockPictograms.first.title!)
+          title: mockPictograms.first.title)
     ];
   }
 }

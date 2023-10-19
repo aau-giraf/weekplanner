@@ -14,8 +14,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 
-class MockSettingsApi extends Mock implements UserApi {}
-
 class MockUserApi extends Mock implements UserApi {
   @override
   Stream<GirafUserModel> get(String id) {
@@ -30,9 +28,15 @@ class MockUserApi extends Mock implements UserApi {
   }
 }
 
+class MockSettingsModel extends Mock implements SettingsModel {}
+
 void main() {
-  SettingsBloc? settingsBloc;
-  Api? api;
+  setUpAll(() {
+    registerFallbackValue(MockSettingsModel());
+  });
+
+  Api api = Api('any');
+  SettingsBloc settingsBloc = SettingsBloc(api);
 
   final DisplayNameModel user = DisplayNameModel(
       role: Role.Citizen.toString(), displayName: 'Citizen', id: '1');
@@ -65,17 +69,15 @@ void main() {
 
   setUp(() {
     api = Api('any');
-    api!.user = MockUserApi();
+    api.user = MockUserApi();
 
     // Mocks the api call to get settings
-    when(api!.user.getSettings(any as String) as Function())
-        .thenAnswer((Invocation inv) {
+    when(() => api.user.getSettings(any())).thenAnswer((Invocation inv) {
       return Stream<SettingsModel>.value(settings);
     });
 
     // Mocks the api call to update settings
-    when(api!.user.updateSettings(any as String, any as SettingsModel)
-            as Function())
+    when(() => api.user.updateSettings(any(), any()))
         .thenAnswer((Invocation inv) {
       settings = updatedSettings;
       return Stream<bool>.value(true);
@@ -85,29 +87,29 @@ void main() {
   });
 
   test('Can load settings from username model', async((DoneFn done) {
-    settingsBloc!.settings.listen((SettingsModel? response) {
+    settingsBloc.settings.listen((SettingsModel? response) {
       expect(response, isNotNull);
       expect(response!.toJson(), equals(settings.toJson()));
-      verify(api!.user.getSettings(any as String) as Function());
+      verify(() => api.user.getSettings(any()));
       done();
     });
 
-    settingsBloc!.loadSettings(user);
+    settingsBloc.loadSettings(user);
   }));
 
   test('Can update settings', async((DoneFn done) {
-    settingsBloc!.settings.listen((SettingsModel? loadedSettings) {
+    settingsBloc.settings.listen((SettingsModel? loadedSettings) {
       expect(loadedSettings, isNotNull);
       expect(loadedSettings!.toJson(), equals(updatedSettings.toJson()));
       done();
     });
 
-    settingsBloc!.updateSettings(user.id!, settings);
-    settingsBloc!.loadSettings(user);
+    settingsBloc.updateSettings(user.id!, settings);
+    settingsBloc.loadSettings(user);
   }));
 
   test('Should dispose stream', async((DoneFn done) {
-    settingsBloc!.settings.listen((_) {}, onDone: done);
-    settingsBloc!.dispose();
+    settingsBloc.settings.listen((_) {}, onDone: done);
+    settingsBloc.dispose();
   }));
 }

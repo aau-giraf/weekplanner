@@ -27,8 +27,8 @@ class CopyResolveBloc extends NewWeekplanBloc {
 
     newWeekModel.thumbnail = super.thumbnailController.value;
     newWeekModel.name = super.titleController.value;
-    newWeekModel.weekYear = int.parse(super.yearController.value);
-    newWeekModel.weekNumber = int.parse(super.weekNoController.value);
+    newWeekModel.weekYear = int.parse(super.yearController.value!);
+    newWeekModel.weekNumber = int.parse(super.weekNoController.value!);
 
     return newWeekModel;
   }

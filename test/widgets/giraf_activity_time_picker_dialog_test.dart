@@ -5,7 +5,7 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/timer_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/widgets/giraf_activity_time_picker_dialog.dart';

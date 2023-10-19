@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:api_client/api/account_api.dart';
 import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/api/user_api.dart';
@@ -11,7 +9,7 @@ import 'package:api_client/persistence/persistence_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -30,8 +28,8 @@ class MockAccountApi extends AccountApi {
   /// if 'username' == alreadyExists. Returns a normal GirafUserModel otherwise
   @override
   Stream<GirafUserModel> register(String username, String password,
-      String displayName, Uint8List profilePicture,
-      {required int? departmentId, required Role? role}) {
+      String displayName, List<int>? profilePicture,
+      {required int departmentId, required Role role}) {
     final Map<String, dynamic> body = <String, dynamic>{
       'username': username,
       'displayName': displayName,

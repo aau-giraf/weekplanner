@@ -40,7 +40,7 @@ class ShowActivityScreen extends StatelessWidget {
       this._timerBloc, this._weekday,
       {required Key key})
       : super(key: key) {
-    _pictoImageBloc.load(_activity.pictograms!.first);
+    _pictoImageBloc.load(_activity.pictograms.first);
     _activityBloc.load(_activity, _girafUser);
     _activityBloc.accesWeekPlanBloc(_weekplanBloc, _weekday);
     _settingsBloc.loadSettings(_girafUser);
@@ -242,7 +242,7 @@ class ShowActivityScreen extends StatelessWidget {
                             _activityBloc.load(_activity, _girafUser);
                             final PictogramModel newPictogram = object;
                             _activity.isChoiceBoard = true;
-                            _activity.pictograms!.add(newPictogram);
+                            _activity.pictograms.add(newPictogram);
                             _activityBloc.update();
                           }
                         });
@@ -382,7 +382,7 @@ class ShowActivityScreen extends StatelessWidget {
         child: Column(children: <Widget>[
       const Center(child: Padding(padding: EdgeInsets.all(8.0))),
       Visibility(
-        visible: _activity.isChoiceBoard!,
+        visible: _activity.isChoiceBoard,
         child: Row(
           children: <Widget>[
             Flexible(
@@ -445,18 +445,16 @@ class ShowActivityScreen extends StatelessWidget {
                                             MediaQuery.of(context).size.width,
                                         height:
                                             MediaQuery.of(context).size.width,
-                                        child: _activity.isChoiceBoard!
+                                        child: _activity.isChoiceBoard
                                             ? ChoiceBoard(_activity,
                                                 _activityBloc, _girafUser)
                                             : buildLoadPictogramImage()),
-                                    _buildActivityStateIcon(
-                                        context,
-                                        snapshot1.data!.state!,
-                                        snapshot2.data!),
+                                    _buildActivityStateIcon(context,
+                                        snapshot1.data!.state, snapshot2.data!),
                                   ],
                                 ),
                                 Visibility(
-                                  visible: !_activity.isChoiceBoard!,
+                                  visible: !_activity.isChoiceBoard,
                                   child: PictogramText(_activity, _girafUser,
                                       minFontSize: 50),
                                 ),
@@ -466,7 +464,7 @@ class ShowActivityScreen extends StatelessWidget {
                     }))),
       ),
       buildButtonBar(),
-      _activityBloc.getActivity().isChoiceBoard!
+      _activityBloc.getActivity().isChoiceBoard
           ? Container()
           : buildInputField(context)
     ]));
@@ -609,7 +607,7 @@ class ShowActivityScreen extends StatelessWidget {
                         break;
                       }
                     default:
-                      break; //FIXME: case here?
+                      break;
                   }
                 },
                 icon: (timerRunningSnapshot.hasData
@@ -779,9 +777,7 @@ class ShowActivityScreen extends StatelessWidget {
                                 color: theme.GirafColors.blue),
                       );
 
-                      if (_activity.isChoiceBoard != null &&
-                          _activity.isChoiceBoard.toString() != '') {
-                        // FIXME: dunno if .toString works here
+                      if (_activity.isChoiceBoard.toString() != '') {
                         return Container(
                             child: Row(children: <Widget>[cancelButton]));
                       } else {
@@ -866,7 +862,7 @@ class ShowActivityScreen extends StatelessWidget {
 
   /// Creates a pictogram image from the streambuilder
   Widget buildLoadPictogramImage() {
-    _pictoImageBloc.load(_activityBloc.getActivity().pictograms!.first);
+    _pictoImageBloc.load(_activityBloc.getActivity().pictograms.first);
     return StreamBuilder<Image>(
       stream: _pictoImageBloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {

@@ -1,3 +1,5 @@
+@Timeout(Duration(seconds: 5))
+
 import 'package:api_client/api/api.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +10,8 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 
 void main() {
+  Api api = Api('baseUrl');
   late ToolbarBloc bloc;
-  late Api api;
 
   setUp(() {
     di.clearAll();

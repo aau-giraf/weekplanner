@@ -4,7 +4,7 @@ import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 
@@ -18,9 +18,9 @@ class MockPictogramApi extends Mock implements PictogramApi {
 }
 
 void main() {
-  late PictogramBloc bloc;
-  late Api api;
-  late MockPictogramApi pictogramApi;
+  Api api = Api('baseUrl');
+  PictogramBloc bloc = PictogramBloc(api);
+  MockPictogramApi pictogramApi = MockPictogramApi();
 
   setUp(() {
     api = Api('any');
@@ -33,18 +33,19 @@ void main() {
     const String query = 'Kat';
     int count = 0;
 
-    when(pictogramApi.getAll(
+    when(() => pictogramApi.getAll(
             page: bloc.latestPage, pageSize: pageSize, query: query))
         .thenAnswer((_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[]));
 
-    bloc.pictograms.listen((List<PictogramModel> response) {
+    bloc.pictograms.listen((List<PictogramModel>? response) {
       switch (count) {
         case 0:
           expect(response, isNull);
+          done();
           break;
         case 1:
-          verify(pictogramApi.getAll(
+          verify(() => pictogramApi.getAll(
               page: bloc.latestPage, pageSize: pageSize, query: query));
           done();
           break;

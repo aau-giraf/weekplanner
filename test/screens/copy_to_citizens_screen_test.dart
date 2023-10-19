@@ -5,9 +5,11 @@ import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:api_client/models/weekday_model.dart';
@@ -54,9 +56,9 @@ class MockWeekApi extends Mock implements WeekApi {
     final WeekModel weekModel = WeekModel(days: <WeekdayModel>[
       WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[
         ActivityModel(
-            pictograms: null,
+            pictograms: <PictogramModel>[],
             order: 1,
-            state: null,
+            state: ActivityState.Normal,
             isChoiceBoard: false,
             id: 1)
       ])
