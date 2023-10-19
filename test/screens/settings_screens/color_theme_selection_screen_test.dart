@@ -10,7 +10,7 @@ import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/weekday_color_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -54,12 +54,12 @@ class MockUserApi extends Mock implements UserApi, NavigatorObserver {
   }
 }
 
-SettingsModel mockSettings;
+late SettingsModel mockSettings;
 
 void main() {
-  Api api;
-  SettingsBloc settingsBloc;
-  NavigatorObserver mockObserver;
+  late Api api;
+  late SettingsBloc settingsBloc;
+  late NavigatorObserver mockObserver;
 
   final DisplayNameModel user = DisplayNameModel(
       displayName: 'Anders And', id: '101', role: Role.Guardian.toString());
@@ -81,9 +81,12 @@ void main() {
       showPopup: false,
       showOnlyActivities: false,
       showSettingsForCitizen: false,
-      weekDayColors: MockUserApi.createWeekDayColors(),);
+      weekDayColors: MockUserApi.createWeekDayColors(),
+    );
 
-    when(api.user.updateSettings(any, any)).thenAnswer((_) {
+    when(api.user.updateSettings(any as String, any as SettingsModel)
+            as Function())
+        .thenAnswer((_) {
       return Stream<bool>.value(true);
     });
 
@@ -119,16 +122,16 @@ void main() {
     await tester
         .pumpWidget(MaterialApp(home: ColorThemeSelectorScreen(user: user)));
 
-    settingsBloc.settings.listen((SettingsModel response) {
+    settingsBloc.settings.listen((SettingsModel? response) {
       expect(response, isNotNull);
 
       final List<WeekdayColorModel> expectedList =
           MockUserApi.createWeekDayColors();
 
-      for (int i = 0; i < response.weekDayColors.length; i++) {
-        expect(response.weekDayColors[i].hexColor == expectedList[i].hexColor,
+      for (int i = 0; i < response!.weekDayColors!.length; i++) {
+        expect(response.weekDayColors?[i].hexColor == expectedList[i].hexColor,
             isTrue);
-        expect(response.weekDayColors[i].day == expectedList[i].day, isTrue);
+        expect(response.weekDayColors?[i].day == expectedList[i].day, isTrue);
       }
     });
   });
@@ -200,21 +203,19 @@ void main() {
   });
 
   testWidgets('Has color theme selection screen been popped',
-          (WidgetTester tester) async{
-        await tester.pumpWidget(MaterialApp(
-            home: ColorThemeSelectorScreen(user: user),
-            // ignore: always_specify_types
-            navigatorObservers: [mockObserver]
-        ));
-        verify(mockObserver.didPush(any, any));
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+        home: ColorThemeSelectorScreen(user: user),
+        // ignore: always_specify_types
+        navigatorObservers: [mockObserver]));
+    verify(() => mockObserver.didPush(any(), any()));
 
-        await tester.pumpAndSettle();
-        expect(find.byType(SettingsColorThemeCheckMarkButton),
-            findsNWidgets(3));
+    await tester.pumpAndSettle();
+    expect(find.byType(SettingsColorThemeCheckMarkButton), findsNWidgets(3));
 
-        await tester.pump();
-        await tester.tap(find.byType(SettingsColorThemeCheckMarkButton).first);
-        await tester.pump();
-        verify(mockObserver.didPop(any, any));
-      });
+    await tester.pump();
+    await tester.tap(find.byType(SettingsColorThemeCheckMarkButton).first);
+    await tester.pump();
+    verify(() => mockObserver.didPop(any(), any()));
+  });
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -27,8 +29,7 @@ import '../style/custom_color.dart' as theme;
 class WeekplanSelectorScreen extends StatefulWidget {
   /// Constructor for weekplan selector screen.
   /// Requires a user to load weekplans
-  WeekplanSelectorScreen(this._user)
-      : _weekBloc = di.get<WeekplansBloc>() {
+  WeekplanSelectorScreen(this._user) : _weekBloc = di.get<WeekplansBloc>() {
     _weekBloc.load(_user, true);
   }
 
@@ -54,7 +55,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: GirafAppBar(
-          title: widget._user.displayName,
+          key: const ValueKey<String>('weekplanSelectorKey'),
+          title: widget._user.displayName ?? 'No Name',
           appBarIcons: <AppBarIcon, VoidCallback>{
             AppBarIcon.edit: () => widget._weekBloc.toggleEditMode(),
             AppBarIcon.logout: () {},
@@ -66,7 +68,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
           stream: widget._weekBloc.editMode,
           initialData: false,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            if (snapshot.data) {
+            if (snapshot.data!) {
               return _buildBottomAppBar(context);
             } else {
               return Container(width: 0.0, height: 0.0);
@@ -75,6 +77,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
         ),
         body: _buildWeekplanColumnview(context));
   }
+
   // Entire screen
   Widget _buildWeekplanColumnview(BuildContext context) {
     final Stream<List<WeekModel>> weekModels = widget._weekBloc.weekModels;
@@ -82,7 +85,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
         widget._weekBloc.oldWeekModels;
     // Container which holds all of the UI elements on the screen
     return Container(
-      child: Column(children: <Widget>[
+        child: Column(children: <Widget>[
       Expanded(
           flex: 5, child: _buildWeekplanGridview(context, weekModels, true)),
       // Overstået Uger bar
@@ -103,8 +106,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                 overflow: TextOverflow.ellipsis,
               ),
               showOldWeeks
-              // Icons for showing and hiding the old weeks are inside this
-              // When the old weeks are shown, show the hide icon
+                  // Icons for showing and hiding the old weeks are inside this
+                  // When the old weeks are shown, show the hide icon
                   ? Expanded(
                       flex: 1,
                       child: IconButton(
@@ -118,8 +121,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                         },
                       ),
                     )
-              // Icons for showing and hiding the old weeks are inside this
-              // When the old weeks are hidden, show the hide icon
+                  // Icons for showing and hiding the old weeks are inside this
+                  // When the old weeks are hidden, show the hide icon
                   : Expanded(
                       flex: 1,
                       child: IconButton(
@@ -141,14 +144,16 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
         },
       ),
 
-        Visibility(
+      Visibility(
           visible: showOldWeeks,
-            child: Expanded(
+          child: Expanded(
               flex: 5,
-              child: Container( // Container with old weeks if shown
-                // Background color of the old weeks
-                color: Colors.grey.shade600,
-                child: _buildWeekplanGridview(context, oldWeekModels, false))))
+              child: Container(
+                  // Container with old weeks if shown
+                  // Background color of the old weeks
+                  color: Colors.grey.shade600,
+                  child:
+                      _buildWeekplanGridview(context, oldWeekModels, false))))
     ]));
   }
 
@@ -178,12 +183,12 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                         MediaQuery.of(context).size.width / 100 * 1.5,
                     mainAxisSpacing:
                         MediaQuery.of(context).size.width / 100 * 1.5,
-                    children: weekplansSnapshot.data.map((WeekModel weekplan) {
+                    children: weekplansSnapshot.data!.map((WeekModel weekplan) {
                       return _buildWeekPlanSelector(
                           context,
                           weekplan,
                           markedWeeksSnapshot.hasData &&
-                              markedWeeksSnapshot.data.contains(weekplan),
+                              markedWeeksSnapshot.data!.contains(weekplan),
                           isUpcomingWeekplan);
                     }).toList());
               });
@@ -195,7 +200,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
     final PictogramImageBloc bloc = di.get<PictogramImageBloc>();
 
     if (weekplan.thumbnail != null) {
-      bloc.loadPictogramById(weekplan.thumbnail.id);
+      bloc.loadPictogramById(weekplan.thumbnail!.id);
     }
 
     if (isMarked) {
@@ -226,9 +231,9 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
         builder:
             (BuildContext context, AsyncSnapshot<bool> inEditModeSnapshot) {
           return GestureDetector(
-              key: Key(weekplan.name),
+              key: Key(weekplan.name!),
               onTap: () =>
-                  handleOnTap(context, weekplan, inEditModeSnapshot.data),
+                  handleOnTap(context, weekplan, inEditModeSnapshot.data!),
               child: ColorFiltered(
                 // Color of each of the Overstået Uger cards
                 colorFilter: ColorFilter.mode(Colors.grey.shade400,
@@ -253,7 +258,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                     Expanded(child: LayoutBuilder(builder:
                         (BuildContext context, BoxConstraints constraints) {
                       return AutoSizeText(
-                        weekplan.name,
+                        weekplan.name!,
                         style: const TextStyle(fontSize: GirafFont.small),
                         maxLines: 1,
                         minFontSize: 14,
@@ -297,14 +302,16 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
 
   /// Handles on tap on a add new weekplan card
   void handleOnTapWeekPlanAdd(BuildContext context) {
-    Routes().push<WeekModel>(
-      context,
-      NewWeekplanScreen(
-        user: widget._user,
-        existingWeekPlans: widget._weekBloc.weekNameModels,
-      ),
-    ).then(
-        (WeekModel newWeekPlan) => widget._weekBloc.load(widget._user, true));
+    Routes()
+        .push<WeekModel>(
+          context,
+          NewWeekplanScreen(
+            user: widget._user,
+            existingWeekPlans: widget._weekBloc.weekNameModels,
+          ),
+        )
+        .then((WeekModel? newWeekPlan) =>
+            widget._weekBloc.load(widget._user, true));
   }
 
   /// Handles on tap on a weekplan card
@@ -313,7 +320,14 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
     if (inEditMode) {
       widget._weekBloc.toggleMarkedWeekModel(weekplan);
     } else {
-      Routes().push(context, WeekplanScreen(weekplan, widget._user))
+      Routes()
+          .push(
+              context,
+              WeekplanScreen(
+                weekplan,
+                widget._user,
+                key: UniqueKey(),
+              ))
           .then((_) => widget._weekBloc.load(widget._user, true));
     }
   }
@@ -363,11 +377,13 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                           const ImageIcon(AssetImage('assets/icons/edit.png')),
                       onPressed: () async => _pushEditWeekPlan(context)),
                   BottomAppBarButton(
+                      key: const Key('copyButtonKey'),
                       buttonText: 'Kopiér',
                       buttonKey: 'CopyWeekplanButton',
                       assetPath: 'assets/icons/copy.png',
                       dialogFunction: _buildCopyDialog),
                   BottomAppBarButton(
+                      key: const Key('deleteButtonKey'),
                       buttonText: 'Slet',
                       buttonKey: 'DeleteActivtiesButton',
                       assetPath: 'assets/icons/delete.png',
@@ -394,22 +410,27 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
           barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
-            return const GirafNotifyDialog(
-                title: 'Fejl', description: description);
+            return GirafNotifyDialog(
+              title: 'Fejl',
+              description: description,
+              key: UniqueKey(),
+            );
           });
       return;
     }
     if (markedCount < 1) {
       return;
     }
-    await Routes().push<WeekModel>(
+    await Routes()
+        .push<WeekModel>(
       context,
       EditWeekPlanScreen(
         user: widget._user,
         weekModel: widget._weekBloc.getMarkedWeekModels()[0],
         selectorBloc: widget._weekBloc,
       ),
-    ).then((WeekModel newWeek) {
+    )
+        .then((WeekModel? newWeek) {
       widget._weekBloc.load(widget._user, true);
       widget._weekBloc.toggleEditMode();
       widget._weekBloc.clearMarkedWeekModels();
@@ -420,35 +441,31 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
   }
 
   ///Builds dialog box to select where to copy weekplan or cancel
-  Future<Center> _buildCopyDialog(BuildContext context) async {
+  Future<Center?> _buildCopyDialog(BuildContext context) async {
     if (widget._weekBloc.getNumberOfMarkedWeekModels() < 1) {
       return null;
-    }
-    else if (widget._weekBloc.getNumberOfMarkedWeekModels() != 1){
+    } else if (widget._weekBloc.getNumberOfMarkedWeekModels() != 1) {
       final List<WeekModel> weekModelList =
-        await widget._weekBloc.getMarkedWeeks();
+          await widget._weekBloc.getMarkedWeeks();
       return showDialog<Center>(
           barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
             return GirafConfirmDialog(
-              title: 'Kopiér ugeplaner',
-              description: 'Hvor vil du kopiére de valgte ugeplaner hen?',
-              confirmButtonText: 'Andre borgere',
-              confirmButtonIcon:
-                const ImageIcon(AssetImage('assets/icons/copy.png')),
-              confirmOnPressed: () {
-                Routes().push(
-                    context, CopyToCitizensScreen(
-                    weekModelList, widget._user));
-              },
-            );
-          }
-      );
-    }
-    else{
+                title: 'Kopiér ugeplaner',
+                description: 'Hvor vil du kopiére de valgte ugeplaner hen?',
+                confirmButtonText: 'Andre borgere',
+                confirmButtonIcon:
+                    const ImageIcon(AssetImage('assets/icons/copy.png')),
+                confirmOnPressed: () {
+                  Routes().push(context,
+                      CopyToCitizensScreen(weekModelList, widget._user));
+                },
+                key: UniqueKey());
+          });
+    } else {
       final List<WeekModel> weekModelList =
-        await widget._weekBloc.getMarkedWeeks();
+          await widget._weekBloc.getMarkedWeeks();
       return showDialog<Center>(
           barrierDismissible: false,
           context: context,
@@ -459,34 +476,35 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
               option1Text: 'Andre borgere',
               option1OnPressed: () {
                 Routes().push(
-                    context, CopyToCitizensScreen(
-                    weekModelList, widget._user));
+                    context, CopyToCitizensScreen(weekModelList, widget._user));
               },
               option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
               option2Text: 'Denne borger',
               option2OnPressed: () {
-                  widget._weekBloc.getMarkedWeekModel().then((
-                      WeekModel weekmodel) {
-                    Routes().push(
-                    context,
-                    CopyResolveScreen(
-                    currentUser: widget._user,
-                    weekModel: weekmodel,
-                    forThisCitizen: true,
-                    ));
-                  });
+                widget._weekBloc
+                    .getMarkedWeekModel()
+                    .then((WeekModel weekmodel) {
+                  Routes().push(
+                      context,
+                      CopyResolveScreen(
+                        currentUser: widget._user,
+                        weekModel: weekmodel,
+                        forThisCitizen: true,
+                      ));
+                });
               },
               option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
+              key: UniqueKey(),
             );
           });
     }
   }
 
   /// Builds dialog box to confirm/cancel deletion
-  Future<Center> _buildDeletionDialog(BuildContext context) {
-    if (widget._weekBloc.getNumberOfMarkedWeekModels() == 0) {
-      return null;
-    }
+  Future<Center?> _buildDeletionDialog(BuildContext context) {
+    // if (widget._weekBloc.getNumberOfMarkedWeekModels() == 0) {
+    //   return null;
+    // } // FIXME: Handle this
 
     return showDialog<Center>(
         barrierDismissible: false,
@@ -496,8 +514,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
               title: 'Slet ugeplaner',
               description: 'Vil du slette ' +
                   widget._weekBloc.getNumberOfMarkedWeekModels().toString() +
-                  '${widget._weekBloc.getNumberOfMarkedWeekModels() == 1
-                      ? ' ugeplan' : ' ugeplaner'}?',
+                  '${widget._weekBloc.getNumberOfMarkedWeekModels() == 1 ? ' ugeplan' : ' ugeplaner'}?',
               confirmButtonText: 'Slet',
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/delete.png')),
@@ -507,7 +524,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
 
                 // Closes the dialog box
                 Routes().pop(context);
-              });
+              },
+              key: UniqueKey());
         });
   }
 }

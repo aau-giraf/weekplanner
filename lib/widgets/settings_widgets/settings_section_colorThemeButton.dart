@@ -19,7 +19,7 @@ class SettingsColorThemeCheckMarkButton extends SettingsSectionItem {
 
   @override
   Widget build(BuildContext context) {
-    Widget trailing;
+    Widget? trailing;
     if (hasCheckMark()) {
       trailing = const Icon(Icons.check, color: theme.GirafColors.black);
     } else {
@@ -29,7 +29,8 @@ class SettingsColorThemeCheckMarkButton extends SettingsSectionItem {
     return ListTile(
       title: Row(
         children: <Widget>[
-          ThemeBox.fromHexValues(_expected[0].hexColor, _expected[1].hexColor),
+          ThemeBox.fromHexValues(
+              _expected[0].hexColor!, _expected[1].hexColor!),
           Text(text),
         ],
       ),
@@ -40,9 +41,7 @@ class SettingsColorThemeCheckMarkButton extends SettingsSectionItem {
 
   /// Checks if the button has been chosen
   bool hasCheckMark() {
-    if (_expected != null &&
-        _current != null &&
-        _expected.length == _current.length) {
+    if (_expected.length == _current.length) {
       for (int i = 0; i < _expected.length; i++) {
         if (_expected[i].hexColor != _current[i].hexColor ||
             _expected[i].day != _current[i].day) {

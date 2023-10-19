@@ -31,36 +31,36 @@ class NewWeekplanBloc extends BlocBase {
   /// This field is used to get the userId. Accessed in
   /// [edit_weekplan_bloc].
   @protected
-  DisplayNameModel weekUser;
+  DisplayNameModel? weekUser;
 
   /// This field controls the title input field
   @protected
-  final rx_dart.BehaviorSubject<String> titleController =
-  rx_dart.BehaviorSubject<String>();
+  final rx_dart.BehaviorSubject<String?> titleController =
+      rx_dart.BehaviorSubject<String?>();
 
   /// This field controls the year no input field
   @protected
-  final rx_dart.BehaviorSubject<String> yearController =
-  rx_dart.BehaviorSubject<String>();
+  final rx_dart.BehaviorSubject<String?> yearController =
+      rx_dart.BehaviorSubject<String?>();
 
   /// This field controls the week no input field
   @protected
-  final rx_dart.BehaviorSubject<String> weekNoController =
-  rx_dart.BehaviorSubject<String>();
+  final rx_dart.BehaviorSubject<String?> weekNoController =
+      rx_dart.BehaviorSubject<String?>();
 
   /// This field controls the pictogram input field
   @protected
-  final rx_dart.BehaviorSubject<PictogramModel> thumbnailController =
-  rx_dart.BehaviorSubject<PictogramModel>();
+  final rx_dart.BehaviorSubject<PictogramModel?> thumbnailController =
+      rx_dart.BehaviorSubject<PictogramModel?>();
 
   /// Handles when the entered title is changed.
-  Sink<String> get onTitleChanged => titleController.sink;
+  Sink<String?> get onTitleChanged => titleController.sink;
 
   /// Handles when the entered year is changed.
-  Sink<String> get onYearChanged => yearController.sink;
+  Sink<String?> get onYearChanged => yearController.sink;
 
   /// Handles when the entered week number is changed.
-  Sink<String> get onWeekNumberChanged => weekNoController.sink;
+  Sink<String?> get onWeekNumberChanged => weekNoController.sink;
 
   /// Emits a [WeekNameModel] when it has a title, year, and week.
   /// If any input is invalid, emits null.
@@ -72,7 +72,7 @@ class NewWeekplanBloc extends BlocBase {
       _combineWeekNameModel);
 
   /// Handles when the thumbnail is changed.
-  Sink<PictogramModel> get onThumbnailChanged => thumbnailController.sink;
+  Sink<PictogramModel?> get onThumbnailChanged => thumbnailController.sink;
 
   /// Gives information about whether the entered title is valid.
   /// Values can be true (valid), false (invalid) and null (initial value).
@@ -90,11 +90,11 @@ class NewWeekplanBloc extends BlocBase {
       weekNoController.stream.transform(_weekNumberValidation);
 
   /// Streams the chosen thumbnail.
-  Stream<PictogramModel> get thumbnailStream => thumbnailController.stream;
+  Stream<PictogramModel?> get thumbnailStream => thumbnailController.stream;
 
   /// Gives information about whether all inputs are valid.
   Stream<bool> get allInputsAreValidStream =>
-      rx_dart.Rx.combineLatest4<bool, bool, bool, PictogramModel, bool>(
+      rx_dart.Rx.combineLatest4<bool, bool, bool, PictogramModel?, bool>(
               validTitleStream,
               validYearStream,
               validWeekNumberStream,
@@ -114,17 +114,18 @@ class NewWeekplanBloc extends BlocBase {
 
   /// Saves the entered information to the database.
   Future<WeekModel> saveWeekplan({
-    @required BuildContext screenContext,
-    @required Stream<List<WeekNameModel>> existingWeekPlans,
+    required BuildContext? screenContext,
+    required Stream<List<WeekNameModel>?> existingWeekPlans,
   }) async {
     if (weekUser == null) {
+      // ignore: null_argument_to_non_null_type
       return Future<WeekModel>.value(null);
     }
 
-    final String _title = titleController.value;
-    final int _year = int.parse(yearController.value);
-    final int _weekNumber = int.parse(weekNoController.value);
-    final PictogramModel _thumbnail = thumbnailController.value;
+    final String? _title = titleController.value;
+    final int _year = int.parse(yearController.value!);
+    final int _weekNumber = int.parse(weekNoController.value!);
+    final PictogramModel? _thumbnail = thumbnailController.value;
 
     final WeekModel _weekModel = WeekModel(
         thumbnail: _thumbnail,
@@ -151,17 +152,18 @@ class NewWeekplanBloc extends BlocBase {
     // If there is a match, ask the user if we should overwrite.
     if (hasExistingMatch) {
       doOverwrite =
-          await displayOverwriteDialog(screenContext, _weekNumber, _year);
+          await displayOverwriteDialog(screenContext!, _weekNumber, _year);
     }
 
     final Completer<WeekModel> saveCompleter = Completer<WeekModel>();
     if (doOverwrite) {
       weekApi.week
-          .update(weekUser.id, _weekModel.weekYear, _weekModel.weekNumber,
+          .update(weekUser!.id!, _weekModel.weekYear!, _weekModel.weekNumber!,
               _weekModel)
           .take(1)
           .listen(saveCompleter.complete);
     } else {
+      // ignore: null_argument_to_non_null_type
       saveCompleter.complete(null);
     }
 
@@ -171,17 +173,17 @@ class NewWeekplanBloc extends BlocBase {
   /// Returns a [Future] that resolves to true if there is a matching week plan
   /// with the same year and week number.
   Future<bool> hasExisitingMatchingWeekplan({
-    @required Stream<List<WeekNameModel>> existingWeekPlans,
-    @required int year,
-    @required int weekNumber,
+    required Stream<List<WeekNameModel>?> existingWeekPlans,
+    required int year,
+    required int weekNumber,
   }) {
     final Completer<bool> matchCompleter = Completer<bool>();
 
     bool hasMatch = false;
 
-    existingWeekPlans.take(1).listen((List<WeekNameModel> existingPlans) {
-      for (WeekNameModel existingPlan in existingPlans) {
-        if (existingPlan.weekYear == year &&
+    existingWeekPlans!.take(1).listen((List<WeekNameModel>? existingPlans) {
+      for (WeekNameModel? existingPlan in existingPlans!) {
+        if (existingPlan!.weekYear == year &&
             existingPlan.weekNumber == weekNumber) {
           hasMatch = true;
         }
@@ -225,8 +227,8 @@ class NewWeekplanBloc extends BlocBase {
     return dialogCompleter.future;
   }
 
-  /// Resets the bloc to its default values.
-  /// The bloc should be reset after each use.
+  // Resets the bloc to its default values.
+  // The bloc should be reset after each use.
   void resetBloc() {
     weekUser = null;
     titleController.sink.add(null);
@@ -236,50 +238,50 @@ class NewWeekplanBloc extends BlocBase {
   }
 
   WeekNameModel _combineWeekNameModel(
-      bool isValid, String name, String year, String week) {
-    if (!isValid) {
-      return null;
-    }
+      bool isValid, String? name, String? year, String? week) {
+    // if (!isValid) {
+    //   return null;
+    // }
     return WeekNameModel(
-        name: name, weekYear: int.parse(year), weekNumber: int.parse(week));
+        name: name, weekYear: int.parse(year!), weekNumber: int.parse(week!));
   }
 
   bool _isAllInputValid(
-      bool title, bool year, bool weekNumber, PictogramModel thumbnail) {
+      bool title, bool year, bool weekNumber, PictogramModel? thumbnail) {
     return title == true &&
         year == true &&
         weekNumber == true &&
         thumbnail != null;
   }
 
-  final StreamTransformer<String, bool> _titleValidation =
-      StreamTransformer<String, bool>.fromHandlers(
-          handleData: (String input, EventSink<bool> sink) {
+  final StreamTransformer<String?, bool> _titleValidation =
+      StreamTransformer<String?, bool>.fromHandlers(
+          handleData: (String? input, EventSink<bool> sink) {
     if (input == null) {
-      sink.add(null);
+      sink.add(false);
     } else {
       sink.add(input.trim().isNotEmpty);
     }
   });
 
-  final StreamTransformer<String, bool> _yearValidation =
-      StreamTransformer<String, bool>.fromHandlers(
-          handleData: (String input, EventSink<bool> sink) {
+  final StreamTransformer<String?, bool> _yearValidation =
+      StreamTransformer<String?, bool>.fromHandlers(
+          handleData: (String? input, EventSink<bool> sink) {
     if (input == null) {
-      sink.add(null);
+      sink.add(false);
     } else {
-      final int year = int.tryParse(input);
+      final int? year = int.tryParse(input);
       sink.add(year != null && year >= 1000 && year <= 9999);
     }
   });
 
-  final StreamTransformer<String, bool> _weekNumberValidation =
-      StreamTransformer<String, bool>.fromHandlers(
-          handleData: (String input, EventSink<bool> sink) {
+  final StreamTransformer<String?, bool> _weekNumberValidation =
+      StreamTransformer<String?, bool>.fromHandlers(
+          handleData: (String? input, EventSink<bool> sink) {
     if (input == null) {
-      sink.add(null);
+      sink.add(false);
     } else {
-      final int weekNumber = int.tryParse(input);
+      final int? weekNumber = int.tryParse(input);
       sink.add(weekNumber != null && weekNumber >= 1 && weekNumber <= 53);
     }
   });

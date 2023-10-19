@@ -7,7 +7,7 @@ import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -51,8 +51,8 @@ class UploadMock extends MockUploadFromGalleryBloc
 }
 
 void main() {
-  UploadMock bloc;
-  Api api;
+  late UploadMock bloc;
+  late Api api;
 
   setUp(() {
     api = Api('Any');
@@ -70,10 +70,12 @@ void main() {
   testWidgets('Tests error dialog pops up on upload error',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
-      home: UploadImageFromPhone(),
+      home: UploadImageFromPhone(
+        key: UniqueKey(),
+      ),
     ));
     await tester.pumpAndSettle();
-    when(api.pictogram.create(any))
+    when(api.pictogram.create(any as PictogramModel) as Function())
         .thenAnswer((_) => Stream<PictogramModel>.error(Exception()));
     bloc.setInputIsValid(true);
 

@@ -1,10 +1,11 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
+import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 
@@ -13,9 +14,9 @@ import '../test_image.dart';
 class MockPictogramApi extends Mock implements PictogramApi {}
 
 void main() {
-  PictogramImageBloc bloc;
-  Api api;
-  MockPictogramApi pictogramApi;
+  late PictogramImageBloc bloc;
+  late Api api;
+  late MockPictogramApi pictogramApi;
 
   setUp(() {
     api = Api('any');
@@ -28,12 +29,12 @@ void main() {
     final PictogramModel model = PictogramModel(
         id: 1,
         lastEdit: null,
-        title: null,
-        accessLevel: null,
+        title: 'null',
+        accessLevel: AccessLevel.PRIVATE,
         imageUrl: null,
         imageHash: null);
 
-    when(pictogramApi.getImage(model.id))
+    when(() => pictogramApi.getImage(model.id!))
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
     bloc.image.listen((Image response) {

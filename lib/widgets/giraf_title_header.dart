@@ -4,13 +4,13 @@ import '../style/custom_color.dart' as theme;
 /// The GirafDialogHeader is to be used at the title location of widgets
 class GirafTitleHeader extends StatelessWidget implements PreferredSizeWidget {
   ///The header takes the title as input, so it is similar for all titles.
-  const GirafTitleHeader({Key key, this.title}) : super(key: key);
+  const GirafTitleHeader({Key? key, this.title}) : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(56.0);
 
   ///title of the header
-  final String title;
+  final String? title;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class GirafTitleHeader extends StatelessWidget implements PreferredSizeWidget {
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
               child: Center(
                   child: Text(
-                title ?? '',
+                title!,
                 textAlign: TextAlign.center,
               )),
             ),

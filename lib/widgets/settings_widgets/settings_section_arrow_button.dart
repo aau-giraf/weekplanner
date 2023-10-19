@@ -15,7 +15,7 @@ class SettingsArrowButton extends SettingsSectionItem {
 
   /// This is extra trailing that is added to the text
   /// The trailing will appear right before the arrow
-  final Widget titleTrailing;
+  final Widget? titleTrailing;
 
   @override
   ListTile build(BuildContext context) {
@@ -31,17 +31,9 @@ class SettingsArrowButton extends SettingsSectionItem {
 
   /// Builds the text with or without the optional trailing widget
   Widget buildTitle() {
-    if (titleTrailing == null) {
-      return Text(text);
-    } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Flexible(
-          child: Text(text)),
-          titleTrailing
-        ],
-      );
-    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[Flexible(child: Text(text)), titleTrailing!],
+    );
   }
 }

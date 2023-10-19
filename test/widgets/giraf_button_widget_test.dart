@@ -5,14 +5,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
-
 const ImageIcon acceptIcon = ImageIcon(AssetImage('assets/icons/accept.png'));
 
 class MockScreen extends StatelessWidget {
-  final rx_dart.BehaviorSubject<bool> isPressed = rx_dart.BehaviorSubject<bool>
-      .seeded(false);
-  final rx_dart.BehaviorSubject<bool> btnEnabled = rx_dart.BehaviorSubject<bool>
-      .seeded(false);
+  final rx_dart.BehaviorSubject<bool> isPressed =
+      rx_dart.BehaviorSubject<bool>.seeded(false);
+  final rx_dart.BehaviorSubject<bool> btnEnabled =
+      rx_dart.BehaviorSubject<bool>.seeded(false);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +63,7 @@ void main() {
     await tester.pump();
     screen.isPressed.listen((bool status) {
       expect(status, isTrue);
-      done.complete();
+      done.complete(true);
     });
     await done.future;
   });
@@ -80,7 +79,7 @@ void main() {
     await tester.pump();
     screen.isPressed.listen((bool status) {
       expect(status, isFalse);
-      done.complete();
+      done.complete(true);
     });
     await done.future;
   });
