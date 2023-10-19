@@ -5,28 +5,24 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/style/custom_color.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
 
-/// Toolbar of the application.
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
-  /// Toolbar of the application.
+  final String? title;
+  final Map<AppBarIcon, VoidCallback>? appBarIcons;
+  final ToolbarBloc toolbarBloc;
+
   GirafAppBar({Key? key, this.title, this.appBarIcons})
       : toolbarBloc = di.get<ToolbarBloc>(),
         preferredSize = const Size.fromHeight(56.0),
         super(key: key);
 
-  /// Used to store the title of the toolbar.
-  final String? title;
-
-  /// Used to store the icons that should be displayed in the appbar.
-  final Map<AppBarIcon, VoidCallback>? appBarIcons;
-
-  /// Contains the functionality of the toolbar.
-  final ToolbarBloc toolbarBloc;
   @override
   final Size preferredSize;
 
   @override
   Widget build(BuildContext context) {
+    final acceptButton = AppBarIcon.accept;
     toolbarBloc.updateIcons(appBarIcons, context);
+
     return AppBar(
       iconTheme: const IconThemeData(
         color: GirafColors.black,
@@ -36,6 +32,12 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
           style: const TextStyle(color: GirafColors.black)),
       flexibleSpace: const GirafTitleHeader(),
       actions: <Widget>[
+        if (appBarIcons != null && appBarIcons!.containsKey(acceptButton))
+          IconButton(
+            tooltip: 'Accepter',
+            icon: const Icon(Icons.check),
+            onPressed: appBarIcons?[acceptButton],
+          ),
         StreamBuilder<List<IconButton>>(
             initialData: const <IconButton>[],
             key: const Key('streambuilderVisibility'),
