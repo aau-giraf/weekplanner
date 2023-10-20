@@ -175,7 +175,34 @@ Widget _buildWidgetsOnButton() {
     fontWeight: widget.fontWeight,
   );
 
-  List<Widget> children = [];
+    if (widget.text != '' && widget.icon != '') {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Flexible(child: widget.icon),
+          const SizedBox(
+            width: 5,
+          ),
+          Flexible(
+            child: Text(
+              widget.text,
+              style: textStyle,
+            )
+          ),
+        ],
+      );
+    } else if (widget.text != '') {
+      return Center(
+          child: AutoSizeText(
+        widget.text,
+        style: textStyle,
+        minFontSize: 5,
+      ));
+    } else if (widget.icon != '') {
+      return Center(
+        child: widget.icon,
+      );
+    }
 
   if (widget.icon != null) {
     children.add(FittedBox(child: widget.icon));

@@ -31,15 +31,13 @@ class ToolbarBloc extends BlocBase {
   void updateIcons(
       Map<AppBarIcon, VoidCallback>? icons, BuildContext? context) {
     List<IconButton>? _iconsToAdd;
-    _iconsToAdd ??= <IconButton>[];
+    _iconsToAdd = <IconButton>[];
 
     // Assigns a map to icons, if icons is null.
-    icons = <AppBarIcon, VoidCallback>{AppBarIcon.logout: () {}};
+    icons ??= <AppBarIcon, VoidCallback>{AppBarIcon.logout: () {}};
 
     for (AppBarIcon icon in icons.keys) {
-      if (icon != null) {
-        _addIconButton(_iconsToAdd, icon, icons[icon], context);
-      }
+      _addIconButton(_iconsToAdd, icon, icons[icon], context);
     }
 
     _visibleButtons.add(_iconsToAdd);

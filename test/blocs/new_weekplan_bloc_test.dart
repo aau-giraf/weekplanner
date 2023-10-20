@@ -292,18 +292,18 @@ void main() {
     });
   }));
 
-  // test('Should reset input streams to default values', async((DoneFn done) {
-  //   bloc.onTitleChanged.add('Ugeplan');
-  //   bloc.onYearChanged.add('2019');
-  //   bloc.onWeekNumberChanged.add('42');
-  //   bloc.onThumbnailChanged.add(mockThumbnail);
-  //   bloc.resetBloc();
-  //   bloc.allInputsAreValidStream.listen((bool isValid) {
-  //     expect(isValid, isNotNull);
-  //     expect(isValid, false);
-  //     done();
-  //   });
-  // })); FIXME: Timeout
+  test('Should reset input streams to default values', async((DoneFn done) {
+    bloc.onTitleChanged.add('Ugeplan');
+    bloc.onYearChanged.add('2019');
+    bloc.onWeekNumberChanged.add('42');
+    bloc.onThumbnailChanged.add(mockThumbnail);
+    bloc.resetBloc();
+    bloc.allInputsAreValidStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
 
   test('Should dispose stream', async((DoneFn done) {
     bloc.allInputsAreValidStream.listen((_) {}, onDone: done);
