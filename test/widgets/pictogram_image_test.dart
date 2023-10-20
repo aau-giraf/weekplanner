@@ -50,7 +50,7 @@ void main() {
     // when(pictogramApi.getImage(pictogramModel.id!))
     //     .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
-    when(pictogramApi.getImage(pictogramModel.id!)).thenAnswer((_) => (int id) {
+    when(pictogramApi.getImage(pictogramModel.id!) as Function()).thenAnswer((_) => (int id) {
           // Return the Stream<Image> based on the provided ID
           if (id == pictogramModel.id) {
             // Return the stream with the sample image
