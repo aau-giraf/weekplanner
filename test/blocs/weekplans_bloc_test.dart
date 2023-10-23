@@ -57,7 +57,7 @@ void main() {
     weekNameModelList.add(weekNameModel1);
   });
 
-  when(() => weekApi.getNames(any())).thenAnswer((_) =>
+  when(() => weekApi.getNames('test')).thenAnswer((_) =>
       rx_dart.BehaviorSubject<List<WeekNameModel>?>.seeded(weekNameModelList));
 
   when(() => weekApi.get(
@@ -88,6 +88,14 @@ void main() {
       .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
 
   test('Should be able to load weekplans for a user', async((DoneFn done) {
+    when(() => weekApi.get(
+            mockUser.id!, weekNameModel1.weekYear!, weekNameModel1.weekNumber!))
+        .thenAnswer(
+            (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
+
+    when(() => weekApi.getNames(mockUser.id!)).thenAnswer((_) =>
+        rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
+
     bloc.weekNameModels.listen((List<WeekNameModel>? response) {
       expect(response, isNotNull);
       expect(response, equals(weekNameModelList));
