@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs
+
 import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
@@ -181,7 +183,7 @@ class NewWeekplanBloc extends BlocBase {
 
     bool hasMatch = false;
 
-    existingWeekPlans!.take(1).listen((List<WeekNameModel>? existingPlans) {
+    existingWeekPlans.take(1).listen((List<WeekNameModel>? existingPlans) {
       for (WeekNameModel? existingPlan in existingPlans!) {
         if (existingPlan!.weekYear == year &&
             existingPlan.weekNumber == weekNumber) {

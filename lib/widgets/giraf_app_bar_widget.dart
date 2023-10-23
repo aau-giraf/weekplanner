@@ -6,22 +6,19 @@ import 'package:weekplanner/style/custom_color.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
 
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String? title;
-  final Map<AppBarIcon, VoidCallback>? appBarIcons;
-  final ToolbarBloc toolbarBloc;
-
   GirafAppBar({Key? key, this.title, this.appBarIcons})
       : toolbarBloc = di.get<ToolbarBloc>(),
         preferredSize = const Size.fromHeight(56.0),
         super(key: key);
+  final String? title;
+  final Map<AppBarIcon, VoidCallback>? appBarIcons;
+  final ToolbarBloc toolbarBloc;
 
   @override
   final Size preferredSize;
 
   @override
   Widget build(BuildContext context) {
-
-
     toolbarBloc.updateIcons(appBarIcons, context);
 
     return AppBar(

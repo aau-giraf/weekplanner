@@ -128,7 +128,7 @@ class WeekplanBloc extends BlocBase {
 
   /// Checks if an activity is marked
   bool isActivityMarked(ActivityModel activityModel) {
-    if (_markedActivities!.value == null) {
+    if (_markedActivities?.value == null) {
       return false;
     }
     return _markedActivities!.value.contains(activityModel);
