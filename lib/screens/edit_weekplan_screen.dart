@@ -45,9 +45,7 @@ class EditWeekPlanScreen extends StatelessWidget {
             selectorBloc: selectorBloc);
 
         try {
-          if (result != null) {
-            Routes().pop<WeekModel>(context, result);
-          }
+          Routes().pop<WeekModel>(context, result);
         } catch (err) {
           throw EditWeekplanButtonException(
               'Something went wrong while building the edit week plan button'

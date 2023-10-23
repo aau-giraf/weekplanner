@@ -315,9 +315,8 @@ void main() {
 
   testWidgets('when user is deleted, display no error, and remove user',
       (WidgetTester tester) async {
-    when(accountApi.delete(user.id!) as Function()).thenAnswer((_) =>
-        rx_dart.BehaviorSubject<bool?>.seeded(
-            null)); // FIXME: user = null as parameter?
+    when(accountApi.delete(user.id!) as Function())
+        .thenAnswer((_) => rx_dart.BehaviorSubject<bool?>.seeded(null));
 
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     await tester.pumpAndSettle();

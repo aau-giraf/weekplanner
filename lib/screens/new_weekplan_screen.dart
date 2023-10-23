@@ -38,9 +38,7 @@ class NewWeekplanScreen extends StatelessWidget {
           existingWeekPlans: existingWeekPlans,
         );
         try {
-          if (newWeekPlan != null) {
-            Routes().pop<WeekModel>(context, newWeekPlan);
-          }
+          Routes().pop<WeekModel>(context, newWeekPlan);
         } catch (err) {
           print('No new weekplan exists' '\n Error: ' + err.toString());
         }

@@ -9,7 +9,6 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
@@ -50,16 +49,17 @@ void main() {
     // when(pictogramApi.getImage(pictogramModel.id!))
     //     .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
-    when(pictogramApi.getImage(pictogramModel.id!) as Function()).thenAnswer((_) => (int id) {
-          // Return the Stream<Image> based on the provided ID
-          if (id == pictogramModel.id) {
-            // Return the stream with the sample image
-            return Stream<Image>.fromIterable([sampleImage]);
-          } else {
-            // Handle other cases if needed
-            throw Exception('Invalid pictogram ID');
-          }
-        });
+    when(pictogramApi.getImage(pictogramModel.id!) as Function())
+        .thenAnswer((_) => (int id) {
+              // Return the Stream<Image> based on the provided ID
+              if (id == pictogramModel.id) {
+                // Return the stream with the sample image
+                return Stream<Image>.fromIterable(<Image>[sampleImage]);
+              } else {
+                // Handle other cases if needed
+                throw Exception('Invalid pictogram ID');
+              }
+            });
 
     // when(pictogramApi.getImage(pictogramModel.id!)).thenAnswer((_) =>
     //   (int id) {
@@ -164,45 +164,43 @@ void main() {
     await waiter.future;
   });
 
-testWidgets('shows delete button when haveRights',
-    (WidgetTester tester) async {
-  await tester.pumpWidget(MaterialApp(
-    home: SingleChildScrollView(
-      child: PictogramImage(
-        pictogram: pictogramModel,
-        onPressed: () {},
-        haveRights: true,
-        key: const ValueKey<String>('haveRightsKey'),
+  testWidgets('shows delete button when haveRights',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: SingleChildScrollView(
+        child: PictogramImage(
+          pictogram: pictogramModel,
+          onPressed: () {},
+          haveRights: true,
+          key: const ValueKey<String>('haveRightsKey'),
+        ),
       ),
-    ),
-  )); 
-  expect(find.byType(GirafButton), findsOneWidget);
-});
-
-
-testWidgets('show delete button when comparing ids',
-    (WidgetTester tester) async {
-  late String id;
-  final Completer<bool> done = Completer<bool>();
-  api.user.me().listen((GirafUserModel model) {
-    id = model.id!;
-    done.complete(true);
+    ));
+    expect(find.byType(GirafButton), findsOneWidget);
   });
 
-  await done.future;
-  await tester.pumpWidget(MaterialApp(
-    home: SingleChildScrollView(
-      child: PictogramImage(
-        pictogram: pictogramModel,
-        onPressed: () {},
-        haveRights: pictogramModel.userId == id,
-        key: const ValueKey<String>('pictogramImageTestKey'),
-      ),
-    ),
-  ));
-  expect(find.byType(GirafButton), findsOneWidget);
-});
+  testWidgets('show delete button when comparing ids',
+      (WidgetTester tester) async {
+    late String id;
+    final Completer<bool> done = Completer<bool>();
+    api.user.me().listen((GirafUserModel model) {
+      id = model.id!;
+      done.complete(true);
+    });
 
+    await done.future;
+    await tester.pumpWidget(MaterialApp(
+      home: SingleChildScrollView(
+        child: PictogramImage(
+          pictogram: pictogramModel,
+          onPressed: () {},
+          haveRights: pictogramModel.userId == id,
+          key: const ValueKey<String>('pictogramImageTestKey'),
+        ),
+      ),
+    ));
+    expect(find.byType(GirafButton), findsOneWidget);
+  });
 
   testWidgets('deletebutton is not shown when image is not owned',
       (WidgetTester tester) async {

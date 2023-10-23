@@ -71,8 +71,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
               return TextFormField(
                 key: const Key('WeekTitleTextFieldKey'),
                 onChanged: widget.bloc.onTitleChanged.add,
-                initialValue:
-                    widget.weekModel == null ? '' : widget.weekModel.name,
+                initialValue: widget.weekModel.name,
                 keyboardType: TextInputType.text,
                 // To avoid emojis and other special characters
                 inputFormatters: <TextInputFormatter>[
@@ -121,9 +120,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 key: const Key('WeekNumberTextFieldKey'),
                 keyboardType: TextInputType.number,
                 onChanged: widget.bloc.onWeekNumberChanged.add,
-                initialValue: widget.weekModel == null
-                    ? ''
-                    : widget.weekModel.weekNumber.toString(),
+                initialValue: widget.weekModel.weekNumber.toString(),
                 style: _style,
                 decoration: InputDecoration(
                     labelText: 'Ugenummer',

@@ -256,9 +256,6 @@ class WeekplansBloc extends BlocBase {
 
   /// Checks if a week model is marked
   bool isWeekModelMarked(WeekModel weekModel) {
-    if (_markedWeekModels.value == null) {
-      return false;
-    }
     return _markedWeekModels.value.contains(weekModel);
   }
 

@@ -450,13 +450,13 @@ void main() {
     expect(find.byTooltip('Fortryd'), findsOneWidget);
   });
 
-testWidgets('GirafConfirmDialog is shown on logout icon press',
-  (WidgetTester tester) async {
+  testWidgets('GirafConfirmDialog is shown on logout icon press',
+      (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.pump();
 
     // Try to find the "Log ud" icon
-    final logoutIconFinder = find.byTooltip('Log ud').first;
+    final Finder logoutIconFinder = find.byTooltip('Log ud').first;
 
     expect(logoutIconFinder, findsOneWidget);
 
@@ -468,9 +468,7 @@ testWidgets('GirafConfirmDialog is shown on logout icon press',
 
     // Now, check if GirafConfirmDialog is shown
     expect(find.byType(GirafConfirmDialog), findsOneWidget);
-  }
-);
-
+  });
 
   testWidgets('User is logged out on confirmation in GirafConfirmDialog',
       (WidgetTester tester) async {

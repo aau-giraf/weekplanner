@@ -297,7 +297,7 @@ class WeekplanBloc extends BlocBase {
       final ActivityModel activityAtIndex =
           _week.days![dayTo.index].activities![i];
 
-      activityAtIndex.order = (activityAtIndex.order ?? 0) - 1;
+      activityAtIndex.order = (activityAtIndex.order) - 1;
     }
 
     _week.days![dayFrom.index].activities!
@@ -316,7 +316,7 @@ class WeekplanBloc extends BlocBase {
       final ActivityModel activityAtIndex =
           _week.days![dayTo.index].activities![i];
 
-      activityAtIndex.order = (activityAtIndex.order ?? 0) + 1;
+      activityAtIndex.order = (activityAtIndex.order) + 1;
     }
 
     if (dayFrom != dayTo) {
