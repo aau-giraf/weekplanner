@@ -1,3 +1,5 @@
+// ignore_for_file: always_specify_types
+
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
