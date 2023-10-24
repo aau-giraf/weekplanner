@@ -258,8 +258,7 @@ class WeekplanScreen extends StatelessWidget {
               title: 'Aflys aktiviteter',
               description: 'Vil du markere ' +
                   _weekplanBloc.getNumberOfMarkedActivities().toString() +
-                  '${_weekplanBloc.getNumberOfMarkedActivities() == 1
-                   ? ' aktivitet' : ' aktiviteter'} som aflyst?',
+                  '${_weekplanBloc.getNumberOfMarkedActivities() == 1 ? ' aktivitet' : ' aktiviteter'} som aflyst?',
               confirmButtonText: 'Bekræft',
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/accept.png')),
@@ -286,8 +285,7 @@ class WeekplanScreen extends StatelessWidget {
               title: 'Genoptag',
               description: 'Vil du genoptage ' +
                   _weekplanBloc.getNumberOfMarkedActivities().toString() +
-                  '${_weekplanBloc.getNumberOfMarkedActivities() == 1
-                   ? ' aktivitet' : ' aktiviteter'}?',
+                  '${_weekplanBloc.getNumberOfMarkedActivities() == 1 ? ' aktivitet' : ' aktiviteter'}?',
               confirmButtonText: 'Genoptag',
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/undo.png')),
@@ -313,8 +311,7 @@ class WeekplanScreen extends StatelessWidget {
               title: 'Slet aktiviteter',
               description: 'Vil du slette ' +
                   _weekplanBloc.getNumberOfMarkedActivities().toString() +
-                  '${_weekplanBloc.getNumberOfMarkedActivities() == 1
-                   ? ' aktivitet' : ' aktiviteter'}?',
+                  '${_weekplanBloc.getNumberOfMarkedActivities() == 1 ? ' aktivitet' : ' aktiviteter'}?',
               confirmButtonText: 'Slet',
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/delete.png')),
@@ -430,23 +427,39 @@ class WeekplanScreen extends StatelessWidget {
                         return Row(children: weekDays);
                       }
                     } else {
-                      debugPrint('Aktiviter valgt $_activitiesToDisplay');
                       final int today = DateTime.now().weekday - 1;
-                      dailyActivities.add(Expanded(
+                      dailyActivities.add(
+                        Expanded(
                           child: WeekplanActivitiesColumn(
-                        dayOfTheWeek: Weekday.values[today],
-                        color: Colors.amber,
-                        weekplanBloc: _weekplanBloc,
-                        user: _user,
-                        streamIndex: today,
-                        activitiesToDisplay: _activitiesToDisplay,
-                      )));
-                      return Row(
-                        key: const Key('SingleWeekdayRow'),
+                            dayOfTheWeek: Weekday.values[today],
+                            color: Colors.amber,
+                            weekplanBloc: _weekplanBloc,
+                            user: _user,
+                            streamIndex: today,
+                            activitiesToDisplay: _activitiesToDisplay,
+                          ),
+                        ),
+                      );
+
+                      return Column(
                         children: <Widget>[
-                          const Spacer(),
-                          dailyActivities.first,
-                          const Spacer(),
+                          Text(
+                            translateWeekDay(Weekday.values[today]),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 35.0),
+                          ),
+                          Expanded(
+                            child: Row(
+                              key: const Key('SingleWeekdayRow'),
+                              children: <Widget>[
+                                const Spacer(),
+                                dailyActivities.first,
+                                const Spacer(),
+                              ],
+                            ),
+                          ),
                         ],
                       );
                     }
@@ -499,5 +512,37 @@ class WeekplanScreen extends StatelessWidget {
       streamIndex: nthDayToAdd,
     )));
     _weekplanBloc.addWeekdayStream();
+  }
+
+  /// Translates the weekday to danish
+  String translateWeekDay(Weekday day) {
+    String translation;
+    switch (day) {
+      case Weekday.Monday:
+        translation = 'Mandag';
+        break;
+      case Weekday.Tuesday:
+        translation = 'Tirsdag';
+        break;
+      case Weekday.Wednesday:
+        translation = 'Onsdag';
+        break;
+      case Weekday.Thursday:
+        translation = 'Torsdag';
+        break;
+      case Weekday.Friday:
+        translation = 'Fredag';
+        break;
+      case Weekday.Saturday:
+        translation = 'Lørdag';
+        break;
+      case Weekday.Sunday:
+        translation = 'Søndag';
+        break;
+      default:
+        translation = '';
+        break;
+    }
+    return translation;
   }
 }
