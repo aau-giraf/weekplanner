@@ -26,7 +26,7 @@ void main() {
    * Use the "environments.local.json" for running against your local web-api
    * For IOS users: change the SERVER_HOST in the environment.local file to "http://localhost:5000"
    */
-  environment.setFile('assets/environments.dev.json').whenComplete(() {
+  environment.setFile('assets/environments.local.json').whenComplete(() {
     _runApp();
   });
 }
@@ -51,9 +51,9 @@ void _runApp() {
             lastState = snapshot.data;
             //To make sure we only listen to the stream once we take advantage
             // of firstTimeLogin bool value
-            if(firstTimeLogIn== true){
+            if (firstTimeLogIn == true) {
               _api.connectivity.connectivityStream.listen((dynamic event) {
-                if(event == false){
+                if (event == false) {
                   lostConnectionDialog(context);
                 }
               });
@@ -63,11 +63,10 @@ void _runApp() {
               // Show screen dependent on logged in role
               switch (_authBloc.loggedInUser.role) {
                 case Role.Citizen:
-                  return WeekplanSelectorScreen(
-                      DisplayNameModel(
-                          displayName: _authBloc.loggedInUser.displayName,
-                          role: describeEnum(_authBloc.loggedInUser.role),
-                          id: _authBloc.loggedInUser.id));
+                  return WeekplanSelectorScreen(DisplayNameModel(
+                      displayName: _authBloc.loggedInUser.displayName,
+                      role: describeEnum(_authBloc.loggedInUser.role),
+                      id: _authBloc.loggedInUser.id));
                 default:
                   return ChooseCitizenScreen();
               }
