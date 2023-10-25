@@ -22,6 +22,7 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/copy_resolve_screen.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 
+//class WeekModelFake extends Fake implements WeekModel{}
 class MockWeekApi extends Mock implements WeekApi {}
 
 class MockUserApi extends Mock implements UserApi {
@@ -57,6 +58,12 @@ final WeekNameModel weekNameModel2 =
     WeekNameModel(name: 'weekplan2', weekNumber: 2020, weekYear: 33);
 
 void main() {
+
+  setUpAll(() 
+  {
+    registerFallbackValue(WeekModel());
+  });
+
   final DisplayNameModel mockUser =
       DisplayNameModel(displayName: 'testName', role: 'testRole', id: 'testId');
 
@@ -70,7 +77,7 @@ void main() {
       thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 3);
 
   late MockCopyResolveBloc bloc;
-  late Api api;
+  Api api = Api('baseUrl');
 
   setUp(() {
     weekNameModelList.clear();
@@ -84,7 +91,7 @@ void main() {
     api.week = MockWeekApi();
     api.user = MockUserApi();
 
-    when(api.week.update('testId', 2020, 3, any as WeekModel) as Function())
+    when(() => api.week.update('testId', 2020, 3, any()))
         .thenAnswer((Invocation answer) {
       final WeekModel inputWeek = answer.positionalArguments[3];
       final WeekNameModel weekNameModel =
@@ -94,7 +101,7 @@ void main() {
       return Stream<WeekModel>.value(weekplan1);
     });
 
-    when(api.week.get('testId', 2020, 3) as Function()).thenAnswer((_) {
+    when(() => api.week.get('testId', 2020, 3)).thenAnswer((_) {
       for (WeekNameModel week in weekNameModelList) {
         final bool isEqual = week.weekYear == 2020 && week.weekNumber == 3;
         if (isEqual) {
@@ -105,21 +112,19 @@ void main() {
           thumbnail: null, name: '2020 - 3', weekYear: 2020, weekNumber: 3));
     });
 
-    when(api.week.get(
-                'testId', weekNameModel.weekYear!, weekNameModel.weekNumber!)
-            as Function())
+    when(() => api.week.get(
+                'testId', weekNameModel.weekYear!, weekNameModel.weekNumber!))
         .thenAnswer((_) {
       return Stream<WeekModel>.value(weekplan1);
     });
 
-    when(api.week.get(
-                'testId', weekNameModel2.weekYear!, weekNameModel2.weekNumber!)
-            as Function())
+    when(() => api.week.get(
+                'testId', weekNameModel2.weekYear!, weekNameModel2.weekNumber!))
         .thenAnswer((_) {
       return Stream<WeekModel>.value(weekplan2);
     });
 
-    when(api.week.getNames('testId') as Function()).thenAnswer((_) {
+    when(()=> api.week.getNames('testId')).thenAnswer((_) {
       return Stream<List<WeekNameModel>>.value(weekNameModelList);
     });
 
