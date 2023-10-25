@@ -97,7 +97,7 @@ void main() {
     api.user = MockUserApi();
     api.week = MockWeekApi();
 
-    when(api.week.getNames(any as String) as Function()).thenAnswer((_) {
+    when(() => api.week.getNames(any())).thenAnswer((_) {
       return Stream<List<WeekNameModel>>.value(<WeekNameModel>[]);
     });
 
