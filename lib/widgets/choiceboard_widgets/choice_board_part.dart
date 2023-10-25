@@ -56,7 +56,6 @@ class ChoiceBoardPart extends StatelessWidget {
                     _bloc.getTitleWhenChoiceboardDeleted();
                   }
                   _bloc.update();
-                  _bloc.load(_activity, _user);
                   _weekplanBloc.loadWeek(_user);
                   _bloc.load(_activity, _user);
                 }),
