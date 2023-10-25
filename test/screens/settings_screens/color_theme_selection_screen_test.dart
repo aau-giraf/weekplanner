@@ -80,8 +80,10 @@ void main() {
       pictogramText: false,
       showPopup: false,
       showOnlyActivities: false,
+      nrOfActivitiesToDisplay: 2,
       showSettingsForCitizen: false,
-      weekDayColors: MockUserApi.createWeekDayColors(),);
+      weekDayColors: MockUserApi.createWeekDayColors(),
+    );
 
     when(api.user.updateSettings(any, any)).thenAnswer((_) {
       return Stream<bool>.value(true);
@@ -200,21 +202,19 @@ void main() {
   });
 
   testWidgets('Has color theme selection screen been popped',
-          (WidgetTester tester) async{
-        await tester.pumpWidget(MaterialApp(
-            home: ColorThemeSelectorScreen(user: user),
+      (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: ColorThemeSelectorScreen(user: user),
             // ignore: always_specify_types
-            navigatorObservers: [mockObserver]
-        ));
-        verify(mockObserver.didPush(any, any));
+            navigatorObservers: [mockObserver]));
+    verify(mockObserver.didPush(any, any));
 
-        await tester.pumpAndSettle();
-        expect(find.byType(SettingsColorThemeCheckMarkButton),
-            findsNWidgets(3));
+    await tester.pumpAndSettle();
+    expect(find.byType(SettingsColorThemeCheckMarkButton), findsNWidgets(3));
 
-        await tester.pump();
-        await tester.tap(find.byType(SettingsColorThemeCheckMarkButton).first);
-        await tester.pump();
-        verify(mockObserver.didPop(any, any));
-      });
+    await tester.pump();
+    await tester.tap(find.byType(SettingsColorThemeCheckMarkButton).first);
+    await tester.pump();
+    verify(mockObserver.didPop(any, any));
+  });
 }

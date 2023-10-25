@@ -18,11 +18,14 @@ import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
+import 'package:weekplanner/screens/settings_screens/number_of_activities_selection_screen.dart';
 import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
+
 SettingsModel mockSettings;
+
 class MockAccountApi extends Mock implements AccountApi {}
 
 class MockUserApi extends Mock implements UserApi {
@@ -75,22 +78,23 @@ void main() {
   setUp(() {
     di.clearAll();
     api = Api('any');
-    accountApi=MockAccountApi();
-    api.account=accountApi;
+    accountApi = MockAccountApi();
+    api.account = accountApi;
     api.user = MockUserApi();
 
     mockSettings = SettingsModel(
-        orientation: null,
-        completeMark: null,
-        cancelMark: null,
-        theme: GirafTheme.AndroidBlue,
-        defaultTimer: DefaultTimer.Hourglass,
-        lockTimerControl: false,
-        pictogramText: false,
-        showPopup: false,
-        showOnlyActivities: false,
-        showSettingsForCitizen: false,
-        weekDayColors: MockUserApi.createWeekDayColors(),
+      orientation: null,
+      completeMark: null,
+      cancelMark: null,
+      theme: GirafTheme.AndroidBlue,
+      defaultTimer: DefaultTimer.Hourglass,
+      lockTimerControl: false,
+      pictogramText: false,
+      showPopup: false,
+      showOnlyActivities: false,
+      nrOfActivitiesToDisplay: 2,
+      showSettingsForCitizen: false,
+      weekDayColors: MockUserApi.createWeekDayColors(),
     );
 
     di.registerDependency<Api>(() => api);
@@ -132,30 +136,57 @@ void main() {
         findsOneWidget);
     expect(find.text('Antal dage der vises når enheden er på langs'),
         findsOneWidget);
-    expect(find.text('Piktogram tekst er synlig'),
-        findsOneWidget);
-    expect(find.text('Vis bekræftelse popups'),
+    expect(find.text('Piktogram tekst er synlig'), findsOneWidget);
+    expect(find.text('Vis bekræftelse popups'), findsOneWidget);
+    expect(find.text('Vis kun aktiviteter'), findsOneWidget);
+    expect(find.text('Hvor mange aktiviteter skal vises på vis kun aktiviter'),
         findsOneWidget);
   });
 
+  testWidgets('NumberOfActivitiesScreen button changes screen',
+      (WidgetTester tester) async {
+    // Tests couldn't find some buttons, so screen size is increased
+    tester.binding.window.physicalSizeTestValue = const Size(1080, 1920);
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
+    await tester.tap(
+        find.text('Hvor mange aktiviteter skal vises på vis kun aktiviter'));
+    await tester.pumpAndSettle();
+    expect(find.byType(NumberOfActivitiesScreen), findsOneWidget);
+  });
+
+  testWidgets('ShowOnlyActivities knap opdaterer indstillinger',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
+
+    expect(false, mockSettings.showOnlyActivities);
+
+    await tester.tap(find.text('Vis kun aktiviteter'));
+    await tester.pumpAndSettle();
+
+    expect(true, mockSettings.showOnlyActivities);
+  });
+
   testWidgets('Settings has Bruger indstillinger section',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-        await tester.pumpAndSettle();
-        expect(find.text('Giv borger adgang til deres indstillinger.',
-            skipOffstage: false)
-        , findsOneWidget);
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
+    expect(
+        find.text('Giv borger adgang til deres indstillinger.',
+            skipOffstage: false),
+        findsOneWidget);
   });
 
   testWidgets('Settings has Brugerindstillinger section',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     await tester.pumpAndSettle();
-    expect(find.text('Bruger indstillinger', skipOffstage: false),
-        findsOneWidget);
+    expect(
+        find.text('Bruger indstillinger', skipOffstage: false), findsOneWidget);
   });
 
- 
   testWidgets('Farver på ugeplan button changes screen',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
@@ -166,7 +197,7 @@ void main() {
   });
 
   testWidgets('Piktogram tekst knap opdaterer indstillinger',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     await tester.pumpAndSettle();
 
@@ -179,22 +210,26 @@ void main() {
   });
 
   testWidgets('Vis popup knap opdaterer indstillinger',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-        await tester.pumpAndSettle();
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
 
-        expect(false, mockSettings.showPopup);
+    expect(false, mockSettings.showPopup);
+    await tester.ensureVisible(find.text('Vis bekræftelse popups'));
+    await tester.tap(find.text('Vis bekræftelse popups'));
 
-        await tester.tap(find.text('Vis bekræftelse popups'));
-
-        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-        await tester.pumpAndSettle();
-        expect(true, mockSettings.showPopup);
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
+    expect(true, mockSettings.showPopup);
   });
 
   testWidgets('Settings has TimerControl checkbox without a checkmark',
       (WidgetTester tester) async {
+    // Tests couldn't find some buttons, so screen size is increased
+    tester.binding.window.physicalSizeTestValue = const Size(1080, 1920);
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    //await tester.ensureVisible(find.text('Lås tidsstyring'));
     await tester.pumpAndSettle();
     expect(
         find.byWidgetPredicate((Widget widget) =>
@@ -205,79 +240,75 @@ void main() {
   });
 
   testWidgets('Tapping the piktogram tekst checkbox changes the current value',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-        await tester.pump();
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pump();
 
-
-        await tester.tap(find.byWidgetPredicate((Widget widget) =>
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
         widget is SettingsCheckMarkButton &&
-            widget.current == 2 &&
-            widget.text == 'Piktogram tekst er synlig'));
-        await tester.pump();
+        widget.current == 2 &&
+        widget.text == 'Piktogram tekst er synlig'));
+    await tester.pump();
 
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is SettingsCheckMarkButton &&
-                widget.current == 1 &&
-                widget.text == 'Piktogram tekst er synlig'),
-            findsOneWidget);
-      });
+            widget.current == 1 &&
+            widget.text == 'Piktogram tekst er synlig'),
+        findsOneWidget);
+  });
 
   testWidgets('Tapping the popup checkbox changes the current value',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-        await tester.pump();
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pump();
 
-        await tester.tap(find.byWidgetPredicate((Widget widget) =>
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
         widget is SettingsCheckMarkButton &&
-            widget.current == 2 &&
-            widget.text == 'Vis bekræftelse popups'));
-        await tester.pump();
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+        widget.current == 2 &&
+        widget.text == 'Vis bekræftelse popups'));
+    await tester.pump();
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is SettingsCheckMarkButton &&
-                widget.current == 1 &&
-                widget.text == 'Vis bekræftelse popups'),
-            findsOneWidget);
-      });
+            widget.current == 1 &&
+            widget.text == 'Vis bekræftelse popups'),
+        findsOneWidget);
+  });
 
   testWidgets('Tapping the TimerControl checkbox changes the current value',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-        await tester.pump();
-
-        await tester.ensureVisible(find.byWidgetPredicate((Widget widget) =>
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pump();
+    await tester.ensureVisible(find.text('Lås tidsstyring'));
+    await tester.ensureVisible(find.byWidgetPredicate((Widget widget) =>
         widget is SettingsCheckMarkButton &&
-            widget.current == 2 &&
-            widget.text == 'Lås tidsstyring'));
-        await tester.pumpAndSettle();
-
-        await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget.current == 2 &&
+        widget.text == 'Lås tidsstyring'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
         widget is SettingsCheckMarkButton &&
-            widget.current == 2 &&
-            widget.text == 'Lås tidsstyring'));
-        await tester.pump();
-        expect(
-            find.byWidgetPredicate((Widget widget) =>
+        widget.current == 2 &&
+        widget.text == 'Lås tidsstyring'));
+    await tester.pump();
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
             widget is SettingsCheckMarkButton &&
             widget.current == 1 &&
             widget.text == 'Lås tidsstyring'),
         findsOneWidget);
   });
 
-  testWidgets('Settings has Slet bruger button',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-        await tester.pumpAndSettle();
-        expect(find.text('Slet bruger',skipOffstage: false), findsOneWidget);
-      });
-
-  testWidgets('Slet bruger show popup on click',
-          (WidgetTester tester) async {
+  testWidgets('Settings has Slet bruger button', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     await tester.pumpAndSettle();
-    await tester.ensureVisible( find.text('Slet bruger',skipOffstage: false));
+    expect(find.text('Slet bruger', skipOffstage: false), findsOneWidget);
+  });
+
+  testWidgets('Slet bruger show popup on click', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Slet bruger', skipOffstage: false));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Slet bruger'));
     await tester.pumpAndSettle();
@@ -285,29 +316,27 @@ void main() {
   });
 
   testWidgets('Delete confirm dialog display the right name',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-        await tester.pumpAndSettle();
-        await tester.ensureVisible( find.text('Slet bruger',
-            skipOffstage: false));
-        await tester.pumpAndSettle();
-        await tester.tap(find.text('Slet bruger'));
-        await tester.pumpAndSettle();
-        expect(
-          find.byWidgetPredicate((Widget widget) =>
-          widget is RichText &&
-              widget.text.toPlainText().contains(
-                  'indtast ' + user.displayName)),
-          findsOneWidget,
-        );
-  });
-
-  testWidgets('confirm dialog provides an error,'
-      ' if the user wrote the wrong name',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     await tester.pumpAndSettle();
-    await tester.ensureVisible( find.text('Slet bruger',skipOffstage: false));
+    await tester.ensureVisible(find.text('Slet bruger', skipOffstage: false));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Slet bruger'));
+    await tester.pumpAndSettle();
+    expect(
+      find.byWidgetPredicate((Widget widget) =>
+          widget is RichText &&
+          widget.text.toPlainText().contains('indtast ' + user.displayName)),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets(
+      'confirm dialog provides an error,'
+      ' if the user wrote the wrong name', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Slet bruger', skipOffstage: false));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Slet bruger'));
     await tester.pumpAndSettle();
@@ -316,30 +345,24 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Det indtastede navn er forkert!'), findsOneWidget);
-      }
-  );
-
+  });
 
   testWidgets('when user is deleted, display no error, and remove user',
-          (WidgetTester tester) async {
-            when(accountApi.delete(user.id)).thenAnswer((_) =>
-            rx_dart.BehaviorSubject<bool>.seeded(user=null));
+      (WidgetTester tester) async {
+    when(accountApi.delete(user.id))
+        .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(user = null));
 
-        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-            await tester.pumpAndSettle();
-            await tester.ensureVisible( find.text('Slet bruger',
-                skipOffstage: false));
-            await tester.pumpAndSettle();
-            await tester.tap(find.text('Slet bruger'));
-        await tester.pumpAndSettle();
-        await tester.enterText(find.byType(TextField), user.displayName);
-        await tester.tap(find.text('Slet'));
-        await tester.pumpAndSettle();
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Slet bruger', skipOffstage: false));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Slet bruger'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), user.displayName);
+    await tester.tap(find.text('Slet'));
+    await tester.pumpAndSettle();
 
-        expect(find.text('Det indtastede navn er forkert!'), findsNothing);
-        expect(user,null);
-      }
-  );
-
-
+    expect(find.text('Det indtastede navn er forkert!'), findsNothing);
+    expect(user, null);
+  });
 }

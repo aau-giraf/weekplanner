@@ -20,50 +20,45 @@ class MockUserApi extends Mock implements UserApi {
   @override
   Stream<GirafUserModel> get(String id) {
     return Stream<GirafUserModel>.value(GirafUserModel(
-        id: '1',
-        department: 3,
-        role: Role.Guardian,
-        roleName: 'Guardian',
-        displayName: 'Kurt',
-        username: 'SpaceLord69',
+      id: '1',
+      department: 3,
+      role: Role.Guardian,
+      roleName: 'Guardian',
+      displayName: 'Kurt',
+      username: 'SpaceLord69',
     ));
   }
-
 }
 
 void main() {
   SettingsBloc settingsBloc;
   Api api;
   final DisplayNameModel user = DisplayNameModel(
-    role: Role.Citizen.toString(),
-    displayName: 'Citizen',
-    id: '1'
-  );
+      role: Role.Citizen.toString(), displayName: 'Citizen', id: '1');
   SettingsModel settings = SettingsModel(
-      orientation: Orientation.Portrait,
-      completeMark: CompleteMark.Checkmark,
-      cancelMark: CancelMark.Cross,
-      defaultTimer: DefaultTimer.PieChart,
-      timerSeconds: 1,
-      activitiesCount: 1,
-      theme: GirafTheme.GirafYellow,
-      weekDayColors: null,
-      pictogramText: false,
-      nrOfActivitiesToDisplay: null,
-      showOnlyActivities: false,
-      showSettingsForCitizen: false,
+    orientation: Orientation.Portrait,
+    completeMark: CompleteMark.Checkmark,
+    cancelMark: CancelMark.Cross,
+    defaultTimer: DefaultTimer.PieChart,
+    timerSeconds: 1,
+    activitiesCount: 1,
+    theme: GirafTheme.GirafYellow,
+    weekDayColors: null,
+    pictogramText: false,
+    showOnlyActivities: false,
+    showSettingsForCitizen: false,
   );
 
   final SettingsModel updatedSettings = SettingsModel(
-      orientation: Orientation.Landscape,
-      completeMark: CompleteMark.MovedRight,
-      cancelMark: CancelMark.Removed,
-      defaultTimer: DefaultTimer.Hourglass,
-      timerSeconds: 2,
-      activitiesCount: 3,
-      theme: GirafTheme.GirafYellow,
-      weekDayColors: null,
-      pictogramText: true,
+    orientation: Orientation.Landscape,
+    completeMark: CompleteMark.MovedRight,
+    cancelMark: CancelMark.Removed,
+    defaultTimer: DefaultTimer.Hourglass,
+    timerSeconds: 2,
+    activitiesCount: 3,
+    theme: GirafTheme.GirafYellow,
+    weekDayColors: null,
+    pictogramText: true,
   );
 
   setUp(() {
