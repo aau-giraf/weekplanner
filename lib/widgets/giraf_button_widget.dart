@@ -180,13 +180,17 @@ class _GirafButtonState extends State<GirafButton> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          widget.icon,
+          Expanded(
+            child: widget.icon,
+          ),
           const SizedBox(
             width: 5,
           ),
-          Text(
-            widget.text,
-            style: textStyle,
+          Expanded(
+            child: Text(
+              widget.text,
+              style: textStyle,
+            ),
           ),
         ],
       );
