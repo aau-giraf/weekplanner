@@ -21,6 +21,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_arrow_button.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_colorThemeButton.dart';
 
+class MockRoute extends Mock implements Route<dynamic>{}
 class MockUserApi extends Mock implements UserApi, NavigatorObserver {
   @override
   Stream<GirafUserModel> me() {
@@ -63,7 +64,10 @@ void main() {
 
   final DisplayNameModel user = DisplayNameModel(
       displayName: 'Anders And', id: '101', role: Role.Guardian.toString());
-
+  setUpAll(() {
+    registerFallbackValue(SettingsModel());
+    registerFallbackValue(MockRoute());
+  });
   setUp(() {
     api = Api('any');
     api.user = MockUserApi();
@@ -84,8 +88,8 @@ void main() {
       weekDayColors: MockUserApi.createWeekDayColors(),
     );
 
-    when(api.user.updateSettings(any as String, any as SettingsModel)
-            as Function())
+    when(()=>api.user.updateSettings(any(), any())
+          )
         .thenAnswer((_) {
       return Stream<bool>.value(true);
     });
