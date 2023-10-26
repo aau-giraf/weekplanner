@@ -77,6 +77,10 @@ void main() {
   late MockEditWeekplanBloc mockBloc;
   late Api api;
   late bool savedWeekplan;
+  setUpAll(() 
+  {
+    registerFallbackValue(WeekModel());
+  });
 
   setUp(() {
     api = Api('any');
@@ -84,18 +88,18 @@ void main() {
     api.pictogram = MockPictogramApi();
     savedWeekplan = false;
 
-    when(api.pictogram.getImage(mockPictogram.id!) as Function())
+    when(()=>api.pictogram.getImage(mockPictogram.id!))
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
-    when(api.week
-                .update(any as String, any as int, any as int, any as WeekModel)
-            as Function())
+    when(()=>api.week
+                .update(any(), any(), any(), any())
+            )
         .thenAnswer((_) {
       savedWeekplan = true;
       return Stream<WeekModel>.value(mockWeek);
     });
 
-    when(api.week.getNames(any as String) as Function()).thenAnswer(
+    when(()=>api.week.getNames(any())).thenAnswer(
       (_) {
         return Stream<List<WeekNameModel>>.value(<WeekNameModel>[
           WeekNameModel(
@@ -106,7 +110,7 @@ void main() {
       },
     );
 
-    when(api.week.get(any as String, any as int, any as int) as Function())
+    when(()=>api.week.get(any(), any(), any()))
         .thenAnswer(
       (_) {
         return Stream<WeekModel>.value(mockWeek);
