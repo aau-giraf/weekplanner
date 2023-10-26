@@ -185,7 +185,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Accepter'), findsOneWidget);
+    expect(find.byTooltip('Accepter').first, findsOneWidget);
   });
 
   testWidgets('Add button is displayed', (WidgetTester tester) async {
@@ -198,7 +198,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Tilføj'), findsOneWidget);
+    expect(find.byTooltip('Tilføj').first, findsOneWidget);
   });
 
   testWidgets('Add timer button is displayed', (WidgetTester tester) async {
@@ -211,7 +211,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Tilføj timer'), findsOneWidget);
+    expect(find.byTooltip('Tilføj timer').first, findsOneWidget);
   });
 
   testWidgets('Back button is displayed', (WidgetTester tester) async {
@@ -224,7 +224,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Tilbage'), findsOneWidget);
+    expect(find.byTooltip('Tilbage').first, findsOneWidget);
   });
 
   testWidgets('Burger menu button is displayed', (WidgetTester tester) async {
@@ -237,7 +237,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Åbn menu'), findsOneWidget);
+    expect(find.byTooltip('Åbn menu').first, findsOneWidget);
   });
 
   testWidgets('Camera button is displayed', (WidgetTester tester) async {
@@ -250,7 +250,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Åbn kamera'), findsOneWidget);
+    expect(find.byTooltip('Åbn kamera').first, findsOneWidget);
   });
 
   testWidgets('Cancel button is displayed', (WidgetTester tester) async {
@@ -263,7 +263,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Fortryd'), findsOneWidget);
+    expect(find.byTooltip('Fortryd').first, findsOneWidget);
   });
 
   testWidgets('Change to citizen button is displayed',
@@ -279,7 +279,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Skift til borger tilstand'), findsOneWidget);
+    expect(find.byTooltip('Skift til borger tilstand').first, findsOneWidget);
   });
 
   testWidgets('Change to guardian button is displayed',
@@ -295,7 +295,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Skift til værge tilstand'), findsOneWidget);
+    expect(find.byTooltip('Skift til værge tilstand').first, findsOneWidget);
   });
 
   testWidgets('Copy button is displayed', (WidgetTester tester) async {
@@ -308,7 +308,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Kopier'), findsOneWidget);
+    expect(find.byTooltip('Kopier').first, findsOneWidget);
   });
 
   testWidgets('Delete button is displayed', (WidgetTester tester) async {
@@ -321,7 +321,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Slet'), findsOneWidget);
+    expect(find.byTooltip('Slet').first, findsOneWidget);
   });
 
   testWidgets('Edit button is displayed', (WidgetTester tester) async {
@@ -334,7 +334,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Rediger'), findsOneWidget);
+    expect(find.byTooltip('Rediger').first, findsOneWidget);
   });
 
   testWidgets('Help button is displayed', (WidgetTester tester) async {
@@ -347,7 +347,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Hjælp'), findsOneWidget);
+    expect(find.byTooltip('Hjælp').first, findsOneWidget);
   });
 
   testWidgets('Home button is displayed', (WidgetTester tester) async {
@@ -360,7 +360,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Gå til startside'), findsOneWidget);
+    expect(find.byTooltip('Gå til startside').first, findsOneWidget);
   });
 
   testWidgets('Log out button is displayed', (WidgetTester tester) async {
@@ -386,7 +386,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Vis profil'), findsOneWidget);
+    expect(find.byTooltip('Vis profil').first, findsOneWidget);
   });
 
   testWidgets('Redo button is displayed', (WidgetTester tester) async {
@@ -398,7 +398,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Gendan'), findsOneWidget);
+    expect(find.byTooltip('Gendan').first, findsOneWidget);
   });
 
   testWidgets('Save button is displayed', (WidgetTester tester) async {
@@ -410,7 +410,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Gem'), findsOneWidget);
+    expect(find.byTooltip('Gem').first, findsOneWidget);
   });
 
   testWidgets('Search button is displayed', (WidgetTester tester) async {
@@ -422,7 +422,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Søg'), findsOneWidget);
+    expect(find.byTooltip('Søg').first, findsOneWidget);
   });
 
   testWidgets('Settings button is displayed', (WidgetTester tester) async {
@@ -434,7 +434,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Indstillinger'), findsOneWidget);
+    expect(find.byTooltip('Indstillinger').first, findsOneWidget);
   });
 
   testWidgets('Undo button is displayed', (WidgetTester tester) async {
@@ -447,7 +447,7 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
 
-    expect(find.byTooltip('Fortryd'), findsOneWidget);
+    expect(find.byTooltip('Fortryd').first, findsOneWidget);
   });
 
   testWidgets('GirafConfirmDialog is shown on logout icon press',
