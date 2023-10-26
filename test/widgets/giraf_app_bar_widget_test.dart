@@ -454,19 +454,10 @@ void main() {
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.pump();
-
-    // Try to find the "Log ud" icon
-    final Finder logoutIconFinder = find.byTooltip('Log ud').first;
-
+    final Finder logoutIconFinder = find.byTooltip('Log ud').last;
     expect(logoutIconFinder, findsOneWidget);
-
-    // Tap the "Log ud" icon
     await tester.tap(logoutIconFinder);
-
-    // Wait for the widget tree to settle, which ensures any animations complete
     await tester.pumpAndSettle();
-
-    // Now, check if GirafConfirmDialog is shown
     expect(find.byType(GirafConfirmDialog), findsOneWidget);
   });
 
@@ -475,8 +466,8 @@ void main() {
     final Completer<bool> done = Completer<bool>();
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.pump();
-    expect(find.byTooltip('Log ud'), findsOneWidget);
-    await tester.tap(find.byTooltip('Log ud').first);
+    expect(find.byTooltip('Log ud').last, findsOneWidget);
+    await tester.tap(find.byTooltip('Log ud').last);
     await tester.pumpAndSettle();
     expect(find.byType(GirafConfirmDialog), findsOneWidget);
     expect(find.byKey(const Key('ConfirmDialogConfirmButton')), findsOneWidget);
