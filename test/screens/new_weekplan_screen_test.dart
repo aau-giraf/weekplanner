@@ -82,7 +82,7 @@ void main() {
   {
     registerFallbackValue(WeekModel());
   });
-  
+
   setUp(() {
     api = Api('any');
     api.week = MockWeekApi();
@@ -314,8 +314,8 @@ void main() {
 
   testWidgets('Click on thumbnail redirects to pictogram search screen',
       (WidgetTester tester) async {
-    when(api.pictogram.getAll(page: 1, pageSize: pageSize, query: '')
-            as Function())
+    when(()=>api.pictogram.getAll(page: 1, pageSize: pageSize, query: '')
+            )
         .thenAnswer((_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[mockPictogram]));
     mockBloc.acceptAllInputs = true;
@@ -361,7 +361,7 @@ void main() {
 
   testWidgets('Week plan is created even when there are no existing plans',
       (WidgetTester tester) async {
-    when(api.week.getNames(any as String) as Function()).thenAnswer(
+    when(()=>api.week.getNames(any())).thenAnswer(
         (_) => Stream<List<WeekNameModel>>.value(<WeekNameModel>[]));
 
     mockWeekplanSelector = WeekplansBloc(api);
