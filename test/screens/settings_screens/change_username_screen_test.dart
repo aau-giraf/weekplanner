@@ -17,7 +17,7 @@ import 'package:weekplanner/screens/settings_screens/change_username_screen.dart
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
 
-late SettingsModel mockSettings;
+SettingsModel mockSettings = SettingsModel();
 
 class MockUserApi extends Mock implements UserApi, NavigatorObserver {
   @override
