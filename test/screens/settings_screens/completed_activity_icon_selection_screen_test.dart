@@ -15,6 +15,8 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/settings_screens/completed_activity_icon_selection_screen.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
 
+class MockRoute extends Mock implements Route<dynamic>{}
+
 class MockUserApi extends Mock implements NavigatorObserver, UserApi {
   @override
   Stream<GirafUserModel> me() {
@@ -43,7 +45,9 @@ void main() {
 
   final DisplayNameModel user = DisplayNameModel(
       displayName: 'Mickey Mouse', id: '2', role: Role.Citizen.toString());
-
+  setUpAll(() {
+    registerFallbackValue(MockRoute());
+  });
   setUp(() {
     di.clearAll();
     api = Api('any');

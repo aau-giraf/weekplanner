@@ -32,6 +32,10 @@ void main() {
   late Api api;
   late SettingsBloc settingsBloc;
 
+  setUpAll(() {
+    registerFallbackValue(SettingsModel());
+  });
+
   setUp(() {
     api = Api('any');
     api.user = MockUserApi();
@@ -46,8 +50,7 @@ void main() {
         pictogramText: false,
         lockTimerControl: false);
 
-    when(api.user.updateSettings(any as String, any as SettingsModel)
-            as Function())
+    when(()=>api.user.updateSettings(any(), any()))
         .thenAnswer((_) {
       return Stream<bool>.value(true);
     });
