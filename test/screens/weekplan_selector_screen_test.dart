@@ -101,7 +101,9 @@ void main() {
   late Api api;
   late MockWeekApi weekApi;
   late MockPictogramApi pictogramApi;
-
+  setUpAll(() {
+    registerFallbackValue(WeekModel());
+  });
   const String nameWeekModel1 = 'weekmodel1';
   const String nameWeekModel2 = 'weekmodel2';
 
@@ -165,47 +167,47 @@ void main() {
     weekNameModelList.add(weekNameModel);
     weekNameModelList.add(weekNameModel2);
 
-    when(weekApi.getNames('testId') as Function()).thenAnswer((_) =>
+    when(()=>weekApi.getNames('testId')).thenAnswer((_) =>
         rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
-    when(weekApi.get(
+    when(()=>weekApi.get(
                 'testId', weekNameModel.weekYear!, weekNameModel.weekNumber!)
-            as Function())
+            )
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
 
-    when(weekApi.get(
+    when(()=>weekApi.get(
                 'testId', weekModel1Copy.weekYear!, weekModel1Copy.weekNumber!)
-            as Function())
+    )
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(emptyWeekmodel));
-    when(weekApi.get(
+    when(()=>weekApi.get(
                 'testId', weekNameModel2.weekYear!, weekNameModel2.weekNumber!)
-            as Function())
+    )
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel2));
 
-    when(weekApi.get('testId', weekModel1.weekYear!, weekModel1.weekNumber!)
-            as Function())
+    when(()=>weekApi.get('testId', weekModel1.weekYear!, weekModel1.weekNumber!)
+    )
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
 
-    when(weekApi.get(
+    when(()=>weekApi.get(
                 'testId', mockWeekModel.weekYear!, mockWeekModel.weekNumber!)
-            as Function())
+            )
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(mockWeekModel));
 
-    when(weekApi.update('testId', weekModel1Copy.weekYear!,
-            weekModel1Copy.weekNumber!, any as WeekModel) as Function())
+    when(()=>weekApi.update('testId', weekModel1Copy.weekYear!,
+            weekModel1Copy.weekNumber!, any()))
         .thenAnswer((_) {
       return rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1Copy);
     });
 
-    when(weekApi.delete(mockUser.id!, any as int, any as int) as Function())
+    when(()=>weekApi.delete(mockUser.id!, any(), any()))
         .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
 
-    when(pictogramApi.getImage(any as int) as Function())
+    when(()=>pictogramApi.getImage(any()))
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
   }
 

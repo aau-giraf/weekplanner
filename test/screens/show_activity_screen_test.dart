@@ -325,11 +325,11 @@ void main() {
   late WeekplanBloc weekplanBloc;
 
   void setupApiCalls() {
-    when(weekApi.update(mockUser.id!, mockWeek.weekYear!, mockWeek.weekNumber!,
-            mockWeek) as Function())
+    when(()=>weekApi.update(mockUser.id!, mockWeek.weekYear!, mockWeek.weekNumber!,
+            mockWeek))
         .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>.seeded(mockWeek));
 
-    when(api.user.getSettings(any as String) as Function()).thenAnswer((_) {
+    when(()=>api.user.getSettings(any())).thenAnswer((_) {
       return Stream<SettingsModel>.value(mockSettings);
     });
   }

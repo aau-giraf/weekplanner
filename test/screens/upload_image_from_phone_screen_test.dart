@@ -2,6 +2,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api_client.dart';
+import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/pictogram_model.dart';
@@ -53,6 +54,10 @@ class UploadMock extends MockUploadFromGalleryBloc
 void main() {
   late UploadMock bloc;
   late Api api;
+  //How the fuck do i initialize Pictogrammodel :/
+  setUpAll(() {
+    registerFallbackValue(PictogramModel(title: "", accessLevel: AccessLevel.PRIVATE));
+    });
 
   setUp(() {
     api = Api('Any');
@@ -75,7 +80,7 @@ void main() {
       ),
     ));
     await tester.pumpAndSettle();
-    when(api.pictogram.create(any as PictogramModel) as Function())
+    when(()=>api.pictogram.create(any()))
         .thenAnswer((_) => Stream<PictogramModel>.error(Exception()));
     bloc.setInputIsValid(true);
 
