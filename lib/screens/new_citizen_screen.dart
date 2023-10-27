@@ -23,7 +23,7 @@ enum Roles {
 
 /// This map provides translations for different roles used in the application
 /// from English to Danish.
-Map<Roles, String> roleText = <Roles, String>{
+final Map<Roles, String> roleText = <Roles, String>{
   Roles.guardian: 'Pædagog', // from Guardian to Pædagog
   Roles.trustee: 'Værge',    // from Trustee to Værge
   Roles.citizen: 'Borger',   // from Citizen to Borger
