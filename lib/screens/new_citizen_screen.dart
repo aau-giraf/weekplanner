@@ -24,12 +24,6 @@ enum Roles {
   citizen
 }
 
-Map<Roles, String> roleText = {
-  Roles.guardian: 'Pædagog',
-  Roles.trustee: 'Værge',
-  Roles.citizen: 'Borger',
-};
-
 /// Screen for creating a new citizen
 // ignore: must_be_immutable
 class NewCitizenScreen extends StatefulWidget {
@@ -80,15 +74,15 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
     widget._bloc.resetBloc();
   }
 
+  /// Variables to control the enable state of a 'Gem bruger' button and
+  /// 'Videre' button
   bool isButtonSaveEnabled = true;
   bool isButtonContinueEnabled = false;
 
-  @override
+ @override
   Widget build(BuildContext context) {
     widget.screenHeight = MediaQuery.of(context).size.height;
     widget.screenWidth = MediaQuery.of(context).size.width;
-
-
     return Scaffold(
       appBar: GirafAppBar(
         title: 'Ny bruger',
@@ -97,8 +91,9 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(
-                  left: 16, top: 6, right: 16, bottom: 2.5),
+              padding:
+              const EdgeInsets.only(left: 16, top: 6,
+                  right: 16, bottom: 2.5),
               child: StreamBuilder<bool>(
                   stream: widget._bloc.validDisplayNameStream,
                   builder:
@@ -119,8 +114,9 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                   }),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                  left: 16, top: 6, right: 16, bottom: 2.5),
+              padding:
+              const EdgeInsets.only(left: 16, top: 6,
+                  right: 16, bottom: 2.5),
               child: StreamBuilder<bool>(
                   stream: widget._bloc.validDisplayNameStream,
                   builder:
@@ -132,7 +128,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                             Expanded(
                               child: ListTile(
                                 key: const Key('guardianRadioButton'),
-                                title: const Text('Pædagog'),
+                                title: const Text('Guardian'),
                                 leading: Radio<Roles>(
                                   value: Roles.guardian,
                                   groupValue: _role,
@@ -149,7 +145,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                             Expanded(
                               child: ListTile(
                                 key: const Key('trusteeRadioButton'),
-                                title: const Text('Værge'),
+                                title: const Text('Trustee'),
                                 leading: Radio<Roles>(
                                   value: Roles.trustee,
                                   groupValue: _role,
@@ -166,7 +162,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                             Expanded(
                               child: ListTile(
                                 key: const Key('citizenRadioButton'),
-                                title: const Text('Borger'),
+                                title: const Text('Citizen'),
                                 leading: Radio<Roles>(
                                   value: Roles.citizen,
                                   groupValue: _role,
@@ -225,10 +221,12 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                               onChanged: _role == Roles.citizen
                                   ? (bool value) {
                                 setState(() {
+                                  // Enable 'Videre' button
                                   isButtonContinueEnabled = value;
-                                  widget
-                                      ._bloc.onUsePictogramPasswordChange
+                                  widget.
+                                  _bloc.onUsePictogramPasswordChange
                                       .add(value);
+                                  // Hide 'Gem bruger' button
                                   isButtonSaveEnabled = !value;
                                 });
                               }
@@ -243,15 +241,15 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                   builder:
                       (BuildContext context, AsyncSnapshot<bool> snapshot) {
                     return Visibility(
-                      visible:
-                      !widget._bloc.usePictogramPasswordController.value,
+                      visible: !widget._bloc.
+                      usePictogramPasswordController.value,
                       child: TextFormField(
                         key: const Key('passwordField'),
                         enabled:
                         !widget._bloc.usePictogramPasswordController.value,
                         decoration: InputDecoration(
-                          border: const OutlineInputBorder(
-                              borderSide: BorderSide()),
+                          border:
+                          const OutlineInputBorder(borderSide: BorderSide()),
                           labelText: 'Kodeord',
                           errorText: (snapshot?.data == true) &&
                               widget._bloc.passwordController.value != null
@@ -280,8 +278,9 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                         enabled:
                         !widget._bloc.usePictogramPasswordController.value,
                         decoration: InputDecoration(
-                          border: const OutlineInputBorder(
-                              borderSide: BorderSide()),
+                          border:
+                          const
+                          OutlineInputBorder(borderSide: BorderSide()),
                           labelText: 'Gentag kodeord',
                           errorText: (snapshot?.data == true)
                               ? null
@@ -293,13 +292,12 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                     );
                   }),
             ),
-            Padding(
-              // edit
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
               //child: Text('Profil billede af borger (valgfri):'),
               child: AutoSizeText(
-                'Profil billede af ${roleText[_role]} (valgfri):',
-                style: const TextStyle(fontSize: GirafFont.small),
+                'Profil billede af borger (valgfri):',
+                style: TextStyle(fontSize: GirafFont.small),
               ),
             ),
 
@@ -325,8 +323,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                   /// Add from gallery button
                   child: GirafButton(
                     key: const Key('TilføjFraGalleriButton'),
-                    icon:
-                    const ImageIcon(AssetImage('assets/icons/gallery.png')),
+                    icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
                     text: 'Tilføj fra galleri',
                     onPressed: widget._bloc.chooseImageFromGallery,
                     child: StreamBuilder<File>(
@@ -345,8 +342,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                   /// Take picture button
                   child: GirafButton(
                     key: const Key('TagBillede'),
-                    icon:
-                    const ImageIcon(AssetImage('assets/icons/camera.png')),
+                    icon: const ImageIcon(AssetImage('assets/icons/camera.png')),
                     text: 'Tag billede',
                     onPressed: widget._bloc.takePictureWithCamera,
                     child: StreamBuilder<File>(
@@ -360,15 +356,18 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                 ),
               ],
             ),
+
+            // Enable 'Gem bruger' button for new user creation
+            // (Pædagog, Værge, Borger) with regular code
             Center(
               child: Visibility(
                 visible: isButtonSaveEnabled,
                 child: Padding(
-                  padding:  const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                  padding:
+                  const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                   child: GirafButton(
                     key: const Key('saveButton'),
-                    icon:
-                    const ImageIcon(AssetImage('assets/icons/save.png')),
+                    icon: const ImageIcon(AssetImage('assets/icons/save.png')),
                     text: 'Gem bruger',
                     isEnabled: false,
                     isEnabledStream: widget._bloc.allInputsAreValidStream,
@@ -411,16 +410,18 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
               ),
             ),
 
-
+            // Enable 'Videre' button for new Borger user creation with
+            // pictogram code
             Center(
               child: Visibility(
                 visible: isButtonContinueEnabled,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                  padding:
+                  const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                   child: GirafButton(
                     key: const Key('nextButton'),
-                    icon: const ImageIcon(
-                        AssetImage('assets/icons/accept.png')),
+                    icon:
+                    const ImageIcon(AssetImage('assets/icons/accept.png')),
                     text: 'Videre',
                     isEnabled: false,
                     isEnabledStream: widget._bloc.validUsePictogramStream,
@@ -441,7 +442,6 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                 ),
               ),
             ),
-
           ],
         ),
       ),
