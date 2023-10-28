@@ -16,13 +16,10 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 enum Roles {
   /// Guardian role
   guardian,
-
   /// Trustee  role
   trustee,
-
   /// Citizen role
-  citizen
-}
+  citizen }
 
 /// Screen for creating a new citizen
 // ignore: must_be_immutable
@@ -79,7 +76,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
   bool isButtonSaveEnabled = true;
   bool isButtonContinueEnabled = false;
 
- @override
+  @override
   Widget build(BuildContext context) {
     widget.screenHeight = MediaQuery.of(context).size.height;
     widget.screenWidth = MediaQuery.of(context).size.width;
@@ -448,3 +445,4 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
     );
   }
 }
+
