@@ -12,7 +12,7 @@ import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
-// Role names for Weekplanner
+/// Role names for Weekplanner
 enum Roles {
   /// Guardian role
   guardian,
