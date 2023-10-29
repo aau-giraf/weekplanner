@@ -71,6 +71,11 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
     widget._bloc.resetBloc();
   }
 
+  /// Variables to control the enable state of a 'Gem bruger' button and
+  /// 'Videre' button
+  bool isButtonSaveEnabled = true;
+  bool isButtonContinueEnabled = false;
+
   @override
   Widget build(BuildContext context) {
     widget.screenHeight = MediaQuery.of(context).size.height;
@@ -213,9 +218,13 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                               onChanged: _role == Roles.citizen
                                   ? (bool value) {
                                 setState(() {
+                                  // Enable 'Videre' button
+                                  isButtonContinueEnabled = value;
                                   widget.
                                   _bloc.onUsePictogramPasswordChange
                                       .add(value);
+                                  // Hide 'Gem bruger' button
+                                  isButtonSaveEnabled = !value;
                                 });
                               }
                                   : null);
@@ -344,11 +353,12 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                 ),
               ],
             ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
+            // Enable 'Gem bruger' button for new user creation
+            // (Pædagog, Værge, Borger) with regular code
+            Center(
+              child: Visibility(
+                visible: isButtonSaveEnabled,
+                child: Padding(
                   padding:
                   const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                   child: GirafButton(
@@ -393,14 +403,20 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                     },
                   ),
                 ),
-                const SizedBox(
-                  width: 30,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+              ),
+            ),
+            // Enable 'Videre' button for new Borger user creation with
+            // pictogram code
+            Center(
+              child: Visibility(
+                visible: isButtonContinueEnabled,
+                child: Padding(
+                  padding:
+                  const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                   child: GirafButton(
                     key: const Key('nextButton'),
-                    icon: const ImageIcon(AssetImage('assets/icons/accept.png')),
+                    icon:
+                    const ImageIcon(AssetImage('assets/icons/accept.png')),
                     text: 'Videre',
                     isEnabled: false,
                     isEnabledStream: widget._bloc.validUsePictogramStream,
@@ -413,13 +429,13 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                                   NewPictogramPasswordScreen(
                                     widget._bloc.usernameController.value,
                                     widget._bloc.displayNameController.value,
-                                    widget._bloc.encodePicture
-                                      (widget._bloc.fileController.value),
+                                    widget._bloc.encodePicture(
+                                        widget._bloc.fileController.value),
                                   )));
                     },
                   ),
                 ),
-              ],
+              ),
             ),
           ],
         ),
