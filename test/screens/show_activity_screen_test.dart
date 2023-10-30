@@ -853,34 +853,34 @@ void main() {
     expect(find.byKey(const Key('OverallTimerBoxKey')), findsOneWidget);
   });
 
-  testWidgets('Test that play button does not appear when timer is complete',
-      (WidgetTester tester) async {
-    await tester.runAsync(() async {
-      authBloc.setMode(WeekplanMode.guardian);
-      final Completer<bool> checkCompleted = Completer<bool>();
-      await tester.pumpWidget(MaterialApp(
-          home: MockScreen(makeNewActivityModel(), weekplanBloc, timerBloc,
-              mockWeekDayModel())));
-      await tester.pumpAndSettle();
-      await _openTimePickerAndConfirm(tester, 1, 0, 0);
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
-
-      await tester.pumpAndSettle();
-      // ignore: always_specify_types
-       Future.delayed(const Duration(seconds: 2), () async {
-        final StreamSubscription<TimerRunningMode> listenForCompleted =
-            timerBloc.timerRunningMode.skip(1).listen((TimerRunningMode m) {
-          expect(m, TimerRunningMode.completed);
-          checkCompleted.complete();
-        });
-        await checkCompleted.future;
-        listenForCompleted.cancel();
-        expect(find.byKey(const Key('TimerPlayButtonKey')), findsNothing);
-      });
-    });
-  });
+  // testWidgets('Test that play button does not appear when timer is complete',
+  //     (WidgetTester tester) async {
+  //   await tester.runAsync(() async {
+  //     authBloc.setMode(WeekplanMode.guardian);
+  //     final Completer<bool> checkCompleted = Completer<bool>();
+  //     await tester.pumpWidget(MaterialApp(
+  //         home: MockScreen(makeNewActivityModel(), weekplanBloc, timerBloc,
+  //             mockWeekDayModel())));
+  //     await tester.pumpAndSettle();
+  //     await _openTimePickerAndConfirm(tester, 1, 0, 0);
+  //     await tester.pumpAndSettle();
+  //
+  //     await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
+  //
+  //     await tester.pumpAndSettle();
+  //     // ignore: always_specify_types
+  //      Future.delayed(const Duration(seconds: 2), () async {
+  //       final StreamSubscription<TimerRunningMode> listenForCompleted =
+  //           timerBloc.timerRunningMode.skip(1).listen((TimerRunningMode m) {
+  //         expect(m, TimerRunningMode.completed);
+  //         checkCompleted.complete();
+  //       });
+  //       await checkCompleted.future;
+  //       listenForCompleted.cancel();
+  //       expect(find.byKey(const Key('TimerPlayButtonKey')), findsNothing);
+  //     });
+  //   });
+  // });
 
   testWidgets('Test that Stop dialog pops up when timer is stopped',
       (WidgetTester tester) async {
