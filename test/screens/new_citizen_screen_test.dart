@@ -174,7 +174,7 @@ void main() {
     await gesture.moveBy(const Offset(0, -300));
     await tester.pump();
 
-    expect(find.byType(GirafButton, skipOffstage: false), findsNWidgets(4));
+    expect(find.byType(GirafButton, skipOffstage: false), findsNWidgets(3));
   });
 
   testWidgets('You can input a display name', (WidgetTester tester) async {
@@ -254,15 +254,32 @@ void main() {
     expect(find.byKey(const Key('ErrorMessageDialog')), findsNWidgets(0));
   });
 
-  testWidgets('"Videre" button should be disabled by default',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
-    await tester.pump();
 
-    expect(
-        tester
-            .widget<GirafButton>(find.byKey(const Key('nextButton')))
-            .isEnabled,
-        isFalse);
-  });
+  testWidgets('"Videre" button should be disabled by default',
+          (WidgetTester tester) async {
+        // Build widget and trigger a frame.
+        await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+
+        // Ensure that the "Videre" button is not present in the initial state.
+        expect(find.byKey(const Key('nextButton')), findsNothing);
+
+        // Find the "Use Piktogram Switch" widget.
+        final switchWidget = find.byKey(const Key('usePictogramSwitch'));
+
+        // Ensure that the "nextButton" is not present before tapping the switch.
+        expect(find.byKey(const Key('nextButton')), findsNothing);
+
+        // Simulate toggling the switch to 'true'.
+        await tester.tap(switchWidget);
+        await tester.pumpAndSettle(); // Wait for the widget to rebuild.
+
+        // Check the state of the "Videre" button.
+        expect(find.byKey(const Key('nextButton')), findsOneWidget);
+        expect(
+            tester
+                .widget<GirafButton>(find.byKey(const Key('nextButton')))
+                .isEnabled,
+            isFalse);
+      });
+
 }
