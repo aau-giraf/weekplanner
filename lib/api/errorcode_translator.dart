@@ -30,14 +30,14 @@ class ApiErrorTranslator {
         // Undefined errors, the message is in english
         // as we cant predict why it was cast
         return 'message: ' +
-            error.errorMessage +
+            (error.errorMessage ?? 'No error message provided') +
             '\nDetails: ' +
-            error.errorDetails;
+            (error.errorDetails ?? 'No error details provided');
       default:
         return 'Fejl: ' +
-            error.errorMessage +
+            (error.errorMessage ?? 'No error message provided') +
             '\nDetails: ' +
-            error.errorDetails;
+            (error.errorDetails ?? 'No error details provided');
     }
   }
 }

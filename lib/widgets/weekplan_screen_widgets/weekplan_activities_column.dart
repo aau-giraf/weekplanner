@@ -382,7 +382,7 @@ class WeekplanActivitiesColumn extends StatelessWidget {
     String message = '';
     Key key;
     if (error is ApiException) {
-      message = error.errorMessage;
+      message = error.errorMessage ?? 'No error defined';
       // ignore: avoid_as
       key = error.errorKey as Key;
     } else {
