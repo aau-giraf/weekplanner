@@ -231,10 +231,11 @@ class WeekplansBloc extends BlocBase {
     final int currentWeekNum = currentWeek[0];
     final int currentYear = currentWeek[1];
 
-    // Checks how many weeks there are in the current year.
-    // If it's a leap year or a thursday on January 1, there are 53 weeks
+    // Checks how many weeks there were/are in the year where the weekplan
+    // was created. If it's a leap year or a Thursday on January 1,
+    // there are/were 53 weeks
     int amountOfWeeksInYear = 52;
-    if (DateTime(currentYear, 1, 1).day == DateTime.thursday ||
+    if (DateTime(currentYear - 1, 1, 1).day == DateTime.thursday ||
         currentYear % 4 == 0) {
       amountOfWeeksInYear = 53;
     }
