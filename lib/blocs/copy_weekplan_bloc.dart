@@ -40,7 +40,7 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
                 user.id!, weekModel.weekYear!, weekModel.weekNumber!, weekModel)
             .take(1)
             .listen((WeekModel weekModel) {
-          callCompleter.complete(weekModel as bool ? true : false);
+          callCompleter.complete(true);
         });
 
         callFutures.add(callCompleter.future);
