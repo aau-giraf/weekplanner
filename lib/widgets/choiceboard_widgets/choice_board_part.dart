@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:weekplanner/blocs/weekplan_bloc.dart';
 
 import '../../di.dart';
 import 'delete_pictogram_from_choice_board_button.dart';
@@ -17,8 +18,7 @@ class ChoiceBoardPart extends StatelessWidget {
     _pictogramImageBloc.load(_pictogramModel);
   }
 
-  final PictogramImageBloc _pictogramImageBloc =
-      di.get<PictogramImageBloc>();
+  final PictogramImageBloc _pictogramImageBloc = di.get<PictogramImageBloc>();
 
   final PictogramModel _pictogramModel;
 
@@ -27,6 +27,8 @@ class ChoiceBoardPart extends StatelessWidget {
   final ActivityModel _activity;
 
   final ActivityBloc _bloc;
+
+  final WeekplanBloc _weekplanBloc = di.get<WeekplanBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +48,7 @@ class ChoiceBoardPart extends StatelessWidget {
               Positioned(
                 top: 5,
                 right: 5,
-                child:
-                    DeletePictogramFromChoiceBoardButton(() {
+                child: DeletePictogramFromChoiceBoardButton(() {
                   _bloc.load(_activity, _user);
                   _activity.pictograms.remove(_pictogramModel);
                   if (_activity.pictograms.length == 1) {
@@ -55,6 +56,8 @@ class ChoiceBoardPart extends StatelessWidget {
                     _bloc.getTitleWhenChoiceboardDeleted();
                   }
                   _bloc.update();
+                  _weekplanBloc.loadWeek(_user);
+                  _bloc.load(_activity, _user);
                 }),
               ),
             ],
