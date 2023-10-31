@@ -36,13 +36,11 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
-import 'package:weekplanner/widgets/pictogram_image.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/activity_card.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
 
 import '../mock_data.dart';
-import 'copy_resolve_screen_test.dart';
 
 class MockActivityApi extends Mock implements ActivityApi {
   @override
