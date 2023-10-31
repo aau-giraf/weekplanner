@@ -327,8 +327,7 @@ void main() {
 
     testWidgets('Click on thumbnail redirects to pictogram search screen',
         (WidgetTester tester) async {
-      when(api.pictogram.getAll(page: 1, pageSize: pageSize, query: '')
-              as Function())
+      when(()=>api.pictogram.getAll(page: 1, pageSize: pageSize, query: ''))
           .thenAnswer((_) =>
               rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
                   <PictogramModel>[mockPictogram]));
