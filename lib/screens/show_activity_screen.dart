@@ -6,6 +6,7 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -624,7 +625,8 @@ class ShowActivityScreen extends StatelessWidget {
       BuildContext overallContext,
       AsyncSnapshot<bool> timerInitSnapshot,
       AsyncSnapshot<WeekplanMode> modeSnapshot,
-      AsyncSnapshot<SettingsModel> settingsSnapshot) {
+      AsyncSnapshot<SettingsModel> settingsSnapshot,
+      ) {
     return Visibility(
       visible: modeSnapshot.data == WeekplanMode.guardian ||
           (settingsSnapshot.hasData && !settingsSnapshot.data.lockTimerControl),
@@ -632,28 +634,23 @@ class ShowActivityScreen extends StatelessWidget {
         child: GirafButton(
           key: const Key('TimerStopButtonKey'),
           onPressed: () {
-            showDialog<Center>(
-                context: overallContext,
-                barrierDismissible: false,
-                builder: (BuildContext context) {
-                  //Confirmation dialog for stopping the timer.
-                  return GirafConfirmDialog(
-                    key: const Key('TimerStopConfirmDialogKey'),
-                    title: 'Stop Timer',
-                    description: 'Vil du stoppe timeren?',
-                    confirmButtonText: 'Stop',
-                    confirmButtonIcon:
-                        const ImageIcon(AssetImage('assets/icons/stop.png')),
-                    confirmOnPressed: () {
-                      _timerBloc.stopTimer();
-                      Routes().pop(context);
-                    },
-                  );
-                });
+            // Directly perform actions without showing the confirmation dialog
+            _timerBloc.stopTimer();
+            _showToast("The timer has been stopped.");
           },
           icon: const ImageIcon(AssetImage('assets/icons/stop.png')),
         ),
       ),
+    );
+  }
+  // Give message after stopping timer
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black,
+      textColor: Colors.white,
     );
   }
 
