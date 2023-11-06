@@ -1184,7 +1184,7 @@ void main() {
           mockActivities[2].id.toString())));
         await tester.pumpAndSettle();
 
-        expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
+        expect(find.byKey(const Key('TimerInitKey')), findsNothing);
           // ignore: always_specify_types
           Future.delayed(const Duration(seconds: 2), () async {
           checkCompleted.complete();
@@ -1232,11 +1232,11 @@ void main() {
             + mockActivities[2].id.toString())));
         await tester.pumpAndSettle();
 
-        expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
+        expect(find.byKey(const Key('TimerInitKey')), findsNothing);
         await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString()
               + mockActivities[2].id.toString())));
 
-        expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
+        expect(find.byKey(const Key('TimerInitKey')), findsNothing);
         // ignore: always_specify_types
         Future.delayed(const Duration(seconds: 2), () async {
           checkCompleted.complete();
