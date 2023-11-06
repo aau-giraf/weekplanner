@@ -636,7 +636,7 @@ class ShowActivityScreen extends StatelessWidget {
           onPressed: () {
             // Directly perform actions without showing the confirmation dialog
             _timerBloc.stopTimer();
-            _showToast("Timeren er blevet stoppet.");
+            _showToast('Timeren er blevet stoppet.');
           },
           icon: const ImageIcon(AssetImage('assets/icons/stop.png')),
         ),
