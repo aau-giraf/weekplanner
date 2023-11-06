@@ -21,6 +21,7 @@ dependencies:
   data_connection_checker: ^0.3.4
   flutter:
     sdk: flutter
+  fluttertoast: ^8.2.2
   http: ^0.13.5
   image: ^3.2.2
   image_picker: ^0.8.6
@@ -31,7 +32,6 @@ dependencies:
   rflutter_alert: ^2.0.4
   rxdart: ^0.27.5
   shared_preferences: ^2.0.15
-  fluttertoast: ^8.2.2
 
 dev_dependencies:
   async_test:
