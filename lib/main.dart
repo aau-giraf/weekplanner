@@ -12,6 +12,8 @@ import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 final Api _api = di.get<Api>();
 final AuthBloc _authBloc = di.get<AuthBloc>();
@@ -26,7 +28,7 @@ void main() {
    * Use the "environments.local.json" for running against your local web-api
    * For IOS users: change the SERVER_HOST in the environment.local file to "http://localhost:5000"
    */
-  environment.setFile('assets/environments.dev.json').whenComplete(() {
+  environment.setFile('assets/environments.local.json').whenComplete(() {
     _runApp();
   });
 }
