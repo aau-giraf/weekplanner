@@ -98,17 +98,6 @@ class NewCitizenBloc extends BlocBase {
     });
   }
 
-  /// pushes an imagePicker screen, then sets the pictogram image,
-  /// to the selected image from the gallery
-  void takePictureWithCamera() {
-    ImagePicker().pickImage(source: ImageSource.camera).then((XFile f) {
-      if (f != null) {
-        _publishImage(File(f.path));
-        _checkInput();
-      }
-    });
-  }
-
   /// pushes an imagePicker screen, then sets the profile picture image,
   /// to the selected image from the gallery
   void chooseImageFromGallery() {
