@@ -685,3 +685,4 @@ android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
 ios/Flutter/Flutter.podspec
 
 ios/Flutter/flutter_export_environment.sh
+lib/main.dart
