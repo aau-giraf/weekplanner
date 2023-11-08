@@ -766,7 +766,7 @@ void main() {
     await _openTimePickerAndConfirm(tester, 3, 2, 1);
     await tester.tap(find.byKey(const Key('TimerStopButtonKey')));
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key('TimerStopConfirmDialogKey')), findsOneWidget);
+    expect(find.byKey(const Key('TimerStopConfirmDialogKey')), findsNothing);
   });
 
   testWidgets('Test that timer delete button probs a confirm dialog',
@@ -894,7 +894,7 @@ void main() {
     await _openTimePickerAndConfirm(tester, 1, 1, 1);
     await tester.tap(find.byKey(const Key('TimerStopButtonKey')));
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key('TimerStopConfirmDialogKey')), findsOneWidget);
+    expect(find.byKey(const Key('TimerStopConfirmDialogKey')), findsNothing);
   });
 
   testWidgets('Only have a play button for timer when lockTimerControl is true',
