@@ -261,7 +261,7 @@ void main() {
     // Ensure that the "Videre" button is not present in the initial state.
     expect(find.byKey(const Key('nextButton')), findsNothing);
     // Find the "Use Piktogram Switch" widget.
-    final switchWidget = find.byKey(const Key('usePictogramSwitch'));
+    final Finder switchWidget = find.byKey(const Key('usePictogramSwitch'));
     // Ensure that the "nextButton" is not present before tapping the switch.
     expect(find.byKey(const Key('nextButton')), findsNothing);
     // Simulate toggling the switch to 'true'.
