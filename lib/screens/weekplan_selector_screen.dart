@@ -52,7 +52,60 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final bool portrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
+    /// screen background
     return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            /// The blue left part of screen
+            Expanded(
+                flex: 1,
+                child: Container(
+                  height: screenSize.height,
+                  child: Image.asset(
+                    'assets/icons/giraf_blue_long.png',
+                    repeat: ImageRepeat.repeat,
+                    fit: BoxFit.cover,
+                  ),
+                )
+            ),
+            /// The white middle of the screen
+            Expanded(
+              flex: 5,
+              child: Container(
+                width: screenSize.width,
+                height: screenSize.height,
+                padding: portrait
+                    ? const EdgeInsets.fromLTRB(50, 0, 50, 0)
+                    : const EdgeInsets.fromLTRB(200, 0, 200, 8),
+              ),
+            ),
+            /// The blue right part of screen
+            Expanded(
+                flex: 1,
+                child: Container(
+                  height: screenSize.height,
+                  child: Image.asset(
+                    'assets/icons/giraf_blue_long.png',
+                    repeat: ImageRepeat.repeat,
+                    fit: BoxFit.cover,
+                  ),
+                )
+            )
+          ],
+        )
+    );
+  }
+
+  ///@override
+  Widget build2(BuildContext context) {
+    return Scaffold(
+
         appBar: GirafAppBar(
           title: widget._user.displayName,
           appBarIcons: <AppBarIcon, VoidCallback>{
@@ -75,11 +128,38 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
         ),
         body: _buildWeekplanColumnview(context));
   }
+
+  ///@override
+  ///sidebar widget - virker ikke
+  ///Widget buildSide(BuildContext context) {
+   /// final Size screenSize = MediaQuery.of(context).size;
+   /// return Scaffold(
+      ///  resizeToAvoidBottomInset: false,
+       /// body: Row(
+         ///   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+           /// children: <Widget>[
+            ///  Expanded(
+              ///    flex: 1,
+                ///  child: Container(
+                  ///  height: screenSize.height,
+                ///    child: Image.asset(
+                   ///   'assets/icons/giraf_orange_long.png',
+                 ///     repeat: ImageRepeat.repeat,
+                  ///    fit: BoxFit.cover,
+                 ///   ),
+             ///     )
+         ///     ),
+       ///     ]
+     ///   )
+  ///  );
+ /// }
+
   // Entire screen
   Widget _buildWeekplanColumnview(BuildContext context) {
     final Stream<List<WeekModel>> weekModels = widget._weekBloc.weekModels;
     final Stream<List<WeekModel>> oldWeekModels =
         widget._weekBloc.oldWeekModels;
+
     // Container which holds all of the UI elements on the screen
     return Container(
       child: Column(children: <Widget>[
@@ -151,6 +231,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                 child: _buildWeekplanGridview(context, oldWeekModels, false))))
     ]));
   }
+
+
 
   Widget _buildWeekplanGridview(BuildContext context,
       Stream<List<WeekModel>> weekModels, bool isUpcomingWeekplan) {
@@ -378,6 +460,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
       ],
     ));
   }
+
+
 
   Future<void> _pushEditWeekPlan(BuildContext context) async {
     final int markedCount = widget._weekBloc.getNumberOfMarkedWeekModels();

@@ -50,6 +50,7 @@ class WeekplanScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return StreamBuilder<WeekplanMode>(
         stream: _authBloc.mode,
         builder: (BuildContext context,
