@@ -55,6 +55,9 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
     final Size screenSize = MediaQuery.of(context).size;
     final bool portrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
+    final Stream<List<WeekModel>> weekModels = widget._weekBloc.weekModels;
+    final Stream<List<WeekModel>> oldWeekModels =
+        widget._weekBloc.oldWeekModels;
 
     /// screen background
     return Scaffold(
@@ -83,24 +86,83 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                 padding: portrait
                     ? const EdgeInsets.fromLTRB(50, 0, 50, 0)
                     : const EdgeInsets.fromLTRB(200, 0, 200, 8),
+                child: Container(
+                child: Column(children: <Widget>[
+                Expanded(
+                flex: 5, child: _buildWeekplanGridview(context, weekModels, true)),
+                // Overstået Uger bar
+                InkWell(
+                  child: Container(
+                    color: Colors.grey,
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.fromLTRB(10.0, 3, 0, 3),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const AutoSizeText(
+                          'Overståede uger',
+                          style: TextStyle(fontSize: GirafFont.small),
+                          maxLines: 1,
+                          minFontSize: 14,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        showOldWeeks
+                        // Icons for showing and hiding the old weeks are inside this
+                        // When the old weeks are shown, show the hide icon
+                            ? Expanded(
+                          flex: 1,
+                          child: IconButton(
+                            key: const Key('HideOldWeeks'),
+                            padding: const EdgeInsets.all(0.0),
+                            alignment: Alignment.centerRight,
+                            color: Colors.black,
+                            icon: const Icon(Icons.remove, size: 50),
+                            onPressed: () {
+                              _toggleOldWeeks();
+                            },
+                          ),
+                        )
+                        // Icons for showing and hiding the old weeks are inside this
+                        // When the old weeks are hidden, show the hide icon
+                            : Expanded(
+                          flex: 1,
+                          child: IconButton(
+                            key: const Key('ShowOldWeeks'),
+                            padding: const EdgeInsets.all(0.0),
+                            alignment: Alignment.centerRight,
+                            color: Colors.black,
+                            icon: const Icon(Icons.add, size: 50),
+                            onPressed: () {
+                              _toggleOldWeeks();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    _toggleOldWeeks();
+                  },
+                ),
+
+                Visibility(
+                    visible: showOldWeeks,
+                    child: Expanded(
+                        flex: 5,
+                        child: Container( // Container with old weeks if shown
+                          // Background color of the old weeks
+                            color: Colors.grey.shade600,
+                            child: _buildWeekplanGridview(context, oldWeekModels, false))))
+                ])),
+                ),
               ),
+              ]
             ),
             /// The blue right part of screen
-            Expanded(
-                flex: 1,
-                child: Container(
-                  height: screenSize.height,
-                  child: Image.asset(
-                    'assets/icons/giraf_blue_long.png',
-                    repeat: ImageRepeat.repeat,
-                    fit: BoxFit.cover,
-                  ),
-                )
-            )
-          ],
-        )
-    );
+        );
   }
+
 
   ///@override
   Widget build2(BuildContext context) {
