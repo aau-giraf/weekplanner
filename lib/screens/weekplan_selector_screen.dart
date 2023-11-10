@@ -79,7 +79,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
             ),
             /// The white middle of the screen
             Expanded(
-              flex: 5,
+              flex: 7,
               child: Container(
                 width: screenSize.width,
                 height: screenSize.height,
@@ -93,7 +93,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                 // Overstået Uger bar
                 InkWell(
                   child: Container(
-                    color: Colors.grey,
+                    color: Colors.blue[600],
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.fromLTRB(10.0, 3, 0, 3),
                     child: Row(
@@ -152,16 +152,27 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                         flex: 5,
                         child: Container( // Container with old weeks if shown
                           // Background color of the old weeks
-                            color: Colors.grey.shade600,
+                            color: Colors.blue[200],
                             child: _buildWeekplanGridview(context, oldWeekModels, false))))
                 ])),
                 ),
               ),
               ]
             ),
-            /// The blue right part of screen
         );
   }
+  /// The blue right part of screen
+ /// Expanded(
+ ///   flex: 1,
+ ///     child: Container(
+  ///      height: screenSize.height,
+  ///      child: Image.asset(
+   ///      'assets/icons/giraf_blue_long.png',
+    ///     repeat: ImageRepeat.repeat,
+  ///    fit: BoxFit.cover,
+   ///    ),
+   ///  )
+ /// );
 
 
   ///@override
@@ -188,7 +199,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
             }
           },
         ),
-        body: _buildWeekplanColumnview(context));
+    );
   }
 
   ///@override
@@ -216,6 +227,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
   ///  );
  /// }
 
+  /*
+  ///Denne del er taget linje 231-307
   // Entire screen
   Widget _buildWeekplanColumnview(BuildContext context) {
     final Stream<List<WeekModel>> weekModels = widget._weekBloc.weekModels;
@@ -294,7 +307,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
     ]));
   }
 
-
+*/
 
   Widget _buildWeekplanGridview(BuildContext context,
       Stream<List<WeekModel>> weekModels, bool isUpcomingWeekplan) {
@@ -375,56 +388,56 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                   handleOnTap(context, weekplan, inEditModeSnapshot.data),
               child: ColorFiltered(
                 // Color of each of the Overstået Uger cards
-                colorFilter: ColorFilter.mode(Colors.grey.shade400,
+                colorFilter: ColorFilter.mode(Colors.blueGrey[50],
                     current ? BlendMode.dst : BlendMode.modulate),
                 child: Card(
                     child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 4,
-                      child: LayoutBuilder(builder:
-                          (BuildContext context, BoxConstraints constraint) {
-                        if (weekplan.thumbnail != null) {
-                          return _getPictogram(weekplan, bloc);
-                        } else {
-                          return Icon(
-                            Icons.add,
-                            size: constraint.maxHeight,
-                          );
-                        }
-                      }),
-                    ),
-                    Expanded(child: LayoutBuilder(builder:
-                        (BuildContext context, BoxConstraints constraints) {
-                      return AutoSizeText(
-                        weekplan.name,
-                        style: const TextStyle(fontSize: GirafFont.small),
-                        maxLines: 1,
-                        minFontSize: 14,
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                      );
-                    })),
-                    Container(
-                      child: weekplan.weekNumber == null
-                          ? null
-                          : Expanded(child: LayoutBuilder(builder:
-                              (BuildContext context,
-                                  BoxConstraints constraints) {
-                              return AutoSizeText(
-                                'Uge: ${weekplan.weekNumber}      '
-                                'År: ${weekplan.weekYear}',
-                                key: const Key('weekYear'),
-                                style:
-                                    const TextStyle(fontSize: GirafFont.small),
-                                maxLines: 1,
-                                minFontSize: 14,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              );
-                            })),
-                    )
-                  ],
+                    children: <Widget>[
+                      Expanded(
+                        flex: 4,
+                        child: LayoutBuilder(builder:
+                            (BuildContext context, BoxConstraints constraint) {
+                         if (weekplan.thumbnail != null) {
+                            return _getPictogram(weekplan, bloc);
+                         } else {
+                           return Icon(
+                             Icons.add,
+                             size: constraint.maxHeight,
+                           );
+                          }
+                       }),
+                      ),
+                      Expanded(child: LayoutBuilder(builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                        return AutoSizeText(
+                          weekplan.name,
+                          style: const TextStyle(fontSize: GirafFont.small),
+                          maxLines: 1,
+                          minFontSize: 14,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                        );
+                      })),
+                      Container(
+                        child: weekplan.weekNumber == null
+                            ? null
+                            : Expanded(child: LayoutBuilder(builder:
+                                (BuildContext context,
+                                    BoxConstraints constraints) {
+                               return AutoSizeText(
+                                 'Uge: ${weekplan.weekNumber}      '
+                                  'År: ${weekplan.weekYear}',
+                                  key: const Key('weekYear'),
+                                  style:
+                                      const TextStyle(fontSize: GirafFont.small),
+                                  maxLines: 1,
+                                  minFontSize: 14,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                );
+                              })),
+                      )
+                    ],
                 )),
               ));
         });
