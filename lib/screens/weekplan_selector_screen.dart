@@ -93,7 +93,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                 // Overstået Uger bar
                 InkWell(
                   child: Container(
-                    color: Colors.blue[600],
+                    color: theme.GirafColors.trusteeDarkBlue,
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.fromLTRB(10.0, 3, 0, 3),
                     child: Row(
@@ -152,7 +152,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                         flex: 5,
                         child: Container( // Container with old weeks if shown
                           // Background color of the old weeks
-                            color: Colors.blue[200],
+                            color: theme.GirafColors.trusteeLightBlue,
                             child: _buildWeekplanGridview(context, oldWeekModels, false))))
                 ])),
                 ),

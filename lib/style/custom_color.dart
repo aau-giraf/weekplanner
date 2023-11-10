@@ -120,4 +120,13 @@ class GirafColors {
 
   /// Grey[350] color
   static const Color lightGrey = Color(0xFFD6D6D6);
+
+  /// Trustee light blue
+  static const Color trusteeLightBlue = Color.fromRGBO(87, 198, 253, 1);
+
+  /// Trustee blue
+  static const Color trusteeBlue = Color.fromRGBO(29, 168, 255, 1);
+
+  /// Trustee dark blue
+  static const Color trusteeDarkBlue = Color.fromRGBO(5, 141, 225, 1);
 }
