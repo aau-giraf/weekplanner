@@ -231,17 +231,6 @@ void main() {
     expect(find.byTooltip('Åbn menu'), findsOneWidget);
   });
 
-  testWidgets('Camera button is displayed', (WidgetTester tester) async {
-    final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
-      AppBarIcon.camera: null});
-
-    await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
-    await tester.pump();
-
-    expect(find.byTooltip('Åbn kamera'), findsOneWidget);
-  });
-
   testWidgets('Cancel button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
         title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{

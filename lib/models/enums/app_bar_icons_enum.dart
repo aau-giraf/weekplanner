@@ -15,9 +15,6 @@ enum AppBarIcon {
   /// Icon for opening burger menu
   burgerMenu,
 
-  /// Icon for opening camera
-  camera,
-
   /// Icon for cancelling action
   cancel,
 
