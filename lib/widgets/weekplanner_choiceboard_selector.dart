@@ -1,6 +1,5 @@
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
-import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
