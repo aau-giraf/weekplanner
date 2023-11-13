@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:weekplanner/Users/Iuser.dart';
+import 'package:weekplanner/users/Iuser.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
+import 'package:api_client/models/enums/complete_mark_enum.dart';
+import 'package:api_client/models/enums/default_timer_enum.dart';
+import 'package:api_client/models/pictogram_model.dart';
+import 'package:api_client/models/settings_model.dart';
+import 'package:flutter/material.dart';
+import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
+import 'package:weekplanner/models/enums/timer_running_mode.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
+import 'package:weekplanner/widgets/pictogram_text.dart';
+import 'package:weekplanner/widgets/timer_widgets/timer_piechart.dart';
 
-class citizen implements IUser{
-  @override
-  Widget build_avatar_icon_behavior(BuildContext context){
-    return Container(
-      width: 400,
-      height: 400,
-      child: Container(
-        margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-        child: const CircleAvatar(
-          key: Key('PlaceholderAvatar'),
-          radius: 20,
-          backgroundImage: AssetImage('assets/login_screen_background_image.png'),
-        ),
-      ),
-    );
-
-  }
-  @override
-  Widget build_choice_board_behavior (){
-
-
-  }
+class citizen implements Iuser{
 
 
 
 }
+
+
+
+
+
+
