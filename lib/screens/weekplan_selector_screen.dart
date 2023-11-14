@@ -88,12 +88,16 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                     : const EdgeInsets.fromLTRB(0, 0, 0,0),
                 child: Container(
                 child: Column(children: <Widget>[
-                  const Align(
+                   Align(
                     alignment: Alignment.topRight,
-                    child: Icon(
-                      Icons.create_outlined,
+                    child: IconButton(
+                      key: Key('EditWeekplanSelctor'),
+                      padding: EdgeInsets.all(0.0),
                       color: Colors.black,
-                      size: 50.0,
+                      icon: Icon(Icons.create_outlined, size: 50),
+                      onPressed: () {
+                        _pushEditWeekPlan(context);
+                      },
                     ),
                   ),
                 Expanded(
@@ -139,7 +143,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                             key: const Key('ShowOldWeeks'),
                             padding: const EdgeInsets.all(0.0),
                             alignment: Alignment.centerRight,
-                            color: Colors.black,
+                            color: Colors.white,
                             icon: const Icon(Icons.add, size: 50),
                             onPressed: () {
                               _toggleOldWeeks();
