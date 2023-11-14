@@ -69,11 +69,33 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
             Expanded(
                 flex: 1,
                 child: Container(
-                  height: screenSize.height,
-                  child: Image.asset(
+
+                  child: Stack(children: <Widget>[
+
+                  Image.asset(
                     'assets/icons/giraf_blue_long.png',
                     repeat: ImageRepeat.repeat,
+                    height: screenSize.height,
                     fit: BoxFit.cover,
+                  ),
+                  Container(
+                    child: Column(children: <Widget>[
+                      Align(
+                        alignment: Alignment.center,
+                        child: IconButton(
+                          key: Key('NavigationMenu'),
+                          padding: EdgeInsets.all(0.0),
+                          color: Colors.black,
+                          icon: Icon(Icons.menu, size: 50),
+                          onPressed: () {
+                            //_naviBar(context); insert navigation menu reference
+                          },
+                        ),
+                      ),
+                    ],
+                    ),
+                  ),
+                    ],
                   ),
                 ),
             ),
@@ -96,7 +118,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                       color: Colors.black,
                       icon: Icon(Icons.create_outlined, size: 50),
                       onPressed: () {
-                        _pushEditWeekPlan(context);
+                        _pushEditWeekPlan(context); //Does not work yet
                       },
                     ),
                   ),
@@ -128,7 +150,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                             key: const Key('HideOldWeeks'),
                             padding: const EdgeInsets.all(0.0),
                             alignment: Alignment.centerRight,
-                            color: Colors.black,
+                            color: Colors.white,
                             icon: const Icon(Icons.remove, size: 50),
                             onPressed: () {
                               _toggleOldWeeks();
@@ -227,7 +249,9 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
     );
   }
 
+
   */
+
 
   ///@override
   ///sidebar widget - virker ikke
