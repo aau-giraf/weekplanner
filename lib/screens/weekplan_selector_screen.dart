@@ -75,7 +75,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                     repeat: ImageRepeat.repeat,
                     fit: BoxFit.cover,
                   ),
-                )
+                ),
             ),
             /// The white middle of the screen
             Expanded(
@@ -85,9 +85,17 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                 height: screenSize.height,
                 padding: portrait
                     ? const EdgeInsets.fromLTRB(50, 0, 50, 0)
-                    : const EdgeInsets.fromLTRB(200, 0, 200, 8),
+                    : const EdgeInsets.fromLTRB(0, 0, 0,0),
                 child: Container(
                 child: Column(children: <Widget>[
+                  const Align(
+                    alignment: Alignment.topRight,
+                    child: Icon(
+                      Icons.create_outlined,
+                      color: Colors.black,
+                      size: 50.0,
+                    ),
+                  ),
                 Expanded(
                 flex: 5, child: _buildWeekplanGridview(context, weekModels, true)),
                 // Overstået Uger bar
@@ -101,7 +109,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                       children: <Widget>[
                         const AutoSizeText(
                           'Overståede uger',
-                          style: TextStyle(fontSize: GirafFont.small),
+                          style: TextStyle(fontSize: GirafFont.small, color: Colors.white),
                           maxLines: 1,
                           minFontSize: 14,
                           textAlign: TextAlign.center,
@@ -157,23 +165,36 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                 ])),
                 ),
               ),
+            /// The blue right part of screen
+            Expanded(
+                flex: 1,
+                child: Container(
+                  height: screenSize.height,
+                  child: Image.asset(
+                    'assets/icons/giraf_blue_long.png',
+                    repeat: ImageRepeat.repeat,
+                    fit: BoxFit.cover,
+                  ),
+                )
+            ),
               ]
             ),
         );
   }
+  /*
   /// The blue right part of screen
- /// Expanded(
- ///   flex: 1,
- ///     child: Container(
-  ///      height: screenSize.height,
-  ///      child: Image.asset(
-   ///      'assets/icons/giraf_blue_long.png',
-    ///     repeat: ImageRepeat.repeat,
-  ///    fit: BoxFit.cover,
-   ///    ),
-   ///  )
- /// );
-
+  Expanded(
+    flex: 1,
+      child: Container(
+        height: screenSize.height,
+        child: Image.asset(
+         'assets/icons/giraf_blue_long.png',
+         repeat: ImageRepeat.repeat,
+      fit: BoxFit.cover,
+       ),
+     )
+  );
+*/
 
   ///@override
   Widget build2(BuildContext context) {
