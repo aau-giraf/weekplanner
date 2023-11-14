@@ -196,7 +196,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
   );
 */
 
-  ///@override
+ /*
   Widget build2(BuildContext context) {
     return Scaffold(
 
@@ -222,6 +222,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
         ),
     );
   }
+
+  */
 
   ///@override
   ///sidebar widget - virker ikke
@@ -330,6 +332,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
 
 */
 
+  ///Build weekplan selector grid
   Widget _buildWeekplanGridview(BuildContext context,
       Stream<List<WeekModel>> weekModels, bool isUpcomingWeekplan) {
     List<WeekModel> initial = <WeekModel>[WeekModel(name: 'Tilføj ugeplan')];
@@ -508,6 +511,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
       },
     );
   }
+
 
   /// Builds the BottomAppBar when in edit mode
   BottomAppBar _buildBottomAppBar(BuildContext context) {
