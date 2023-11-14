@@ -29,10 +29,10 @@ class WeekplansBloc extends BlocBase {
   Stream<List<WeekModel>> get markedWeekModels => _markedWeekModels.stream;
 
   final rx_dart.BehaviorSubject<List<WeekModel>> _weekModel =
-    rx_dart.BehaviorSubject<List<WeekModel>>();
+      rx_dart.BehaviorSubject<List<WeekModel>>();
 
   final rx_dart.BehaviorSubject<List<WeekModel>> _oldWeekModel =
-    rx_dart.BehaviorSubject<List<WeekModel>>();
+      rx_dart.BehaviorSubject<List<WeekModel>>();
 
   /// This is a stream where all the old [WeekModel] are put in,
   /// and this is the stream to listen to,
@@ -40,13 +40,13 @@ class WeekplansBloc extends BlocBase {
   Stream<List<WeekModel>> get oldWeekModels => _oldWeekModel.stream;
 
   final rx_dart.BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
-    rx_dart.BehaviorSubject<List<WeekNameModel>>();
+      rx_dart.BehaviorSubject<List<WeekNameModel>>();
 
   final rx_dart.BehaviorSubject<bool> _editMode =
-    rx_dart.BehaviorSubject<bool>.seeded(false);
+      rx_dart.BehaviorSubject<bool>.seeded(false);
 
   final rx_dart.BehaviorSubject<List<WeekModel>> _markedWeekModels =
-    rx_dart.BehaviorSubject<List<WeekModel>>.seeded(<WeekModel>[]);
+      rx_dart.BehaviorSubject<List<WeekModel>>.seeded(<WeekModel>[]);
 
   final Api _api;
   DisplayNameModel _user;
@@ -91,10 +91,10 @@ class WeekplansBloc extends BlocBase {
     getWeekDetails(weekPlanNames, weekDetails, oldWeekDetails);
 
     final Stream<List<WeekModel>> getWeekPlans =
-      reformatWeekDetailsToObservableList(weekDetails);
+        reformatWeekDetailsToObservableList(weekDetails);
 
     final Stream<List<WeekModel>> getOldWeekPlans =
-      reformatWeekDetailsToObservableList(oldWeekDetails);
+        reformatWeekDetailsToObservableList(oldWeekDetails);
 
     getWeekPlans
         .take(1)
@@ -114,13 +114,13 @@ class WeekplansBloc extends BlocBase {
       List<Stream<WeekModel>> details) {
     // ignore: always_specify_types
     return details.isEmpty
-    // Ignore type specification; Stream<WeekModel>
-    //   does not contain .empty()
-    // ignore: always_specify_types
+        // Ignore type specification; Stream<WeekModel>
+        //   does not contain .empty()
+        // ignore: always_specify_types
         ? const Stream.empty()
         : details.length == 1
-        ? details[0].map((WeekModel plan) => <WeekModel>[plan])
-        : rx_dart.Rx.combineLatestList(details);
+            ? details[0].map((WeekModel plan) => <WeekModel>[plan])
+            : rx_dart.Rx.combineLatestList(details);
   }
 
   /// Makes API calls to get the weekplan details
@@ -144,9 +144,10 @@ class WeekplansBloc extends BlocBase {
     }
   }
 
-  /// Returns the current week number
-  int getCurrentWeekNum() {
-    return getWeekNumberFromDate(DateTime.now());
+  /// Returns the current week number and its year
+  List<int> getCurrentWeekNum() {
+    final DateTime now = DateTime.now();
+    return [getWeekNumberFromDate(now), now.year];
   }
 
   /// Calculates the current week number from a given date
@@ -226,12 +227,31 @@ class WeekplansBloc extends BlocBase {
 
   /// Checks if a week is in the past/expired
   bool isWeekDone(WeekNameModel weekPlan) {
-    final int currentYear = DateTime.now().year;
-    final int currentWeek = getCurrentWeekNum();
+    final List<int> currentWeek = getCurrentWeekNum();
+    final int currentWeekNum = currentWeek[0];
+    final int currentYear = currentWeek[1];
+
+    // Checks how many weeks there were/are in the year where the weekplan
+    // was created. If it's a leap year or a Thursday on January 1,
+    // there are/were 53 weeks
+    int amountOfWeeksInYear = 52;
+    if (DateTime(currentYear - 1, 1, 1).day == DateTime.thursday ||
+        currentYear % 4 == 0) {
+      amountOfWeeksInYear = 53;
+    }
+
+    // Checks if the weekplan is from last year's last week and checks if there
+    // is an overlap over the new year
+    if (weekPlan.weekYear == currentYear - 1 &&
+        currentWeekNum == 1 &&
+        weekPlan.weekNumber == amountOfWeeksInYear &&
+        DateTime.now().day != 1) {
+      return false;
+    }
 
     if (weekPlan.weekYear < currentYear ||
         (weekPlan.weekYear == currentYear &&
-            weekPlan.weekNumber < currentWeek)) {
+            weekPlan.weekNumber < currentWeekNum)) {
       return true;
     }
     return false;
@@ -264,10 +284,10 @@ class WeekplansBloc extends BlocBase {
 
   /// Delete the marked week models when the trash button is clicked
   void deleteMarkedWeekModels() {
-    final List<WeekModel> localWeekModels = _weekModel.hasValue ?
-    _weekModel.value : null;
-    final List<WeekModel> oldLocalWeekModels = _oldWeekModel.hasValue ?
-    _oldWeekModel.value.toList() : null;
+    final List<WeekModel> localWeekModels =
+        _weekModel.hasValue ? _weekModel.value : null;
+    final List<WeekModel> oldLocalWeekModels =
+        _oldWeekModel.hasValue ? _oldWeekModel.value.toList() : null;
     // Updates the weekplan in the database
     for (WeekModel weekModel in _markedWeekModels.value) {
       _api.week
@@ -291,10 +311,10 @@ class WeekplansBloc extends BlocBase {
   /// This method deletes the given week model from the database after checking
   /// if it's an old weekplan or an upcoming
   void deleteWeekModel(WeekModel weekModel) {
-    final List<WeekModel> localWeekModels = _weekModel.hasValue ?
-    _weekModel.value : null;
-    final List<WeekModel> oldLocalWeekModels = _oldWeekModel.hasValue ?
-    _oldWeekModel.value : null;
+    final List<WeekModel> localWeekModels =
+        _weekModel.hasValue ? _weekModel.value : null;
+    final List<WeekModel> oldLocalWeekModels =
+        _oldWeekModel.hasValue ? _oldWeekModel.value : null;
 
     if (localWeekModels != null && localWeekModels.contains(weekModel)) {
       deleteWeek(localWeekModels, weekModel);
@@ -343,7 +363,7 @@ class WeekplansBloc extends BlocBase {
   /// Returns a WeekModel list of the marked weeks
   Future<List<WeekModel>> getMarkedWeeks() async {
     final List<WeekModel> weekList = <WeekModel>[];
-    for (WeekModel weekModel in _markedWeekModels.value){
+    for (WeekModel weekModel in _markedWeekModels.value) {
       final Completer<WeekModel> completer = Completer<WeekModel>();
       _api.week
           .get(_user.id, weekModel.weekYear, weekModel.weekNumber)
