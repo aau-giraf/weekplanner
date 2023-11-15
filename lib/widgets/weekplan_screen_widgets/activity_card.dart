@@ -167,11 +167,15 @@ class ActivityCard extends StatelessWidget {
                       ),
                     ),
                     _buildActivityStateIcon(
-                        context, _activityState, weekModeSnapShot, settingsSnapShot),
+                        context,
+                        _activityState,
+                        weekModeSnapShot,
+                        settingsSnapShot),
                     _buildTimerIcon(context, _activity),
                   ],
                 ),
-                // Remove avatar icon if there are multiple activities in the choiceboard
+                // Remove avatar icon if there are multiple activities in the
+                // choiceboard
                 multipleActivities == false
                     ? Stack(
                   alignment: AlignmentDirectional.topStart,
