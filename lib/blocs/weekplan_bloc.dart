@@ -60,7 +60,7 @@ class WeekplanBloc extends BlocBase {
   /// Sink to set the currently chosen week
   Future<void> getWeek(WeekModel week, DisplayNameModel user) async {
     _api.week
-        .get(user.id!, week.weekYear!, week.weekNumber!)
+        .get(user.id!, week.weekYear, week.weekNumber)
         .listen((WeekModel loadedWeek) {
       _week = loadedWeek;
       _userWeek.add(UserWeekModel(loadedWeek, user));
@@ -73,7 +73,7 @@ class WeekplanBloc extends BlocBase {
   /// Get the current week fresh from the api
   Future<void> loadWeek(DisplayNameModel user) async {
     _api.week
-        .get(user.id!, _week.weekYear!, _week.weekNumber!)
+        .get(user.id!, _week.weekYear, _week.weekNumber)
         .listen((WeekModel loadedWeek) {
       _userWeek.add(UserWeekModel(loadedWeek, user));
       _week = loadedWeek;
@@ -197,7 +197,7 @@ class WeekplanBloc extends BlocBase {
     }
 
     _api.week
-        .update(user.id!, week.weekYear!, week.weekNumber!, week)
+        .update(user.id!, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
     });
@@ -264,8 +264,8 @@ class WeekplanBloc extends BlocBase {
     final Completer<void> completer = Completer<void>();
     final DisplayNameModel user = _userWeek.value.user;
     _api.activity
-        .add(activity, user.id!, _week.name!, _week.weekYear!,
-            _week.weekNumber!, _week.days![day].day!)
+        .add(activity, user.id!, _week.name!, _week.weekYear, _week.weekNumber,
+            _week.days![day].day!)
         .listen((ActivityModel ac) {
       _week.days![day].activities!.add(ac);
       updateWeekdays(<WeekdayModel>[_week.days![day]])
@@ -339,7 +339,7 @@ class WeekplanBloc extends BlocBase {
   Future<void> getWeekday(Weekday day) async {
     final DisplayNameModel user = _userWeek.value.user;
     _api.week
-        .getDay(user.id!, _week.weekYear!, _week.weekNumber!, day)
+        .getDay(user.id!, _week.weekYear, _week.weekNumber, day)
         .listen((WeekdayModel newDay) {
       _weekDayStreams[newDay.day!.index - _firstDay].add(newDay);
     }).onError((Object error) {
@@ -354,7 +354,7 @@ class WeekplanBloc extends BlocBase {
     final DisplayNameModel user = _userWeek.value.user;
     for (WeekdayModel day in days) {
       _api.week
-          .updateDay(user.id!, _week.weekYear!, _week.weekNumber!, day)
+          .updateDay(user.id!, _week.weekYear, _week.weekNumber, day)
           .listen((WeekdayModel newDay) {
         _weekDayStreams[newDay.day!.index - _firstDay].add(newDay);
         _week.days![newDay.day!.index] = newDay;

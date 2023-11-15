@@ -52,8 +52,8 @@ void main() {
         return Stream<List<WeekNameModel>?>.value(<WeekNameModel>[
           WeekNameModel(
               name: mockWeek.name,
-              weekNumber: mockWeek.weekNumber!,
-              weekYear: mockWeek.weekYear!),
+              weekNumber: mockWeek.weekNumber,
+              weekYear: mockWeek.weekYear),
         ]);
       },
     );
@@ -65,7 +65,7 @@ void main() {
     );
 
     when(() => api.week
-            .delete(mockUser.id!, mockWeek.weekYear!, mockWeek.weekNumber!))
+            .delete(mockUser.id!, mockWeek.weekYear, mockWeek.weekNumber))
         .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
 
     mockWeekplanSelector = WeekplansBloc(api);

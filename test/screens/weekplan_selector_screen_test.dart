@@ -167,47 +167,42 @@ void main() {
     weekNameModelList.add(weekNameModel);
     weekNameModelList.add(weekNameModel2);
 
-    when(()=>weekApi.getNames('testId')).thenAnswer((_) =>
+    when(() => weekApi.getNames('testId')).thenAnswer((_) =>
         rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
-    when(()=>weekApi.get(
-                'testId', weekNameModel.weekYear!, weekNameModel.weekNumber!)
-            )
+    when(() => weekApi.get(
+            'testId', weekNameModel.weekYear!, weekNameModel.weekNumber!))
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
 
-    when(()=>weekApi.get(
-                'testId', weekModel1Copy.weekYear!, weekModel1Copy.weekNumber!)
-    )
+    when(() => weekApi.get(
+            'testId', weekModel1Copy.weekYear, weekModel1Copy.weekNumber))
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(emptyWeekmodel));
-    when(()=>weekApi.get(
-                'testId', weekNameModel2.weekYear!, weekNameModel2.weekNumber!)
-    )
+    when(() => weekApi.get(
+            'testId', weekNameModel2.weekYear!, weekNameModel2.weekNumber!))
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel2));
 
-    when(()=>weekApi.get('testId', weekModel1.weekYear!, weekModel1.weekNumber!)
-    )
+    when(() =>
+            weekApi.get('testId', weekModel1.weekYear, weekModel1.weekNumber))
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
 
-    when(()=>weekApi.get(
-                'testId', mockWeekModel.weekYear!, mockWeekModel.weekNumber!)
-            )
+    when(() => weekApi.get(
+            'testId', mockWeekModel.weekYear, mockWeekModel.weekNumber))
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(mockWeekModel));
 
-    when(()=>weekApi.update('testId', weekModel1Copy.weekYear!,
-            weekModel1Copy.weekNumber!, any()))
-        .thenAnswer((_) {
+    when(() => weekApi.update('testId', weekModel1Copy.weekYear,
+        weekModel1Copy.weekNumber, any())).thenAnswer((_) {
       return rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1Copy);
     });
 
-    when(()=>weekApi.delete(mockUser.id!, any(), any()))
+    when(() => weekApi.delete(mockUser.id!, any(), any()))
         .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
 
-    when(()=>pictogramApi.getImage(any()))
+    when(() => pictogramApi.getImage(any()))
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
   }
 
@@ -766,8 +761,8 @@ void main() {
 
     mockWeekNameModelList.add(WeekNameModel(
         name: 'test',
-        weekNumber: mockWeekModel.weekNumber!,
-        weekYear: mockWeekModel.weekYear!));
+        weekNumber: mockWeekModel.weekNumber,
+        weekYear: mockWeekModel.weekYear));
 
     await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();

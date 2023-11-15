@@ -10,7 +10,6 @@ import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 final Api _api = di.get<Api>();
-final AuthBloc _authBloc = di.get<AuthBloc>();
 
 void main() {
   // Register all dependencies for injector
@@ -62,18 +61,18 @@ void _runApp() {
 
             if (loggedIn) {
               // Show screen dependent on logged in role
-              switch (_authBloc.loggedInUser.role) {
-                // case Role.Citizen:
-                //   return WeekplanSelectorScreen(
-                //     DisplayNameModel(
-                //       displayName: _authBloc!.loggedInUser.displayName,
-                //       role: describeEnum(_authBloc!.loggedInUser.role!),
-                //       id: _authBloc!.loggedInUser.id,
-                //     ),
-                //   );
-                default:
-                  return ChooseCitizenScreen();
-              }
+              // switch (_authBloc.loggedInUser.role ?? 'lol') {
+              //   // case Role.Citizen:
+              //   //   return WeekplanSelectorScreen(
+              //   //     DisplayNameModel(
+              //   //       displayName: _authBloc!.loggedInUser.displayName,
+              //   //       role: describeEnum(_authBloc!.loggedInUser.role!),
+              //   //       id: _authBloc!.loggedInUser.id,
+              //   //     ),
+              //   //   );
+              //   default:
+              return ChooseCitizenScreen();
+              // }
             } else {
               // Not loggedIn pop context to login screen.
               Routes().goHome(context);

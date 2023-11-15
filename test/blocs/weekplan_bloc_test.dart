@@ -111,7 +111,7 @@ void main() {
     weekplanBloc.userWeek.listen((UserWeekModel response) {
       expect(response, isNotNull);
       expect(response.week, equals(week));
-      verify(() => api.week.get(user.id!, week.weekYear!, week.weekNumber!));
+      verify(() => api.week.get(user.id!, week.weekYear, week.weekNumber));
       done();
     });
   }));

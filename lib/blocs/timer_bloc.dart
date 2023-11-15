@@ -28,7 +28,7 @@ class TimerBloc extends BlocBase {
   /// stream for checking if the timer is running
   Stream<TimerRunningMode> get timerRunningMode =>
       _timerRunningModeStream.stream;
-  late StreamSubscription<TimerRunningMode>?
+  StreamSubscription<TimerRunningMode>?
       _subscription; // ignore: cancel_subscriptions
 
   /// Stream for checking if the timer is instantiated.

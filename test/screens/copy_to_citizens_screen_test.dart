@@ -52,7 +52,7 @@ bool hasConflict = false;
 
 class MockWeekApi extends Mock implements WeekApi {
   @override
-  Stream<WeekModel> get(String? id, int? year, int? weekNumber) {
+  Stream<WeekModel> get(String? id, int year, int weekNumber) {
     final WeekModel weekModel = WeekModel(days: <WeekdayModel>[
       WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[
         ActivityModel(

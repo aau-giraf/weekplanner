@@ -204,9 +204,9 @@ class WeekplansBloc extends BlocBase {
         return -1;
       }
       if (a.weekYear == b.weekYear) {
-        return a.weekNumber!.compareTo(b.weekNumber!);
+        return a.weekNumber.compareTo(b.weekNumber);
       } else {
-        return a.weekYear!.compareTo(b.weekYear!);
+        return a.weekYear.compareTo(b.weekYear);
       }
     });
     return list;
@@ -216,9 +216,9 @@ class WeekplansBloc extends BlocBase {
   List<WeekModel> _sortOldWeekPlans(List<WeekModel> list) {
     list.toList().sort((WeekModel a, WeekModel b) {
       if (a.weekYear == b.weekYear) {
-        return b.weekNumber!.compareTo(a.weekNumber!);
+        return b.weekNumber.compareTo(a.weekNumber);
       } else {
-        return b.weekYear!.compareTo(a.weekYear!);
+        return b.weekYear.compareTo(a.weekYear);
       }
     });
     return list;
@@ -268,7 +268,7 @@ class WeekplansBloc extends BlocBase {
     // Updates the weekplan in the database
     for (WeekModel weekModel in _markedWeekModels.value) {
       _api.week
-          .delete(_user.id!, weekModel.weekYear!, weekModel.weekNumber!)
+          .delete(_user.id!, weekModel.weekYear, weekModel.weekNumber)
           .listen((bool deleted) {
         if (deleted) {
           // Checks if its an old or upcoming weekplan
@@ -304,7 +304,7 @@ class WeekplansBloc extends BlocBase {
   /// This method deletes the given week model from the database
   void deleteWeek(List<WeekModel> weekModels, WeekModel weekModel) {
     _api.week
-        .delete(_user.id!, weekModel.weekYear!, weekModel.weekNumber!)
+        .delete(_user.id!, weekModel.weekYear, weekModel.weekNumber)
         .listen((bool deleted) {
       if (deleted) {
         weekModels.remove(weekModel);
@@ -331,7 +331,7 @@ class WeekplansBloc extends BlocBase {
 
     final Completer<WeekModel> completer = Completer<WeekModel>();
     _api.week
-        .get(_user.id!, marked.weekYear!, marked.weekNumber!)
+        .get(_user.id!, marked.weekYear, marked.weekNumber)
         .listen((WeekModel weekModel) => completer.complete(weekModel));
 
     return completer.future;
@@ -343,7 +343,7 @@ class WeekplansBloc extends BlocBase {
     for (WeekModel weekModel in _markedWeekModels.value) {
       final Completer<WeekModel> completer = Completer<WeekModel>();
       _api.week
-          .get(_user.id!, weekModel.weekYear!, weekModel.weekNumber!)
+          .get(_user.id!, weekModel.weekYear, weekModel.weekNumber)
           .listen((WeekModel weekModel) => completer.complete(weekModel));
       weekList.add(await completer.future);
     }

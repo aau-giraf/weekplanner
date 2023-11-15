@@ -54,8 +54,8 @@ void main() {
         return Stream<List<WeekNameModel>>.value(<WeekNameModel>[
           WeekNameModel(
               name: mockWeek.name,
-              weekNumber: mockWeek.weekNumber!,
-              weekYear: mockWeek.weekYear!),
+              weekNumber: mockWeek.weekNumber,
+              weekYear: mockWeek.weekYear),
         ]);
       },
     );

@@ -267,23 +267,19 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                       );
                     })),
                     Container(
-                      child: weekplan.weekNumber == null
-                          ? null
-                          : Expanded(child: LayoutBuilder(builder:
-                              (BuildContext context,
-                                  BoxConstraints constraints) {
-                              return AutoSizeText(
-                                'Uge: ${weekplan.weekNumber}      '
-                                'År: ${weekplan.weekYear}',
-                                key: const Key('weekYear'),
-                                style:
-                                    const TextStyle(fontSize: GirafFont.small),
-                                maxLines: 1,
-                                minFontSize: 14,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              );
-                            })),
+                      child: Expanded(child: LayoutBuilder(builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                        return AutoSizeText(
+                          'Uge: ${weekplan.weekNumber}      '
+                          'År: ${weekplan.weekYear}',
+                          key: const Key('weekYear'),
+                          style: const TextStyle(fontSize: GirafFont.small),
+                          maxLines: 1,
+                          minFontSize: 14,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                        );
+                      })),
                     )
                   ],
                 )),
@@ -502,10 +498,6 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
 
   /// Builds dialog box to confirm/cancel deletion
   Future<Center?> _buildDeletionDialog(BuildContext context) {
-    // if (widget._weekBloc.getNumberOfMarkedWeekModels() == 0) {
-    //   return null;
-    // } // FIXME: Handle this
-
     return showDialog<Center>(
         barrierDismissible: false,
         context: context,

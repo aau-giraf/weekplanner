@@ -31,9 +31,16 @@ class SettingsArrowButton extends SettingsSectionItem {
 
   /// Builds the text with or without the optional trailing widget
   Widget buildTitle() {
+    if (titleTrailing != null) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[Flexible(child: Text(text)), titleTrailing!],
+      );
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[Flexible(child: Text(text)), titleTrailing!],
+      children: <Widget>[Flexible(child: Text(text))],
     );
   }
 }

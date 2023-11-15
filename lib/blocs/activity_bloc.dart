@@ -20,7 +20,7 @@ class ActivityBloc extends BlocBase {
 
   /// Stream for updated ActivityModel.
   Stream<ActivityModel> get activityModelStream => _activityModelStream.stream;
-  late StreamSubscription<ActivityModel>?
+  StreamSubscription<ActivityModel>?
       _subscription; // ignore: cancel_subscriptions
   /// rx_dart.BehaviorSubject for the updated ActivityModel.
   final rx_dart.BehaviorSubject<ActivityModel> _activityModelStream =

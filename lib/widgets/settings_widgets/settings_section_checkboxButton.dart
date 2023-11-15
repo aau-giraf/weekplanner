@@ -46,21 +46,24 @@ class SettingsCheckMarkButton extends SettingsSectionItem {
 
     ListTile checkBoxButton;
 
-    if (timer as int == 0) {
+    if (timer == null) {
       checkBoxButton = ListTile(
         title: Text(text),
         trailing: trailing,
         onTap: () => callback(),
       );
     } else {
-      late String _imagePath;
+      String _imagePath;
       if (timer == DefaultTimer.PieChart) {
         _imagePath = 'assets/timer/piechart_icon.png';
       } else if (timer == DefaultTimer.Hourglass) {
         _imagePath = 'assets/timer/hourglass_icon.png';
       } else if (timer == DefaultTimer.Numeric) {
         _imagePath = 'assets/timer/countdowntimer_icon.png';
+      } else {
+        _imagePath = '';
       }
+
       checkBoxButton = ListTile(
           title: Text(text),
           leading: Image(image: AssetImage(_imagePath)),

@@ -33,7 +33,6 @@ class MockUserApi extends Mock implements UserApi {
     }
 
     throw Exception;
-    //return null; //FIXME
   }
 }
 

@@ -160,7 +160,7 @@ class NewWeekplanBloc extends BlocBase {
     final Completer<WeekModel> saveCompleter = Completer<WeekModel>();
     if (doOverwrite) {
       weekApi.week
-          .update(weekUser!.id!, _weekModel.weekYear!, _weekModel.weekNumber!,
+          .update(weekUser!.id!, _weekModel.weekYear, _weekModel.weekNumber,
               _weekModel)
           .take(1)
           .listen(saveCompleter.complete);

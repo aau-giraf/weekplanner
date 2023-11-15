@@ -62,8 +62,8 @@ class CopyResolveScreen extends StatelessWidget {
         if (numberOfConflicts > 0) {
           toCopy = await _displayConflictDialog(
               context,
-              newWeekModel.weekNumber!,
-              newWeekModel.weekYear!,
+              newWeekModel.weekNumber,
+              newWeekModel.weekYear,
               numberOfConflicts,
               currentUser);
         }

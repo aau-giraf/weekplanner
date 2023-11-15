@@ -56,8 +56,9 @@ void main() {
   late Api api;
   //How the fuck do i initialize Pictogrammodel :/
   setUpAll(() {
-    registerFallbackValue(PictogramModel(title: "", accessLevel: AccessLevel.PRIVATE));
-    });
+    registerFallbackValue(
+        PictogramModel(title: '', accessLevel: AccessLevel.PRIVATE));
+  });
 
   setUp(() {
     api = Api('Any');
@@ -80,7 +81,7 @@ void main() {
       ),
     ));
     await tester.pumpAndSettle();
-    when(()=>api.pictogram.create(any()))
+    when(() => api.pictogram.create(any()))
         .thenAnswer((_) => Stream<PictogramModel>.error(Exception()));
     bloc.setInputIsValid(true);
 

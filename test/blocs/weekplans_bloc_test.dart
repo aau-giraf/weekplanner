@@ -249,8 +249,6 @@ void main() {
     int count = 0;
     bloc.weekModels.listen((List<WeekModel> userWeekModels) {
       if (count == 0) {
-        //bloc.deleteMarkedWeekModels();
-        //FIXME: Can't delete what doesn't exists?
         count++;
       } else {
         expect(userWeekModels.contains(weekModel6), false);

@@ -80,15 +80,17 @@ class ShowActivityScreen extends StatelessWidget {
         stream: _authBloc.mode,
         builder: (BuildContext context, AsyncSnapshot<WeekplanMode> snapshot) {
           return buildScreenFromOrientation(
-              orientation, context, snapshot.data!);
+              orientation, context, snapshot.data);
         });
   }
 
   /// Build the activity screens in a row or column
   /// depending on the orientation of the device.
   Scaffold buildScreenFromOrientation(
-      Orientation orientation, BuildContext context, WeekplanMode mode) {
+      Orientation orientation, BuildContext context, WeekplanMode? mode) {
     late Widget childContainer;
+
+    mode ??= WeekplanMode.citizen;
 
     try {
       if (orientation == Orientation.portrait) {

@@ -37,7 +37,7 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
         final Completer<bool> callCompleter = Completer<bool>();
         _api.week
             .update(
-                user.id!, weekModel.weekYear!, weekModel.weekNumber!, weekModel)
+                user.id!, weekModel.weekYear, weekModel.weekNumber, weekModel)
             .take(1)
             .listen((WeekModel weekModel) {
           callCompleter.complete(true);
@@ -55,7 +55,7 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
     bool daysAreEmpty = true;
 
     final WeekModel response = await _api.week
-        .get(user.id!, weekModel.weekYear!, weekModel.weekNumber!)
+        .get(user.id!, weekModel.weekYear, weekModel.weekNumber)
         .first;
 
     if (response.days == null) {
@@ -69,8 +69,8 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
     ///Checks whether the name of the week model is different from the default
     /// created when no week exists
     if (daysAreEmpty) {
-      final int weekYear = weekModel.weekYear!;
-      final int weekNumber = weekModel.weekNumber!;
+      final int weekYear = weekModel.weekYear;
+      final int weekNumber = weekModel.weekNumber;
       daysAreEmpty = response.name!.compareTo('$weekYear - $weekNumber') == 0;
     }
 

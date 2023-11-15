@@ -57,7 +57,7 @@ void main() {
   //   activityModel = null;
 
   //   di.clearAll();
-  // }); // FIXME: Can't be null, should be uninitialized in another way
+  // });
 
   ActivityModel createActivityModel(int fullLength, int progress,
       {bool paused = false}) {

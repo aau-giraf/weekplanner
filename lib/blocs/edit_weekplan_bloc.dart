@@ -48,13 +48,13 @@ class EditWeekplanBloc extends NewWeekplanBloc {
 
       final bool hasExistingMatch = await hasExisitingMatchingWeekplan(
           existingWeekPlans: selectorBloc.weekNameModels,
-          year: newWeekModel.weekYear!,
-          weekNumber: newWeekModel.weekNumber!);
+          year: newWeekModel.weekYear,
+          weekNumber: newWeekModel.weekNumber);
 
       // If there is a match, ask the user if we should overwrite.
       if (hasExistingMatch) {
         doOverwrite = await displayOverwriteDialog(
-            screenContext!, newWeekModel.weekNumber!, newWeekModel.weekYear!);
+            screenContext!, newWeekModel.weekNumber, newWeekModel.weekYear);
       }
 
       // Here we delete the old week plan (we had to do this because of the way
@@ -69,8 +69,8 @@ class EditWeekplanBloc extends NewWeekplanBloc {
 
     if (doOverwrite) {
       weekApi.week
-          .update(super.weekUser!.id!, newWeekModel.weekYear!,
-              newWeekModel.weekNumber!, newWeekModel)
+          .update(super.weekUser!.id!, newWeekModel.weekYear,
+              newWeekModel.weekNumber, newWeekModel)
           .take(1)
           .listen(updateCompleter.complete);
     } else {

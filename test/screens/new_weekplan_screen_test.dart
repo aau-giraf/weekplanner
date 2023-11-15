@@ -78,8 +78,7 @@ void main() {
   late Api api;
   late bool savedWeekplan;
 
-  setUpAll(() 
-  {
+  setUpAll(() {
     registerFallbackValue(WeekModel());
   });
 
@@ -89,29 +88,26 @@ void main() {
     api.pictogram = MockPictogramApi();
     savedWeekplan = false;
 
-    when(()=>api.pictogram.getImage(mockPictogram.id!))
+    when(() => api.pictogram.getImage(mockPictogram.id!))
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
-    when(()=>api.week
-                .update(any(), any(), any(), any()))
-        .thenAnswer((_) {
+    when(() => api.week.update(any(), any(), any(), any())).thenAnswer((_) {
       savedWeekplan = true;
       return Stream<WeekModel>.value(mockWeek);
     });
 
-    when(()=>api.week.getNames(any())).thenAnswer(
+    when(() => api.week.getNames(any())).thenAnswer(
       (_) {
         return Stream<List<WeekNameModel>>.value(<WeekNameModel>[
           WeekNameModel(
               name: mockWeek.name,
-              weekNumber: mockWeek.weekNumber!,
-              weekYear: mockWeek.weekYear!),
+              weekNumber: mockWeek.weekNumber,
+              weekYear: mockWeek.weekYear),
         ]);
       },
     );
 
-    when(()=>api.week.get(any(), any(), any()))
-        .thenAnswer(
+    when(() => api.week.get(any(), any(), any())).thenAnswer(
       (_) {
         return Stream<WeekModel>.value(mockWeek);
       },
@@ -314,8 +310,7 @@ void main() {
 
   testWidgets('Click on thumbnail redirects to pictogram search screen',
       (WidgetTester tester) async {
-    when(()=>api.pictogram.getAll(page: 1, pageSize: pageSize, query: '')
-            )
+    when(() => api.pictogram.getAll(page: 1, pageSize: pageSize, query: ''))
         .thenAnswer((_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[mockPictogram]));
     mockBloc.acceptAllInputs = true;
@@ -361,7 +356,7 @@ void main() {
 
   testWidgets('Week plan is created even when there are no existing plans',
       (WidgetTester tester) async {
-    when(()=>api.week.getNames(any())).thenAnswer(
+    when(() => api.week.getNames(any())).thenAnswer(
         (_) => Stream<List<WeekNameModel>>.value(<WeekNameModel>[]));
 
     mockWeekplanSelector = WeekplansBloc(api);
