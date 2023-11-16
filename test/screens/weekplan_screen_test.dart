@@ -1337,7 +1337,8 @@ void main() {
               mockWeek.days![0].day!.index.toString() +
                   mockActivities[2].id.toString())));
 
-        expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+          expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+        });
       });
     }
 

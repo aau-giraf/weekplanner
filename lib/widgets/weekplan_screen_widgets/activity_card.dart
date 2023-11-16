@@ -264,7 +264,7 @@ class ActivityCard extends StatelessWidget {
 
   Widget _buildActivityStateIcon(
       BuildContext context,
-      ActivityState state,
+      ActivityState? state,
       AsyncSnapshot<WeekplanMode> weekModeSnapShot,
       AsyncSnapshot<SettingsModel?> settingsSnapShot) {
     return StreamBuilder<TimerRunningMode>(

@@ -20,11 +20,9 @@ packages:
   api_client:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "task/131"
-      resolved-ref: "1a6d16de685bf631afa47440abaf41ac72167a4c"
-      url: "https://github.com/aau-giraf/api_client.git"
-    source: git
+      path: "../api_client"
+      relative: true
+    source: path
     version: "0.0.2"
   archive:
     dependency: transitive
@@ -402,6 +400,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  fluttertoast:
+    dependency: "direct main"
+    description:
+      name: fluttertoast
+      sha256: dfdde255317af381bfc1c486ed968d5a43a2ded9c931e87cbecd88767d6a71c1
+      url: "https://pub.dev"
+    source: hosted
+    version: "8.2.4"
   frontend_server_client:
     dependency: transitive
     description:
