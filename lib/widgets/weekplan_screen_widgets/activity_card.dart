@@ -352,7 +352,7 @@ class ActivityCard extends StatelessWidget {
                     height: 0,
                   );
                 }
-
+                
               default:
                 return Container(
                   width: 0,

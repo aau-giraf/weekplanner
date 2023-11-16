@@ -480,7 +480,7 @@ class WeekplanDayColumn extends StatelessWidget {
     _timerBloc[index].addHandlerToRunningModeOnce();
     _timerBloc[index].initTimer();
 
-    if (activistModel.timer == null) {
+    if (activistModel.timer == null || activistModel.chosenActivity != null) {
       _activityBloc.completeActivity();
     } else {
       _timerBloc[index].playTimer();

@@ -646,6 +646,16 @@ class ShowActivityScreen extends StatelessWidget {
       ),
     );
   }
+  // Give message after stopping timer
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black,
+      textColor: Colors.white,
+    );
+  }
 
   // Give message after stopping timer
   void _showToast(String message) {
