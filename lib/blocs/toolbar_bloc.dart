@@ -63,9 +63,6 @@ class ToolbarBloc extends BlocBase {
       case AppBarIcon.burgerMenu:
         _iconsToAdd.add(_createIconBurgermenu(callback));
         break;
-      case AppBarIcon.camera:
-        _iconsToAdd.add(_createIconCamera(callback));
-        break;
       case AppBarIcon.cancel:
         _iconsToAdd.add(_createIconCancel(callback));
         break;
@@ -159,14 +156,6 @@ class ToolbarBloc extends BlocBase {
     return IconButton(
       icon: Image.asset('assets/icons/burgermenu.png'),
       tooltip: 'Åbn menu',
-      onPressed: callback,
-    );
-  }
-
-  IconButton _createIconCamera(VoidCallback callback) {
-    return IconButton(
-      icon: Image.asset('assets/icons/camera.png'),
-      tooltip: 'Åbn kamera',
       onPressed: callback,
     );
   }
