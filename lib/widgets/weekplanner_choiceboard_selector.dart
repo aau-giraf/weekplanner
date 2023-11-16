@@ -179,11 +179,23 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
   //Changes activity type so it is not a choiceboard, and only keeps the
   //selected pictogram in the activity
   void _selectPictogramFromChoiceboard(BuildContext context, int index) {
-    _activity.isChoiceBoard = false;
-    final List<PictogramModel> _pictogramModels = <PictogramModel>[
-      _activity.pictograms[index]
-    ];
-    _activity.pictograms = _pictogramModels;
+    // if (!_activity.pictograms
+    //     .any((PictogramModel element) => element.isCompleted == false)) {
+    //   _activity.state = ActivityState.Completed;
+    // }
+    // if (_activity.pictograms.length == 1) {
+    //   _activity.isChoiceBoard = false;
+    // } else {
+    //   _activity.pictograms.removeAt(index);
+    // }
+
+    // final List<PictogramModel> _pictogramModels = <PictogramModel>[
+    //   _activity.pictograms[index]
+    // ];
+    // _activity.pictograms = _pictogramModels;
+    _activity.chosenActivity = index;
+    _activityBloc.load(_activity, _user);
+    _activityBloc.completeActivity();
 
     _activityBloc.update();
     _activityBloc.activityModelStream.skip(1).take(1).listen((_) {

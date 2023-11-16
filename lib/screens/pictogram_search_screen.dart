@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/screens/take_picture_with_camera_screen.dart';
 import 'package:weekplanner/screens/upload_image_from_phone_screen.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -143,23 +142,14 @@ class _PictogramSearchState extends State<PictogramSearch> {
                               buttonKey: 'TilføjFraGalleriButton',
                               assetPath: 'assets/icons/gallery.png',
                               dialogFunction: (BuildContext context) {
-                                Routes().push(context,
-                                    UploadImageFromPhone(key: UniqueKey()));
+                                Routes().push(
+                                    context,
+                                    UploadImageFromPhone(
+                                      key: const Key('uploadFromPhone'),
+                                    ));
                               },
-                              key: UniqueKey(),
+                              key: const Key('addFromGallery'),
                             ),
-                            BottomAppBarButton(
-                                buttonText: 'Tag billede',
-                                buttonKey: 'TagBilledeButton',
-                                assetPath: 'assets/icons/camera.png',
-                                dialogFunction: (BuildContext context) {
-                                  Routes().push(
-                                      context,
-                                      TakePictureWithCamera(
-                                        key: UniqueKey(),
-                                      ));
-                                },
-                                key: UniqueKey())
                           ])))
             ])));
   }

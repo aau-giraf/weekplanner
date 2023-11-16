@@ -172,7 +172,7 @@ void main() {
     await gesture.moveBy(const Offset(0, -300));
     await tester.pump();
 
-    expect(find.byType(GirafButton, skipOffstage: false), findsNWidgets(4));
+    expect(find.byType(GirafButton, skipOffstage: false), findsNWidgets(3));
   });
 
   testWidgets('You can input a display name', (WidgetTester tester) async {

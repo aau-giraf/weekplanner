@@ -333,29 +333,6 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                         }),
                   ),
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-
-                  /// Take picture button
-                  child: GirafButton(
-                      key: const Key('TagBillede'),
-                      icon: const ImageIcon(
-                          AssetImage('assets/icons/camera.png')),
-                      text: 'Tag billede',
-                      onPressed: widget._bloc.takePictureWithCamera,
-                      child: StreamBuilder<File?>(
-                          stream: widget._bloc.file,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<File?> snapshot) {
-                            final File? fileData = snapshot
-                                .data; // Store the data in a local variable
-                            return fileData != null
-                                ? widget._displayImage(
-                                    fileData) // Use the local variable
-                                : widget._displayIfNoImage();
-                          })),
-                ),
               ],
             ),
 

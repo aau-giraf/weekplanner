@@ -6,6 +6,7 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -636,28 +637,24 @@ class ShowActivityScreen extends StatelessWidget {
         child: GirafButton(
           key: const Key('TimerStopButtonKey'),
           onPressed: () {
-            showDialog<Center>(
-                context: overallContext,
-                barrierDismissible: false,
-                builder: (BuildContext context) {
-                  //Confirmation dialog for stopping the timer.
-                  return GirafConfirmDialog(
-                    key: const Key('TimerStopConfirmDialogKey'),
-                    title: 'Stop Timer',
-                    description: 'Vil du stoppe timeren?',
-                    confirmButtonText: 'Stop',
-                    confirmButtonIcon:
-                        const ImageIcon(AssetImage('assets/icons/stop.png')),
-                    confirmOnPressed: () {
-                      _timerBloc.stopTimer();
-                      Routes().pop(context);
-                    },
-                  );
-                });
+            // Directly perform actions without showing the confirmation dialog
+            _timerBloc.stopTimer();
+            _showToast('Timeren er blevet stoppet.');
           },
           icon: const ImageIcon(AssetImage('assets/icons/stop.png')),
         ),
       ),
+    );
+  }
+
+  // Give message after stopping timer
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black,
+      textColor: Colors.white,
     );
   }
 
@@ -718,86 +715,92 @@ class ShowActivityScreen extends StatelessWidget {
   /// of the button depends on whether it is in guardian or citizen mode.
   ButtonBar buildButtonBar() {
     return ButtonBar(
-        // Key used for testing widget.
-        key: const Key('ButtonBarRender'),
-        alignment: MainAxisAlignment.center,
-        children: <Widget>[
-          StreamBuilder<WeekplanMode>(
-            stream: _authBloc.mode,
-            builder: (BuildContext context,
-                AsyncSnapshot<WeekplanMode> weekplanModeSnapshot) {
-              return StreamBuilder<ActivityModel>(
-                  stream: _activityBloc.activityModelStream,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<ActivityModel> activitySnapshot) {
-                    if (activitySnapshot.data == null) {
-                      return const CircularProgressIndicator();
-                    }
+      // Key used for testing widget.
+      key: const Key('ButtonBarRender'),
+      alignment: MainAxisAlignment.center,
+      children: <Widget>[
+        StreamBuilder<WeekplanMode>(
+          stream: _authBloc.mode,
+          builder: (BuildContext context,
+              AsyncSnapshot<WeekplanMode> weekplanModeSnapshot) {
+            return StreamBuilder<ActivityModel>(
+              stream: _activityBloc.activityModelStream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<ActivityModel> activitySnapshot) {
+                if (activitySnapshot.data == null) {
+                  return const CircularProgressIndicator();
+                }
 
-                    final GirafButton completeButton = GirafButton(
-                        key: const Key('CompleteStateToggleButton'),
-                        onPressed: () {
+                ActivityState activityState = activitySnapshot.data!.state;
+                final bool isComplete = activityState != ActivityState.Canceled;
+                final bool isCanceled =
+                    activityState != ActivityState.Completed;
+
+                final bool showCancelButton =
+                    weekplanModeSnapshot.data == WeekplanMode.guardian &&
+                        isCanceled;
+                final bool showCompleteButton = isComplete;
+
+                final GirafButton completeButton = GirafButton(
+                  key: const Key('CompleteStateToggleButton'),
+                  onPressed: showCompleteButton
+                      ? () {
                           _activityBloc.completeActivity();
-                        },
-                        isEnabled: activitySnapshot.data!.state !=
-                            ActivityState.Canceled,
-                        text: activitySnapshot.data!.state !=
-                                ActivityState.Completed
-                            ? 'Afslut'
-                            : 'Fortryd',
-                        icon: activitySnapshot.data!.state !=
-                                ActivityState.Completed
-                            ? const ImageIcon(
-                                AssetImage('assets/icons/accept.png'),
-                                color: theme.GirafColors.green)
-                            : const ImageIcon(
-                                AssetImage('assets/icons/undo.png'),
-                                color: theme.GirafColors.blue));
+                          activityState = _activityBloc.getActivity().state;
+                        }
+                      : null,
+                  text: isCanceled ? 'Afslut' : 'Fortryd',
+                  icon: isCanceled
+                      ? const ImageIcon(
+                          AssetImage('assets/icons/accept.png'),
+                          color: theme.GirafColors.green,
+                        )
+                      : const ImageIcon(
+                          AssetImage('assets/icons/undo.png'),
+                          color: theme.GirafColors.blue,
+                        ),
+                );
 
-                    if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
-                      final GirafButton cancelButton = GirafButton(
-                        key: const Key('CancelStateToggleButton'),
-                        onPressed: () {
+                final GirafButton cancelButton = GirafButton(
+                  key: const Key('CancelStateToggleButton'),
+                  onPressed: showCancelButton
+                      ? () {
                           _activityBloc.cancelActivity();
-                          _activity.state = _activityBloc.getActivity().state;
-                          //This removes current context
-                          // so back button correctly navigates
-                        },
-                        isEnabled: activitySnapshot.data!.state !=
-                            ActivityState.Completed,
-                        text: activitySnapshot.data!.state !=
-                                ActivityState.Canceled
-                            ? 'Aflys'
-                            : 'Fortryd',
-                        icon: activitySnapshot.data!.state !=
-                                ActivityState.Canceled
-                            ? const ImageIcon(
-                                AssetImage('assets/icons/cancel.png'),
-                                color: theme.GirafColors.red)
-                            : const ImageIcon(
-                                AssetImage('assets/icons/undo.png'),
-                                color: theme.GirafColors.blue),
-                      );
+                          activityState = _activityBloc.getActivity().state;
+                        }
+                      : null,
+                  text: isComplete ? 'Aflys' : 'Fortryd',
+                  icon: isComplete
+                      ? const ImageIcon(
+                          AssetImage('assets/icons/cancel.png'),
+                          color: theme.GirafColors.red,
+                        )
+                      : const ImageIcon(
+                          AssetImage('assets/icons/undo.png'),
+                          color: theme.GirafColors.blue,
+                        ),
+                );
 
-                      if (_activity.isChoiceBoard.toString() != '') {
-                        return Container(
-                            child: Row(children: <Widget>[cancelButton]));
-                      } else {
-                        return Container(
-                            child: Row(children: <Widget>[
-                          Padding(
-                              padding: const EdgeInsets.only(right: 40.0),
-                              child: completeButton),
-                          cancelButton
-                        ]));
-                      }
-                    } else {
-                      return completeButton;
-                    }
-                  });
-            },
-          ),
-        ]);
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Visibility(
+                      visible: showCompleteButton,
+                      child: completeButton,
+                    ),
+                    const SizedBox(width: 15),
+                    Visibility(
+                      visible: showCancelButton,
+                      child: cancelButton,
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
+      ],
+    );
   }
 
   /// Builds the input field and buttons for changing the description of

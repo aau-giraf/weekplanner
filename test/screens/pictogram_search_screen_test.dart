@@ -24,14 +24,15 @@ import '../blocs/pictogram_bloc_test.dart';
 import '../test_image.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
-class MockRoute extends Mock implements Route<dynamic>{}
+
+class MockRoute extends Mock implements Route<dynamic> {}
+
 void main() {
   late PictogramBloc bloc;
   late Api api;
   late MockPictogramApi pictogramApi;
   late DisplayNameModel user;
-   setUpAll(() 
-  {
+  setUpAll(() {
     registerFallbackValue(MockRoute());
   });
   final PictogramModel pictogramModel = PictogramModel(
@@ -51,7 +52,7 @@ void main() {
     user =
         DisplayNameModel(id: '1', displayName: 'Anders and', role: 'Guardian');
 
-    when(()=>pictogramApi.getImage(pictogramModel.id!))
+    when(() => pictogramApi.getImage(pictogramModel.id!))
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
     di.clearAll();
@@ -63,26 +64,10 @@ void main() {
     di.registerDependency<NewCitizenBloc>(() => NewCitizenBloc(api));
   });
 
-  testWidgets('Camera button shows', (WidgetTester tester) async {
-    when(()=>pictogramApi.getAll(
-            page: bloc.latestPage, pageSize: pageSize, query: ''))
-        .thenAnswer((_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
-            <PictogramModel>[pictogramModel]));
-
-    await tester.pumpWidget(MaterialApp(
-      home: PictogramSearch(user: user),
-    ));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Tag billede'), findsOneWidget);
-
-    await tester.pump(const Duration(milliseconds: 11000));
-  });
-
   testWidgets('renders', (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
 
-    when(()=>pictogramApi.getAll(
+    when(() => pictogramApi.getAll(
             page: bloc.latestPage, pageSize: pageSize, query: ''))
         .thenAnswer((_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
@@ -103,7 +88,7 @@ void main() {
   });
 
   testWidgets('Has Giraf App Bar', (WidgetTester tester) async {
-    when(()=>pictogramApi.getAll(
+    when(() => pictogramApi.getAll(
             page: bloc.latestPage, pageSize: pageSize, query: ''))
         .thenAnswer((_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
@@ -123,10 +108,8 @@ void main() {
     final Completer<bool> done = Completer<bool>();
     const String query = 'Kat';
 
-    when(()=>pictogramApi.getAll(
-            page: bloc.latestPage,
-            pageSize: pageSize,
-            query: query))
+    when(() => pictogramApi.getAll(
+            page: bloc.latestPage, pageSize: pageSize, query: query))
         .thenAnswer((_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
 
@@ -154,10 +137,8 @@ void main() {
     final Completer<bool> done = Completer<bool>();
     const String query = 'Kat';
 
-    when(()=>pictogramApi.getAll(
-            page: bloc.latestPage,
-            pageSize: pageSize,
-            query: query))
+    when(() => pictogramApi.getAll(
+            page: bloc.latestPage, pageSize: pageSize, query: query))
         .thenAnswer((_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
 
@@ -183,10 +164,8 @@ void main() {
     final Completer<bool> done = Completer<bool>();
     const String query = 'Kat';
 
-    when(()=>pictogramApi.getAll(
-            page: bloc.latestPage,
-            pageSize: pageSize,
-            query: query))
+    when(() => pictogramApi.getAll(
+            page: bloc.latestPage, pageSize: pageSize, query: query))
         .thenAnswer((_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
 
@@ -223,10 +202,8 @@ void main() {
       (WidgetTester tester) async {
     const String query = 'Kat';
 
-    when(()=>pictogramApi.getAll(
-            page: bloc.latestPage,
-            pageSize: pageSize,
-            query: query))
+    when(() => pictogramApi.getAll(
+            page: bloc.latestPage, pageSize: pageSize, query: query))
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<List<PictogramModel>?>.seeded(null));
 
@@ -245,10 +222,8 @@ void main() {
       (WidgetTester tester) async {
     const String query = 'Kat';
 
-    when(()=>pictogramApi.getAll(
-            page: bloc.latestPage,
-            pageSize: pageSize,
-            query: query))
+    when(() => pictogramApi.getAll(
+            page: bloc.latestPage, pageSize: pageSize, query: query))
         .thenAnswer((_) => BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
 

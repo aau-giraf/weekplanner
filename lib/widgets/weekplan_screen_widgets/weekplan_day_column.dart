@@ -469,7 +469,7 @@ class WeekplanDayColumn extends StatelessWidget {
       List<ActivityModel> activities, int index, WeekdayModel weekday) {
     final ActivityModel activistModel = activities[index];
     if (activistModel.state == ActivityState.Completed ||
-        (activistModel.timer!.paused == false)) {
+        (activistModel.timer != null && activistModel.timer!.paused == false)) {
       return;
     }
     _activityBloc.load(activistModel, user);
@@ -480,7 +480,7 @@ class WeekplanDayColumn extends StatelessWidget {
     _timerBloc[index].addHandlerToRunningModeOnce();
     _timerBloc[index].initTimer();
 
-    if (activistModel.timer as int == 0) {
+    if (activistModel.timer == null || activistModel.chosenActivity != null) {
       _activityBloc.completeActivity();
     } else {
       _timerBloc[index].playTimer();
