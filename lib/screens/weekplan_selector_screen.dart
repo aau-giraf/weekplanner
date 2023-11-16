@@ -103,6 +103,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
             Expanded(
               flex: 7,
               child: Container(
+
                 width: screenSize.width,
                 height: screenSize.height,
                 padding: portrait
@@ -122,15 +123,17 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                       },
                     ),
                   ),
-                Expanded(
-                flex: 5, child: _buildWeekplanGridview(context, weekModels, true)),
+                  Expanded(
+                    flex: 5, child: _buildWeekplanGridview(context, weekModels, true)),
+
                 // Overstået Uger bar
                 InkWell(
                   child: Container(
                     color: theme.GirafColors.trusteeDarkBlue,
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.fromLTRB(10.0, 3, 0, 3),
-                    child: Row(
+                    child: Stack(children: <Widget>[
+                      Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         const AutoSizeText(
@@ -173,6 +176,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                           ),
                         ),
                       ],
+                    ),
+                    ],
                     ),
                   ),
                   onTap: () {
@@ -222,35 +227,35 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
   );
 */
 
- /*
+/*
   Widget build2(BuildContext context) {
     return Scaffold(
 
-        appBar: GirafAppBar(
-          title: widget._user.displayName,
-          appBarIcons: <AppBarIcon, VoidCallback>{
-            AppBarIcon.edit: () => widget._weekBloc.toggleEditMode(),
-            AppBarIcon.logout: () {},
-            AppBarIcon.settings: () =>
-                Routes().push(context, SettingsScreen(widget._user))
-          },
-        ),
-        bottomNavigationBar: StreamBuilder<bool>(
-          stream: widget._weekBloc.editMode,
-          initialData: false,
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            if (snapshot.data) {
-              return _buildBottomAppBar(context);
-            } else {
-              return Container(width: 0.0, height: 0.0);
-            }
-          },
-        ),
+      appBar: GirafAppBar(
+        title: widget._user.displayName,
+        appBarIcons: <AppBarIcon, VoidCallback>{
+          AppBarIcon.edit: () => widget._weekBloc.toggleEditMode(),
+          AppBarIcon.logout: () {},
+          AppBarIcon.settings: () =>
+              Routes().push(context, SettingsScreen(widget._user))
+        },
+      ),
+      bottomNavigationBar: StreamBuilder<bool>(
+        stream: widget._weekBloc.editMode,
+        initialData: false,
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.data) {
+            return _buildBottomAppBar(context);
+          } else {
+            return Container(width: 0.0, height: 0.0);
+          }
+        },
+      ),
     );
   }
+*/
 
 
-  */
 
 
   ///@override
