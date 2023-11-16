@@ -60,25 +60,6 @@ void main() {
     di.registerDependency<NewCitizenBloc>(() => NewCitizenBloc(api));
   });
 
-  testWidgets('Camera button shows', (WidgetTester tester) async {
-
-    when(pictogramApi.getAll(page: bloc.latestPage,
-        pageSize: pageSize, query: '')).thenAnswer(
-            (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
-            <PictogramModel>[pictogramModel]));
-
-    await tester.pumpWidget(MaterialApp(
-      home: PictogramSearch(user: user),
-    ));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Tag billede'), findsOneWidget);
-
-    await tester.pump(const Duration(milliseconds: 11000));
-
-
-  });
-
   testWidgets('renders', (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
 

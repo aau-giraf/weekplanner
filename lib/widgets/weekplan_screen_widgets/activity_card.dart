@@ -21,7 +21,7 @@ import '../../style/custom_color.dart' as theme;
 /// Widget used for activities in the weekplan screen.
 class ActivityCard extends StatelessWidget {
   /// Constructor
-  ActivityCard(this._activity,this._timerBloc, this._user) {
+  ActivityCard(this._activity, this._timerBloc, this._user) {
     _settingsBloc.loadSettings(_user);
   }
 
@@ -129,6 +129,7 @@ class ActivityCard extends StatelessWidget {
         ),
       );
     }
+
     // Check if there is more than one activity in the choiceboard
     final bool multipleActivities =
         _activity.pictograms.length > 1 && _activity.isChoiceBoard;
@@ -191,6 +192,7 @@ class ActivityCard extends StatelessWidget {
         ),
       ),
     );
+
   }
 
 
@@ -242,8 +244,8 @@ class ActivityCard extends StatelessWidget {
       AsyncSnapshot<SettingsModel> settingsSnapShot) {
     return StreamBuilder<TimerRunningMode>(
         stream: _timerBloc.timerRunningMode,
-        builder: (BuildContext context,
-            AsyncSnapshot<TimerRunningMode> snapshot1) {
+        builder:
+            (BuildContext context, AsyncSnapshot<TimerRunningMode> snapshot1) {
           if (weekModeSnapShot.hasData && settingsSnapShot.hasData) {
             final WeekplanMode role = weekModeSnapShot.data;
             final SettingsModel settings = settingsSnapShot.data;
@@ -254,25 +256,17 @@ class ActivityCard extends StatelessWidget {
                     snapshot1.data != TimerRunningMode.running) {
                   break;
                 }
-                return Container(child: TimerPiechart(_timerBloc),
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height);
+                return Container(
+                    child: TimerPiechart(_timerBloc),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height);
               case ActivityState.Completed:
                 if (role == WeekplanMode.guardian) {
                   return Icon(
                     Icons.check,
                     key: const Key('IconComplete'),
                     color: theme.GirafColors.green,
-                    size: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
+                    size: MediaQuery.of(context).size.width,
                   );
                 } else if (role == WeekplanMode.citizen) {
                   if (settings.completeMark == null) {
@@ -284,23 +278,14 @@ class ActivityCard extends StatelessWidget {
                       Icons.check,
                       key: const Key('IconComplete'),
                       color: theme.GirafColors.green,
-                      size: MediaQuery
-                          .of(context)
-                          .size
-                          .width,
+                      size: MediaQuery.of(context).size.width,
                     );
                   } else if (settings.completeMark == CompleteMark.MovedRight) {
                     return Container(
                         key: const Key('GreyOutBox'),
                         color: theme.GirafColors.transparentGrey,
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width);
+                        height: MediaQuery.of(context).size.width,
+                        width: MediaQuery.of(context).size.width);
                   } else if (settings.completeMark == CompleteMark.Removed) {
                     //This case should be handled by _shouldActivityBeVisiblei
                     return Container(
@@ -310,17 +295,13 @@ class ActivityCard extends StatelessWidget {
                   }
                 }
 
-
                 return const Center(child: CircularProgressIndicator());
               case ActivityState.Canceled:
                 return Icon(
                   Icons.clear,
                   key: const Key('IconCanceled'),
                   color: theme.GirafColors.red,
-                  size: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
+                  size: MediaQuery.of(context).size.width,
                 );
                 break;
               case ActivityState.Active:
@@ -330,10 +311,7 @@ class ActivityCard extends StatelessWidget {
                     Icons.brightness_1_outlined,
                     key: const Key('IconActive'),
                     color: theme.GirafColors.amber,
-                    size: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
+                    size: MediaQuery.of(context).size.width,
                   );
                 }
                 if (role == WeekplanMode.citizen &&
@@ -342,10 +320,7 @@ class ActivityCard extends StatelessWidget {
                     Icons.brightness_1_outlined,
                     key: const Key('IconActive'),
                     color: theme.GirafColors.amber,
-                    size: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
+                    size: MediaQuery.of(context).size.width,
                   );
                 } else {
                   return Container(
@@ -358,8 +333,7 @@ class ActivityCard extends StatelessWidget {
               default:
                 return Container(
                   width: 0,
-                  height: 0
-                  ,
+                  height: 0,
                 );
             }
           }
