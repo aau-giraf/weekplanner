@@ -130,98 +130,71 @@ class ActivityCard extends StatelessWidget {
       );
     }
 
-    if (_activity.chosenActivity != -1 &&
-        weekModeSnapShot.data != WeekplanMode.guardian) {
-      return Opacity(
-        opacity: _shouldActivityBeVisible(weekModeSnapShot, settingsSnapShot)
-            ? 1.0
-            : 0,
-        child: Container(
-            color: theme.GirafColors.white,
-            margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-            child: FittedBox(
-              child: Column(
-                children: <Widget>[
-                  Stack(
-                    children: <Widget>[
-                      Stack(
-                        alignment: AlignmentDirectional.topEnd,
-                        children: <Widget>[
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.width,
-                            child: FittedBox(
-                              child: _getPictogram(_activity
-                                  .pictograms[_activity.chosenActivity]),
-                            ),
-                          ),
-                          _buildActivityStateIcon(context, _activityState,
-                              weekModeSnapShot, settingsSnapShot),
-                          _buildTimerIcon(context, _activity),
-                        ],
-                      ),
-                      Stack(
-                        alignment: AlignmentDirectional.topStart,
-                        children: <Widget>[
-                          _buildAvatarIcon(context),
-                        ],
-                      ),
-                    ],
-                  ),
-                  PictogramText(_activity, _user),
-                ],
-              ),
-            )),
-      );
-    } else {
-      return Container(
-          decoration: BoxDecoration(
-              color: theme.GirafColors.white,
-              border: Border.all(
-                  color: Colors.black,
-                  width: MediaQuery.of(context).size.width * 0.01)),
-          margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-          child: FittedBox(
-            child: Column(
+    // Check if there is more than one activity in the choiceboard
+    final bool multipleActivities =
+        _activity.pictograms.length > 1 && _activity.isChoiceBoard;
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.GirafColors.white,
+        border: Border.all(
+          color: Colors.black,
+          width: MediaQuery.of(context).size.width * 0.01,
+        ),
+      ),
+      margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+      child: FittedBox(
+        child: Column(
+          children: <Widget>[
+            Stack(
               children: <Widget>[
                 Stack(
+                  alignment: AlignmentDirectional.topEnd,
                   children: <Widget>[
-                    Stack(
-                      alignment: AlignmentDirectional.topEnd,
-                      children: <Widget>[
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.width,
-                          child: FittedBox(
-                              child: Stack(
-                            alignment: AlignmentDirectional.center,
-                            children: <Widget>[
-                              SizedBox(
-                                  key: const Key('WeekPlanScreenChoiceBoard'),
-                                  width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.width,
-                                  child: returnGridView(pictograms)),
-                            ],
-                          )),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.width,
+                      child: FittedBox(
+                        child: Stack(
+                          alignment: AlignmentDirectional.center,
+                          children: <Widget>[
+                            SizedBox(
+                              key: const Key('WeekPlanScreenChoiceBoard'),
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.width,
+                              child: returnGridView(pictograms),
+                            ),
+                          ],
                         ),
-                        _buildActivityStateIcon(context, _activityState,
-                            weekModeSnapShot, settingsSnapShot),
-                        _buildTimerIcon(context, _activity),
-                      ],
+                      ),
                     ),
-                    Stack(
-                        alignment: AlignmentDirectional.topStart,
-                        children: <Widget>[
-                          _buildAvatarIcon(context),
-                        ])
+                    _buildActivityStateIcon(
+                        context,
+                        _activityState,
+                        weekModeSnapShot,
+                        settingsSnapShot),
+                    _buildTimerIcon(context, _activity),
                   ],
                 ),
-                PictogramText(_activity, _user),
+                // Remove avatar icon if there are multiple activities in the
+                // choiceboard
+                multipleActivities == false
+                    ? Stack(
+                  alignment: AlignmentDirectional.topStart,
+                  children: <Widget>[
+                    _buildAvatarIcon(context),
+                  ],
+                )
+                    : Container(),
               ],
             ),
-          ));
-    }
+            PictogramText(_activity, _user),
+          ],
+        ),
+      ),
+    );
+
   }
+
 
   ///Returns the correct gridview
   Center returnGridView(List<Widget> list) {
@@ -231,15 +204,15 @@ class ActivityCard extends StatelessWidget {
         crossAxisCount: 2,
         children: List<Widget>.generate(
           list.length,
-          (int index) {
+              (int index) {
             return Padding(
               padding: const EdgeInsets.all(15.0),
               child: Container(
                 decoration: BoxDecoration(
                     border: Border.all(
-                  color: Colors.black,
-                  width: 5,
-                )),
+                      color: Colors.black,
+                      width: 5,
+                    )),
                 child: list[index],
               ),
             );
@@ -415,6 +388,7 @@ class ActivityCard extends StatelessWidget {
         });
   }
 
+
   Widget _buildAvatarIcon(BuildContext context) {
     return Container(
         width: 400,
@@ -425,7 +399,8 @@ class ActivityCard extends StatelessWidget {
               key: Key('PlaceholderAvatar'),
               radius: 20,
               backgroundImage:
-                  AssetImage('assets/login_screen_background_image.png')),
+              AssetImage('assets/login_screen_background_image.png')),
         ));
   }
+
 }
