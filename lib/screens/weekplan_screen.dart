@@ -22,7 +22,7 @@ import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_activities_column.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
-
+import 'package:weekplanner/style/font_size.dart';
 import '../style/custom_color.dart' as theme;
 
 /// <summary>
@@ -47,9 +47,156 @@ class WeekplanScreen extends StatelessWidget {
   final DisplayNameModel _user;
   final WeekModel _week;
 
-
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final bool portrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
+    /// screen background
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            /// The blue left part of screen
+            Expanded(
+              flex: 1,
+              child: Container(
+
+                child: Stack(children: <Widget>[
+
+                  Image.asset(
+                    'assets/icons/giraf_blue_long.png',
+                    repeat: ImageRepeat.repeat,
+                    height: screenSize.height,
+                    fit: BoxFit.cover,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(50.0),
+                    child: Column(children: <Widget>[
+                      Align(
+                        alignment: Alignment.center,
+                          child: IconButton(
+                            key: Key('NavigationMenu'),
+                            padding: EdgeInsets.all(0.0),
+                            color: Colors.white,
+                            icon: Icon(Icons.menu, size: 55),
+                            onPressed: () {
+                              //_naviBar(context); insert navigation reference
+                            },
+                          ),
+                      ),
+                    ],
+                    ),
+                  ),
+                ],
+                ),
+              ),
+            ),
+            /// The white middle of the screen
+            Expanded(
+              flex: 7,
+              child: Container(
+                width: screenSize.width,
+                height: screenSize.height,
+                padding: portrait
+                    ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
+                    : const EdgeInsets.fromLTRB(0, 20, 0,0),
+                child: Stack(children: <Widget>[
+                    Row(children: <Widget>[
+                      Container(
+                        child: Column(children: <Widget>[
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: IconButton(
+                              key: Key('BackArrow'),
+                              padding: portrait
+                                  ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
+                                  : const EdgeInsets.fromLTRB(0, 0, 50, 0),
+                              color: Colors.black,
+                              icon: Icon(Icons.arrow_back, size: 55),
+                              onPressed: () {
+                                Navigator.pop(context); ///go back to previous page
+                              },
+                            ),
+                          ),
+                        ],
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                       child: Text(
+                        'Ugeplan',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: GirafFont.headline, fontFamily: 'Quicksand-Bold'),
+                        ),
+                      ),
+
+                      Container(
+                        child: Column(children: <Widget>[
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: IconButton(
+                              key: const Key('EditWeekplan'),
+                              padding: portrait
+                                  ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
+                                  : const EdgeInsets.fromLTRB(690, 0, 0, 0),
+                              color: Colors.black,
+                              icon: const Icon(Icons.create_outlined, size: 50),
+                              onPressed: () {
+                                ///_pushEditWeekPlan(context); //Does not work yet
+                              },
+                            ),
+                          ),
+                        ],
+                        ),
+                      ),
+                  ],
+                  ),
+                  Container(
+                    padding: portrait
+                        ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
+                        : const EdgeInsets.fromLTRB(0, 70, 0, 0),
+                  child: StreamBuilder<UserWeekModel>(
+                      stream: _weekplanBloc.userWeek,
+                      initialData: null,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<UserWeekModel> snapshot) {
+                        if (snapshot.hasData) {
+                          return _buildWeeks(snapshot.data.week, context);
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      }
+                  ),
+                  ),
+                ],
+                ),
+
+              ),
+            ),
+            /// The blue right part of screen
+            Expanded(
+                flex: 1,
+                child: Container(
+                  height: screenSize.height,
+                  child: Image.asset(
+                    'assets/icons/giraf_blue_long.png',
+                    repeat: ImageRepeat.repeat,
+                    fit: BoxFit.cover,
+                  ),
+                )
+            ),
+          ]
+      ),
+    );
+  }
+
+///  @override
+  Widget build2(BuildContext context) {
 
     return StreamBuilder<WeekplanMode>(
         stream: _authBloc.mode,
@@ -339,14 +486,15 @@ class WeekplanScreen extends StatelessWidget {
 
   StreamBuilder<WeekplanMode> _buildWeeks(
       WeekModel weekModel, BuildContext context) {
+
     const List<Color> defaultWeekColors = <Color>[
-      theme.GirafColors.mondayColor,
-      theme.GirafColors.tuesdayColor,
-      theme.GirafColors.wednesdayColor,
-      theme.GirafColors.thursdayColor,
-      theme.GirafColors.fridayColor,
-      theme.GirafColors.saturdayColor,
-      theme.GirafColors.sundayColor
+      theme.GirafColors.trusteeLightBlue,
+      theme.GirafColors.trusteeLightBlue,
+      theme.GirafColors.trusteeLightBlue,
+      theme.GirafColors.trusteeLightBlue,
+      theme.GirafColors.trusteeLightBlue,
+      theme.GirafColors.trusteeLightBlue,
+      theme.GirafColors.trusteeLightBlue
     ];
     final List<Widget> weekDays = <Widget>[];
     final Orientation orientation = MediaQuery.of(context).orientation;

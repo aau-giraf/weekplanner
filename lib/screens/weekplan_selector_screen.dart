@@ -72,36 +72,32 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
 
                   child: Stack(children: <Widget>[
 
-                  Image.asset(
-                    'assets/icons/giraf_blue_long.png',
-                    repeat: ImageRepeat.repeat,
-                    height: screenSize.height,
-                    fit: BoxFit.cover,
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(50.0),
-                    child: Column(children: <Widget>[
-                      Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                          color: Colors.white,
-                          padding: EdgeInsets.all(0.0),
+                    Image.asset(
+                     'assets/icons/giraf_blue_long.png',
+                     repeat: ImageRepeat.repeat,
+                     height: screenSize.height,
+                     fit: BoxFit.cover,
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(50.0),
+                      child: Column(children: <Widget>[
+                        Align(
+                          alignment: Alignment.center,
                           child: IconButton(
                             key: Key('NavigationMenu'),
                             padding: EdgeInsets.all(0.0),
-                            color: Colors.black,
-                            icon: Icon(Icons.menu, size: 50),
+                            color: Colors.white,
+                            icon: Icon(Icons.menu, size: 55),
                             onPressed: () {
-                              //_naviBar(context); insert navigation menu reference
+                              //_naviBar(context); insert navigation reference
                             },
                           ),
+                        ),
+                      ],
                       ),
-                      ),
-                    ],
                     ),
-                  ),
-                    ],
-                  ),
+                      ],
+                    ),
                 ),
             ),
             /// The white middle of the screen
@@ -114,10 +110,15 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                       ? const EdgeInsets.fromLTRB(50, 0, 50, 0)
                       : const EdgeInsets.fromLTRB(0, 20, 0,0),
                 child: Stack(children: <Widget>[
-                  Text(
-                   'Ugeplaner',
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: GirafFont.headline, fontFamily: 'Quicksand-Bold'),
+                  Container(
+                    padding: portrait
+                        ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
+                        : const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    child: const Text(
+                      'Ugeplaner',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: GirafFont.headline, fontFamily: 'Quicksand-Bold'),
+                    ),
                   ),
                   Container(
                   child: Column(children: <Widget>[
@@ -125,7 +126,9 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                       alignment: Alignment.topRight,
                       child: IconButton(
                         key: const Key('EditWeekplanSelctor'),
-                        padding: const EdgeInsets.all(0.0),
+                        padding: portrait
+                            ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
+                            : const EdgeInsets.fromLTRB(0, 0, 40, 0),
                         color: Colors.black,
                         icon: const Icon(Icons.create_outlined, size: 50),
                         onPressed: () {
