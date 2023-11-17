@@ -79,18 +79,23 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                     fit: BoxFit.cover,
                   ),
                   Container(
+                    padding: EdgeInsets.all(50.0),
                     child: Column(children: <Widget>[
                       Align(
                         alignment: Alignment.center,
-                        child: IconButton(
-                          key: Key('NavigationMenu'),
+                        child: Container(
+                          color: Colors.white,
                           padding: EdgeInsets.all(0.0),
-                          color: Colors.black,
-                          icon: Icon(Icons.menu, size: 50),
-                          onPressed: () {
-                            //_naviBar(context); insert navigation menu reference
-                          },
-                        ),
+                          child: IconButton(
+                            key: Key('NavigationMenu'),
+                            padding: EdgeInsets.all(0.0),
+                            color: Colors.black,
+                            icon: Icon(Icons.menu, size: 50),
+                            onPressed: () {
+                              //_naviBar(context); insert navigation menu reference
+                            },
+                          ),
+                      ),
                       ),
                     ],
                     ),
@@ -103,79 +108,83 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
             Expanded(
               flex: 7,
               child: Container(
-
-                width: screenSize.width,
-                height: screenSize.height,
-                padding: portrait
-                    ? const EdgeInsets.fromLTRB(50, 0, 50, 0)
-                    : const EdgeInsets.fromLTRB(0, 0, 0,0),
-                child: Container(
-                child: Column(children: <Widget>[
-                   Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                      key: Key('EditWeekplanSelctor'),
-                      padding: EdgeInsets.all(0.0),
-                      color: Colors.black,
-                      icon: Icon(Icons.create_outlined, size: 50),
-                      onPressed: () {
-                        _pushEditWeekPlan(context); //Does not work yet
-                      },
-                    ),
+                  width: screenSize.width,
+                  height: screenSize.height,
+                  padding: portrait
+                      ? const EdgeInsets.fromLTRB(50, 0, 50, 0)
+                      : const EdgeInsets.fromLTRB(0, 20, 0,0),
+                child: Stack(children: <Widget>[
+                  Text(
+                   'Ugeplaner',
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: GirafFont.headline, fontFamily: 'Quicksand-Bold'),
                   ),
-                  Expanded(
-                    flex: 5, child: _buildWeekplanGridview(context, weekModels, true)),
-
-                // Overstået Uger bar
-                InkWell(
-                  child: Container(
-                    color: theme.GirafColors.trusteeDarkBlue,
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.fromLTRB(10.0, 3, 0, 3),
-                    child: Stack(children: <Widget>[
-                      Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        const AutoSizeText(
-                          'Overståede uger',
-                          style: TextStyle(fontSize: GirafFont.small, color: Colors.white),
-                          maxLines: 1,
-                          minFontSize: 14,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        showOldWeeks
-                        // Icons for showing and hiding the old weeks are inside this
-                        // When the old weeks are shown, show the hide icon
+                  Container(
+                  child: Column(children: <Widget>[
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        key: const Key('EditWeekplanSelctor'),
+                        padding: const EdgeInsets.all(0.0),
+                        color: Colors.black,
+                        icon: const Icon(Icons.create_outlined, size: 50),
+                        onPressed: () {
+                          _pushEditWeekPlan(context); //Does not work yet
+                        },
+                      ),
+                  ),
+                    Expanded(
+                      flex: 5, child: _buildWeekplanGridview(context, weekModels, true)),
+                    // Overstået Uger bar
+                    InkWell(
+                      child: Container(
+                        color: theme.GirafColors.trusteeDarkBlue,
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.fromLTRB(10.0, 3, 0, 3),
+                        child: Stack(children: <Widget>[
+                          Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            const AutoSizeText(
+                              'Overståede uger',
+                              style: TextStyle(fontSize: GirafFont.small, color: Colors.white),
+                              maxLines: 1,
+                              minFontSize: 14,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            showOldWeeks
+                            // Icons for showing and hiding the old weeks are inside this
+                            // When the old weeks are shown, show the hide icon
                             ? Expanded(
-                          flex: 1,
-                          child: IconButton(
-                            key: const Key('HideOldWeeks'),
-                            padding: const EdgeInsets.all(0.0),
-                            alignment: Alignment.centerRight,
-                            color: Colors.white,
-                            icon: const Icon(Icons.remove, size: 50),
-                            onPressed: () {
-                              _toggleOldWeeks();
-                            },
-                          ),
-                        )
-                        // Icons for showing and hiding the old weeks are inside this
-                        // When the old weeks are hidden, show the hide icon
+                            flex: 1,
+                              child: IconButton(
+                                key: const Key('HideOldWeeks'),
+                                padding: const EdgeInsets.all(0.0),
+                                alignment: Alignment.centerRight,
+                                color: Colors.white,
+                                icon: const Icon(Icons.remove, size: 50),
+                                onPressed: () {
+                                  _toggleOldWeeks();
+                                },
+                              ),
+                            )
+                            // Icons for showing and hiding the old weeks are inside this
+                            // When the old weeks are hidden, show the hide icon
                             : Expanded(
-                          flex: 1,
-                          child: IconButton(
-                            key: const Key('ShowOldWeeks'),
-                            padding: const EdgeInsets.all(0.0),
-                            alignment: Alignment.centerRight,
-                            color: Colors.white,
-                            icon: const Icon(Icons.add, size: 50),
-                            onPressed: () {
-                              _toggleOldWeeks();
-                            },
-                          ),
-                        ),
-                      ],
+                            flex: 1,
+                              child: IconButton(
+                              key: const Key('ShowOldWeeks'),
+                              padding: const EdgeInsets.all(0.0),
+                              alignment: Alignment.centerRight,
+                              color: Colors.white,
+                                icon: const Icon(Icons.add, size: 50),
+                                onPressed: () {
+                                _toggleOldWeeks();
+                                },
+                              ),
+                            ),
+                        ],
                     ),
                     ],
                     ),
@@ -185,17 +194,19 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                   },
                 ),
 
-                Visibility(
-                    visible: showOldWeeks,
-                    child: Expanded(
-                        flex: 5,
-                        child: Container( // Container with old weeks if shown
-                          // Background color of the old weeks
-                            color: theme.GirafColors.trusteeLightBlue,
-                            child: _buildWeekplanGridview(context, oldWeekModels, false))))
-                ])),
-                ),
+                    Visibility(
+                        visible: showOldWeeks,
+                        child: Expanded(
+                            flex: 5,
+                            child: Container( // Container with old weeks if shown
+                              // Background color of the old weeks
+                                color: theme.GirafColors.trusteeLightBlue,
+                                child: _buildWeekplanGridview(context, oldWeekModels, false))))
+                                ])),
+                            ],
+                            ),
               ),
+            ),
             /// The blue right part of screen
             Expanded(
                 flex: 1,

@@ -9,6 +9,9 @@ class GirafFont
   ///Font size for timer
   static const double timer = 50;
 
+  ///Font size for timer
+  static const double headline = 45;
+
   ///Large font
   static const double large = 30;
 
