@@ -18,7 +18,7 @@ class ChooseCitizenBloc extends BlocBase {
   /// Update the block with current users
   void updateBloc() {
     _api.user.me().flatMap((GirafUserModel user) {
-      return _api.user.getCitizens(user.id);
+      return _api.user.getCitizens(user.id!);
     }).listen((List<DisplayNameModel> citizens) {
       _citizens.add(citizens);
     }).onError((Object error) {

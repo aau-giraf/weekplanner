@@ -35,21 +35,21 @@ class PictogramText extends StatelessWidget {
         stream: _authBloc.mode,
         builder: (BuildContext context,
             AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-          return StreamBuilder<SettingsModel>(
+          return StreamBuilder<SettingsModel?>(
               stream: _settingsBloc.settings,
               builder: (BuildContext context,
-                  AsyncSnapshot<SettingsModel> settingsSnapshot) {
+                  AsyncSnapshot<SettingsModel?> settingsSnapshot) {
                 if (settingsSnapshot.hasData && weekModeSnapshot.hasData) {
-                  final WeekplanMode weekMode = weekModeSnapshot.data;
-                  final SettingsModel settings = settingsSnapshot.data;
-                  final bool pictogramTextIsEnabled = settings.pictogramText;
+                  final WeekplanMode weekMode = weekModeSnapshot.data!;
+                  final SettingsModel settings = settingsSnapshot.data!;
+                  final bool pictogramTextIsEnabled = settings.pictogramText!;
                   if ((_isGuardianMode(weekMode) || pictogramTextIsEnabled) &&
                       settings.pictogramText == true) {
                     if (_activity.isChoiceBoard) {
                       return _buildPictogramText(
-                          context, _activity.choiceBoardName);
+                          context, _activity.choiceBoardName!);
                     } else {
-                      final String pictogramText = _activity.title;
+                      final String pictogramText = _activity.title!;
                       return _buildPictogramText(context, pictogramText);
                     }
                   }
@@ -89,14 +89,14 @@ class PictogramText extends StatelessWidget {
 /// accounted for
 double textWidth(String text, BuildContext context) {
   return (TextPainter(
-      text: TextSpan(
-          text: text,
-          style:
-          const TextStyle(fontWeight: FontWeight.bold, fontSize: 120)),
-      maxLines: 1,
-      textScaleFactor: MediaQuery.of(context).textScaleFactor,
-      textDirection: TextDirection.ltr)
-    ..layout())
+          text: TextSpan(
+              text: text,
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 120)),
+          maxLines: 1,
+          textScaleFactor: MediaQuery.of(context).textScaleFactor,
+          textDirection: TextDirection.ltr)
+        ..layout())
       .size
       .width;
 }

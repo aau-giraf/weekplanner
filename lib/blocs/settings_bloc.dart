@@ -17,32 +17,32 @@ class SettingsBloc extends BlocBase {
   final Api _api;
 
   /// Settings stream
-  Stream<SettingsModel> get settings => _settings.stream;
+  Stream<SettingsModel?> get settings => _settings.stream;
 
   /// Currently selected theme
-  Stream<GirafTheme> get theme => _theme.stream;
+  Stream<GirafTheme?> get theme => _theme.stream;
 
   /// List of available themes
   Stream<List<GirafTheme>> get themeList => _themeList.stream;
   final rx_dart.BehaviorSubject<List<GirafTheme>> _themeList =
       rx_dart.BehaviorSubject<List<GirafTheme>>.seeded(<GirafTheme>[]);
 
-  final rx_dart.BehaviorSubject<GirafTheme> _theme =
-      rx_dart.BehaviorSubject<GirafTheme>.seeded(null);
+  final rx_dart.BehaviorSubject<GirafTheme?> _theme =
+      rx_dart.BehaviorSubject<GirafTheme?>.seeded(null);
 
-  final rx_dart.BehaviorSubject<SettingsModel> _settings =
+  final rx_dart.BehaviorSubject<SettingsModel?> _settings =
       rx_dart.BehaviorSubject<SettingsModel>();
 
   /// Load the settings for a user
   void loadSettings(DisplayNameModel user) {
-    _api.user.getSettings(user.id).listen((SettingsModel settingsModel) {
+    _api.user.getSettings(user.id!).listen((SettingsModel? settingsModel) {
       _settings.add(settingsModel);
     });
   }
 
   /// Load the settings for a giraf user
   void loadSettingsGirafUser(GirafUserModel user) {
-    _api.user.getSettings(user.id).listen((SettingsModel settingsModel) {
+    _api.user.getSettings(user.id!).listen((SettingsModel? settingsModel) {
       _settings.add(settingsModel);
     });
   }
@@ -53,10 +53,8 @@ class SettingsBloc extends BlocBase {
   }
 
   ///Deletes the user
-  void deleteUser(String userId){
-    _api.account
-        .delete(userId)
-        .listen((bool deleted){});
+  void deleteUser(String userId) {
+    _api.account.delete(userId).listen((bool deleted) {});
   }
 
   /// Set the theme to be used

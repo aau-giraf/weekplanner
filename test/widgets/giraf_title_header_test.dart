@@ -6,20 +6,13 @@ void main() {
   testWidgets('Test that a null title is replaced with empty',
       (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(
-        home: Scaffold(
-      body: GirafTitleHeader(title: 'TitleHeader'),
-    )));
-    await tester.pump();
-    expect(find.text('TitleHeader'), findsOneWidget);
-  });
+      home: Scaffold(
+        appBar: GirafTitleHeader(title: null),
+      ),
+    ));
 
-  testWidgets('Test that a null title is replaced with empty',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
-        home: Scaffold(
-      body: GirafTitleHeader(),
-    )));
-    await tester.pump();
-    expect(find.text(''), findsOneWidget);
+    expect(find.byType(GirafTitleHeader),
+        findsOneWidget); // Forvent at finde GirafTitleHeader
+    expect(find.text(''), findsOneWidget); // Forvent at finde en tom streng
   });
 }

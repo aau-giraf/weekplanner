@@ -13,7 +13,6 @@ import 'package:weekplanner/widgets/settings_widgets/'
 
 import '../../di.dart';
 
-
 /// Screen where the icon for completed activity can be chosen
 class CompletedActivityIconScreen extends StatelessWidget {
   /// Constructor
@@ -28,34 +27,28 @@ class CompletedActivityIconScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: GirafAppBar(
-          title: _user.displayName + ': indstillinger',
-        ),
-        body: StreamBuilder<SettingsModel>(
+            title: _user.displayName! + ': indstillinger', key: UniqueKey()),
+        body: StreamBuilder<SettingsModel?>(
             stream: _settingsBloc.settings,
             builder: (BuildContext context,
-                AsyncSnapshot<SettingsModel> settingsSnapshot) {
+                AsyncSnapshot<SettingsModel?> settingsSnapshot) {
               if (settingsSnapshot.hasData) {
-                final SettingsModel _settingsModel = settingsSnapshot.data;
+                final SettingsModel _settingsModel = settingsSnapshot.data!;
 
                 return ListView(
                   children: <Widget>[
                     SettingsSection('Tegn for udførelse', <SettingsSectionItem>[
-                      SettingsCheckMarkButton(
-                          0,
-                          _settingsModel.completeMark,
+                      SettingsCheckMarkButton(0, _settingsModel.completeMark,
                           'Fjern aktiviteten for borgeren', () {
-                              Routes().pop(context, CompleteMark.Removed);
-                          }),
+                        Routes().pop(context, CompleteMark.Removed);
+                      }),
                       SettingsCheckMarkButton(
-                          1,
-                          _settingsModel.completeMark,
-                          'Flueben', () {
+                          1, _settingsModel.completeMark, 'Flueben', () {
                         Routes().pop(context, CompleteMark.Checkmark);
                       }),
                       SettingsCheckMarkButton(
-                          2,
-                          _settingsModel.completeMark,
-                          'Lav aktiviteten grå', () {
+                          2, _settingsModel.completeMark, 'Lav aktiviteten grå',
+                          () {
                         Routes().pop(context, CompleteMark.MovedRight);
                       }),
                     ]),

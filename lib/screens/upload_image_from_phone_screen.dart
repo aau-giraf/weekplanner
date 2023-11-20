@@ -16,10 +16,10 @@ import '../style/custom_color.dart' as theme;
 // ignore: must_be_immutable
 class UploadImageFromPhone extends StatelessWidget {
   /// Default constructor
-  UploadImageFromPhone({Key key}) : super(key: key);
+  UploadImageFromPhone({required Key key}) : super(key: key);
 
   final UploadFromGalleryBloc _uploadFromGallery =
-  di.get<UploadFromGalleryBloc>();
+      di.get<UploadFromGalleryBloc>();
 
   final BorderRadius _imageBorder = BorderRadius.circular(25);
 
@@ -33,13 +33,18 @@ class UploadImageFromPhone extends StatelessWidget {
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
+    // ignore: lines_longer_than_80_chars
     return Scaffold(
-      appBar: GirafAppBar(title: 'Tilføj fra galleri'),
+      appBar: GirafAppBar(
+          key: const ValueKey<String>('uploadKey'),
+          title: 'Tilføj fra galleri'),
       body: StreamBuilder<bool>(
           stream: _uploadFromGallery.isUploading,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            return snapshot.hasData && snapshot.data
-                ? const LoadingSpinnerWidget()
+            return snapshot.hasData && snapshot.data!
+                ? LoadingSpinnerWidget(
+                    key: UniqueKey(),
+                  )
                 : _buildBody(context);
           }),
     );
@@ -100,17 +105,15 @@ class UploadImageFromPhone extends StatelessWidget {
     return Padding(
         padding: const EdgeInsets.only(bottom: 15),
         child: Container(
-          child: TextButton(
-            onPressed: _uploadFromGallery.chooseImageFromGallery,
-            child: StreamBuilder<File>(
-                stream: _uploadFromGallery.file,
-                builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
-                    snapshot.data != null
-                        ? _displayImage(snapshot.data)
-                        : _displayIfNoImage()),
-          )
-        )
-    );
+            child: TextButton(
+          onPressed: _uploadFromGallery.chooseImageFromGallery,
+          child: StreamBuilder<File>(
+              stream: _uploadFromGallery.file,
+              builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
+                  snapshot.data != null
+                      ? _displayImage(snapshot.data!)
+                      : _displayIfNoImage()),
+        )));
   }
 
   void _showUploadError(BuildContext context) {
@@ -118,9 +121,10 @@ class UploadImageFromPhone extends StatelessWidget {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return const GirafNotifyDialog(
+        return GirafNotifyDialog(
           title: 'Fejl',
           description: 'Upload af pictogram fejlede.',
+          key: UniqueKey(),
         );
       },
     );

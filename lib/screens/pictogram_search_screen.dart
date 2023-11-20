@@ -16,12 +16,11 @@ import '../style/custom_color.dart' as theme;
 /// This screen will return `null` back is pressed, otherwise it will return the
 /// chosen pictogram.
 class PictogramSearch extends StatefulWidget {
-
   /// Constructor
-  const PictogramSearch({@required this.user});
+  const PictogramSearch({required this.user});
 
   /// The current authenticated user
-  final DisplayNameModel user;
+  final DisplayNameModel? user;
 
   @override
   _PictogramSearchState createState() => _PictogramSearchState();
@@ -30,10 +29,9 @@ class PictogramSearch extends StatefulWidget {
 class _PictogramSearchState extends State<PictogramSearch> {
   final PictogramBloc _bloc = di.get<PictogramBloc>();
 
-
   //Search after pictograms when the page loads
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _bloc.search('');
   }
@@ -41,7 +39,10 @@ class _PictogramSearchState extends State<PictogramSearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GirafAppBar(title: 'Piktogram'),
+        appBar: GirafAppBar(
+          title: 'Piktogram',
+          key: UniqueKey(),
+        ),
         body: Column(
           children: <Widget>[
             Padding(
@@ -64,42 +65,40 @@ class _PictogramSearchState extends State<PictogramSearch> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: StreamBuilder<List<PictogramModel>>(
+                child: StreamBuilder<List<PictogramModel>?>(
                     stream: _bloc.pictograms,
                     initialData: const <PictogramModel>[],
                     builder: (BuildContext context,
-                        AsyncSnapshot<List<PictogramModel>> snapshot) {
+                        AsyncSnapshot<List<PictogramModel>?> snapshot) {
                       if (snapshot.hasData) {
-                        return Column(
-                          children: <Widget> [
-                            Expanded(
+                        return Column(children: <Widget>[
+                          Expanded(
                               child: GridView.count(
-                                crossAxisCount: 4,
-                                children: snapshot.data
-                                    .map((PictogramModel pictogram)
-                                => PictogramImage(
-                                    pictogram: pictogram,
-                                    haveRights: widget.user == null
-                                        || pictogram.userId
-                                        == null ? false :
-                                    pictogram.userId == widget.user.id,
-                                    needsTitle: true,
-                                    onPressed: () =>
-                                        Routes().pop(context, pictogram)))
-                                    .toList(),
-                                controller: _bloc.sc
-                            )
-                            ),
-                            _bloc.loadingPictograms == true
-                            ? Container(
-                              height: 80,
-                              child: const Center(
-                                  child: CircularProgressIndicator()
-                              ),
-                            )
-                            : Container()
-                          ]
-                        );
+                                  crossAxisCount: 4,
+                                  children: snapshot.data!
+                                      .map((PictogramModel pictogram) =>
+                                          PictogramImage(
+                                            pictogram: pictogram,
+                                            haveRights: widget.user == null ||
+                                                    pictogram.userId == null
+                                                ? false
+                                                : pictogram.userId ==
+                                                    widget.user!.id,
+                                            needsTitle: true,
+                                            onPressed: () => Routes()
+                                                .pop(context, pictogram),
+                                            key: UniqueKey(),
+                                          ))
+                                      .toList(),
+                                  controller: _bloc.sc)),
+                          _bloc.loadingPictograms == true
+                              ? Container(
+                                  height: 80,
+                                  child: const Center(
+                                      child: CircularProgressIndicator()),
+                                )
+                              : Container()
+                        ]);
                       } else if (snapshot.hasError) {
                         return InkWell(
                           key: const Key('timeoutWidget'),
@@ -117,9 +116,9 @@ class _PictogramSearchState extends State<PictogramSearch> {
           ],
         ),
         bottomNavigationBar: BottomAppBar(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
               Expanded(
                   child: Container(
                       decoration: const BoxDecoration(
@@ -135,22 +134,23 @@ class _PictogramSearchState extends State<PictogramSearch> {
                             theme.GirafColors.appBarOrange,
                           ])),
                       child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          BottomAppBarButton(
-                            buttonText: 'Tilføj fra galleri',
-                            buttonKey: 'TilføjFraGalleriButton',
-                            assetPath: 'assets/icons/gallery.png',
-                            dialogFunction: (BuildContext context) {
-                              Routes().push(
-                                  context, UploadImageFromPhone());
-                            }
-                          ),
-                        ]
-                      )))
-            ]
-          )
-       ));
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            BottomAppBarButton(
+                              buttonText: 'Tilføj fra galleri',
+                              buttonKey: 'TilføjFraGalleriButton',
+                              assetPath: 'assets/icons/gallery.png',
+                              dialogFunction: (BuildContext context) {
+                                Routes().push(
+                                    context,
+                                    UploadImageFromPhone(
+                                      key: const Key('uploadFromPhone'),
+                                    ));
+                              },
+                              key: const Key('addFromGallery'),
+                            ),
+                          ])))
+            ])));
   }
 }

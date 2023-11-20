@@ -17,7 +17,7 @@ class EditWeekplanBloc extends NewWeekplanBloc {
   void initializeEditBloc(DisplayNameModel user, WeekModel weekModel) {
     super.initialize(user);
     // We just take the values out of the week model and put into our sink
-    super.onTitleChanged.add(weekModel.name);
+    super.onTitleChanged.add(weekModel.name!);
     super.onYearChanged.add(weekModel.weekYear.toString());
     super.onWeekNumberChanged.add(weekModel.weekNumber.toString());
     super.onThumbnailChanged.add(weekModel.thumbnail);
@@ -26,9 +26,9 @@ class EditWeekplanBloc extends NewWeekplanBloc {
   /// This method allows one to save the new information stored in the week
   /// model object and also deletes the old object if necessary
   Future<WeekModel> editWeekPlan(
-      {BuildContext screenContext,
-      WeekModel oldWeekModel,
-      WeekplansBloc selectorBloc}) async {
+      {required BuildContext? screenContext,
+      required WeekModel oldWeekModel,
+      required WeekplansBloc selectorBloc}) async {
     final WeekModel newWeekModel = WeekModel();
 
     // We copy the activities from the old week model.
@@ -37,8 +37,8 @@ class EditWeekplanBloc extends NewWeekplanBloc {
     // Getting the values from the input fields
     newWeekModel.thumbnail = super.thumbnailController.value;
     newWeekModel.name = super.titleController.value;
-    newWeekModel.weekYear = int.parse(super.yearController.value);
-    newWeekModel.weekNumber = int.parse(super.weekNoController.value);
+    newWeekModel.weekYear = int.parse(super.yearController.value!);
+    newWeekModel.weekNumber = int.parse(super.weekNoController.value!);
 
     bool doOverwrite = true;
 
@@ -54,7 +54,7 @@ class EditWeekplanBloc extends NewWeekplanBloc {
       // If there is a match, ask the user if we should overwrite.
       if (hasExistingMatch) {
         doOverwrite = await displayOverwriteDialog(
-            screenContext, newWeekModel.weekNumber, newWeekModel.weekYear);
+            screenContext!, newWeekModel.weekNumber, newWeekModel.weekYear);
       }
 
       // Here we delete the old week plan (we had to do this because of the way
@@ -69,11 +69,12 @@ class EditWeekplanBloc extends NewWeekplanBloc {
 
     if (doOverwrite) {
       weekApi.week
-          .update(super.weekUser.id, newWeekModel.weekYear,
+          .update(super.weekUser!.id!, newWeekModel.weekYear,
               newWeekModel.weekNumber, newWeekModel)
           .take(1)
           .listen(updateCompleter.complete);
     } else {
+      // ignore: null_argument_to_non_null_type
       updateCompleter.complete(null);
     }
 

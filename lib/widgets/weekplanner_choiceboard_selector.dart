@@ -43,9 +43,10 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
           titlePadding: const EdgeInsets.all(0.0),
           shape: Border.all(
               color: theme.GirafColors.transparentDarkGrey, width: 5.0),
-          title: const Center(
+          title: Center(
               child: GirafTitleHeader(
             title: 'Vælg aktivitet',
+            key: UniqueKey(),
           )),
           content: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -117,17 +118,17 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
 
   Widget _displayPictogram(
       BuildContext context, List<Widget> pictograms, int index) {
-    return StreamBuilder<SettingsModel>(
+    return StreamBuilder<SettingsModel?>(
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
-            AsyncSnapshot<SettingsModel> settingSnapshot) {
+            AsyncSnapshot<SettingsModel?> settingSnapshot) {
           return SizedBox(
             height: MediaQuery.of(context).size.height * 0.2,
             width: MediaQuery.of(context).size.height * 0.2,
             child: FittedBox(
               child: GestureDetector(
                   onTap: () {
-                    if (settingSnapshot.data.showPopup) {
+                    if (settingSnapshot.data!.showPopup!) {
                       _selectPictogramFromChoiceBoardPopup(
                               context, pictograms, index)
                           .then((_) {
@@ -154,7 +155,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
   }
 
   //Shows a popup when selecting a pictogram on a choiceboard
-  Future<Center> _selectPictogramFromChoiceBoardPopup(
+  Future<Center?> _selectPictogramFromChoiceBoardPopup(
       BuildContext context, List<Widget> pictograms, int index) {
     return showDialog<Center>(
         barrierDismissible: false,

@@ -1,3 +1,5 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'dart:async';
 import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -12,17 +14,19 @@ class GirafButton extends StatefulWidget {
   /// isEnabledStream is a stream which is listened to, to update the
   /// enabled/disabled state of the button.
   const GirafButton({
-    Key key,
-    this.text,
+    required Key key,
+    this.text = 'Default',
     this.fontSize = 20,
     this.fontWeight = FontWeight.normal,
-    this.icon,
-    this.width,
+    this.icon = const ImageIcon(AssetImage('assets/icons/accept.png')),
+    this.width = 40.0,
     this.height = 40.0,
-    @required this.onPressed,
+    required this.onPressed,
     this.isEnabled = true,
     // ignore: avoid_unused_constructor_parameters
-    this.isEnabledStream, StreamBuilder<File> child,
+    this.isEnabledStream = const Stream<bool>.empty(),
+    // ignore: avoid_unused_constructor_parameters
+    StreamBuilder<File?>? child,
   }) : super(key: key);
 
   /// The text placed at the center of the button.
@@ -46,7 +50,7 @@ class GirafButton extends StatefulWidget {
   /// The function to be called when the button is pressed.
   /// The function must be a void funtion with no input parameters.
   /// If this is set to null, the button will be disabled.
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   /// Determines whether the button is enabled or disabled by default. If
   /// isEnabledStream is also supplied, the latest emitted item from the stream
@@ -57,7 +61,7 @@ class GirafButton extends StatefulWidget {
   /// A stream which tells whether the button should be enabled or disabled.
   /// If the stream emits a null value, the value of isEnabled will be used
   /// instead.
-  final Stream<bool> isEnabledStream;
+  final Stream<bool>? isEnabledStream;
 
   @override
   _GirafButtonState createState() => _GirafButtonState();
@@ -71,37 +75,34 @@ class _GirafButtonState extends State<GirafButton> {
     _isPressed = false;
     if (widget.isEnabledStream != null) {
       _isEnabledSubscription =
-          widget.isEnabledStream.listen(_handleIsEnabledStreamEvent);
+          widget.isEnabledStream!.listen(_handleIsEnabledStreamEvent);
     }
     super.initState();
   }
 
-  static const Gradient _gradientDefault = LinearGradient(
-      colors: <Color>[theme.GirafColors.gradientDefaultYellow,
-        theme.GirafColors.gradientDefaultOrange],
-      begin: Alignment(0.0, -1.0),
-      end: Alignment(0.0, 1.0));
+  static const Gradient _gradientDefault = LinearGradient(colors: <Color>[
+    theme.GirafColors.gradientDefaultYellow,
+    theme.GirafColors.gradientDefaultOrange
+  ], begin: Alignment(0.0, -1.0), end: Alignment(0.0, 1.0));
 
-  static const Gradient _gradientPressed = LinearGradient(
-      colors: <Color>[theme.GirafColors.gradientPressedYellow,
-        theme.GirafColors.gradientPressedOrange],
-      begin: Alignment(0.0, -1.0),
-      end: Alignment(0.0, 1.0));
+  static const Gradient _gradientPressed = LinearGradient(colors: <Color>[
+    theme.GirafColors.gradientPressedYellow,
+    theme.GirafColors.gradientPressedOrange
+  ], begin: Alignment(0.0, -1.0), end: Alignment(0.0, 1.0));
 
-  static const Gradient _gradientDisabled = LinearGradient(
-      colors: <Color>[theme.GirafColors.gradientDisabledYellow,
-        theme.GirafColors.gradientDisabledOrange],
-      begin: Alignment(0.0, -1.0),
-      end: Alignment(0.0, 1.0));
+  static const Gradient _gradientDisabled = LinearGradient(colors: <Color>[
+    theme.GirafColors.gradientDisabledYellow,
+    theme.GirafColors.gradientDisabledOrange
+  ], begin: Alignment(0.0, -1.0), end: Alignment(0.0, 1.0));
 
   static const Color _borderDefault = theme.GirafColors.gradientDefaultBorder;
   static const Color _borderPressed = theme.GirafColors.gradientPressedBorder;
   static const Color _borderDisabled = theme.GirafColors.gradientDisabledBorder;
 
-  bool _isPressed;
-  bool _isEnabled;
-  StreamSubscription<bool> _isEnabledSubscription;
-  Timer _timer;
+  bool? _isPressed;
+  bool? _isEnabled;
+  StreamSubscription<bool>? _isEnabledSubscription;
+  Timer? _timer;
 
   @override
   Widget build(BuildContext context) {
@@ -113,13 +114,13 @@ class _GirafButtonState extends State<GirafButton> {
         width: widget.width,
         height: widget.height,
         decoration: BoxDecoration(
-          gradient: _isEnabled
-              ? (_isPressed ? _gradientPressed : _gradientDefault)
+          gradient: _isEnabled!
+              ? (_isPressed! ? _gradientPressed : _gradientDefault)
               : _gradientDisabled,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-              color: _isEnabled
-                  ? (_isPressed ? _borderPressed : _borderDefault)
+              color: _isEnabled!
+                  ? (_isPressed! ? _borderPressed : _borderDefault)
                   : _borderDisabled,
               width: 1.2),
         ),
@@ -131,14 +132,14 @@ class _GirafButtonState extends State<GirafButton> {
   }
 
   void _onTapDown(TapDownDetails details) {
-    if (_isEnabled) {
+    if (_isEnabled!) {
       setState(() => _isPressed = true);
     }
   }
 
   void _onTapUp(TapUpDetails details) {
-    if (_isEnabled) {
-      widget.onPressed();
+    if (_isEnabled!) {
+      widget.onPressed!();
       // On a quick tap the pressed state is not shown, because the state
       // changes too fast, hence we introduce a delay.
       _timer = Timer(const Duration(milliseconds: 100),
@@ -147,12 +148,12 @@ class _GirafButtonState extends State<GirafButton> {
   }
 
   void _onTapCancel() {
-    if (_isEnabled) {
+    if (_isEnabled!) {
       setState(() => _isPressed = false);
     }
   }
 
-  void _handleIsEnabledStreamEvent(bool value) {
+  void _handleIsEnabledStreamEvent(bool? value) {
     // If a null value is emitted reset enabled state to default.
     value ??= widget.isEnabled;
 
@@ -170,37 +171,44 @@ class _GirafButtonState extends State<GirafButton> {
   }
 
   Widget _buildWidgetsOnButton() {
-    final TextStyle textStyle = TextStyle(color: theme.GirafColors.black,
-        fontSize: widget.fontSize, fontWeight: widget.fontWeight);
+    final TextStyle textStyle = TextStyle(
+        color: theme.GirafColors.black,
+        fontSize: widget.fontSize,
+        fontWeight: widget.fontWeight);
 
-    if (widget.text != null && widget.icon != null) {
+    if (widget.text != '' && widget.icon != '') {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          widget.icon,
+          Expanded(
+            child: widget.icon,
+          ),
           const SizedBox(
             width: 5,
           ),
-          Text(
-            widget.text,
-            style: textStyle,
+          Expanded(
+            child: Text(
+              widget.text,
+              style: textStyle,
+            ),
           ),
         ],
       );
-    } else if (widget.text != null) {
+    } else if (widget.text != '') {
       return Center(
           child: AutoSizeText(
-            widget.text,
-            style: textStyle,
-            minFontSize: 5,
+        widget.text,
+        style: textStyle,
+        minFontSize: 5,
       ));
-    } else if (widget.icon != null) {
+    } else if (widget.icon != '') {
       return Center(
         child: widget.icon,
       );
     }
 
-    return null;
+    // return null;
+    throw Exception;
   }
 
   @override
