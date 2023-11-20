@@ -20,9 +20,11 @@ packages:
   api_client:
     dependency: "direct main"
     description:
-      path: "../api_client"
-      relative: true
-    source: path
+      path: "."
+      ref: develop
+      resolved-ref: "92fd09481438b5d558358e172ba2df3375dd0dd2"
+      url: "https://github.com/aau-giraf/api_client.git"
+    source: git
     version: "0.0.2"
   archive:
     dependency: transitive
