@@ -47,6 +47,7 @@ class WeekplanScreen extends StatelessWidget {
   final DisplayNameModel _user;
   final WeekModel _week;
 
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -77,15 +78,19 @@ class WeekplanScreen extends StatelessWidget {
                     child: Column(children: <Widget>[
                       Align(
                         alignment: Alignment.center,
-                          child: IconButton(
-                            key: Key('NavigationMenu'),
-                            padding: EdgeInsets.all(0.0),
-                            color: Colors.white,
-                            icon: Icon(Icons.menu, size: 55),
-                            onPressed: () {
-                              //_naviBar(context); insert navigation reference
-                            },
-                          ),
+                        child: Builder(
+                            builder: (BuildContext context) {
+                              return IconButton(
+                                key: Key('NavigationMenu'),
+                                padding: EdgeInsets.all(0.0),
+                                color: Colors.white,
+                                icon: Icon(Icons.menu, size: 55),
+                                onPressed: () {
+                                  Scaffold.of(context).openDrawer();
+                                },
+                              );
+                            }
+                        ),
                       ),
                     ],
                     ),
@@ -191,6 +196,44 @@ class WeekplanScreen extends StatelessWidget {
                 )
             ),
           ]
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Ugeplaner'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Profil'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/profil');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Skift bruger'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/skift bruger');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.exit_to_app),
+              title: const Text('Log af'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/log af');
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

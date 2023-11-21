@@ -20,6 +20,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+import 'package:weekplanner/widgets/input_fields_weekplan.dart';
 
 import '../style/custom_color.dart' as theme;
 
@@ -83,14 +84,18 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                       child: Column(children: <Widget>[
                         Align(
                           alignment: Alignment.center,
-                          child: IconButton(
-                            key: Key('NavigationMenu'),
-                            padding: EdgeInsets.all(0.0),
-                            color: Colors.white,
-                            icon: Icon(Icons.menu, size: 55),
-                            onPressed: () {
-                              //_naviBar(context); insert navigation reference
-                            },
+                          child: Builder(
+                            builder: (BuildContext context) {
+                              return IconButton(
+                                key: Key('NavigationMenu'),
+                                padding: EdgeInsets.all(0.0),
+                                color: Colors.white,
+                                icon: Icon(Icons.menu, size: 55),
+                                onPressed: () {
+                                  Scaffold.of(context).openDrawer();
+                                },
+                              );
+                            }
                           ),
                         ),
                       ],
@@ -121,83 +126,83 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                     ),
                   ),
                   Container(
-                  child: Column(children: <Widget>[
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                        key: const Key('EditWeekplanSelctor'),
-                        padding: portrait
-                            ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
-                            : const EdgeInsets.fromLTRB(0, 0, 40, 0),
-                        color: Colors.black,
-                        icon: const Icon(Icons.create_outlined, size: 50),
-                        onPressed: () {
-                          _pushEditWeekPlan(context); //Does not work yet
-                        },
-                      ),
-                  ),
-                    Expanded(
-                      flex: 5, child: _buildWeekplanGridview(context, weekModels, true)),
-                    // Overstået Uger bar
-                    InkWell(
-                      child: Container(
-                        color: theme.GirafColors.trusteeDarkBlue,
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.fromLTRB(10.0, 3, 0, 3),
-                        child: Stack(children: <Widget>[
-                          Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            const AutoSizeText(
-                              'Overståede uger',
-                              style: TextStyle(fontSize: GirafFont.small, color: Colors.white),
-                              maxLines: 1,
-                              minFontSize: 14,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            showOldWeeks
-                            // Icons for showing and hiding the old weeks are inside this
-                            // When the old weeks are shown, show the hide icon
-                            ? Expanded(
-                            flex: 1,
-                              child: IconButton(
-                                key: const Key('HideOldWeeks'),
+                    child: Column(children: <Widget>[
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: IconButton(
+                          key: const Key('EditWeekplanSelctor'),
+                          padding: portrait
+                              ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
+                              : const EdgeInsets.fromLTRB(0, 0, 40, 0),
+                          color: Colors.black,
+                          icon: const Icon(Icons.create_outlined, size: 50),
+                          onPressed: () {
+                            _pushEditWeekPlan(context); //Does not work yet
+                          },
+                        ),
+                    ),
+                      Expanded(
+                        flex: 5, child: _buildWeekplanGridview(context, weekModels, true)),
+                      // Overstået Uger bar
+                      InkWell(
+                        child: Container(
+                          color: theme.GirafColors.trusteeDarkBlue,
+                          alignment: Alignment.centerLeft,
+                          padding: const EdgeInsets.fromLTRB(10.0, 3, 0, 3),
+                          child: Stack(children: <Widget>[
+                            Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              const AutoSizeText(
+                                'Overståede uger',
+                                style: TextStyle(fontSize: GirafFont.small, color: Colors.white),
+                                maxLines: 1,
+                                minFontSize: 14,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              showOldWeeks
+                              // Icons for showing and hiding the old weeks are inside this
+                              // When the old weeks are shown, show the hide icon
+                              ? Expanded(
+                              flex: 1,
+                                child: IconButton(
+                                  key: const Key('HideOldWeeks'),
+                                  padding: const EdgeInsets.all(0.0),
+                                  alignment: Alignment.centerRight,
+                                  color: Colors.white,
+                                  icon: const Icon(Icons.remove, size: 50),
+                                    onPressed: () {
+                                    _toggleOldWeeks();
+                                  },
+                                ),
+                              )
+                              // Icons for showing and hiding the old weeks are inside this
+                              // When the old weeks are hidden, show the hide icon
+                              : Expanded(
+                              flex: 1,
+                                child: IconButton(
+                                key: const Key('ShowOldWeeks'),
                                 padding: const EdgeInsets.all(0.0),
                                 alignment: Alignment.centerRight,
                                 color: Colors.white,
-                                icon: const Icon(Icons.remove, size: 50),
-                                onPressed: () {
+                                  icon: const Icon(Icons.add, size: 50),
+                                  onPressed: () {
                                   _toggleOldWeeks();
-                                },
+                                  },
+                                ),
                               ),
-                            )
-                            // Icons for showing and hiding the old weeks are inside this
-                            // When the old weeks are hidden, show the hide icon
-                            : Expanded(
-                            flex: 1,
-                              child: IconButton(
-                              key: const Key('ShowOldWeeks'),
-                              padding: const EdgeInsets.all(0.0),
-                              alignment: Alignment.centerRight,
-                              color: Colors.white,
-                                icon: const Icon(Icons.add, size: 50),
-                                onPressed: () {
-                                _toggleOldWeeks();
-                                },
-                              ),
-                            ),
-                        ],
+                          ],
+                      ),
+                      ],
+                      ),
                     ),
-                    ],
-                    ),
+                    onTap: () {
+                      _toggleOldWeeks();
+                    },
                   ),
-                  onTap: () {
-                    _toggleOldWeeks();
-                  },
-                ),
 
-                    Visibility(
+                      Visibility(
                         visible: showOldWeeks,
                         child: Expanded(
                             flex: 5,
@@ -224,7 +229,45 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
             ),
               ]
             ),
-        );
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Ugeplaner'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Profil'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/profil');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Skift bruger'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/skift bruger');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.exit_to_app),
+              title: const Text('Log af'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/log af');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
   /*
   /// The blue right part of screen
