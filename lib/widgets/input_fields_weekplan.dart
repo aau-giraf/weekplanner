@@ -38,29 +38,55 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: <Widget>[
-      _titleInputField(),
-      _yearInputField(),
-      _weekNumberInputField(),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-        //Stack(
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              child: _pictogramInputField(),
-          )),
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              height: 100,
-              child: widget.button,
-            )
-          )
-        ],
-      )
-    ]);
+    return Column(
+      children: [
+        AppBar(
+          backgroundColor: Colors.transparent, // Remove the blur background
+          elevation: 0, // Remove the shadow
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black), // Customize the arrow color
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          title: Text(
+            'Title',
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 50.0,
+            ),
+          ),
+        ),
+        Expanded(
+          child: ListView(
+            children: <Widget>[
+              _titleInputField(),
+              _yearInputField(),
+              _weekNumberInputField(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      child: _pictogramInputField(),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      height: 100,
+                      child: widget.button,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _titleInputField() {
@@ -73,7 +99,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 key: const Key('WeekTitleTextFieldKey'),
                 onChanged: widget.bloc.onTitleChanged.add,
                 initialValue:
-                    widget.weekModel == null ? '' : widget.weekModel.name,
+                widget.weekModel == null ? '' : widget.weekModel.name,
                 keyboardType: TextInputType.text,
                 // To avoid emojis and other special characters
                 inputFormatters: <TextInputFormatter>[
@@ -84,7 +110,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 decoration: InputDecoration(
                     labelText: 'Titel',
                     errorText:
-                        (snapshot?.data == true) ? null : 'Titel skal angives',
+                    (snapshot?.data == true) ? null : 'Titel skal angives',
                     border: const OutlineInputBorder(borderSide: BorderSide())),
               );
             }));
@@ -175,9 +201,9 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
       );
     } else {
       return PictogramImage(
-          pictogram: snapshot.data,
-          onPressed: () => _openPictogramSearch(context, widget.bloc),
-          haveRights: false,
+        pictogram: snapshot.data,
+        onPressed: () => _openPictogramSearch(context, widget.bloc),
+        haveRights: false,
       );
     }
   }

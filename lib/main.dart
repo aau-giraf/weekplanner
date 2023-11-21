@@ -12,8 +12,7 @@ import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 
 final Api _api = di.get<Api>();
 final AuthBloc _authBloc = di.get<AuthBloc>();
@@ -45,6 +44,7 @@ void _runApp() {
       title: 'Weekplanner',
       theme: ThemeData(fontFamily: 'Quicksand'),
       //debugShowCheckedModeBanner: false,
+
       home: StreamBuilder<bool>(
           initialData: false,
           stream: di.get<AuthBloc>().loggedIn.where((bool currentState) =>
@@ -78,7 +78,16 @@ void _runApp() {
               Routes().goHome(context);
               return LoginScreen();
             }
-          })));
+          }),
+
+
+    routes: {
+    //'/profil': (context) => WeekplanSelectorScreen(),
+      '/skift bruger': (context) => ChooseCitizenScreen(),
+      '/log af': (context) => LoginScreen(),
+    },
+
+  ));
 }
 
 /// Lost connection dialog
