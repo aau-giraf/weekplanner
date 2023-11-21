@@ -41,6 +41,12 @@ class LoginScreenState extends State<LoginScreen> {
   /// Stores the login status, used for dismissing the LoadingSpinner
   bool loginStatus = false;
 
+  /// Controls whether we should show the pictogram login screen or use default text-based login
+  bool showPictogram = false;
+
+  /// A simple lock for disabling re-clicking of the pictogram switch
+  bool pictogramLock = false;
+
   /// This is called when login should be triggered
   void loginAction(BuildContext context) {
     showLoadingSpinner(context, true);
@@ -170,11 +176,7 @@ class LoginScreenState extends State<LoginScreen> {
                   ? const EdgeInsets.fromLTRB(50, 0, 50, 0)
                   : const EdgeInsets.fromLTRB(200, 0, 200, 8),
               decoration: const BoxDecoration(
-                // The background of the login-screen
-                image: DecorationImage(
-                  image: AssetImage('assets/login_screen_background_image.png'),
-                  fit: BoxFit.cover,
-                ),
+                color: Colors.white,
               ),
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -185,59 +187,150 @@ class LoginScreenState extends State<LoginScreen> {
                       key: _formKey,
                       child: Column(
                         children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                  padding: const EdgeInsets.fromLTRB(0, 40, 20, 40),
+                                  child: Transform.scale(
+                                   scale: 1.5,
+                                   child: const Icon(
+                                     Icons.text_fields_rounded,
+                                   )
+                                  )
+                              ),
+                              Container(
+                                child: Transform.scale(
+                                  scale: 2,
+                                  child: Switch(
+                                    value: showPictogram,
+                                    key: const Key("PictogramSwitch"),
+                                    thumbColor: const MaterialStatePropertyAll<Color>(Colors.green),
+                                    onChanged: (bool value) {
+                                      // Do nothing if the lock is enabled
+                                      if (pictogramLock) {
+                                        return;
+                                      }
+
+                                      setState(() {
+                                        showPictogram = value;
+
+                                        if (showPictogram) {
+                                          // Add pictogram lock to prevent spamming the switch during animation
+                                          pictogramLock = true;
+
+                                          // Show pictogram screen after a short delay until a better UI solution is implemented
+                                          // This avoids instant popup of the pictogram login screen before switch animation is finished
+                                          Future.delayed(const Duration(milliseconds: 300), () {
+                                            Routes().push(context, PictogramLoginScreen()).then((value) {
+                                              // Reset the switch widget when we return from the picogram screen
+                                              setState(() {
+                                                showPictogram = false;
+
+                                                // Release the lock
+                                                pictogramLock = false;
+                                              });
+                                            });
+                                          });
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                  padding: const EdgeInsets.fromLTRB(20, 40, 0, 40),
+                                  child: Transform.scale(
+                                    scale: 1.5,
+                                    child: const Icon(
+                                      Icons.photo_outlined,
+                                    )
+                                  )
+                              ),
+                            ],
+                          ),
                           Padding(
                             padding: portrait
                                 ? const EdgeInsets.fromLTRB(0, 20, 0, 10)
                                 : const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: theme.GirafColors.grey, width: 1),
-                                  borderRadius:
-                                  const BorderRadius.all(Radius.circular(20.0)),
-                                  color: theme.GirafColors.white),
-                              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
-                              child: TextField(
-                                key: const Key('UsernameKey'),
-                                style: const TextStyle(fontSize: GirafFont.large),
-                                controller: usernameCtrl,
-                                keyboardType: TextInputType.text,
-                                // Use email input type for emails.
-                                decoration: const InputDecoration.collapsed(
-                                  hintText: 'Brugernavn',
-                                  hintStyle: TextStyle(
-                                      color: theme.GirafColors.loginFieldText),
-                                  fillColor: theme.GirafColors.white,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                const Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                    child: Text(
+                                      'Brugernavn',
+                                      style: TextStyle(fontSize: GirafFont.medium),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: theme.GirafColors.grey, width: 1),
+                                      borderRadius:
+                                      const BorderRadius.all(Radius.circular(10.0)),
+                                      color: theme.GirafColors.white),
+                                  padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
+                                  child: TextField(
+                                    key: const Key('UsernameKey'),
+                                    style: const TextStyle(fontSize: GirafFont.large),
+                                    controller: usernameCtrl,
+                                    keyboardType: TextInputType.text,
+                                    // Use email input type for emails.
+                                    decoration: const InputDecoration.collapsed(
+                                      hintStyle: TextStyle(
+                                          color: theme.GirafColors.loginFieldText),
+                                      fillColor: theme.GirafColors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: theme.GirafColors.grey, width: 1),
-                                  borderRadius:
-                                  const BorderRadius.all(Radius.circular(20.0)),
-                                  color: theme.GirafColors.white),
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(
-                                key: const Key('PasswordKey'),
-                                style: const TextStyle(fontSize: GirafFont.large),
-                                controller: passwordCtrl,
-                                obscureText: true,
-                                decoration: const InputDecoration.collapsed(
-                                  hintText: 'Adgangskode',
-                                  hintStyle: TextStyle(
-                                      color: theme.GirafColors.loginFieldText),
-                                  fillColor: theme.GirafColors.white,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                const Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                    child: Text(
+                                      'Kodeord',
+                                      style: TextStyle(fontSize: GirafFont.medium),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: theme.GirafColors.grey, width: 1),
+                                      borderRadius:
+                                      const BorderRadius.all(Radius.circular(10.0)),
+                                      color: theme.GirafColors.white),
+                                  padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
+                                  child: TextField(
+                                    key: const Key('UsernameKey'),
+                                    style: const TextStyle(fontSize: GirafFont.large),
+                                    controller: usernameCtrl,
+                                    keyboardType: TextInputType.text,
+                                    // Use email input type for emails.
+                                    decoration: const InputDecoration.collapsed(
+                                      hintStyle: TextStyle(
+                                          color: theme.GirafColors.loginFieldText),
+                                      fillColor: theme.GirafColors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                            padding: const EdgeInsets.fromLTRB(0, 25, 0, 5),
                             child: Container(
                               child: Transform.scale(
                                 scale: 1.5,
@@ -245,29 +338,13 @@ class LoginScreenState extends State<LoginScreen> {
                                   key: const Key('LoginBtnKey'),
                                   style: girafButtonStyle,
                                   child: const Text(
-                                    'Login',
-                                    style: TextStyle(color: theme.GirafColors.white),
+                                    'LOGIN',
+                                    style: TextStyle(color: theme.GirafColors.white, fontSize: GirafFont.large),
                                   ),
                                   onPressed: () {
                                     loginAction(context);
                                   },
                                 ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            child: Transform.scale(
-                              scale: 1.2,
-                              child: ElevatedButton(
-                                style: girafButtonStyle,
-                                child: const Text(
-                                  'Piktogram login',
-                                  key: Key('UsePictogramLoginKey'),
-                                  style: TextStyle(color: theme.GirafColors.white),
-                                ),
-                                onPressed: () {
-                                  Routes().push(context, PictogramLoginScreen());
-                                },
                               ),
                             ),
                           ),
@@ -279,10 +356,9 @@ class LoginScreenState extends State<LoginScreen> {
                               child: ElevatedButton(
                                 style: girafButtonStyle,
                                 child: const Text(
-                                  'Auto-Login',
+                                  'AUTO-LOGIN',
                                   key: Key('AutoLoginKey'),
-                                  style:
-                                  TextStyle(color: theme.GirafColors.white),
+                                  style: TextStyle(color: theme.GirafColors.white, fontSize: GirafFont.large),
                                 ),
                                 onPressed: () {
                                   usernameCtrl.text =
