@@ -13,6 +13,8 @@ import 'package:weekplanner/screens/pictogram_login_screen.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
+import 'package:api_client/models/displayname_model.dart';
+
 
 import '../style/custom_color.dart' as theme;
 
@@ -62,7 +64,7 @@ class LoginScreenState extends State<LoginScreen> {
         if (snapshot) {
           // Pop the loading spinner
           Routes().goHome(context);
-        }
+         }
         // Stop listening for future logins
         loginListener.cancel();
       });

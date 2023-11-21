@@ -52,34 +52,259 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final bool portrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+    final Stream<List<WeekModel>> weekModels = widget._weekBloc.weekModels;
+    final Stream<List<WeekModel>> oldWeekModels =
+        widget._weekBloc.oldWeekModels;
+
+    /// screen background
     return Scaffold(
-        appBar: GirafAppBar(
-          title: widget._user.displayName,
-          appBarIcons: <AppBarIcon, VoidCallback>{
-            AppBarIcon.edit: () => widget._weekBloc.toggleEditMode(),
-            AppBarIcon.logout: () {},
-            AppBarIcon.settings: () =>
-                Routes().push(context, SettingsScreen(widget._user))
-          },
-        ),
-        bottomNavigationBar: StreamBuilder<bool>(
-          stream: widget._weekBloc.editMode,
-          initialData: false,
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            if (snapshot.data) {
-              return _buildBottomAppBar(context);
-            } else {
-              return Container(width: 0.0, height: 0.0);
-            }
-          },
-        ),
-        body: _buildWeekplanColumnview(context));
+        resizeToAvoidBottomInset: false,
+        body: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            /// The blue left part of screen
+            Expanded(
+                flex: 1,
+                child: Container(
+
+                  child: Stack(children: <Widget>[
+
+                    Image.asset(
+                     'assets/icons/giraf_blue_long.png',
+                     repeat: ImageRepeat.repeat,
+                     height: screenSize.height,
+                     fit: BoxFit.cover,
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(50.0),
+                      child: Column(children: <Widget>[
+                        Align(
+                          alignment: Alignment.center,
+                          child: IconButton(
+                            key: Key('NavigationMenu'),
+                            padding: EdgeInsets.all(0.0),
+                            color: Colors.white,
+                            icon: Icon(Icons.menu, size: 55),
+                            onPressed: () {
+                              //_naviBar(context); insert navigation reference
+                            },
+                          ),
+                        ),
+                      ],
+                      ),
+                    ),
+                      ],
+                    ),
+                ),
+            ),
+            /// The white middle of the screen
+            Expanded(
+              flex: 7,
+              child: Container(
+                  width: screenSize.width,
+                  height: screenSize.height,
+                  padding: portrait
+                      ? const EdgeInsets.fromLTRB(50, 0, 50, 0)
+                      : const EdgeInsets.fromLTRB(0, 20, 0,0),
+                child: Stack(children: <Widget>[
+                  Container(
+                    padding: portrait
+                        ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
+                        : const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    child: const Text(
+                      'Ugeplaner',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: GirafFont.headline, fontFamily: 'Quicksand-Bold'),
+                    ),
+                  ),
+                  Container(
+                  child: Column(children: <Widget>[
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        key: const Key('EditWeekplanSelctor'),
+                        padding: portrait
+                            ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
+                            : const EdgeInsets.fromLTRB(0, 0, 40, 0),
+                        color: Colors.black,
+                        icon: const Icon(Icons.create_outlined, size: 50),
+                        onPressed: () {
+                          _pushEditWeekPlan(context); //Does not work yet
+                        },
+                      ),
+                  ),
+                    Expanded(
+                      flex: 5, child: _buildWeekplanGridview(context, weekModels, true)),
+                    // Overstået Uger bar
+                    InkWell(
+                      child: Container(
+                        color: theme.GirafColors.trusteeDarkBlue,
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.fromLTRB(10.0, 3, 0, 3),
+                        child: Stack(children: <Widget>[
+                          Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            const AutoSizeText(
+                              'Overståede uger',
+                              style: TextStyle(fontSize: GirafFont.small, color: Colors.white),
+                              maxLines: 1,
+                              minFontSize: 14,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            showOldWeeks
+                            // Icons for showing and hiding the old weeks are inside this
+                            // When the old weeks are shown, show the hide icon
+                            ? Expanded(
+                            flex: 1,
+                              child: IconButton(
+                                key: const Key('HideOldWeeks'),
+                                padding: const EdgeInsets.all(0.0),
+                                alignment: Alignment.centerRight,
+                                color: Colors.white,
+                                icon: const Icon(Icons.remove, size: 50),
+                                onPressed: () {
+                                  _toggleOldWeeks();
+                                },
+                              ),
+                            )
+                            // Icons for showing and hiding the old weeks are inside this
+                            // When the old weeks are hidden, show the hide icon
+                            : Expanded(
+                            flex: 1,
+                              child: IconButton(
+                              key: const Key('ShowOldWeeks'),
+                              padding: const EdgeInsets.all(0.0),
+                              alignment: Alignment.centerRight,
+                              color: Colors.white,
+                                icon: const Icon(Icons.add, size: 50),
+                                onPressed: () {
+                                _toggleOldWeeks();
+                                },
+                              ),
+                            ),
+                        ],
+                    ),
+                    ],
+                    ),
+                  ),
+                  onTap: () {
+                    _toggleOldWeeks();
+                  },
+                ),
+
+                    Visibility(
+                        visible: showOldWeeks,
+                        child: Expanded(
+                            flex: 5,
+                            child: Container( // Container with old weeks if shown
+                              // Background color of the old weeks
+                                color: theme.GirafColors.trusteeLightBlue,
+                                child: _buildWeekplanGridview(context, oldWeekModels, false))))
+                                ])),
+                            ],
+                            ),
+              ),
+            ),
+            /// The blue right part of screen
+            Expanded(
+                flex: 1,
+                child: Container(
+                  height: screenSize.height,
+                  child: Image.asset(
+                    'assets/icons/giraf_blue_long.png',
+                    repeat: ImageRepeat.repeat,
+                    fit: BoxFit.cover,
+                  ),
+                )
+            ),
+              ]
+            ),
+        );
   }
+  /*
+  /// The blue right part of screen
+  Expanded(
+    flex: 1,
+      child: Container(
+        height: screenSize.height,
+        child: Image.asset(
+         'assets/icons/giraf_blue_long.png',
+         repeat: ImageRepeat.repeat,
+      fit: BoxFit.cover,
+       ),
+     )
+  );
+*/
+
+/*
+  Widget build2(BuildContext context) {
+    return Scaffold(
+
+      appBar: GirafAppBar(
+        title: widget._user.displayName,
+        appBarIcons: <AppBarIcon, VoidCallback>{
+          AppBarIcon.edit: () => widget._weekBloc.toggleEditMode(),
+          AppBarIcon.logout: () {},
+          AppBarIcon.settings: () =>
+              Routes().push(context, SettingsScreen(widget._user))
+        },
+      ),
+      bottomNavigationBar: StreamBuilder<bool>(
+        stream: widget._weekBloc.editMode,
+        initialData: false,
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.data) {
+            return _buildBottomAppBar(context);
+          } else {
+            return Container(width: 0.0, height: 0.0);
+          }
+        },
+      ),
+    );
+  }
+*/
+
+
+
+
+  ///@override
+  ///sidebar widget - virker ikke
+  ///Widget buildSide(BuildContext context) {
+   /// final Size screenSize = MediaQuery.of(context).size;
+   /// return Scaffold(
+      ///  resizeToAvoidBottomInset: false,
+       /// body: Row(
+         ///   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+           /// children: <Widget>[
+            ///  Expanded(
+              ///    flex: 1,
+                ///  child: Container(
+                  ///  height: screenSize.height,
+                ///    child: Image.asset(
+                   ///   'assets/icons/giraf_orange_long.png',
+                 ///     repeat: ImageRepeat.repeat,
+                  ///    fit: BoxFit.cover,
+                 ///   ),
+             ///     )
+         ///     ),
+       ///     ]
+     ///   )
+  ///  );
+ /// }
+
+  /*
+  ///Denne del er taget linje 231-307
   // Entire screen
   Widget _buildWeekplanColumnview(BuildContext context) {
     final Stream<List<WeekModel>> weekModels = widget._weekBloc.weekModels;
     final Stream<List<WeekModel>> oldWeekModels =
         widget._weekBloc.oldWeekModels;
+
     // Container which holds all of the UI elements on the screen
     return Container(
       child: Column(children: <Widget>[
@@ -152,6 +377,9 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
     ]));
   }
 
+*/
+
+  ///Build weekplan selector grid
   Widget _buildWeekplanGridview(BuildContext context,
       Stream<List<WeekModel>> weekModels, bool isUpcomingWeekplan) {
     List<WeekModel> initial = <WeekModel>[WeekModel(name: 'Tilføj ugeplan')];
@@ -231,56 +459,56 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                   handleOnTap(context, weekplan, inEditModeSnapshot.data),
               child: ColorFiltered(
                 // Color of each of the Overstået Uger cards
-                colorFilter: ColorFilter.mode(Colors.grey.shade400,
+                colorFilter: ColorFilter.mode(Colors.blueGrey[50],
                     current ? BlendMode.dst : BlendMode.modulate),
                 child: Card(
                     child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 4,
-                      child: LayoutBuilder(builder:
-                          (BuildContext context, BoxConstraints constraint) {
-                        if (weekplan.thumbnail != null) {
-                          return _getPictogram(weekplan, bloc);
-                        } else {
-                          return Icon(
-                            Icons.add,
-                            size: constraint.maxHeight,
-                          );
-                        }
-                      }),
-                    ),
-                    Expanded(child: LayoutBuilder(builder:
-                        (BuildContext context, BoxConstraints constraints) {
-                      return AutoSizeText(
-                        weekplan.name,
-                        style: const TextStyle(fontSize: GirafFont.small),
-                        maxLines: 1,
-                        minFontSize: 14,
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                      );
-                    })),
-                    Container(
-                      child: weekplan.weekNumber == null
-                          ? null
-                          : Expanded(child: LayoutBuilder(builder:
-                              (BuildContext context,
-                                  BoxConstraints constraints) {
-                              return AutoSizeText(
-                                'Uge: ${weekplan.weekNumber}      '
-                                'År: ${weekplan.weekYear}',
-                                key: const Key('weekYear'),
-                                style:
-                                    const TextStyle(fontSize: GirafFont.small),
-                                maxLines: 1,
-                                minFontSize: 14,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              );
-                            })),
-                    )
-                  ],
+                    children: <Widget>[
+                      Expanded(
+                        flex: 4,
+                        child: LayoutBuilder(builder:
+                            (BuildContext context, BoxConstraints constraint) {
+                         if (weekplan.thumbnail != null) {
+                            return _getPictogram(weekplan, bloc);
+                         } else {
+                           return Icon(
+                             Icons.add,
+                             size: constraint.maxHeight,
+                           );
+                          }
+                       }),
+                      ),
+                      Expanded(child: LayoutBuilder(builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                        return AutoSizeText(
+                          weekplan.name,
+                          style: const TextStyle(fontSize: GirafFont.small),
+                          maxLines: 1,
+                          minFontSize: 14,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                        );
+                      })),
+                      Container(
+                        child: weekplan.weekNumber == null
+                            ? null
+                            : Expanded(child: LayoutBuilder(builder:
+                                (BuildContext context,
+                                    BoxConstraints constraints) {
+                               return AutoSizeText(
+                                 'Uge: ${weekplan.weekNumber}      '
+                                  'År: ${weekplan.weekYear}',
+                                  key: const Key('weekYear'),
+                                  style:
+                                      const TextStyle(fontSize: GirafFont.small),
+                                  maxLines: 1,
+                                  minFontSize: 14,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                );
+                              })),
+                      )
+                    ],
                 )),
               ));
         });
@@ -331,6 +559,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
     );
   }
 
+
   /// Builds the BottomAppBar when in edit mode
   BottomAppBar _buildBottomAppBar(BuildContext context) {
     return BottomAppBar(
@@ -378,6 +607,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
       ],
     ));
   }
+
+
 
   Future<void> _pushEditWeekPlan(BuildContext context) async {
     final int markedCount = widget._weekBloc.getNumberOfMarkedWeekModels();

@@ -120,4 +120,32 @@ class GirafColors {
 
   /// Grey[350] color
   static const Color lightGrey = Color(0xFFD6D6D6);
+
+  /// Trustee light blue
+  static const Color trusteeLightBlue = Color.fromRGBO(87, 198, 253, 1);
+
+  /// Trustee blue
+  static const Color trusteeBlue = Color.fromRGBO(29, 168, 255, 1);
+
+  /// Trustee dark blue
+  static const Color trusteeDarkBlue = Color.fromRGBO(5, 141, 225, 1);
+
+  /// Guardian light green
+  static const Color guardianLightGreen = Color.fromRGBO(149, 219, 77, 1);
+
+  /// Guardian green
+  static const Color guardianGreen = Color.fromRGBO(107, 202, 5, 1);
+
+  /// Guardian dark green
+  static const Color guardianDarkGreen = Color.fromRGBO(63, 174, 0, 1);
+
+  /// Citizen light orange
+  static const Color citizenLightOrange = Color.fromRGBO(253, 182, 88, 1);
+
+  /// Guardian orange
+  static const Color citizenOrange = Color.fromRGBO(254, 152, 39, 1);
+
+  /// Guardian dark orange
+  static const Color citizenDarkOrange = Color.fromRGBO(234, 123, 32, 1);
+
 }
