@@ -137,7 +137,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                           color: Colors.black,
                           icon: const Icon(Icons.create_outlined, size: 50),
                           onPressed: () {
-                            _pushEditWeekPlan(context); //Does not work yet
+                            widget._weekBloc.toggleEditMode();
                           },
                         ),
                     ),
@@ -470,9 +470,10 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
     }
 
     if (isMarked) {
+      _pushEditWeekPlan(context); //Det virker men man kan ikke edit den
       return Container(
           decoration: BoxDecoration(
-            border: Border.all(color: theme.GirafColors.black, width: 15),
+            border: Border.all(color: theme.GirafColors.black, width: 5),
           ),
           child: _buildWeekplanCard(
             context,
