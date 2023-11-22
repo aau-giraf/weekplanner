@@ -281,11 +281,11 @@ class WeekplansBloc extends BlocBase {
           }
           // Update the weekNameModels stream
           final List<WeekNameModel>? updatedWeekNameModels = _weekNameModelsList
-              ?.value
+              .value
               ?.where((WeekNameModel weekNameModel) =>
                   weekNameModel.weekYear != weekModel.weekYear ||
                   weekNameModel.weekNumber != weekModel.weekNumber)
-              ?.toList();
+              .toList();
           _weekNameModelsList.add(updatedWeekNameModels);
         }
       });
