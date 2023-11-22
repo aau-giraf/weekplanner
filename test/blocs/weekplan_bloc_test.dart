@@ -99,7 +99,9 @@ void main() {
   });
 
   test('Loads a weekplan for the weekplan view', async((DoneFn done) {
-
+    // Loads up a week, listen for the done() function to be called. The expect
+    // function evaluates if the weekplans functions correctly by looking at the
+    // response.
     weekplanBloc.getWeek(week, user);
     weekplanBloc.userWeek.listen((UserWeekModel response) {
       expect(response, isNotNull);
@@ -111,6 +113,8 @@ void main() {
 
   test('Adds an activity to a list of marked activities', async((DoneFn done) {
     // Create an ActivityModel, to add to the list of marked activites.
+    //Then looks for the marked activities within the list.
+    // Skips the first entry
     final ActivityModel activityModel = ActivityModel(
         pictograms: <PictogramModel>[
           PictogramModel(
@@ -140,6 +144,9 @@ void main() {
 
   test('Removes an activity to a list of marked activities',
       async((DoneFn done) {
+        //Creates two activities and addes them to a list.
+        //Creates a listener for activities on the list.
+        //Removes one activity, and checks that the list lenght is = 1
     final ActivityModel firstActivityModel = ActivityModel(
         pictograms: <PictogramModel>[
           PictogramModel(
@@ -186,6 +193,10 @@ void main() {
   }));
 
   test('Clears list of marked activities', async((DoneFn done) {
+    //Creates an markedactivity and addes it to a list with a listener.
+    //The listener fires the expect function, expecting the lenght = 0.
+    //Uses the clearMarkedactivities() function to remove activities.
+    // TODO actually add the activity to the list, including more than one act
     weekplanBloc.addMarkedActivity(ActivityModel(
         pictograms: <PictogramModel>[
           PictogramModel(
@@ -213,6 +224,7 @@ void main() {
 
   test('Checks if the activity is in the list of marked activities',
       async((DoneFn done) {
+        //Checks if an activity is added to a list of marked activities.
     final ActivityModel activity = ActivityModel(
         pictograms: <PictogramModel>[
           PictogramModel(
@@ -239,6 +251,7 @@ void main() {
   }));
 
   test('Checks if the edit mode toggles from false', async((DoneFn done) {
+    //Checks if the edit mode can be toggled from false to true.
     /// Editmode stream initial value is false.
     weekplanBloc.editMode.skip(1).listen((bool toggle) {
       expect(toggle, true);
@@ -250,6 +263,11 @@ void main() {
 
   test('Checks if marked activities are deleted from a users weekplan',
       async((DoneFn done) {
+        //Test if the api.week.update function get called
+        //This test should propperly ensure that the activities are deleted
+        //though an expect, instead of just making sure that the function
+        //is called
+        // TODO:Add expect to ensure that the list is empty
     final DisplayNameModel user = DisplayNameModel(
       role: Role.Citizen.toString(),
       displayName: 'User',
@@ -284,12 +302,13 @@ void main() {
 
   test('Checks if marked activities are copied to a new day',
       async((DoneFn done) {
+        // Creates a user
     final DisplayNameModel user = DisplayNameModel(
       role: Role.Citizen.toString(),
       displayName: 'User',
       id: '1'
     );
-
+    // Creates an activity
     final ActivityModel activity = ActivityModel(
         pictograms: <PictogramModel>[
           PictogramModel(
@@ -304,7 +323,7 @@ void main() {
         isChoiceBoard: null,
         order: null,
         state: null);
-
+    // Creates a Weekmodel called week
     week = WeekModel(
         thumbnail: PictogramModel(
             imageUrl: null,
@@ -324,7 +343,10 @@ void main() {
         name: 'Week',
         weekNumber: 1,
         weekYear: 2019);
-
+    // Add the days and displaies them in the weekblock,
+    // then copies that weekblock and verify that it is updated
+    //Lastly it picks the fourth weekday and creates a listener for it.
+    //When fired, it ensures that the length of its activities are = 1
     weekplanBloc.getWeek(week, user).whenComplete((){
       weekplanBloc.setDaysToDisplay(5, 0);
       for(int i = 0; i < 5; i++) {
@@ -343,12 +365,13 @@ void main() {
   }));
 
   test('Checks if marked activities are marked as cancel', async((DoneFn done) {
+    //Creates a user
     final DisplayNameModel user = DisplayNameModel(
       role: Role.Citizen.toString(),
       displayName: 'User',
       id: '1'
     );
-
+    //Creates activity
     final ActivityModel activity = ActivityModel(
         pictograms: <PictogramModel>[
           PictogramModel(
@@ -363,7 +386,7 @@ void main() {
         isChoiceBoard: null,
         order: null,
         state: ActivityState.Normal);
-
+    //Creates week
     week = WeekModel(
         thumbnail: PictogramModel(
             imageUrl: null,
@@ -384,7 +407,10 @@ void main() {
         weekNumber: 1,
         weekYear: 2019);
 
-
+    // Add the days and displaies them in the weekblock, marks the activities
+    // Then cancel the marked activities, and verifies that they are updated.
+    // Creates a listener for monday, listening for weekday
+    // When fired it checks if the first activities state is Canceled
     weekplanBloc.getWeek(week, user).whenComplete((){
       weekplanBloc.setDaysToDisplay(5, 0);
       for(int i = 0; i < 5; i++) {
@@ -403,12 +429,13 @@ void main() {
 
   test('Checks if marked activities are marked as resumed',
   async((DoneFn done) {
+    //Creates a user
     final DisplayNameModel user = DisplayNameModel(
         role: Role.Citizen.toString(),
         displayName: 'User',
         id: '1'
     );
-
+    //Creates a activity
     final ActivityModel activity = ActivityModel(
         pictograms: <PictogramModel>[
           PictogramModel(
@@ -424,7 +451,7 @@ void main() {
         order: null,
         state: ActivityState.Canceled);
 
-
+    // Creates a week
     week = WeekModel(
         thumbnail: PictogramModel(
             imageUrl: null,
@@ -445,6 +472,10 @@ void main() {
         weekNumber: 1,
         weekYear: 2019);
 
+    // Add the days and displaies them in the weekblock,
+    // Marks the activities and then unmarks them.
+    // Creates a listener for monday, listening for weekday
+    // When fired it checks if the first activities state is Active
     weekplanBloc.getWeek(week, user).whenComplete((){
       weekplanBloc.setDaysToDisplay(5, 0);
       for(int i = 0; i < 5; i++) {
@@ -463,6 +494,7 @@ void main() {
 
   test('Checks if the edit mode toggles from true', async((DoneFn done) {
     /// Edit mode stream initial value is false.
+    // Checks that the edit mode untoggles when used twice.
     weekplanBloc.toggleEditMode();
 
     weekplanBloc.editMode.skip(1).listen((bool toggle) {
@@ -474,12 +506,13 @@ void main() {
   }));
 
   test('Adds an activity to a given weekplan', async((DoneFn done) {
+    // Creates a user
     final DisplayNameModel user = DisplayNameModel(
       role: Role.Guardian.toString(),
       displayName: 'User',
       id: '1'
     );
-
+    //Creates a Activity
     final ActivityModel activity = ActivityModel(
         order: null,
         isChoiceBoard: null,
@@ -487,7 +520,10 @@ void main() {
         id: null,
         pictograms: null,
         title: '');
-
+    // Add the days and displaies them in the weekblock
+    // Addes the activities and verify that they are updated
+    // Creates a listener for monday, when fired it compares the activities
+    // length and if it is the same activity as the one added
     weekplanBloc.getWeek(week, user).whenComplete((){
       weekplanBloc.setDaysToDisplay(2, 0);
       for(int i = 0; i < 2; i++) {
@@ -506,6 +542,7 @@ void main() {
   }));
 
   test('Reorder activity from monday to tuesday', async((DoneFn done) {
+    //Creates a week
     week = WeekModel(
         thumbnail: PictogramModel(
             imageUrl: null,
@@ -521,13 +558,17 @@ void main() {
         name: 'Week',
         weekNumber: 1,
         weekYear: 2019);
-
+    // Creates two activities and addes the to different days
     final ActivityModel modelToMove = ActivityModel(
         id: 1, pictograms: null, order: 0, state: null, isChoiceBoard: false);
     week.days[0].activities.add(modelToMove);
     week.days[1].activities.add(ActivityModel(
         id: 2, pictograms: null, order: 0, state: null, isChoiceBoard: false));
 
+    // Creates a weekplanBlock and displaies the days with activities on them.
+    // Uses the reorderActivities method, switching monday to tuesday.
+    // Creates a listener for tuesday which fires on weekdays
+    // When fired, it checks that the activities where all reordered to tuesday
     weekplanBloc.getWeek(week, user).whenComplete(() {
       weekplanBloc.setDaysToDisplay(2, 0);
       for(int i = 0; i < 2; i++) {
@@ -551,6 +592,7 @@ void main() {
   }));
 
   test('Reorder activity from monday to monday', async((DoneFn done) {
+    //Creates week
     week = WeekModel(
         thumbnail: PictogramModel(
             imageUrl: null,
@@ -566,7 +608,7 @@ void main() {
         name: 'Week',
         weekNumber: 1,
         weekYear: 2019);
-
+    //Creates three activities on monday
     final ActivityModel modelToMove = ActivityModel(
         id: 1, pictograms: null, order: 0, state: null, isChoiceBoard: false);
 
@@ -578,6 +620,10 @@ void main() {
     week.days[0].activities.add(ActivityModel(
         id: 3, pictograms: null, order: 2, state: null, isChoiceBoard: false));
 
+    // Creates a weekplanBlock and displaies monday and tuesday.
+    // Uses the reorderActivities method, switching monday to monday.
+    // Creates a listener for monday which fires on weekdays
+    // When fired, it checks that the activities where all reordered to monday
     weekplanBloc.getWeek(week, user).whenComplete(() {
       weekplanBloc.setDaysToDisplay(2, 0);
       for (int i = 0; i < 2; i++) {
