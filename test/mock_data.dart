@@ -23,7 +23,7 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_color_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 
 import 'test_image.dart';
@@ -47,21 +47,21 @@ class MockData {
     mockApi.account = MockAccountApi();
   }
 
-  WeekModel mockWeek;
-  SettingsModel mockSettings;
-  List<ActivityModel> mockActivities;
-  List<PictogramModel> mockPictograms;
-  DisplayNameModel mockUser;
+  late WeekModel mockWeek;
+  late SettingsModel mockSettings;
+  late List<ActivityModel> mockActivities;
+  late List<PictogramModel> mockPictograms;
+  late DisplayNameModel mockUser;
 
-  Api mockApi;
+  late Api mockApi;
 
   WeekModel _createInitialMockWeek() {
     return WeekModel(
         thumbnail: PictogramModel(
             imageUrl: null,
             imageHash: null,
-            accessLevel: null,
-            title: null,
+            accessLevel: AccessLevel.PRIVATE,
+            title: 'null',
             id: null,
             lastEdit: null),
         days: <WeekdayModel>[
@@ -230,7 +230,7 @@ class MockWeekApi extends Mock implements WeekApi {
   WeekModel _mockWeek;
 
   @override
-  Stream<WeekModel> get(String id, int year, int weekNumber) {
+  Stream<WeekModel> get(String? id, int? year, int? weekNumber) {
     return Stream<WeekModel>.value(_mockWeek);
   }
 
@@ -244,7 +244,7 @@ class MockWeekApi extends Mock implements WeekApi {
   @override
   Stream<WeekdayModel> updateDay(
       String id, int year, int weekNumber, WeekdayModel weekInput) {
-    WeekdayModel dayToReplace = _mockWeek.days
+    WeekdayModel dayToReplace = _mockWeek.days!
         .singleWhere((WeekdayModel day) => day.day == weekInput.day);
     dayToReplace = weekInput;
     return Stream<WeekdayModel>.value(dayToReplace);
@@ -253,7 +253,7 @@ class MockWeekApi extends Mock implements WeekApi {
   @override
   Stream<WeekdayModel> getDay(
       String id, int year, int weekNumber, Weekday day) {
-    return Stream<WeekdayModel>.value(_mockWeek.days
+    return Stream<WeekdayModel>.value(_mockWeek.days!
         .singleWhere((WeekdayModel weekday) => weekday.day == day));
   }
 }
@@ -322,7 +322,7 @@ class MockActivityApi extends Mock implements ActivityApi {
 
   @override
   Stream<ActivityModel> updateTimer(ActivityModel activity, String userId) {
-      return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
+    return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
   }
 
   @override

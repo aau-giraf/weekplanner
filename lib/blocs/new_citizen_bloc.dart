@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
@@ -16,54 +15,56 @@ class NewCitizenBloc extends BlocBase {
   NewCitizenBloc(this._api);
 
   final Api _api;
-  GirafUserModel _user;
+  GirafUserModel? _user;
 
   /// This field controls the display name input field
-  final rx_dart.BehaviorSubject<String> displayNameController =
-      rx_dart.BehaviorSubject<String>();
+  final rx_dart.BehaviorSubject<String?> displayNameController =
+      rx_dart.BehaviorSubject<String?>();
 
   /// This field controls the username input field
-  final rx_dart.BehaviorSubject<String> usernameController =
-      rx_dart.BehaviorSubject<String>();
+  final rx_dart.BehaviorSubject<String?> usernameController =
+      rx_dart.BehaviorSubject<String?>();
 
   /// This field controls the password input field
-  final rx_dart.BehaviorSubject<String> passwordController =
-      rx_dart.BehaviorSubject<String>();
+  final rx_dart.BehaviorSubject<String?> passwordController =
+      rx_dart.BehaviorSubject<String?>();
 
   /// This field controls the password verification input field
-  final rx_dart.BehaviorSubject<String> passwordVerifyController =
-      rx_dart.BehaviorSubject<String>();
+  final rx_dart.BehaviorSubject<String?> passwordVerifyController =
+      rx_dart.BehaviorSubject<String?>();
 
   /// This field controls the switch for pictogram password
-  final rx_dart.BehaviorSubject<bool> usePictogramPasswordController =
+  final rx_dart.BehaviorSubject<bool?> usePictogramPasswordController =
       rx_dart.BehaviorSubject<bool>();
-  
+
   /// This controller handles the profile picture
-  final rx_dart.BehaviorSubject<File> fileController = 
-      rx_dart.BehaviorSubject<File>();
-      
+  final rx_dart.BehaviorSubject<File?> fileController =
+      rx_dart.BehaviorSubject<File?>();
+
   /// Publishes the image file, while it is not null
-  Stream<File> get file => fileController.stream.where((File f) => f != null);
+  Stream<File?>? get file =>
+      fileController.stream.where((File? f) => f != null);
+
   /// Publishes if the input fields are filled
-  Stream<bool> get isInputValid => _isInputValid.stream;
+  Stream<bool?> get isInputValid => _isInputValid.stream;
 
   final rx_dart.BehaviorSubject<bool> _isInputValid =
-  rx_dart.BehaviorSubject<bool>.seeded(false);
+      rx_dart.BehaviorSubject<bool>.seeded(false);
 
   /// Handles when the entered display name is changed.
-  Sink<String> get onDisplayNameChange => displayNameController.sink;
+  Sink<String?> get onDisplayNameChange => displayNameController.sink;
 
   /// Handles when the entered username is changed.
-  Sink<String> get onUsernameChange => usernameController.sink;
+  Sink<String?> get onUsernameChange => usernameController.sink;
 
   /// Handles when the entered password is changed.
-  Sink<String> get onPasswordChange => passwordController.sink;
+  Sink<String?> get onPasswordChange => passwordController.sink;
 
   /// Handles when the entered password verification is changed.
-  Sink<String> get onPasswordVerifyChange => passwordVerifyController.sink;
+  Sink<String?> get onPasswordVerifyChange => passwordVerifyController.sink;
 
   /// Handles when the switch for pictogram password is changed.
-  Sink<bool> get onUsePictogramPasswordChange =>
+  Sink<bool?> get onUsePictogramPasswordChange =>
       usePictogramPasswordController.sink;
 
   /// Validation stream for display name
@@ -79,11 +80,22 @@ class NewCitizenBloc extends BlocBase {
       passwordController.stream.transform(_passwordValidation);
 
   /// Validation stream for password validation
-  Stream<bool> get validPasswordVerificationStream =>
-      rx_dart.Rx.combineLatest2<String, String, bool>(
-          passwordController.hasValue ? passwordController : '',
-          passwordVerifyController,
-          (String a, String b) => a == b);
+  Stream<bool> get validPasswordVerificationStream {
+    Stream<String?> firstStream;
+
+    if (passwordController.hasValue) {
+      firstStream = passwordController;
+    } else {
+      // If passwordController doesn't have a value, create an empty stream.
+      firstStream = const Stream<String>.empty();
+    }
+
+    return rx_dart.Rx.combineLatest2<String?, String?, bool>(
+      firstStream,
+      passwordVerifyController,
+      (String? a, String? b) => a == b,
+    );
+  }
 
   /// Validation stream for determining if the user wants to use Pictogram PW
   Stream<bool> get usePictogramPasswordStream =>
@@ -98,21 +110,10 @@ class NewCitizenBloc extends BlocBase {
     });
   }
 
-  /// pushes an imagePicker screen, then sets the pictogram image,
-  /// to the selected image from the gallery
-  void takePictureWithCamera() {
-    ImagePicker().pickImage(source: ImageSource.camera).then((XFile f) {
-      if (f != null) {
-        _publishImage(File(f.path));
-        _checkInput();
-      }
-    });
-  }
-
   /// pushes an imagePicker screen, then sets the profile picture image,
   /// to the selected image from the gallery
   void chooseImageFromGallery() {
-    ImagePicker().pickImage(source: ImageSource.gallery).then((XFile f) {
+    ImagePicker().pickImage(source: ImageSource.gallery).then((XFile? f) {
       if (f != null) {
         _publishImage(File(f.path));
         _checkInput();
@@ -120,7 +121,7 @@ class NewCitizenBloc extends BlocBase {
     });
   }
 
-  void _publishImage(File file) {
+  void _publishImage(File? file) {
     fileController.add(file);
   }
 
@@ -134,47 +135,48 @@ class NewCitizenBloc extends BlocBase {
   }
 
   /// Encodes the given file into an integer list.
-  Uint8List encodePicture(File file) {
-    return file != null
-      ? encodePng(copyResize(decodeImage(file.readAsBytesSync()),
-          width: 512)) // 512 bytes chosen as a reasonable input size.
-      : null;
+  List<int>? encodePicture(File? file) {
+    if (file != null) {
+      final Image? image = decodeImage(file.readAsBytesSync());
+      if (image != null) {
+        return encodePng(copyResize(image, width: 512));
+      }
     }
+    return null;
+  }
 
   /// Method called with information about the new citizen.
   Stream<GirafUserModel> createCitizen() {
     return _api.account.register(
-        usernameController.value,
-        passwordController.value,
-        displayNameController.value,
-        encodePicture(fileController.value),
-        departmentId: _user.department,
-        role: Role.Citizen,
+      usernameController.value!,
+      passwordController.value!,
+      displayNameController.value!,
+      encodePicture(fileController.valueOrNull),
+      departmentId: _user!.department!,
+      role: Role.Citizen,
     );
   }
 
   /// Method called with information about the trustee attached to the citizen.
   Stream<GirafUserModel> createTrustee() {
     return _api.account.register(
-        usernameController.value,
-        passwordController.value,
-        displayNameController.value,
-        encodePicture(fileController.value),
-        departmentId: _user.department,
-        role: Role.Trustee
-    );
+        usernameController.value!,
+        passwordController.value!,
+        displayNameController.value!,
+        encodePicture(fileController.valueOrNull),
+        departmentId: _user!.department!,
+        role: Role.Trustee);
   }
 
   /// Method called with information about the guardian attached to the citizen.
   Stream<GirafUserModel> createGuardian() {
     return _api.account.register(
-        usernameController.value,
-        passwordController.value,
-        displayNameController.value,
-         encodePicture(fileController.value),
-        departmentId: _user.department,
-        role: Role.Guardian
-    );
+        usernameController.value!,
+        passwordController.value!,
+        displayNameController.value!,
+        encodePicture(fileController.valueOrNull),
+        departmentId: _user!.department!,
+        role: Role.Guardian);
   }
 
   /// Gives information about whether all inputs are valid,
@@ -199,9 +201,9 @@ class NewCitizenBloc extends BlocBase {
           (bool a, bool b, bool c) => a && b && c).asBroadcastStream();
 
   /// Stream for display name validation
-  final StreamTransformer<String, bool> _displayNameValidation =
-      StreamTransformer<String, bool>.fromHandlers(
-          handleData: (String input, EventSink<bool> sink) {
+  final StreamTransformer<String?, bool> _displayNameValidation =
+      StreamTransformer<String?, bool>.fromHandlers(
+          handleData: (String? input, EventSink<bool> sink) {
     if (input == null || input.isEmpty) {
       sink.add(false);
     } else {
@@ -210,9 +212,9 @@ class NewCitizenBloc extends BlocBase {
   });
 
   /// Stream for username validation
-  final StreamTransformer<String, bool> _usernameValidation =
-      StreamTransformer<String, bool>.fromHandlers(
-          handleData: (String input, EventSink<bool> sink) {
+  final StreamTransformer<String?, bool> _usernameValidation =
+      StreamTransformer<String?, bool>.fromHandlers(
+          handleData: (String? input, EventSink<bool> sink) {
     if (input == null || input.isEmpty) {
       sink.add(false);
     } else {
@@ -224,9 +226,9 @@ class NewCitizenBloc extends BlocBase {
   });
 
   /// Stream for password validation
-  final StreamTransformer<String, bool> _passwordValidation =
-      StreamTransformer<String, bool>.fromHandlers(
-          handleData: (String input, EventSink<bool> sink) {
+  final StreamTransformer<String?, bool> _passwordValidation =
+      StreamTransformer<String?, bool>.fromHandlers(
+          handleData: (String? input, EventSink<bool> sink) {
     if (input == null || input.isEmpty) {
       sink.add(false);
     } else {

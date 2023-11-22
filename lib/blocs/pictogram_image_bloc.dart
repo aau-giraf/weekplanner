@@ -18,15 +18,14 @@ class PictogramImageBloc extends BlocBase {
   /// Provides loaded pictogram-images
   Stream<Image> get image => _image.stream;
 
-  final rx_dart.BehaviorSubject<Image> _image
-  = rx_dart.BehaviorSubject<Image>();
+  final rx_dart.BehaviorSubject<Image> _image =
+      rx_dart.BehaviorSubject<Image>();
 
   final Api _api;
 
   static final Map<int, Image> _cache = <int, Image>{};
   static final Queue<int> _cacheQueue = Queue<int>();
   static const int _cacheMaxSize = 100;
-
 
   /// Lock for adding pictograms to cache
   static Mutex lock = Mutex();
@@ -35,22 +34,22 @@ class PictogramImageBloc extends BlocBase {
   ///
   /// The [pictogram] model should contain an ID which the API can then fetch.
   void load(PictogramModel pictogram) {
-    _api.pictogram.getImage(pictogram.id).listen(_image.add);
+    _api.pictogram.getImage(pictogram.id!).listen(_image.add);
   }
 
   /// Initialize loading of a specific [PictogramModel] from its [id].
-  Future<bool> loadPictogramById(int id) async {
+  Future<bool> loadPictogramById(int? id) async {
     await lock.acquire();
     try {
       if (_cache.containsKey(id)) {
         // Renew queue position
         _cacheQueue.removeWhere((int x) => x == id);
-        _cacheQueue.add(id);
+        _cacheQueue.add(id!);
 
-        _image.add(_cache[id]);
+        _image.add(_cache[id]!);
       } else {
         rx_dart.Rx.retry<Image>(() {
-          return _api.pictogram.getImage(id);
+          return _api.pictogram.getImage(id!);
         }, 3)
             .listen(
           (Image image) async {
@@ -58,7 +57,7 @@ class PictogramImageBloc extends BlocBase {
 
             await lock.acquire();
             try {
-              _cache.putIfAbsent(id, () => image);
+              _cache.putIfAbsent(id!, () => image);
               _cacheQueue.add(id);
 
               while (_cacheQueue.length > _cacheMaxSize) {
@@ -77,15 +76,14 @@ class PictogramImageBloc extends BlocBase {
   }
 
   /// Delete pictogram
-   bool delete (PictogramModel pm){
-    bool result;
-    final Stream<bool> res = _api.pictogram.delete(pm.id);
+  bool delete(PictogramModel pm) {
+    late bool result;
+    final Stream<bool>? res = _api.pictogram.delete(pm.id!);
     if (res != null) {
-      res.listen((bool success) {
+      res.listen((bool? success) {
         result = success ?? false;
       });
-    }
-    else{
+    } else {
       result = false;
     }
     return result;

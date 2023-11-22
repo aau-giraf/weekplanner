@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
-import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
@@ -14,7 +14,7 @@ class AuthBloc extends BlocBase {
   AuthBloc(this._api);
 
   /// Store logged in user data.
-  GirafUserModel loggedInUser;
+  late GirafUserModel loggedInUser;
 
   final Api _api;
 
@@ -50,7 +50,6 @@ class AuthBloc extends BlocBase {
       // If there is a successful login, remove the loading spinner,
       // and push the status to the stream
       if (status) {
-
         // Store the logged in user data
         _api.user.me().listen((GirafUserModel event) {
           loggedInUser = GirafUserModel(
@@ -76,7 +75,6 @@ class AuthBloc extends BlocBase {
         }).onError((Object error) {
           completer.completeError(error);
         });
-
       }
     }).onError((Object error) {
       completer.completeError(error);
@@ -133,7 +131,7 @@ class AuthBloc extends BlocBase {
 
   /// Checks if there is an internet connection
   Future<bool> checkInternetConnection() async {
-    final bool hasConnection = await DataConnectionChecker().hasConnection;
+    final bool hasConnection = await InternetConnectionChecker().hasConnection;
     return Future<bool>.value(hasConnection);
   }
 

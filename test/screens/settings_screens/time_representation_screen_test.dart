@@ -7,7 +7,7 @@ import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -38,8 +38,8 @@ class MockUserApi extends Mock implements UserApi, NavigatorObserver {
 }
 
 void main() {
-  Api api;
-  NavigatorObserver mockObserver;
+  late Api api;
+  late NavigatorObserver mockObserver;
 
   final DisplayNameModel user = DisplayNameModel(
       displayName: 'Mickey Mouse', id: '2', role: Role.Citizen.toString());
@@ -61,7 +61,7 @@ void main() {
     expect(
         find.byWidgetPredicate((Widget widget) =>
             widget is GirafAppBar &&
-            widget.title == user.displayName + ': indstillinger'),
+            widget.title == user.displayName! + ': indstillinger'),
         findsOneWidget);
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
@@ -78,7 +78,7 @@ void main() {
     expect(find.text('Nedtælling'), findsOneWidget);
   });
 
-    testWidgets('Has option called Timeglas', (WidgetTester tester) async {
+  testWidgets('Has option called Timeglas', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: TimeRepresentationScreen(user)));
     await tester.pumpAndSettle();
     expect(find.text('Timeglas'), findsOneWidget);
@@ -87,7 +87,7 @@ void main() {
   testWidgets('Has option called Standard', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: TimeRepresentationScreen(user)));
     await tester.pumpAndSettle();
-    expect(find.text('Standard'),findsOneWidget);
+    expect(find.text('Standard'), findsOneWidget);
   });
 
   testWidgets('Has only one option selected', (WidgetTester tester) async {
@@ -97,20 +97,19 @@ void main() {
   });
 
   testWidgets('Has time representation screen been popped',
-          (WidgetTester tester) async{
-        await tester.pumpWidget(MaterialApp(
-            home: TimeRepresentationScreen(user),
-            // ignore: always_specify_types
-            navigatorObservers: [mockObserver]
-        ));
-        verify(mockObserver.didPush(any, any));
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+        home: TimeRepresentationScreen(user),
+        // ignore: always_specify_types
+        navigatorObservers: [mockObserver]));
+    verify(() => mockObserver.didPush(any(), any()));
 
-        await tester.pumpAndSettle();
-        expect(find.byType(SettingsCheckMarkButton), findsNWidgets(3));
+    await tester.pumpAndSettle();
+    expect(find.byType(SettingsCheckMarkButton), findsNWidgets(3));
 
-        await tester.pump();
-        await tester.tap(find.byType(SettingsCheckMarkButton).first);
-        await tester.pump();
-        verify(mockObserver.didPop(any, any));
-      });
+    await tester.pump();
+    await tester.tap(find.byType(SettingsCheckMarkButton).first);
+    await tester.pump();
+    verify(() => mockObserver.didPop(any(), any()));
+  });
 }

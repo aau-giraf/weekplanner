@@ -16,7 +16,7 @@ class InputFieldsWeekPlan extends StatefulWidget {
   /// Class created for keeping the input fields for the new and
   /// edit week plan screen consisten-t
   const InputFieldsWeekPlan(
-      {@required this.bloc, @required this.button, this.weekModel});
+      {required this.bloc, required this.button, required this.weekModel});
 
   /// This is the bloc used to control the input fields
   final NewWeekplanBloc bloc;
@@ -45,19 +45,18 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-        //Stack(
+          //Stack(
           Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              child: _pictogramInputField(),
-          )),
+              alignment: Alignment.centerLeft,
+              child: Container(
+                child: _pictogramInputField(),
+              )),
           Align(
-            alignment: Alignment.center,
-            child: Container(
-              height: 100,
-              child: widget.button,
-            )
-          )
+              alignment: Alignment.center,
+              child: Container(
+                height: 100,
+                child: widget.button,
+              ))
         ],
       )
     ]);
@@ -72,8 +71,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
               return TextFormField(
                 key: const Key('WeekTitleTextFieldKey'),
                 onChanged: widget.bloc.onTitleChanged.add,
-                initialValue:
-                    widget.weekModel == null ? '' : widget.weekModel.name,
+                initialValue: widget.weekModel.name,
                 keyboardType: TextInputType.text,
                 // To avoid emojis and other special characters
                 inputFormatters: <TextInputFormatter>[
@@ -84,7 +82,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 decoration: InputDecoration(
                     labelText: 'Titel',
                     errorText:
-                        (snapshot?.data == true) ? null : 'Titel skal angives',
+                        (snapshot.data == true) ? null : 'Titel skal angives',
                     border: const OutlineInputBorder(borderSide: BorderSide())),
               );
             }));
@@ -100,13 +98,11 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 key: const Key('WeekYearTextFieldKey'),
                 keyboardType: TextInputType.number,
                 onChanged: widget.bloc.onYearChanged.add,
-                initialValue: widget.weekModel == null
-                    ? ''
-                    : widget.weekModel.weekYear.toString(),
+                initialValue: widget.weekModel.weekYear.toString(),
                 style: _style,
                 decoration: InputDecoration(
                     labelText: 'År',
-                    errorText: (snapshot?.data == true)
+                    errorText: (snapshot.data == true)
                         ? null
                         : 'År skal angives som fire cifre',
                     border: const OutlineInputBorder(borderSide: BorderSide())),
@@ -124,13 +120,11 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 key: const Key('WeekNumberTextFieldKey'),
                 keyboardType: TextInputType.number,
                 onChanged: widget.bloc.onWeekNumberChanged.add,
-                initialValue: widget.weekModel == null
-                    ? ''
-                    : widget.weekModel.weekNumber.toString(),
+                initialValue: widget.weekModel.weekNumber.toString(),
                 style: _style,
                 decoration: InputDecoration(
                     labelText: 'Ugenummer',
-                    errorText: (snapshot?.data == true)
+                    errorText: (snapshot.data == true)
                         ? null
                         : 'Ugenummer skal være mellem 1 og 53',
                     border: const OutlineInputBorder(borderSide: BorderSide())),
@@ -146,7 +140,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
           key: const Key('WeekThumbnailKey'),
           width: MediaQuery.of(context).size.width / 2,
           height: 200,
-          child: StreamBuilder<PictogramModel>(
+          child: StreamBuilder<PictogramModel?>(
             stream: widget.bloc.thumbnailStream,
             builder: _buildThumbnail,
           ),
@@ -156,8 +150,8 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
   }
 
   Widget _buildThumbnail(
-      BuildContext context, AsyncSnapshot<PictogramModel> snapshot) {
-    if (snapshot?.data == null) {
+      BuildContext context, AsyncSnapshot<PictogramModel?> snapshot) {
+    if (snapshot.data == null) {
       return GestureDetector(
         onTap: () => _openPictogramSearch(context, widget.bloc),
         child: Card(
@@ -175,16 +169,21 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
       );
     } else {
       return PictogramImage(
-          pictogram: snapshot.data,
+          pictogram: snapshot.data!,
           onPressed: () => _openPictogramSearch(context, widget.bloc),
           haveRights: false,
-      );
+          key: UniqueKey());
     }
   }
 
   void _openPictogramSearch(BuildContext context, NewWeekplanBloc bloc) {
-    Routes().push<PictogramModel>(context, const PictogramSearch(user: null,))
-        .then((PictogramModel pictogram) {
+    Routes()
+        .push<PictogramModel>(
+            context,
+            const PictogramSearch(
+              user: null,
+            ))
+        .then((PictogramModel? pictogram) {
       if (pictogram != null) {
         bloc.onThumbnailChanged.add(pictogram);
       }

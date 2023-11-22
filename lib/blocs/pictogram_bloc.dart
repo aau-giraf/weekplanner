@@ -15,12 +15,10 @@ const int pageSize = 24;
 
 /// Pictogram Business Logic Component
 class PictogramBloc extends BlocBase {
-
   /// Pictogram Business Logic Component
   ///
   /// Gives the ability to search for pictograms and await the results.
-  PictogramBloc(this._api){
-
+  PictogramBloc(this._api) {
     // Listens for if view is scrolled to the bottom
     sc.addListener(() {
       if (sc.position.pixels >= sc.position.maxScrollExtent) {
@@ -34,7 +32,7 @@ class PictogramBloc extends BlocBase {
   /// The null value is used as a way to communicate loading. That is, if you
   /// receive null from this stream, you know to discard your previous results
   /// and display a loading indicator
-  Stream<List<PictogramModel>> get pictograms => _pictograms.stream;
+  Stream<List<PictogramModel>?> get pictograms => _pictograms.stream;
 
   /// This is the pictograms received from the latest search function call.
   ///
@@ -42,7 +40,7 @@ class PictogramBloc extends BlocBase {
   List<PictogramModel> latestPictograms = <PictogramModel>[];
 
   /// This is the query string specified at the latest search.
-  String latestQuery;
+  late String? latestQuery;
 
   /// This is the page number incrementing on every call to extendSearch.
   int latestPage = 1;
@@ -56,11 +54,11 @@ class PictogramBloc extends BlocBase {
   /// Boolean used to specify if more pictograms are able to be loaded.
   bool reachedLastPictogram = false;
 
-  final rx_dart.BehaviorSubject<List<PictogramModel>> _pictograms =
-      rx_dart.BehaviorSubject<List<PictogramModel>>();
+  final rx_dart.BehaviorSubject<List<PictogramModel>?> _pictograms =
+      rx_dart.BehaviorSubject<List<PictogramModel>?>();
 
   final Api _api;
-  Timer _debounceTimer;
+  Timer? _debounceTimer;
 
   /// Initializes a search for [query].
   ///
@@ -72,37 +70,36 @@ class PictogramBloc extends BlocBase {
   ///
   /// The results are published in [pictograms].
   void search(String query) {
-
     //ensures that it always shows the first pictograms in the database
     latestPage = 1;
 
     loadingPictograms = true;
     if (_debounceTimer != null) {
-      _debounceTimer.cancel();
+      _debounceTimer!.cancel();
     }
 
     _pictograms.add(null);
-    List<PictogramModel> _resultPlaceholder;
+    late List<PictogramModel>? _resultPlaceholder;
     _debounceTimer = Timer(const Duration(milliseconds: _debounceTime), () {
       //Timer for sending an error if getting pictogram results takes too long
 
       Timer(const Duration(milliseconds: _timeoutTime), () {
-        if (_resultPlaceholder == null || _resultPlaceholder.isEmpty) {
+        if (_resultPlaceholder == null || _resultPlaceholder!.isEmpty) {
           _pictograms.addError('Søgningen gav ingen resultater. '
               'Tjek internetforbindelsen.');
         }
       });
       _api.pictogram
           .getAll(page: latestPage, pageSize: pageSize, query: query)
-          .listen((List<PictogramModel> results) {
+          .listen((List<PictogramModel>? results) {
         _resultPlaceholder = results;
-        latestPictograms = _resultPlaceholder;
+        latestPictograms = _resultPlaceholder!;
         latestQuery = query;
         latestPage = 1;
         reachedLastPictogram = false;
         loadingPictograms = false;
-        _pictograms.add(_resultPlaceholder);
-          });
+        _pictograms.add(_resultPlaceholder!);
+      });
     });
   }
 
@@ -115,7 +112,7 @@ class PictogramBloc extends BlocBase {
     }
 
     if (_debounceTimer != null) {
-      _debounceTimer.cancel();
+      _debounceTimer!.cancel();
     }
 
     loadingPictograms = true;
@@ -123,9 +120,9 @@ class PictogramBloc extends BlocBase {
     _pictograms.add(latestPictograms);
     _debounceTimer = Timer(const Duration(milliseconds: _debounceTime), () {
       _api.pictogram
-          .getAll(page: ++latestPage, pageSize: pageSize, query: latestQuery)
-          .listen((List<PictogramModel> results) {
-        if(results == null || results.isEmpty) {
+          .getAll(page: ++latestPage, pageSize: pageSize, query: latestQuery!)
+          .listen((List<PictogramModel>? results) {
+        if (results == null || results.isEmpty) {
           reachedLastPictogram = true;
         } else {
           latestPictograms.addAll(results);
@@ -140,8 +137,8 @@ class PictogramBloc extends BlocBase {
   ///
   /// Deletes a chosen pictogram
   ///
-  void delete(PictogramModel pm){
-    _api.pictogram.delete(pm.id);
+  void delete(PictogramModel pm) {
+    _api.pictogram.delete(pm.id!);
   }
 
   @override

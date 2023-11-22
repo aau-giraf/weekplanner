@@ -7,7 +7,7 @@ import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
@@ -38,17 +38,21 @@ class MockUserApi extends Mock implements UserApi {
 class MockCitizens extends Mock implements UserApi {}
 
 void main() {
-  ChooseCitizenBloc bloc;
-  ToolbarBloc toolbarBloc;
-  Api api;
-  AuthBloc authBloc;
+  late ChooseCitizenBloc bloc;
+  late ToolbarBloc toolbarBloc;
+  late Api api;
+  late AuthBloc authBloc;
   setUp(() {
     di.clearAll();
     api = Api('any');
     authBloc = AuthBloc(api);
-    authBloc.loggedInUser = GirafUserModel(id: '1', role: Role.Guardian, 
-                              roleName: 'guardian', username: 'testUsername', 
-                              displayName: 'testDisplayname', department: 1);
+    authBloc.loggedInUser = GirafUserModel(
+        id: '1',
+        role: Role.Guardian,
+        roleName: 'guardian',
+        username: 'testUsername',
+        displayName: 'testDisplayname',
+        department: 1);
     api.user = MockUserApi();
     bloc = ChooseCitizenBloc(api);
     di.registerDependency<Api>(() => api);
@@ -58,7 +62,6 @@ void main() {
     di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
     di.registerDependency<ToolbarBloc>(() => toolbarBloc);
   });
-
 
   testWidgets('Renders ChooseCitizenScreen', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
@@ -93,10 +96,10 @@ void main() {
   });
 
   testWidgets('Has add citizen button', (WidgetTester tester) async {
-    final Role role = authBloc.loggedInUser.role;
+    final Role role = authBloc.loggedInUser.role!;
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     await tester.pumpAndSettle();
-    if(role == Role.Guardian) {
+    if (role == Role.Guardian) {
       expect(find.byType(TextButton), findsNWidgets(1));
     } else {
       expect(find.byType(TextButton), findsNWidgets(0));

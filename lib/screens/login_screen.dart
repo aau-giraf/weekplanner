@@ -35,7 +35,7 @@ class LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordCtrl = TextEditingController();
 
   /// Stores the context
-  BuildContext currentContext;
+  late BuildContext currentContext;
 
   /// Stores the login status, used for dismissing the LoadingSpinner
   bool loginStatus = false;
@@ -48,7 +48,7 @@ class LoginScreenState extends State<LoginScreen> {
     authBloc
         .authenticate(usernameCtrl.value.text, passwordCtrl.value.text)
         .then((dynamic result) {
-      StreamSubscription<bool> loginListener;
+      StreamSubscription<bool>? loginListener;
       loginListener = authBloc.loggedIn.listen((bool snapshot) {
         loginStatus = snapshot;
         // Return if logging out
@@ -57,7 +57,7 @@ class LoginScreenState extends State<LoginScreen> {
           Routes().goHome(context);
         }
         // Stop listening for future logins
-        loginListener.cancel();
+        loginListener!.cancel();
       });
     }).catchError((Object error) {
       if (error is ApiException) {

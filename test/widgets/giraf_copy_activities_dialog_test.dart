@@ -7,7 +7,6 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 
-
 List<bool> checkboxValues = <bool>[];
 
 class MockScreen extends StatelessWidget {
@@ -40,7 +39,8 @@ class MockScreen extends StatelessWidget {
               confirmOnPressed: (List<bool> days, BuildContext context) {
                 checkboxValues = days;
                 Routes().pop(context);
-              });
+              },
+              key: UniqueKey());
         });
   }
 }
