@@ -7,19 +7,19 @@ import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 
 class MockUserApi extends Mock implements UserApi {
   @override
   Stream<GirafUserModel> me() {
     return Stream<GirafUserModel>.value(GirafUserModel(
-      id: '1',
-      department: 3,
-      role: Role.Guardian,
-      roleName: 'Guardian',
-      displayName: 'Kurt',
-      username: 'SpaceLord69'));
+        id: '1',
+        department: 3,
+        role: Role.Guardian,
+        roleName: 'Guardian',
+        displayName: 'Kurt',
+        username: 'SpaceLord69'));
   }
 
   @override
@@ -32,29 +32,27 @@ class MockUserApi extends Mock implements UserApi {
 }
 
 Map<String, WeekModel> map = <String, WeekModel>{};
-class MockWeekApi extends Mock implements WeekApi {
 
+class MockWeekApi extends Mock implements WeekApi {
   @override
-  Stream<WeekModel> update(String id, int year, int weekNumber,
-    WeekModel week) {
+  Stream<WeekModel> update(
+      String id, int year, int weekNumber, WeekModel week) {
     map[id] = week;
     return Stream<WeekModel>.value(week);
   }
 
   @override
-  Stream<WeekModel> get(String id, int year, int weekNumber) {
+  Stream<WeekModel> get(String? id, int? year, int? weekNumber) {
     // return null so there are no conflicts
-    return Stream<WeekModel>.value(null);
+    return Stream<WeekModel>.value(WeekModel());
   }
-
 }
 
-
 void main() {
-  CopyWeekplanBloc bloc;
-  Api api;
-  DisplayNameModel user;
-  WeekModel weekplan1;
+  late CopyWeekplanBloc bloc;
+  late Api api;
+  late DisplayNameModel user;
+  late WeekModel weekplan1;
   setUp(() {
     api = Api('any');
     api.user = MockUserApi();
@@ -63,7 +61,7 @@ void main() {
     user = DisplayNameModel(
         displayName: 'Hans', role: Role.Citizen.toString(), id: '1');
     weekplan1 = WeekModel(
-      thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 32);
+        thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 32);
   });
 
   test('toggleMarkedUserModel', async((DoneFn done) {
@@ -75,12 +73,12 @@ void main() {
     done();
   }));
 
-  test('Test whether the copyToCitizens method '
-    'copies the weekplan to the citizens', async((DoneFn done) {
-
+  test(
+      'Test whether the copyToCitizens method '
+      'copies the weekplan to the citizens', async((DoneFn done) {
     for (int i = 0; i < 10; i++) {
       final DisplayNameModel user = DisplayNameModel(
-        displayName: 'Hans', role: Role.Citizen.toString(), id: i.toString());
+          displayName: 'Hans', role: Role.Citizen.toString(), id: i.toString());
       bloc.toggleMarkedUserModel(user);
       bloc.markedUserModels.listen((List<DisplayNameModel> markedUsers) {
         expect(markedUsers.contains(user), true);
@@ -90,13 +88,11 @@ void main() {
     bloc.copyWeekplan(<WeekModel>[weekplan1], user, false);
 
     bloc.markedUserModels.listen((List<DisplayNameModel> markedUsers) {
-      for (DisplayNameModel user in markedUsers){
+      for (DisplayNameModel user in markedUsers) {
         expect(map.containsKey(user.id), true);
         expect(map[user.id], weekplan1);
       }
       done();
     });
-
   }));
-  
 }

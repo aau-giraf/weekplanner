@@ -12,24 +12,26 @@ class Giraf3ButtonDialog extends StatelessWidget {
   ///The dialog displays the title and description, with two buttons
   ///to either confirm the action, or cancel, which simply closes the dialog.
   const Giraf3ButtonDialog(
-      {Key key,
-      @required this.title,
-      this.description,
-      @required this.option1Text,
-      @required this.option1Icon,
-      @required this.option1OnPressed,
-      @required this.option2Text,
-      @required this.option2Icon,
-      @required this.option2OnPressed,
-      this.cancelOnPressed})
+      {required Key key,
+      required this.title,
+      this.description = 'Beskrivelse',
+      required this.option1Text,
+      required this.option1Icon,
+      required this.option1OnPressed,
+      required this.option2Text,
+      required this.option2Icon,
+      required this.option2OnPressed,
+      this.cancelOnPressed = _defaultCancelFunction})
       : super(key: key);
+
+  static void _defaultCancelFunction() {}
 
   ///title of the dialogBox, displayed in the header of the dialogBox
   final String title;
 
   ///description of the dialogBox, displayed under the header, describing the
   ///encountered problem
-  final String description;
+  final String? description;
 
   ///text for option 1 button
   final String option1Text;
@@ -50,7 +52,7 @@ class Giraf3ButtonDialog extends StatelessWidget {
   final VoidCallback option2OnPressed;
 
   ///the method is call when the cancel button is pressed. Optional
-  final VoidCallback cancelOnPressed;
+  final VoidCallback? cancelOnPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +64,7 @@ class Giraf3ButtonDialog extends StatelessWidget {
       title: Center(
           child: GirafTitleHeader(
         title: title,
+        key: UniqueKey(),
       )),
       content: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -75,14 +78,14 @@ class Giraf3ButtonDialog extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 15.0),
-                      child: Text(
-                  //if description is null,
-                  // its replaced with empty.
-                  description ?? '',
-                  textAlign: TextAlign.center,
-                ),
-                    ))
+                  padding: const EdgeInsets.symmetric(vertical: 15.0),
+                  child: Text(
+                    //if description is null,
+                    // its replaced with empty.
+                    description ?? '',
+                    textAlign: TextAlign.center,
+                  ),
+                ))
               ],
             ),
             Row(
@@ -127,7 +130,7 @@ class Giraf3ButtonDialog extends StatelessWidget {
                           color: theme.GirafColors.black),
                       onPressed: () {
                         if (cancelOnPressed != null) {
-                          cancelOnPressed();
+                          cancelOnPressed!();
                         }
 
                         Routes().pop(context);

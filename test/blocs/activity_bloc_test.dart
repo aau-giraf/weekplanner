@@ -1,3 +1,5 @@
+// ignore_for_file: always_specify_types
+
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -5,11 +7,12 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/activity_bloc.dart';
 
@@ -18,17 +21,17 @@ class MockWeekApi extends Mock implements WeekApi {}
 class MockActivityApi extends Mock implements ActivityApi {}
 
 void main() {
-  ActivityBloc bloc;
-  Api api;
-  MockWeekApi weekApi;
-  MockActivityApi activityApi;
+  Api api = Api('any');
+  ActivityBloc bloc = ActivityBloc(api);
+  MockWeekApi weekApi = MockWeekApi();
+  MockActivityApi activityApi = MockActivityApi();
 
   final DisplayNameModel mockUser =
-  DisplayNameModel(id: '50', displayName: 'testUser202', role: null);
+      DisplayNameModel(id: '50', displayName: 'testUser202', role: null);
 
   final ActivityModel mockActivity = ActivityModel(
       id: 1,
-      pictograms: null,
+      pictograms: <PictogramModel>[],
       order: 0,
       state: ActivityState.Normal,
       isChoiceBoard: false);
@@ -50,13 +53,12 @@ void main() {
       weekYear: 2010);
 
   void setupApiCalls() {
-    when(weekApi.update(mockUser.id, mockWeekModel.weekYear,
+    when(() => weekApi.update(mockUser.id!, mockWeekModel.weekYear,
             mockWeekModel.weekNumber, mockWeekModel))
-        .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>
-        .seeded(mockWeekModel));
-    when(activityApi.update(mockActivity, mockUser.id))
-        .thenAnswer((_) => rx_dart.BehaviorSubject<ActivityModel>
-        .seeded(mockActivity));
+        .thenAnswer(
+            (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(mockWeekModel));
+    when(() => activityApi.update(mockActivity, mockUser.id!)).thenAnswer(
+        (_) => rx_dart.BehaviorSubject<ActivityModel>.seeded(mockActivity));
   }
 
   setUp(() {

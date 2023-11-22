@@ -25,14 +25,13 @@ class TimeRepresentationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: GirafAppBar(
-          title: _user.displayName + ': indstillinger',
-        ),
-        body: StreamBuilder<SettingsModel>(
+            title: _user.displayName! + ': indstillinger', key: UniqueKey()),
+        body: StreamBuilder<SettingsModel?>(
             stream: _settingsBloc.settings,
             builder: (BuildContext context,
-                AsyncSnapshot<SettingsModel> settingsSnapshot) {
+                AsyncSnapshot<SettingsModel?> settingsSnapshot) {
               if (settingsSnapshot.hasData) {
-                final SettingsModel _settingsModel = settingsSnapshot.data;
+                final SettingsModel _settingsModel = settingsSnapshot.data!;
 
                 return ListView(
                   children: <Widget>[
@@ -40,16 +39,17 @@ class TimeRepresentationScreen extends StatelessWidget {
                         'Vælg Tidsrepræsentation', <SettingsSectionItem>[
                       SettingsCheckMarkButton(DefaultTimer.PieChart,
                           _settingsModel.defaultTimer, 'Standard', () {
-                            Routes().pop(context, DefaultTimer.PieChart);
+                        Routes().pop(context, DefaultTimer.PieChart);
                       }, DefaultTimer.PieChart),
                       SettingsCheckMarkButton(DefaultTimer.Hourglass,
                           _settingsModel.defaultTimer, 'Timeglas', () {
-                            Routes().pop(context, DefaultTimer.Hourglass);
+                        Routes().pop(context, DefaultTimer.Hourglass);
                       }, DefaultTimer.Hourglass),
                       SettingsCheckMarkButton(DefaultTimer.Numeric,
                           _settingsModel.defaultTimer, 'Nedtælling', () {
                         _settingsModel.defaultTimer = DefaultTimer.Numeric;
-                        _settingsBloc.updateSettings(_user.id, _settingsModel)
+                        _settingsBloc
+                            .updateSettings(_user.id!, _settingsModel)
                             .listen((_) {
                           Routes().pop(context, DefaultTimer.Numeric);
                         });

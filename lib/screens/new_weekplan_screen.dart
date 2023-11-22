@@ -14,14 +14,14 @@ class NewWeekplanScreen extends StatelessWidget {
   /// Screen for creating a new weekplan.
   /// Requires a [UsernameModel] to be able to save the new weekplan.
   NewWeekplanScreen({
-    @required DisplayNameModel user,
-    @required this.existingWeekPlans,
+    required DisplayNameModel user,
+    required this.existingWeekPlans,
   }) : _bloc = di.get<NewWeekplanBloc>() {
     _bloc.initialize(user);
   }
 
   /// Stream of existing week plans.
-  final Stream<List<WeekNameModel>> existingWeekPlans;
+  final Stream<List<WeekNameModel>?> existingWeekPlans;
   final NewWeekplanBloc _bloc;
 
   @override
@@ -38,9 +38,7 @@ class NewWeekplanScreen extends StatelessWidget {
           existingWeekPlans: existingWeekPlans,
         );
         try {
-          if (newWeekPlan != null) {
-            Routes().pop<WeekModel>(context, newWeekPlan);
-          }
+          Routes().pop<WeekModel>(context, newWeekPlan);
         } catch (err) {
           print('No new weekplan exists' '\n Error: ' + err.toString());
         }
@@ -48,10 +46,11 @@ class NewWeekplanScreen extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: GirafAppBar(title: 'Ny ugeplan'),
+      appBar: GirafAppBar(title: 'Ny ugeplan', key: UniqueKey()),
       body: InputFieldsWeekPlan(
         bloc: _bloc,
         button: saveButton,
+        weekModel: WeekModel(),
       ),
     );
   }

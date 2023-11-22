@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable, public_member_api_docs
+
 import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/api_exception.dart';
@@ -5,13 +7,14 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import '../../style/custom_color.dart' as theme;
 
 /// Screen for changing password
-class ChangePasswordScreen extends StatelessWidget {//ignore: must_be_immutable
+class ChangePasswordScreen extends StatelessWidget {
   /// Constructor
   ChangePasswordScreen(DisplayNameModel user) : _user = user;
 
@@ -30,19 +33,19 @@ class ChangePasswordScreen extends StatelessWidget {//ignore: must_be_immutable
   final TextEditingController repeatNewPasswordCtrl = TextEditingController();
 
   final DisplayNameModel _user;
-
-  /// authbloc
   final AuthBloc authBloc = di.get<AuthBloc>();
   final Api _api = di.get<Api>();
-  
-  /// used for popping the dialog
-  BuildContext currentContext;
-  bool loginStatus = false; //ignore: public_member_api_docs
+  late BuildContext currentContext;
+  bool loginStatus = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GirafAppBar(title: 'Skift password'),
+        appBar: GirafAppBar(
+          key: const ValueKey<String>('widgetKey'),
+          title: 'Skift password',
+          appBarIcons: const <AppBarIcon, VoidCallback>{},
+        ),
         body: buildPasswordChange(context));
   }
 
@@ -190,14 +193,14 @@ class ChangePasswordScreen extends StatelessWidget {//ignore: must_be_immutable
       DisplayNameModel user, String oldPassword, String newPassword) {
     //Checks if user is logged in
     authBloc
-        .authenticate(authBloc.loggedInUser.username, oldPassword)
+        .authenticate(authBloc.loggedInUser.username!, oldPassword)
         .then((dynamic result) {
-      StreamSubscription<bool> loginListener;
+      StreamSubscription<bool>? loginListener;
       loginListener = authBloc.loggedIn.listen((bool snapshot) {
         loginStatus = snapshot;
         if (snapshot) {
           _api.account
-              .changePasswordWithOld(user.id, oldPassword, newPassword)
+              .changePasswordWithOld(user.id!, oldPassword, newPassword)
               .listen((_) {})
               .onDone(() {
             createDialog('Kodeord ændret', 'Dit kodeord er blevet ændret',
@@ -206,7 +209,7 @@ class ChangePasswordScreen extends StatelessWidget {//ignore: must_be_immutable
         }
 
         /// Stop listening for future logins
-        loginListener.cancel();
+        loginListener!.cancel();
       });
     }).catchError((Object error) {
       if (error is ApiException) {
