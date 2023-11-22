@@ -280,9 +280,9 @@ class WeekplansBloc extends BlocBase {
             _oldWeekModel.add(oldLocalWeekModels);
           }
           // Update the weekNameModels stream
-          final List<WeekNameModel> updatedWeekNameModels = _weekNameModelsList
+          final List<WeekNameModel>? updatedWeekNameModels = _weekNameModelsList
               .value
-              .where((WeekNameModel weekNameModel) =>
+              ?.where((WeekNameModel weekNameModel) =>
                   weekNameModel.weekYear != weekModel.weekYear ||
                   weekNameModel.weekNumber != weekModel.weekNumber)
               .toList();
