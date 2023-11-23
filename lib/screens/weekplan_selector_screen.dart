@@ -236,8 +236,6 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
               leading: const Icon(Icons.home),
               title: const Text('Ugeplaner'),
               onTap: () {
-                Navigator.pop(context);
-                Navigator.of(context).pop();
               },
             ),
             ListTile(

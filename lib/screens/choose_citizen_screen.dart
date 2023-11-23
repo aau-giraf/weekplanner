@@ -175,8 +175,6 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
               leading: const Icon(Icons.home),
               title: const Text('Ugeplaner'),
               onTap: () {
-                Navigator.pop(context);
-                Navigator.of(context).pop();
               },
             ),
             ListTile(
