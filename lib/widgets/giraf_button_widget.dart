@@ -15,10 +15,10 @@ class GirafButton extends StatefulWidget {
     Key key,
     this.text,
     this.fontSize = 20,
-    this.fontWeight = FontWeight.normal,
+    this.fontWeight = FontWeight.bold,
     this.icon,
     this.width,
-    this.height = 40.0,
+    this.height = 60.0,
     @required this.onPressed,
     this.isEnabled = true,
     // ignore: avoid_unused_constructor_parameters
@@ -60,10 +60,10 @@ class GirafButton extends StatefulWidget {
   final Stream<bool> isEnabledStream;
 
   @override
-  _GirafButtonState createState() => _GirafButtonState();
+  _GirafButtonNewState createState() => _GirafButtonNewState();
 }
 
-class _GirafButtonState extends State<GirafButton> {
+class _GirafButtonNewState extends State<GirafButton> {
   @override
   void initState() {
     // If onPressed callback is null, the button should be disabled.
@@ -116,7 +116,7 @@ class _GirafButtonState extends State<GirafButton> {
           gradient: _isEnabled
               ? (_isPressed ? _gradientPressed : _gradientDefault)
               : _gradientDisabled,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(5),
           border: Border.all(
               color: _isEnabled
                   ? (_isPressed ? _borderPressed : _borderDefault)
@@ -124,7 +124,7 @@ class _GirafButtonState extends State<GirafButton> {
               width: 1.2),
         ),
         child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             child: _buildWidgetsOnButton()),
       ),
     );
@@ -179,7 +179,7 @@ class _GirafButtonState extends State<GirafButton> {
         children: <Widget>[
           widget.icon,
           const SizedBox(
-            width: 5,
+            width: 5, // space between the icon and the text
           ),
           Text(
             widget.text,

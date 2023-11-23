@@ -52,6 +52,10 @@ class GirafColors {
   /// Orange color for button default gradient
   static const Color gradientDefaultOrange = Color(0xFFFF9D00);
 
+  static const Color gradientDefaultBlue = Color(0xFF0087DA);
+
+  static const Color gradientDefaultDarkBlue = Color(0xFF005285);
+
   /// Border color for button default gradient
   static const Color gradientDefaultBorder = Color(0xFF8A6E00);
 
