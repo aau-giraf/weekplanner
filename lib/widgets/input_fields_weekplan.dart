@@ -39,17 +39,18 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      // ignore: always_specify_types
       children: [
         AppBar(
-          backgroundColor: Colors.transparent, // Remove the blur background
-          elevation: 0, // Remove the shadow
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black), // Customize the arrow color
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
-          title: Text(
+          title: const Text(
             'Title',
             style: TextStyle(
               color: Colors.black,

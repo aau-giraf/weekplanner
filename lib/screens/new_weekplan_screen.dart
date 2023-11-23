@@ -12,6 +12,7 @@ import 'package:weekplanner/widgets/input_fields_weekplan.dart';
 // ignore: public_member_api_docs
 class NewWeekplanScreen extends StatelessWidget {
 
+
   // ignore: public_member_api_docs
   NewWeekplanScreen({
     @required this.user,
@@ -44,35 +45,25 @@ class NewWeekplanScreen extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                   Container(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.center,
-                          // ignore: duplicate_ignore
-                          child: Container(
-                            padding: const EdgeInsets.all(10.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(color: Colors.black, width: 2.0),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Builder(
-                              builder: (BuildContext context) {
-                                return IconButton(
-                                  key: const Key('NavigationMenu'),
-                                  padding: const EdgeInsets.all(0.0),
-                                  color: Colors.black,
-                                  icon: const Icon(Icons.menu, size: 60),
-                                  onPressed: () {
-                                    Scaffold.of(context).openDrawer();
-                                  },
-                                );
-                              },
-                            ),
-                          ),
+                    padding: const EdgeInsets.all(50.0),
+                    child: Column(children: <Widget>[
+                      Align(
+                        alignment: Alignment.center,
+                        child: Builder(
+                            builder: (BuildContext context) {
+                              return IconButton(
+                                key: const Key('NavigationMenu'),
+                                padding: const EdgeInsets.all(0.0),
+                                color: Colors.white,
+                                icon: const Icon(Icons.menu, size: 55),
+                                onPressed: () {
+                                  Scaffold.of(context).openDrawer();
+                                },
+                              );
+                            }
                         ),
-                      ],
+                      ),
+                    ],
                     ),
                   ),
                 ],
@@ -80,7 +71,7 @@ class NewWeekplanScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            flex: 5,
+            flex: 7,
             child: InputFieldsWeekPlan(
               bloc: _bloc, button: null,
             ),
@@ -147,6 +138,43 @@ class NewWeekplanScreen extends StatelessWidget {
                                   icon: const Icon(Icons.close, size: 60),
                                   onPressed: () {
                                     Navigator.of(context).pop();
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 30),
+                              Container(
+                                padding: const EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.black, width: 2.0),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: IconButton(
+                                  key: const Key('copy'),
+                                  padding: const EdgeInsets.all(0.0),
+                                  color: Colors.black, // Icon color
+                                  icon: const Icon(Icons.copy, size: 60),
+                                  onPressed: () {
+
+                                  },
+                                ),
+                              ),
+
+                              const SizedBox(height: 30),
+                              Container(
+                                padding: const EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.black, width: 2.0),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: IconButton(
+                                  key: const Key('cancel'),
+                                  padding: const EdgeInsets.all(0.0),
+                                  color: Colors.black, // Icon color
+                                  icon: const Icon(Icons.cancel, size: 60),
+                                  onPressed: () {
+
                                   },
                                 ),
                               ),
