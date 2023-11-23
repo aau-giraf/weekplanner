@@ -470,7 +470,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
     }
 
     if (isMarked) {
-      _pushEditWeekPlan(context); //Det virker men man kan ikke edit den
+       /// _pushEditWeekPlan(context); //Det virker men man siden bliver mærkelig
       return Container(
           decoration: BoxDecoration(
             border: Border.all(color: theme.GirafColors.black, width: 5),

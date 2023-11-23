@@ -163,10 +163,10 @@ class WeekplanScreen extends StatelessWidget {
                     padding: portrait
                         ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
                         : const EdgeInsets.fromLTRB(0, 70, 0, 0),
-                  child: StreamBuilder<UserWeekModel>(
-                      stream: _weekplanBloc.userWeek,
-                      initialData: null,
-                      builder: (BuildContext context,
+                    child: StreamBuilder<UserWeekModel>(
+                        stream: _weekplanBloc.userWeek,
+                        initialData: null,
+                        builder: (BuildContext context,
                           AsyncSnapshot<UserWeekModel> snapshot) {
                         if (snapshot.hasData) {
                           return _buildWeeks(snapshot.data.week, context);

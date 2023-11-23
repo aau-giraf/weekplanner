@@ -15,6 +15,7 @@ import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/input_fields_weekplan.dart';
 
 /// The screen to choose a citizen
 class ChooseCitizenScreen extends StatefulWidget {
@@ -28,6 +29,190 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final bool portrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
+    /// screen background
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            /// The blue left part of screen
+            Expanded(
+              flex: 1,
+              child: Container(
+
+                child: Stack(children: <Widget>[
+
+                  Image.asset(
+                    'assets/icons/giraf_blue_long.png',
+                    repeat: ImageRepeat.repeat,
+                    height: screenSize.height,
+                    fit: BoxFit.cover,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(50.0),
+                    child: Column(children: <Widget>[
+                      Align(
+                        alignment: Alignment.center,
+                        child: Builder(
+                            builder: (BuildContext context) {
+                              return IconButton(
+                                key: Key('NavigationMenu'),
+                                padding: EdgeInsets.all(0.0),
+                                color: Colors.white,
+                                icon: Icon(Icons.menu, size: 55),
+                                onPressed: () {
+                                  Scaffold.of(context).openDrawer();
+                                },
+                              );
+                            }
+                        ),
+                      ),
+                    ],
+                    ),
+                  ),
+                ],
+                ),
+              ),
+            ),
+            /// The white middle of the screen
+            Expanded(
+              flex: 7,
+              child: Container(
+                width: screenSize.width,
+                height: screenSize.height,
+                padding: portrait
+                    ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
+                    : const EdgeInsets.fromLTRB(0, 20, 0,0),
+                child: Stack(children: <Widget>[
+                  Row(children: <Widget>[
+                    Container(
+                      padding: portrait
+                          ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
+                          : const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          'Vælg bruger',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: GirafFont.headline, fontFamily: 'Quicksand-Bold'),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Column(children: <Widget>[
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                            key: const Key('EditUser'),
+                            padding: portrait
+                                ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
+                                : const EdgeInsets.fromLTRB(650, 0, 40, 0),
+                            color: Colors.black,
+                            icon: const Icon(Icons.create_outlined, size: 50),
+                            onPressed: () {
+                              ///_pushEditWeekPlan(context); //Does not work yet
+                            },
+                          ),
+                        ),
+                      ],
+                      ),
+                    ),
+                  ],
+                  ),
+                  Container(
+                    padding: portrait
+                        ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
+                        : const EdgeInsets.fromLTRB(0, 70, 0, 0),
+                    child: StreamBuilder<List<DisplayNameModel>>(
+                      stream: _bloc.citizen,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<DisplayNameModel>> snapshot) {
+                        if (snapshot.connectionState != ConnectionState.waiting) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 0,
+                              horizontal: 20,
+                            ),
+                            child: GridView.count(
+                                crossAxisCount: portrait ? 2 : 4,
+                                children:
+                                _buildCitizenSelectionList(context, snapshot)),
+                          );
+                        } else {
+                          return Container(
+                            child: const Text('Loading...'),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ],
+                ),
+              ),
+            ),
+            /// The blue right part of screen
+            Expanded(
+                flex: 1,
+                child: Container(
+                  height: screenSize.height,
+                  child: Image.asset(
+                    'assets/icons/giraf_blue_long.png',
+                    repeat: ImageRepeat.repeat,
+                    fit: BoxFit.cover,
+                  ),
+                )
+            ),
+          ]
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Ugeplaner'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Profil'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/profil');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Skift bruger'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/skift bruger');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.exit_to_app),
+              title: const Text('Log af'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/log af');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
+  @override
+  Widget build2(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
 //_api.user.getUserByName("Guardian-dev")
     final bool portrait =
