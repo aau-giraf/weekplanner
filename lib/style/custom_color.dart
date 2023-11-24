@@ -8,7 +8,11 @@ class GirafColors {
   static const Color loginFieldText = Color.fromRGBO(170, 170, 170, 1);
 
   /// Color for the login button
-  static const Color loginButtonColor = Color.fromRGBO(48, 81, 118, 1);
+  static const Color loginButtonColor = Color.fromRGBO(0, 160, 35, 1);
+  /// Color for the top of the login button
+  static const Color loginButtonColorLight = Color.fromRGBO(0, 217, 47, 1);
+  /// Color for the login button when pressed
+  static const Color loginButtonColorLightPressed = Color.fromRGBO(49, 181, 78, 1);
 
   /// Color for the buttons
   static const Color buttonColor = Color(0xA0FFFFFF);
@@ -56,6 +60,8 @@ class GirafColors {
 
   static const Color gradientDefaultDarkBlue = Color(0xFF005285);
 
+  static const Color gradientDefaultBluePressed = Color.fromARGB(255, 35, 131, 190);
+
   /// Border color for button default gradient
   static const Color gradientDefaultBorder = Color(0xFF8A6E00);
 
@@ -76,6 +82,10 @@ class GirafColors {
 
   /// Border color for button disabled gradient
   static const Color gradientDisabledBorder = Color(0x668A6E00);
+
+  static const Color gradientGreenBorder = Color.fromARGB(102, 14, 71, 23);
+
+  static const Color gradientBlueBorder = Color.fromARGB(102, 14, 26, 72);
 
   /// Color for error messages (Same as dart standard)
   static const Color errorColor = Color(0xFFD32F2F);

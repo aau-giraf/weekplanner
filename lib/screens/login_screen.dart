@@ -13,7 +13,10 @@ import 'package:weekplanner/screens/pictogram_login_screen.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
+import 'package:weekplanner/widgets/giraf_login_button_widget.dart';
+import 'package:weekplanner/widgets/giraf_opret_button_widget.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:weekplanner/screens/new_citizen_screen.dart';
 
 
 import '../style/custom_color.dart' as theme;
@@ -146,12 +149,12 @@ class LoginScreenState extends State<LoginScreen> {
     ///Used to check if the keyboard is visible
     final bool keyboard = MediaQuery.of(context).viewInsets.bottom > 0;
 
-    final ButtonStyle girafButtonStyle = ElevatedButton.styleFrom(
-      backgroundColor: theme.GirafColors.loginButtonColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-      ),
-    );
+    // final ButtonStyle girafButtonStyle = ElevatedButton.styleFrom(
+    //   backgroundColor: theme.GirafColors.loginButtonColor,
+    //   shape: const RoundedRectangleBorder(
+    //     borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    //   ),
+    // );
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -176,7 +179,7 @@ class LoginScreenState extends State<LoginScreen> {
               height: screenSize.height,
               padding: portrait
                   ? const EdgeInsets.fromLTRB(50, 0, 50, 0)
-                  : const EdgeInsets.fromLTRB(200, 0, 200, 8),
+                  : const EdgeInsets.fromLTRB(200, 0, 200, 0),
               decoration: const BoxDecoration(
                 color: Colors.white,
               ),
@@ -253,7 +256,7 @@ class LoginScreenState extends State<LoginScreen> {
                           ),
                           Padding(
                             padding: portrait
-                                ? const EdgeInsets.fromLTRB(0, 20, 0, 10)
+                                ? const EdgeInsets.fromLTRB(0, 10, 0, 10)
                                 : const EdgeInsets.fromLTRB(0, 0, 0, 5),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -333,62 +336,87 @@ class LoginScreenState extends State<LoginScreen> {
                           ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(0, 25, 0, 5),
-                            child: Container(
-                              child: Transform.scale(
-                                scale: 1.5,
-                                child: ElevatedButton(
-                                  key: const Key('LoginBtnKey'),
-                                  style: girafButtonStyle,
-                                  child: const Text(
-                                    'LOGIN',
-                                    style: TextStyle(color: theme.GirafColors.white, fontSize: GirafFont.large),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                  child: Transform.scale(
+                                    scale: 1,
+                                    child: GirafButtonOpret(
+                                      key: const Key('OpretBtnKey'),
+                                      text: 'Opret', 
+                                      onPressed: () {
+                                        Routes().push(context, NewCitizenScreen());
+                                      },
+                                    ),
                                   ),
-                                  onPressed: () {
-                                    loginAction(context);
-                                  },
                                 ),
-                              ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                                ),
+
+                                Container(
+                                  child: Transform.scale(
+                                    scale: 1,
+                                    child: GirafButtonLogin(
+                                      key: const Key('LoginBtnKey'),
+                                      text: 'Login',
+                                      onPressed: () {
+                                        loginAction(context);
+                                      },
+                                      
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          // Autologin button, only used for debugging
-                          environment.getVar<bool>('DEBUG')
-                              ? Container(
-                            child: Transform.scale(
-                              scale: 1.2,
-                              child: ElevatedButton(
-                                style: girafButtonStyle,
-                                child: const Text(
-                                  'AUTO-LOGIN',
-                                  key: Key('AutoLoginKey'),
-                                  style: TextStyle(color: theme.GirafColors.white, fontSize: GirafFont.large),
-                                ),
-                                onPressed: () {
-                                  usernameCtrl.text =
-                                      environment.getVar<String>('USERNAME');
-                                  passwordCtrl.text =
-                                      environment.getVar<String>('PASSWORD');
-                                  loginAction(context);
-                                },
-                              ),
-                            ),
-                          )
-                              : Container(),
+                          
                         ],
                       ),
                     )
-                  ]),
+                  ]
+                  ),
             ),
           ),
           Expanded(
             flex: 1,
-            child: Container(
-              height: screenSize.height,
-              child: Image.asset(
-                'assets/icons/giraf_blue_long.png',
-                repeat: ImageRepeat.repeat,
-                fit: BoxFit.cover,
-              ),
-            )
+            child: Stack(
+              children: <Widget>[
+                Container(
+                height: screenSize.height,
+                  child: Image.asset(
+                    'assets/icons/giraf_blue_long.png',
+                    repeat: ImageRepeat.repeat,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+
+                // Autologin button, only used for debugging
+                environment.getVar<bool>('DEBUG')
+                    ? Container(
+                      padding: EdgeInsets.only(left: screenSize.width*0.02,top: screenSize.height*0.9,right: screenSize.width*0.02, bottom: screenSize.height*0.03 ),
+                      child: Transform.scale(
+                        scale: 1,
+                        child: GirafButtonLogin(
+                          text: 'AUTO',
+                          key: Key('AutoLoginKey'),
+                          onPressed: () {
+                            usernameCtrl.text =
+                                environment.getVar<String>('USERNAME');
+                            passwordCtrl.text =
+                                environment.getVar<String>('PASSWORD');
+                            loginAction(context);
+                          },
+                          ),
+                        ),
+                      )
+                    
+                    : Container(),
+
+              ],
+            ),
+            
           ),
           Expanded(
             flex: 1,
