@@ -16,14 +16,19 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 /// Role names for Weekplanner
 enum Roles {
   /// Guardian role
-  guardian,
-
+    guardian,
   /// Trustee  role
-  trustee,
+    trustee,
+   /// Citizen role
+   citizen }
 
-  /// Citizen role
-  citizen
-}
+/// This map provides translations for different roles used in the application
+/// from English to Danish.
+final Map<Roles, String> roleText = <Roles, String>{
+  Roles.guardian: 'Pædagog', // from Guardian to Pædagog
+  Roles.trustee: 'Værge',    // from Trustee to Værge
+  Roles.citizen: 'Borger',   // from Citizen to Borger
+};
 
 /// Screen for creating a new citizen
 // ignore: must_be_immutable
@@ -123,7 +128,9 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                             Expanded(
                               child: ListTile(
                                 key: const Key('guardianRadioButton'),
-                                title: const Text('Guardian'),
+                                // The title for the radio button, 
+                                // translated from 'Guardian' to 'Pædagog'
+                                title: const Text('Pædagog'),
                                 leading: Radio<Roles>(
                                   value: Roles.guardian,
                                   groupValue: _role,
@@ -140,7 +147,9 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                             Expanded(
                               child: ListTile(
                                 key: const Key('trusteeRadioButton'),
-                                title: const Text('Trustee'),
+                                // The title for the radio button, 
+                                // translated from 'Trustee' to 'Værge'
+                                title: const Text('Værge'),
                                 leading: Radio<Roles>(
                                   value: Roles.trustee,
                                   groupValue: _role,
@@ -157,7 +166,9 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                             Expanded(
                               child: ListTile(
                                 key: const Key('citizenRadioButton'),
-                                title: const Text('Citizen'),
+                                // The title for the radio button, 
+                                // translated from 'Citizen' to 'Borger'
+                                title: const Text('Borger'),
                                 leading: Radio<Roles>(
                                   value: Roles.citizen,
                                   groupValue: _role,
@@ -282,12 +293,15 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                     );
                   }),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            Padding( // edit
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
               //child: Text('Profil billede af borger (valgfri):'),
               child: AutoSizeText(
-                'Profil billede af borger (valgfri):',
-                style: TextStyle(fontSize: GirafFont.small),
+                // The text for displaying a profile picture based on
+                // the user's role. It dynamically includes the user's role,
+                // e.g., 'Pædagog', 'Værge', or 'Borger'
+                'Profil billede af ${roleText[_role]} (valgfri):',
+                style: const TextStyle(fontSize: GirafFont.small),
               ),
             ),
 
