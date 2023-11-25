@@ -49,11 +49,14 @@ void main() {
 
     when(() => api.week.getNames(any())).thenAnswer(
       (_) {
-        return Stream<List<WeekNameModel>?>.value(<WeekNameModel>[
-          WeekNameModel(
+        return Stream<List<WeekNameModel>>.fromIterable(<List<WeekNameModel>>[
+          <WeekNameModel>[
+            WeekNameModel(
               name: mockWeek.name,
               weekNumber: mockWeek.weekNumber,
-              weekYear: mockWeek.weekYear),
+              weekYear: mockWeek.weekYear,
+            ),
+          ]
         ]);
       },
     );
