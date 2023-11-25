@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -76,6 +77,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
   bool isButtonSaveEnabled = true;
   bool isButtonContinueEnabled = false;
 
+
   @override
   Widget build(BuildContext context) {
     widget.screenHeight = MediaQuery.of(context).size.height;
@@ -101,7 +103,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                         border:
                         const OutlineInputBorder(borderSide: BorderSide()),
                         labelText: 'Navn',
-                        errorText: (snapshot?.data == true) &&
+                        errorText: (snapshot.data == true) &&
                             widget._bloc.displayNameController.value != null
                             ? null
                             : 'Navn skal udfyldes',
@@ -129,9 +131,9 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                                 leading: Radio<Roles>(
                                   value: Roles.guardian,
                                   groupValue: _role,
-                                  onChanged: (Roles value) {
+                                  onChanged: (Roles? value) {
                                     setState(() {
-                                      _role = value;
+                                      _role = value!;
                                       widget._bloc.onUsePictogramPasswordChange
                                           .add(value == Roles.citizen);
                                     });
@@ -146,9 +148,9 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                                 leading: Radio<Roles>(
                                   value: Roles.trustee,
                                   groupValue: _role,
-                                  onChanged: (Roles value) {
+                                  onChanged: (Roles? value) {
                                     setState(() {
-                                      _role = value;
+                                      _role = value!;
                                       widget._bloc.onUsePictogramPasswordChange
                                           .add(value == Roles.citizen);
                                     });
@@ -163,9 +165,9 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                                 leading: Radio<Roles>(
                                   value: Roles.citizen,
                                   groupValue: _role,
-                                  onChanged: (Roles value) {
+                                  onChanged: (Roles? value) {
                                     setState(() {
-                                      _role = value;
+                                      _role = value!;
                                     });
                                   },
                                 ),
@@ -189,7 +191,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                         border:
                         const OutlineInputBorder(borderSide: BorderSide()),
                         labelText: 'Brugernavn',
-                        errorText: (snapshot?.data == true) &&
+                        errorText: (snapshot.data == true) &&
                             widget._bloc.usernameController.value != null
                             ? null
                         // cant make it shorter because of the string
@@ -238,17 +240,17 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                   builder:
                       (BuildContext context, AsyncSnapshot<bool> snapshot) {
                     return Visibility(
-                      visible: !widget._bloc.
-                      usePictogramPasswordController.value,
+                      visible:
+                      !widget._bloc.usePictogramPasswordController.value!,
                       child: TextFormField(
                         key: const Key('passwordField'),
                         enabled:
-                        !widget._bloc.usePictogramPasswordController.value,
+                        !widget._bloc.usePictogramPasswordController.value!,
                         decoration: InputDecoration(
                           border:
                           const OutlineInputBorder(borderSide: BorderSide()),
                           labelText: 'Kodeord',
-                          errorText: (snapshot?.data == true) &&
+                          errorText: (snapshot.data == true) &&
                               widget._bloc.passwordController.value != null
                               ? null
                           // cant make it shorter because of the string
@@ -269,11 +271,11 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                       (BuildContext context, AsyncSnapshot<bool> snapshot) {
                     return Visibility(
                       visible:
-                      !widget._bloc.usePictogramPasswordController.value,
+                      !widget._bloc.usePictogramPasswordController.value!,
                       child: TextFormField(
                         key: const Key('passwordVerifyField'),
                         enabled:
-                        !widget._bloc.usePictogramPasswordController.value,
+                        !widget._bloc.usePictogramPasswordController.value!,
                         decoration: InputDecoration(
                           border:
                           const
@@ -300,13 +302,16 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
 
             /// Profile preview picture
             Center(
-              child: StreamBuilder<File>(
-                  stream: widget._bloc.file,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<File> snapshot) =>
-                  snapshot.data != null
-                      ? widget._displayImage(snapshot.data)
-                      : widget._displayIfNoImage()),
+              child: StreamBuilder<File?>(
+                stream: widget._bloc.file,
+                builder: (BuildContext context, AsyncSnapshot<File?> snapshot) {
+                  final File? fileData =
+                      snapshot.data; // Store the data in a local variable
+                  return fileData != null
+                      ? widget._displayImage(fileData) // Use the local variable
+                      : widget._displayIfNoImage();
+                },
+              ),
             ),
 
             Row(
@@ -320,16 +325,22 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                   /// Add from gallery button
                   child: GirafButton(
                     key: const Key('TilføjFraGalleriButton'),
-                    icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
+                    icon:
+                    const ImageIcon(AssetImage('assets/icons/gallery.png')),
+
                     text: 'Tilføj fra galleri',
                     onPressed: widget._bloc.chooseImageFromGallery,
                     child: StreamBuilder<File>(
                         stream: widget._bloc.file,
                         builder: (BuildContext context,
-                            AsyncSnapshot<File> snapshot) =>
-                        snapshot.data != null
-                            ? widget._displayImage(snapshot.data)
-                            : widget._displayIfNoImage()),
+                            AsyncSnapshot<File?> snapshot) {
+                          final File? fileData = snapshot
+                              .data; // Store the data in a local variable
+                          return fileData != null
+                              ? widget._displayImage(
+                              fileData) // Use the local variable
+                              : widget._displayIfNoImage();
+                        }),
                   ),
                 ),
               ],
@@ -410,10 +421,13 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                           MaterialPageRoute<void>(
                               builder: (BuildContext context) =>
                                   NewPictogramPasswordScreen(
-                                    widget._bloc.usernameController.value,
-                                    widget._bloc.displayNameController.value,
-                                    widget._bloc.encodePicture(
-                                        widget._bloc.fileController.value),
+                                      widget._bloc.usernameController.value!,
+                                      widget._bloc.displayNameController.value!,
+                                      Uint8List.fromList(
+                                        widget._bloc.encodePicture(widget
+                                            ._bloc.fileController.value) ??
+                                            <int>[],
+                                      )
                                   )));
                     },
                   ),
