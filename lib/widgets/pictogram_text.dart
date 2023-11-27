@@ -89,14 +89,14 @@ class PictogramText extends StatelessWidget {
 /// accounted for
 double textWidth(String text, BuildContext context) {
   return (TextPainter(
-      text: TextSpan(
-          text: text,
-          style:
-          const TextStyle(fontWeight: FontWeight.bold, fontSize: 120)),
-      maxLines: 1,
-      textScaleFactor: MediaQuery.of(context).textScaleFactor,
-      textDirection: TextDirection.ltr)
-    ..layout())
+          text: TextSpan(
+              text: text,
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 120)),
+          maxLines: 1,
+          textScaleFactor: MediaQuery.of(context).textScaleFactor,
+          textDirection: TextDirection.ltr)
+        ..layout())
       .size
       .width;
 }
