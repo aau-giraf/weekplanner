@@ -24,7 +24,7 @@ void main() {
   MockActivityApi activityApi;
 
   final DisplayNameModel mockUser =
-  DisplayNameModel(id: '50', displayName: 'testUser202', role: null);
+      DisplayNameModel(id: '50', displayName: 'testUser202', role: null);
 
   final ActivityModel mockActivity = ActivityModel(
       id: 1,
@@ -52,11 +52,10 @@ void main() {
   void setupApiCalls() {
     when(weekApi.update(mockUser.id, mockWeekModel.weekYear,
             mockWeekModel.weekNumber, mockWeekModel))
-        .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>
-        .seeded(mockWeekModel));
-    when(activityApi.update(mockActivity, mockUser.id))
-        .thenAnswer((_) => rx_dart.BehaviorSubject<ActivityModel>
-        .seeded(mockActivity));
+        .thenAnswer(
+            (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(mockWeekModel));
+    when(activityApi.update(mockActivity, mockUser.id)).thenAnswer(
+        (_) => rx_dart.BehaviorSubject<ActivityModel>.seeded(mockActivity));
   }
 
   setUp(() {
