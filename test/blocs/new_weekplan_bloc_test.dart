@@ -13,9 +13,11 @@ import 'package:weekplanner/di.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
+//tests for various functions related to creating new weekplans
 void main() {
   NewWeekplanBloc bloc;
   Api api;
+  //create a mock week for use in the tests
   final PictogramModel mockThumbnail = PictogramModel(
       id: 1,
       lastEdit: null,
@@ -24,7 +26,7 @@ void main() {
       imageUrl: 'http://any.tld',
       imageHash: null);
   final DisplayNameModel mockUser =
-  DisplayNameModel(displayName: 'User', id: '1', role: null);
+      DisplayNameModel(displayName: 'User', id: '1', role: null);
   final WeekModel mockWeek = WeekModel(
       thumbnail: mockThumbnail,
       days: null,
@@ -37,7 +39,7 @@ void main() {
   setUp(() {
     api = Api('any');
     api.week = MockWeekApi();
-
+    //setup api listeners to return the correct values from the mock week created earlier
     when(api.week.update(any, any, any, any)).thenAnswer((_) {
       return Stream<WeekModel>.value(mockWeek);
     });

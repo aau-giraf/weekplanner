@@ -14,10 +14,12 @@ import 'package:weekplanner/di.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
+//test functionality for editing a weekplan bloc
 void main() {
   EditWeekplanBloc bloc;
   WeekplansBloc mockWeekplanSelector;
   Api api;
+  //Create mockup pictogram
   final PictogramModel mockThumbnail = PictogramModel(
       id: 1,
       lastEdit: null,
@@ -26,7 +28,7 @@ void main() {
       imageUrl: 'http://any.tld',
       imageHash: null);
   final DisplayNameModel mockUser =
-  DisplayNameModel(displayName: 'User', id: '1', role: null);
+      DisplayNameModel(displayName: 'User', id: '1', role: null);
   final WeekModel mockWeek = WeekModel(
       thumbnail: mockThumbnail,
       days: null,
@@ -34,6 +36,7 @@ void main() {
       weekNumber: 1,
       weekYear: DateTime.now().year + 1);
 
+//set up test, defines what values to return on api calls
   setUp(() {
     api = Api('any');
     api.week = MockWeekApi();

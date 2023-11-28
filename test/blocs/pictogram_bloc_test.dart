@@ -11,8 +11,8 @@ import 'package:weekplanner/blocs/pictogram_bloc.dart';
 class MockPictogramApi extends Mock implements PictogramApi {
   @override
   Stream<PictogramModel> get(int id) async* {
-    final PictogramModel mockModel = PictogramModel(id: -1, title: 'test1',
-        accessLevel: AccessLevel.PUBLIC);
+    final PictogramModel mockModel =
+        PictogramModel(id: -1, title: 'test1', accessLevel: AccessLevel.PUBLIC);
     yield mockModel;
   }
 }
@@ -33,29 +33,40 @@ void main() {
     const String query = 'Kat';
     int count = 0;
 
-    when(pictogramApi.getAll(page: bloc.latestPage,
-        pageSize: pageSize, query: query)).thenAnswer(
-            (_) =>
-        rx_dart.BehaviorSubject<List<PictogramModel>>
-            .seeded(<PictogramModel>[]));
+    // Make a mock call to the api.
+    // It deposes the result and returns with an empty, seeded list.
+    when(pictogramApi.getAll(
+            page: bloc.latestPage, pageSize: pageSize, query: query))
+        .thenAnswer((_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
+            <PictogramModel>[]));
 
+    // Validate behaviour of the stream. bloc.search adds two objects to
+    // bloc.pictograms: one null and one placeholder PictogramModel.
+    // The listener below is called every time bloc.pictograms is updated.
     bloc.pictograms.listen((List<PictogramModel> response) {
       switch (count) {
         case 0:
+          // If the stream is empty, ie. no results,
+          // the response should be null, since bloc.search adds a null object
+          // to the stream first. Otherwise, the test fails.
           expect(response, isNull);
           break;
         case 1:
-          verify(pictogramApi.getAll(page: bloc.latestPage,
-              pageSize: pageSize, query: query));
+          // If the stream is not empty, the 'getAll' method must have been run.
+          // 'verify' makes the test fail if 'getAll' was not called.
+          verify(pictogramApi.getAll(
+              page: bloc.latestPage, pageSize: pageSize, query: query));
           done();
           break;
       }
+
       count++;
     });
 
     bloc.search(query);
   }));
 
+  // TODO: Is this even a valid test?
   test('Should dispose stream', async((DoneFn done) {
     bloc.pictograms.listen((_) {}, onDone: done);
     bloc.dispose();
