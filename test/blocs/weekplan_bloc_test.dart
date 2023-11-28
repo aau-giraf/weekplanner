@@ -196,7 +196,6 @@ void main() {
     //Creates an markedactivity and addes it to a list with a listener.
     //The listener fires the expect function, expecting the lenght = 0.
     //Uses the clearMarkedactivities() function to remove activities.
-    // TODO actually add the activity to the list, including more than one act
     weekplanBloc.addMarkedActivity(ActivityModel(
         pictograms: <PictogramModel>[
           PictogramModel(
@@ -211,6 +210,7 @@ void main() {
         isChoiceBoard: null,
         order: null,
         state: null));
+
 
     weekplanBloc.markedActivities
         .skip(1)
