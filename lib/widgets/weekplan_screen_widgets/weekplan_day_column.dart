@@ -17,6 +17,7 @@ import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
 import '../../di.dart';
 import '../../routes.dart';
@@ -393,7 +394,6 @@ class WeekplanDayColumn extends StatelessWidget {
   FittedBox _pictogramIconStack(
       BuildContext context, int index, WeekdayModel weekday, bool inEditMode) {
     final ActivityModel currActivity = weekday.activities![index];
-
     final bool isMarked = weekplanBloc.isActivityMarked(currActivity);
 
     return FittedBox(
@@ -401,77 +401,133 @@ class WeekplanDayColumn extends StatelessWidget {
         alignment: AlignmentDirectional.center,
         children: <Widget>[
           StreamBuilder<WeekplanMode>(
-              stream: _authBloc.mode,
-              initialData: WeekplanMode.guardian,
-              builder: (BuildContext context,
-                  AsyncSnapshot<WeekplanMode> modeSnapshot) {
-                return StreamBuilder<SettingsModel?>(
-                    stream: _settingsBloc.settings,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<SettingsModel?> settingsSnapshot) {
-                      if (settingsSnapshot.hasData && modeSnapshot.hasData) {
-                        const double _width = 1;
-                        return SizedBox(
-                            width: MediaQuery.of(context).size.width / _width,
-                            child: Container(
-                              child: GestureDetector(
-                                key: Key(weekday.day!.index.toString() +
-                                    currActivity.id.toString()),
-                                onTap: () {
-                                  if (modeSnapshot.data ==
-                                          WeekplanMode.guardian ||
-                                      modeSnapshot.data ==
-                                          WeekplanMode.trustee) {
-                                    _handleOnTapActivity(
-                                        inEditMode,
-                                        isMarked,
-                                        false,
-                                        weekday.activities!,
-                                        index,
-                                        context,
-                                        weekday);
-                                  } else {
-                                    _handleOnTapActivity(
-                                        false,
-                                        false,
-                                        true,
-                                        weekday.activities!,
-                                        index,
-                                        context,
-                                        weekday);
-                                  }
-                                },
-                                child:
-                                    (modeSnapshot.data == WeekplanMode.guardian)
-                                        ? _buildIsMarked(isMarked, context,
-                                            weekday, weekday.activities!, index)
-                                        : _buildIsMarked(
-                                            false,
-                                            context,
-                                            weekday,
-                                            weekday.activities!,
-                                            index),
-                              ),
-                            ));
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    });
-              }),
+            stream: _authBloc.mode,
+            initialData: WeekplanMode.guardian,
+            builder: (BuildContext context,
+                AsyncSnapshot<WeekplanMode> modeSnapshot) {
+              return StreamBuilder<SettingsModel?>(
+                stream: _settingsBloc.settings,
+                builder: (BuildContext context,
+                    AsyncSnapshot<SettingsModel?> settingsSnapshot) {
+                  if (settingsSnapshot.hasData && modeSnapshot.hasData) {
+                    return Draggable<SettingsModel>(
+                      child: SizedBox(
+                        width: 600,
+                        height: 600,
+                        child: Container(
+                          child: GestureDetector(
+                            key: Key(weekday.day!.index.toString() +
+                                currActivity.id.toString()),
+                            onTap: () {
+                              if (modeSnapshot.data == WeekplanMode.guardian ||
+                                  modeSnapshot.data == WeekplanMode.trustee) {
+                                _handleOnTapActivity(
+                                  inEditMode,
+                                  isMarked,
+                                  false,
+                                  weekday.activities!,
+                                  index,
+                                  context,
+                                  weekday,
+                                );
+                              } else {
+                                _handleOnTapActivity(
+                                  false,
+                                  false,
+                                  true,
+                                  weekday.activities!,
+                                  index,
+                                  context,
+                                  weekday,
+                                );
+                              }
+                            },
+                            child: (modeSnapshot.data == WeekplanMode.guardian)
+                                ? _buildIsMarked(isMarked, context, weekday,
+                                weekday.activities!, index)
+                                : _buildIsMarked(false, context, weekday,
+                                weekday.activities!, index),
+                          ),
+                        ),
+                      ),
+                      feedback: SizedBox(
+                        width: 250,
+                        height: 250,
+                        child: Container(
+                          child: GestureDetector(
+                            key: Key(weekday.day!.index.toString() +
+                                currActivity.id.toString()),
+                            child: (modeSnapshot.data == WeekplanMode.guardian)
+                                ? _buildIsMarked(isMarked, context, weekday,
+                                weekday.activities!, index)
+                                : _buildIsMarked(false, context, weekday,
+                                weekday.activities!, index),
+                          ),
+                        ),
+                      ),
+                      feedbackOffset: const Offset(-5, -5),
+                      onDragEnd: (DraggableDetails details) {
+                        if (modeSnapshot.data == WeekplanMode.citizen ||
+                            modeSnapshot.data == WeekplanMode.trustee) {
+                          if (currActivity.state == ActivityState.Canceled ||
+                              currActivity.state == ActivityState.Completed) {
+                            weekplanBloc.addMarkedActivity(currActivity);
+                            showRemoveDialog(context);
+                          }
+                        } else {
+                          weekplanBloc.addMarkedActivity(currActivity);
+                          showRemoveDialog(context);
+                        }
+                      },
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              );
+            },
+          ),
         ],
       ),
     );
   }
 
-  void _handleActivity(
-      List<ActivityModel> activities, int index, WeekdayModel weekday) {
+  /// Show a verification popup before deleting the activity.
+  Future<void> showRemoveDialog(BuildContext context) async {
+    showDialog<Center>(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return GirafConfirmDialog(
+          key: UniqueKey(),
+          title: 'Slet aktiviteter',
+          description: 'Vil du slette ' +
+              weekplanBloc.getNumberOfMarkedActivities().toString() +
+              '${weekplanBloc.getNumberOfMarkedActivities() == 1 ?
+              ' aktivitet' : ' aktiviteter'}?',
+          confirmButtonText: 'Slet',
+          confirmButtonIcon:
+          const ImageIcon(AssetImage('assets/icons/delete.png')),
+          confirmOnPressed: () {
+            weekplanBloc.deleteMarkedActivities();
+            Routes().pop(context);
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _handleActivity(List<ActivityModel> activities, int index,
+      WeekdayModel weekday, BuildContext context) async {
     final ActivityModel activistModel = activities[index];
-    if (activistModel.state == ActivityState.Completed ||
-        (activistModel.timer != null && activistModel.timer!.paused == false)) {
+    // check if activity has finished, then reload the data
+    if (activistModel.state == ActivityState.Completed) {
+      weekplanBloc.loadWeek(user);
       return;
     }
+
     _activityBloc.load(activistModel, user);
     _activityBloc.accesWeekPlanBloc(weekplanBloc, weekday);
     _timerBloc[index].load(activistModel, user: user);
@@ -514,14 +570,15 @@ class WeekplanDayColumn extends StatelessWidget {
                 activities[index], _activityBloc, user);
           });
     } else if (isCitizen) {
-      _handleActivity(activities, index, weekday);
+      _handleActivity(activities, index, weekday, context);
+    } else if (isMarked) {
+      weekplanBloc.removeMarkedActivity(activities[index]);
     } else if (!inEditMode) {
       Routes()
           .push(
-              context,
-              ShowActivityScreen(activities[index], user, weekplanBloc,
-                  _timerBloc[index], weekday,
-                  key: UniqueKey()))
+          context,
+          ShowActivityScreen(activities[index], user, weekplanBloc,
+            _timerBloc[index], weekday, key: UniqueKey(),))
           .whenComplete(() {
         weekplanBloc.getWeekday(weekday.day!).catchError((Object error) {
           creatingNotifyDialog(error, context);

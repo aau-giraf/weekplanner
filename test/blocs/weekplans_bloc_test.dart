@@ -58,7 +58,7 @@ void main() {
   });
 
   when(() => weekApi.getNames('test')).thenAnswer((_) =>
-      rx_dart.BehaviorSubject<List<WeekNameModel>?>.seeded(weekNameModelList));
+      rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
   when(() => weekApi.get(
           'test', weekNameModel1.weekYear!, weekNameModel1.weekNumber!))

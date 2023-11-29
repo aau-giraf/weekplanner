@@ -8,7 +8,7 @@ import 'package:weekplanner/style/custom_color.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
 
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
-  GirafAppBar({Key? key, this.title, this.appBarIcons})
+  GirafAppBar({Key? key, this.title, this.appBarIcons, this.leading,})
       : toolbarBloc = di.get<ToolbarBloc>(),
         preferredSize = const Size.fromHeight(56.0),
         super(key: key);
@@ -19,7 +19,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   final Size preferredSize;
-
+  final Widget? leading; // Define a leading widget
   @override
   Widget build(BuildContext context) {
     toolbarBloc.updateIcons(appBarIcons, context);
@@ -31,6 +31,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(title ?? '',
           overflow: TextOverflow.clip,
           style: const TextStyle(color: GirafColors.black)),
+      leading: leading, // set the leading widget
       flexibleSpace: const GirafTitleHeader(),
       actions: <Widget>[
         StreamBuilder<List<IconButton>>(
