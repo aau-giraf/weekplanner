@@ -467,8 +467,10 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
       bloc.loadPictogramById(weekplan.thumbnail.id);
     }
 
+
     if (isMarked) {
-       /// _pushEditWeekPlan(context); //Det virker men man siden bliver mærkelig
+
+       _pushEditWeekPlan(context); //Det virker men siden bliver mærkelig
       return Container(
           decoration: BoxDecoration(
             border: Border.all(color: theme.GirafColors.black, width: 5),
@@ -487,6 +489,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
         current,
       );
     }
+
   }
 
   Widget _buildWeekplanCard(BuildContext context, WeekModel weekplan,
@@ -601,7 +604,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
     );
   }
 
-
+/*
   /// Builds the BottomAppBar when in edit mode
   BottomAppBar _buildBottomAppBar(BuildContext context) {
     return BottomAppBar(
@@ -649,7 +652,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
       ],
     ));
   }
-
+*/
 
 
   Future<void> _pushEditWeekPlan(BuildContext context) async {
@@ -675,12 +678,12 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
     if (markedCount < 1) {
       return;
     }
+
     await Routes().push<WeekModel>(
       context,
-      EditWeekPlanScreen(
+      NewWeekplanScreen(
         user: widget._user,
-        weekModel: widget._weekBloc.getMarkedWeekModels()[0],
-        selectorBloc: widget._weekBloc,
+        existingWeekPlans: widget._weekBloc.weekNameModels,
       ),
     ).then((WeekModel newWeek) {
       widget._weekBloc.load(widget._user, true);

@@ -14,6 +14,7 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -150,7 +151,7 @@ class WeekplanScreen extends StatelessWidget {
                               color: Colors.black,
                               icon: const Icon(Icons.create_outlined, size: 50),
                               onPressed: () {
-                                ///_pushEditWeekPlan(context); //Does not work yet
+                                Routes().push(context, NewWeekplanScreen());
                               },
                             ),
                           ),
