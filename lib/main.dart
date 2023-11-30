@@ -8,10 +8,22 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+import 'package:weekplanner/roles/roles.dart';
 
 final Api _api = di.get<Api>();
 
 void main() {
+  // Create different role strategies
+  var citizenStrategy = CitizenStrategy();
+  var trusteeStrategy = TrusteeStrategy();
+  var guardianStrategy = GuardianStrategy();
+  var superuserStrategy = SuperuserStrategy();
+
+  // Create user contexts with different roles
+  var citizen = UserContext(citizenStrategy);
+  var trustee = UserContext(trusteeStrategy);
+  var guardian = UserContext(guardianStrategy);
+  var superuser = UserContext(superuserStrategy);
   // Register all dependencies for injector
   Bootstrap().register();
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +33,7 @@ void main() {
    * Use the "environments.local.json" for running against your local web-api
    * For IOS users: change the SERVER_HOST in the environment.local file to "http://localhost:5000"
    */
-  environment.setFile('assets/environments.dev.json').whenComplete(() {
+  environment.setFile('assets/environments.local.json').whenComplete(() {
     _runApp();
   });
 }
