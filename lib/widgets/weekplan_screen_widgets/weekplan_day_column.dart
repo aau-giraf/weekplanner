@@ -393,6 +393,12 @@ class WeekplanDayColumn extends StatelessWidget {
   // Returning a widget that stacks a pictogram and an status icon
   FittedBox _pictogramIconStack(
       BuildContext context, int index, WeekdayModel weekday, bool inEditMode) {
+    if (weekday.activities == null || weekday.activities!.isEmpty) {
+      return const FittedBox(
+        child: SizedBox.shrink(),
+      );
+    }
+
     final ActivityModel currActivity = weekday.activities![index];
     final bool isMarked = weekplanBloc.isActivityMarked(currActivity);
 
@@ -410,7 +416,8 @@ class WeekplanDayColumn extends StatelessWidget {
                 builder: (BuildContext context,
                     AsyncSnapshot<SettingsModel?> settingsSnapshot) {
                   if (settingsSnapshot.hasData && modeSnapshot.hasData) {
-                    return Draggable<SettingsModel>(
+                    return Draggable<ActivityModel>(
+                      data: currActivity,
                       child: SizedBox(
                         width: 600,
                         height: 600,
