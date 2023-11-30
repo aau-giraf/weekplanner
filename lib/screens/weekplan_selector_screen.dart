@@ -127,20 +127,39 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                   ),
                   Container(
                     child: Column(children: <Widget>[
+
                       Align(
                         alignment: Alignment.topRight,
-                        child: IconButton(
-                          key: const Key('EditWeekplanSelctor'),
+                        child: Row(children: <Widget>[
+                        Stack(children: <Widget>[
+                          IconButton(
+                          key: const Key('MarkForEditWeekplanSelctor'),
                           padding: portrait
                               ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
-                              : const EdgeInsets.fromLTRB(0, 0, 40, 0),
+                              : const EdgeInsets.fromLTRB(930, 0, 40, 0),
                           color: Colors.black,
                           icon: const Icon(Icons.create_outlined, size: 50),
                           onPressed: () {
                             widget._weekBloc.toggleEditMode();
                           },
                         ),
+                          IconButton(
+                            key: const Key('EditWeekplanSelctor'),
+                            padding: portrait
+                                ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
+                                : const EdgeInsets.fromLTRB(850, 0, 40, 0),
+                            color: Colors.black,
+                            icon: const Icon(Icons.check, size: 50),
+                            onPressed: () {
+                              _pushEditWeekPlan(context);
+                            },
+                          ),
+                        ],
+                        ),
+                    ],
+                        ),
                     ),
+
                       Expanded(
                         flex: 5, child: _buildWeekplanGridview(context, weekModels, true)),
                       // Overstået Uger bar
@@ -469,8 +488,6 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
 
 
     if (isMarked) {
-
-       _pushEditWeekPlan(context); //Det virker men siden bliver mærkelig
       return Container(
           decoration: BoxDecoration(
             border: Border.all(color: theme.GirafColors.black, width: 5),
@@ -681,7 +698,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
 
     await Routes().push<WeekModel>(
       context,
-      NewWeekplanScreen(
+      NewWeekplanScreen( ///Når der laves en edit side til ugeplaner, skal den her skiftes ud med edit siden
         user: widget._user,
         existingWeekPlans: widget._weekBloc.weekNameModels,
       ),
