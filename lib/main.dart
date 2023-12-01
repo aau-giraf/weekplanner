@@ -4,26 +4,32 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/bootstrap.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
+import 'package:weekplanner/roles/citizen_strategy.dart';
+import 'package:weekplanner/roles/guardian_strategy.dart';
+import 'package:weekplanner/roles/roles.dart';
+import 'package:weekplanner/roles/superuser_strategy.dart';
+import 'package:weekplanner/roles/trustee_strategy.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
-import 'package:weekplanner/roles/roles.dart';
+
 
 final Api _api = di.get<Api>();
 
 void main() {
-  // Create different role strategies
+  /// Create different role strategies
   var citizenStrategy = CitizenStrategy();
   var trusteeStrategy = TrusteeStrategy();
   var guardianStrategy = GuardianStrategy();
   var superuserStrategy = SuperuserStrategy();
 
-  // Create user contexts with different roles
-  var citizen = UserContext(citizenStrategy);
-  var trustee = UserContext(trusteeStrategy);
-  var guardian = UserContext(guardianStrategy);
-  var superuser = UserContext(superuserStrategy);
+  ///Create context for each strategies
+  var user = UserContext<CitizenStrategy>(citizenStrategy);
+  var trustee = UserContext<TrusteeStrategy>(trusteeStrategy);
+  var guardian = UserContext<GuardianStrategy>(guardianStrategy);
+  var superuser = UserContext<SuperuserStrategy>(superuserStrategy);
+
   // Register all dependencies for injector
   Bootstrap().register();
   WidgetsFlutterBinding.ensureInitialized();
