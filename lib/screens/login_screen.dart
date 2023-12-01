@@ -319,9 +319,9 @@ class LoginScreenState extends State<LoginScreen> {
                                       color: theme.GirafColors.white),
                                   padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
                                   child: TextField(
-                                    key: const Key('UsernameKey'),
+                                    key: const Key('PasswordKey'),
                                     style: const TextStyle(fontSize: GirafFont.large),
-                                    controller: usernameCtrl,
+                                    controller: passwordCtrl,
                                     keyboardType: TextInputType.text,
                                     // Use email input type for emails.
                                     decoration: const InputDecoration.collapsed(
