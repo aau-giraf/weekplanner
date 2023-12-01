@@ -73,7 +73,7 @@ class ProfileScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: const [
                               Text(
-                                'Profil',
+                                'Profil - concept page',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -94,7 +94,7 @@ class ProfileScreen extends StatelessWidget {
                                 key: const Key('EditUser'),
                                 padding: portrait
                                     ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
-                                    : const EdgeInsets.fromLTRB(700, 0, 40, 0),
+                                    : const EdgeInsets.fromLTRB(310, 0, 40, 0),
                                 color: Colors.black,
                                 icon: const Icon(Icons.create_outlined, size: 50),
                                 onPressed: () {
