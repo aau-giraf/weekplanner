@@ -5,22 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/copy_resolve_screen.dart';
 import 'package:weekplanner/screens/copy_to_citizens_screen.dart';
-import 'package:weekplanner/screens/edit_weekplan_screen.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
-import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/style/font_size.dart';
-import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
-import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
-import 'package:weekplanner/widgets/input_fields_weekplan.dart';
+
 
 import '../style/custom_color.dart' as theme;
 
@@ -31,7 +25,16 @@ class WeekplanSelectorScreen extends StatefulWidget {
   WeekplanSelectorScreen(this._user)
       : _weekBloc = di.get<WeekplansBloc>() {
     _weekBloc.load(_user, true);
+
   }
+
+  ///Variable representing the screen height
+  dynamic screenHeight;
+
+  ///Variable representing the screen width
+  dynamic screenWidth;
+
+
 
   final WeekplansBloc _weekBloc;
   final DisplayNameModel _user;
@@ -59,6 +62,9 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
     final Stream<List<WeekModel>> weekModels = widget._weekBloc.weekModels;
     final Stream<List<WeekModel>> oldWeekModels =
         widget._weekBloc.oldWeekModels;
+
+    widget.screenHeight = MediaQuery.of(context).size.height;
+    widget.screenWidth = MediaQuery.of(context).size.width;
 
     /// screen background
     return Scaffold(
@@ -127,38 +133,45 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                   ),
                   Container(
                     child: Column(children: <Widget>[
-
                       Align(
                         alignment: Alignment.topRight,
-                        child: Row(children: <Widget>[
-                        Stack(children: <Widget>[
-                          IconButton(
-                          key: const Key('MarkForEditWeekplanSelctor'),
-                          padding: portrait
-                              ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
-                              : const EdgeInsets.fromLTRB(930, 0, 40, 0),
-                          color: Colors.black,
-                          icon: const Icon(Icons.create_outlined, size: 50),
-                          onPressed: () {
-                            widget._weekBloc.toggleEditMode();
-                          },
+                        child: Row(
+                          children: <Widget>[
+                            Stack(
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(widget.screenWidth * 0.73, 0, 0, 0),
+                                  child: IconButton(
+                                    key: const Key('MarkForEditWeekplanSelctor'),
+                                    padding: portrait
+                                        ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
+                                        : const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    color: Colors.black,
+                                    icon: const Icon(Icons.create_outlined, size: 50),
+                                    onPressed: () {
+                                      widget._weekBloc.toggleEditMode(); // <-- Doesn't work.
+                                    },
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(widget.screenWidth * 0.68, 0, 0, 0),
+                                  child: IconButton(
+                                    key: const Key('EditWeekplanSelctor'),
+                                    padding: portrait
+                                        ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
+                                        : const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    color: Colors.black,
+                                    icon: const Icon(Icons.check, size: 50),
+                                    onPressed: () {
+                                      _pushEditWeekPlan(context);
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                          IconButton(
-                            key: const Key('EditWeekplanSelctor'),
-                            padding: portrait
-                                ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
-                                : const EdgeInsets.fromLTRB(850, 0, 40, 0),
-                            color: Colors.black,
-                            icon: const Icon(Icons.check, size: 50),
-                            onPressed: () {
-                              _pushEditWeekPlan(context);
-                            },
-                          ),
-                        ],
-                        ),
-                    ],
-                        ),
-                    ),
+                      ),
 
                       Expanded(
                         flex: 5, child: _buildWeekplanGridview(context, weekModels, true)),

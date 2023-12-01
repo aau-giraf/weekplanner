@@ -21,6 +21,12 @@ import 'package:weekplanner/widgets/input_fields_weekplan.dart';
 class ChooseCitizenScreen extends StatefulWidget {
   @override
   _ChooseCitizenScreenState createState() => _ChooseCitizenScreenState();
+
+  ///Variable representing the screen height
+  dynamic screenHeight;
+
+  ///Variable representing the screen width
+  dynamic screenWidth;
 }
 
 class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
@@ -30,8 +36,11 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    final bool portrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
+    final bool portrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+    widget.screenHeight = MediaQuery.of(context).size.height;
+    widget.screenWidth = MediaQuery.of(context).size.width;
+
 
     /// screen background
     return Scaffold(
@@ -103,6 +112,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
                       ),
                     ),
                     Container(
+                      padding: EdgeInsets.fromLTRB(widget.screenHeight * 0.78, 0, 0, 0),
                       child: Column(children: <Widget>[
                         Align(
                           alignment: Alignment.topRight,
@@ -110,7 +120,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
                             key: const Key('EditUser'),
                             padding: portrait
                                 ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
-                                : const EdgeInsets.fromLTRB(650, 0, 40, 0),
+                                : const EdgeInsets.fromLTRB(0, 0, 0, 0),
                             color: Colors.black,
                             icon: const Icon(Icons.delete, size: 50),
                             onPressed: () {
