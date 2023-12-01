@@ -45,7 +45,7 @@ class _PictogramLoginState extends LoginScreenState {
       height: screenSize.height,
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/login_screen_background_image.png'),
+          image: AssetImage('assets/icons/giraf_orange_long.png'),
           fit: BoxFit.cover,
         ),
       ),

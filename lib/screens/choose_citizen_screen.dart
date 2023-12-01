@@ -112,7 +112,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
                                 ? const EdgeInsets.fromLTRB(0, 0, 0, 0)
                                 : const EdgeInsets.fromLTRB(650, 0, 40, 0),
                             color: Colors.black,
-                            icon: const Icon(Icons.create_outlined, size: 50),
+                            icon: const Icon(Icons.delete, size: 50),
                             onPressed: () {
                               ///_pushEditWeekPlan(context); //Does not work yet
                             },

@@ -94,7 +94,7 @@ class PictogramInputFieldState extends State<PictogramInputField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey,
+      // color: Colors.grey,
       width: MediaQuery.of(context).size.width,
       height: 120,
       key: const Key('InputPasswordContainer'),
