@@ -56,6 +56,7 @@ class InputNavigatoinMenuState extends State<InputNavigatoinMenu> {
                 ],
               ),
             ),
+          ),
         ],
       ),
       drawer: Drawer(
