@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/widgets/giraf_drawer.dart';
 import 'package:weekplanner/widgets/input_fields_weekplan.dart';
 import 'package:weekplanner/widgets/navigation_menu.dart';
 // ignore: public_member_api_docs
@@ -35,8 +36,7 @@ class NewWeekplanScreen extends StatelessWidget {
         children: [
           Expanded(
             flex: 1,
-            child: InputNavigatoinMenu(
-            ),
+            child: InputNavigationMenu(),
           ),
           Expanded(
             flex: 7,
@@ -158,7 +158,7 @@ class NewWeekplanScreen extends StatelessWidget {
           ),
         ],
       ),
-
+      drawer: GirafDrawer(),
     );
   }
 }

@@ -20,7 +20,9 @@ import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
+import 'package:weekplanner/widgets/giraf_drawer.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+import 'package:weekplanner/widgets/navigation_menu.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_activities_column.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
 import 'package:weekplanner/style/font_size.dart';
@@ -64,41 +66,7 @@ class WeekplanScreen extends StatelessWidget {
             /// The blue left part of screen
             Expanded(
               flex: 1,
-              child: Container(
-
-                child: Stack(children: <Widget>[
-
-                  Image.asset(
-                    'assets/icons/giraf_blue_long.png',
-                    repeat: ImageRepeat.repeat,
-                    height: screenSize.height,
-                    fit: BoxFit.cover,
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(50.0),
-                    child: Column(children: <Widget>[
-                      Align(
-                        alignment: Alignment.center,
-                        child: Builder(
-                            builder: (BuildContext context) {
-                              return IconButton(
-                                key: Key('NavigationMenu'),
-                                padding: EdgeInsets.all(0.0),
-                                color: Colors.white,
-                                icon: Icon(Icons.menu, size: 55),
-                                onPressed: () {
-                                  Scaffold.of(context).openDrawer();
-                                },
-                              );
-                            }
-                        ),
-                      ),
-                    ],
-                    ),
-                  ),
-                ],
-                ),
-              ),
+              child: InputNavigationMenu(),
             ),
             /// The white middle of the screen
             Expanded(
@@ -198,44 +166,7 @@ class WeekplanScreen extends StatelessWidget {
             ),
           ]
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text('Ugeplaner'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('Profil'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/profil');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('Skift bruger'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/skift bruger');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.exit_to_app),
-              title: const Text('Log af'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/log af');
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: GirafDrawer(),
     );
   }
 
