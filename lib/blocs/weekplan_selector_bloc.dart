@@ -67,6 +67,24 @@ class WeekplansBloc extends BlocBase {
     _api.week.getNames(_user.id!).listen(_weekNameModelsList.add);
   }
 
+  /// List stores weekModels
+  final List<WeekModel> currentData = <WeekModel>[];
+
+  /// Method handles adding weekModels to _weekModel stream
+  void addWeekModels(List<WeekModel> weekModel) {
+    currentData.addAll(weekModel);
+    _weekModel.add(currentData);
+  }
+
+  /// List stores old weekModels
+  final List<WeekModel> oldCurrentData = <WeekModel>[];
+
+  /// Method handles adding weekModels to _oldWeekModel stream
+  void addOldWeekModels(List<WeekModel> weekModel) {
+    oldCurrentData.addAll(weekModel);
+    _oldWeekModel.add(oldCurrentData);
+  }
+
   /// Gets all the information for a [Weekmodel].
   /// [weekPlanNames] parameter contains all the information
   /// needed for getting all [WeekModel]'s.

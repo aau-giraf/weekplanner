@@ -23,17 +23,17 @@ void main() {
 
   final List<WeekNameModel> weekNameModelList = <WeekNameModel>[];
   final WeekNameModel weekNameModel1 =
-      WeekNameModel(name: 'name', weekNumber: 8, weekYear: 2020);
+  WeekNameModel(name: 'name', weekNumber: 8, weekYear: 2020);
   final WeekNameModel weekNameModel2 =
-      WeekNameModel(name: 'name', weekNumber: 3, weekYear: 2021);
+  WeekNameModel(name: 'name', weekNumber: 3, weekYear: 2021);
   final WeekNameModel weekNameModel3 =
-      WeekNameModel(name: 'name', weekNumber: 28, weekYear: 2020);
+  WeekNameModel(name: 'name', weekNumber: 28, weekYear: 2020);
   final WeekNameModel weekNameModel4 =
-      WeekNameModel(name: 'name', weekNumber: 3, weekYear: 2020);
+  WeekNameModel(name: 'name', weekNumber: 3, weekYear: 2020);
   final WeekNameModel weekNameModel5 =
-      WeekNameModel(name: 'name', weekNumber: 50, weekYear: 2019);
+  WeekNameModel(name: 'name', weekNumber: 50, weekYear: 2019);
   final WeekNameModel weekNameModel6 =
-      WeekNameModel(name: 'name', weekNumber: 8, weekYear: 9999);
+  WeekNameModel(name: 'name', weekNumber: 8, weekYear: 9999);
   final List<WeekModel> weekModelList = <WeekModel>[];
   final WeekModel weekModel1 = WeekModel(weekNumber: 8, weekYear: 2020);
   final WeekModel weekModel2 = WeekModel(weekNumber: 3, weekYear: 2021);
@@ -42,7 +42,7 @@ void main() {
   final WeekModel weekModel5 = WeekModel(weekNumber: 50, weekYear: 2019);
   final WeekModel weekModel6 = WeekModel(weekNumber: 8, weekYear: 9999);
   final DisplayNameModel mockUser =
-      DisplayNameModel(displayName: 'test', id: 'test', role: 'test');
+  DisplayNameModel(displayName: 'test', id: 'test', role: 'test');
 
   setUp(() {
     api = Api('any');
@@ -58,30 +58,30 @@ void main() {
   });
 
   when(() => weekApi.getNames('test')).thenAnswer((_) =>
-      rx_dart.BehaviorSubject<List<WeekNameModel>?>.seeded(weekNameModelList));
+  rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
   when(() => weekApi.get(
-          'test', weekNameModel1.weekYear!, weekNameModel1.weekNumber!))
+      'test', weekNameModel1.weekYear!, weekNameModel1.weekNumber!))
       .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
 
   when(() => weekApi.get(
-          'test', weekNameModel2.weekYear!, weekNameModel2.weekNumber!))
+      'test', weekNameModel2.weekYear!, weekNameModel2.weekNumber!))
       .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel2));
 
   when(() => weekApi.get(
-          'test', weekNameModel3.weekYear!, weekNameModel3.weekNumber!))
+      'test', weekNameModel3.weekYear!, weekNameModel3.weekNumber!))
       .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel3));
 
   when(() => weekApi.get(
-          'test', weekNameModel4.weekYear!, weekNameModel4.weekNumber!))
+      'test', weekNameModel4.weekYear!, weekNameModel4.weekNumber!))
       .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel4));
 
   when(() => weekApi.get(
-          'test', weekNameModel5.weekYear!, weekNameModel5.weekNumber!))
+      'test', weekNameModel5.weekYear!, weekNameModel5.weekNumber!))
       .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel5));
 
   when(() => weekApi.get(
-          'test', weekNameModel6.weekYear!, weekNameModel6.weekNumber!))
+      'test', weekNameModel6.weekYear!, weekNameModel6.weekNumber!))
       .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel6));
 
   when(() => weekApi.delete(any(), any(), any()))
@@ -89,12 +89,12 @@ void main() {
 
   test('Should be able to load weekplans for a user', async((DoneFn done) {
     when(() => weekApi.get(
-            mockUser.id!, weekNameModel1.weekYear!, weekNameModel1.weekNumber!))
+        mockUser.id!, weekNameModel1.weekYear!, weekNameModel1.weekNumber!))
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
 
     when(() => weekApi.getNames(mockUser.id!)).thenAnswer((_) =>
-        rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
+    rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
     bloc.weekNameModels.listen((List<WeekNameModel>? response) {
       expect(response, isNotNull);
@@ -134,20 +134,20 @@ void main() {
 
   test('Removes a weekmodel from the list of marked weekmodels',
       async((DoneFn done) {
-    // Add the weekmodel to list of marked weekmodels
-    bloc.toggleMarkedWeekModel(weekModel1);
-    expect(bloc.getNumberOfMarkedWeekModels(), 1);
+        // Add the weekmodel to list of marked weekmodels
+        bloc.toggleMarkedWeekModel(weekModel1);
+        expect(bloc.getNumberOfMarkedWeekModels(), 1);
 
-    bloc.markedWeekModels
-        .skip(1)
-        .listen((List<WeekModel> markedWeekModelsList) {
-      expect(markedWeekModelsList.length, 0);
-      done();
-    });
+        bloc.markedWeekModels
+            .skip(1)
+            .listen((List<WeekModel> markedWeekModelsList) {
+          expect(markedWeekModelsList.length, 0);
+          done();
+        });
 
-    // Remove the weekmodel from the list of marked weekmodels.
-    bloc.toggleMarkedWeekModel(weekModel1);
-  }));
+        // Remove the weekmodel from the list of marked weekmodels.
+        bloc.toggleMarkedWeekModel(weekModel1);
+      }));
 
   test('Clear the list of marked weekmodels', async((DoneFn done) {
     // Add the weekmodel to list of marked weekmodels
@@ -186,79 +186,79 @@ void main() {
 
   test('Checks if the number of marked weekmodels matches',
       async((DoneFn done) {
-    bloc.toggleMarkedWeekModel(weekModel1);
-    expect(bloc.getNumberOfMarkedWeekModels(), 1);
+        bloc.toggleMarkedWeekModel(weekModel1);
+        expect(bloc.getNumberOfMarkedWeekModels(), 1);
 
-    bloc.toggleMarkedWeekModel(WeekModel(name: 'testWeekModel'));
-    expect(bloc.getNumberOfMarkedWeekModels(), 2);
+        bloc.toggleMarkedWeekModel(WeekModel(name: 'testWeekModel'));
+        expect(bloc.getNumberOfMarkedWeekModels(), 2);
 
-    bloc.toggleMarkedWeekModel(weekModel1);
-    expect(bloc.getNumberOfMarkedWeekModels(), 1);
-    done();
-  }));
+        bloc.toggleMarkedWeekModel(weekModel1);
+        expect(bloc.getNumberOfMarkedWeekModels(), 1);
+        done();
+      }));
 
   test('Checks if the marked weekmodels are deleted from the weekmodels',
       async((DoneFn done) {
-    final List<WeekNameModel> weekNameModelList = <WeekNameModel>[
-      weekNameModel1
-    ];
-    when(() => weekApi.get(
+        final List<WeekNameModel> weekNameModelList = <WeekNameModel>[
+          weekNameModel1
+        ];
+        when(() => weekApi.get(
             mockUser.id!, weekNameModel1.weekYear!, weekNameModel1.weekNumber!))
-        .thenAnswer(
-            (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
+            .thenAnswer(
+                (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
 
-    when(() => weekApi.getNames(mockUser.id!)).thenAnswer((_) =>
+        when(() => weekApi.getNames(mockUser.id!)).thenAnswer((_) =>
         rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
-    bloc.load(mockUser);
-    bloc.toggleMarkedWeekModel(weekModel1);
-    expect(bloc.getNumberOfMarkedWeekModels(), 1);
+        bloc.load(mockUser);
+        bloc.toggleMarkedWeekModel(weekModel1);
+        expect(bloc.getNumberOfMarkedWeekModels(), 1);
 
-    int count = 0;
-    bloc.weekModels.listen((List<WeekModel> userWeekModels) {
-      if (count == 0) {
-        bloc.deleteMarkedWeekModels();
-        count++;
-      } else {
-        expect(userWeekModels.contains(weekModel1), false);
-        expect(userWeekModels.length, 0);
-        expect(bloc.getNumberOfMarkedWeekModels(), 0);
-      }
-    });
+        int count = 0;
+        bloc.weekModels.listen((List<WeekModel> userWeekModels) {
+          if (count == 0) {
+            bloc.deleteMarkedWeekModels();
+            count++;
+          } else {
+            expect(userWeekModels.contains(weekModel1), false);
+            expect(userWeekModels.length, 0);
+            expect(bloc.getNumberOfMarkedWeekModels(), 0);
+          }
+        });
 
-    done();
-  }));
+        done();
+      }));
 
   test('check deletion of new weekplan without oldWeekPlan',
       async((DoneFn done) {
-    final List<WeekNameModel> weekNameModelList = <WeekNameModel>[
-      weekNameModel6
-    ];
-    when(() => weekApi.get(
+        final List<WeekNameModel> weekNameModelList = <WeekNameModel>[
+          weekNameModel6
+        ];
+        when(() => weekApi.get(
             mockUser.id!, weekNameModel6.weekYear!, weekNameModel6.weekNumber!))
-        .thenAnswer(
-            (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel6));
+            .thenAnswer(
+                (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel6));
 
-    when(() => weekApi.getNames(mockUser.id!)).thenAnswer((_) =>
+        when(() => weekApi.getNames(mockUser.id!)).thenAnswer((_) =>
         rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
-    bloc.load(mockUser);
-    bloc.toggleMarkedWeekModel(weekModel6);
-    expect(bloc.getNumberOfMarkedWeekModels(), 1);
+        bloc.load(mockUser);
+        bloc.toggleMarkedWeekModel(weekModel6);
+        expect(bloc.getNumberOfMarkedWeekModels(), 1);
 
-    int count = 0;
-    bloc.weekModels.listen((List<WeekModel> userWeekModels) {
-      if (count == 0) {
-        count++;
-      } else {
-        expect(userWeekModels.contains(weekModel6), false);
-        expect(userWeekModels.length, 0);
-        expect(bloc.getNumberOfMarkedWeekModels(), 0);
-      }
-    });
+        int count = 0;
+        bloc.weekModels.listen((List<WeekModel> userWeekModels) {
+          if (count == 0) {
+            count++;
+          } else {
+            expect(userWeekModels.contains(weekModel6), false);
+            expect(userWeekModels.length, 0);
+            expect(bloc.getNumberOfMarkedWeekModels(), 0);
+          }
+        });
 
-    done();
-  }));
+        done();
+      }));
 
   test('Checks if the edit mode toggles from true', async((DoneFn done) {
     /// Edit mode stream initial value is false.
@@ -272,37 +272,92 @@ void main() {
     bloc.toggleEditMode();
   }));
 
-  //test('Check if the week models are sorted by date', async((DoneFn done)
-  // async
-  //{
-  //  final List<WeekModel> correctListOld = <WeekModel>[
-  //    weekModel1, weekModel4, weekModel5
-  //  ];
-  //  final List<WeekModel> correctListUpcoming = <WeekModel>[
-  //    weekModel3, weekModel2
-  //  ];
-//
-  //  weekNameModelList.add(weekNameModel2);
-  //  weekNameModelList.add(weekNameModel3);
-  //  weekNameModelList.add(weekNameModel4);
-  //  weekNameModelList.add(weekNameModel5);
-//
-  //  weekModelList.add(weekModel2);
-  //  weekModelList.add(weekModel3);
-  //  weekModelList.add(weekModel4);
-  //  weekModelList.add(weekModel5);
-//
-  //  bloc.load(DisplayNameModel(displayName: 'test', role: 'test',
-  //  id: 'test'));
-//
-  //  bloc.oldWeekModels.listen((List<WeekModel>oldWeekModels) {
-  //    expect(correctListOld, oldWeekModels);
-  //  });
-  //  bloc.weekModels.listen((List<WeekModel>weekModels) {
-  //    expect(correctListUpcoming, weekModels);
-  //  });
-  //  done();
-  //}));
+  /// Method adds weekModel to the _weekModel stream
+  void addWeekModel(WeekModel weekModel) {
+    bloc.addWeekModels(<WeekModel>[weekModel]);
+  }
+
+  /// Method adds weekModel to the _oldWeekModel stream
+  void addOldWeekModel(WeekModel weekModel) {
+    bloc.addOldWeekModels(<WeekModel>[weekModel]);
+  }
+
+  /// Method to handle adding a weekModel
+  void handleAddWeekModels(WeekModel weekModel) {
+    // If weekModel is in weekModelList, add weekModel to _oldWeekModel stream
+    if (weekModelList.contains(weekModel)) {
+      addOldWeekModel(weekModel);
+    } else {
+      // If weekModel is not in weekModelList, add weekModel to _weekModel stream
+      addWeekModel(weekModel);
+    }
+  }
+
+  test('Check if the week models are sorted by date',
+      async((DoneFn done) async {
+        final List<WeekModel> correctListOld = <WeekModel>[
+          weekModel1,
+          weekModel4,
+          weekModel5
+        ];
+        final List<WeekModel> correctListUpcoming = <WeekModel>[
+          weekModel2,
+          weekModel3,
+        ];
+
+        weekModelList.add(weekModel4);
+        weekModelList.add(weekModel5);
+
+        handleAddWeekModels(weekModel1);
+        handleAddWeekModels(weekModel2);
+        handleAddWeekModels(weekModel3);
+        handleAddWeekModels(weekModel4);
+        handleAddWeekModels(weekModel5);
+
+        // Check upcoming List
+        bloc.weekModels.listen((List<WeekModel> weekModels) {
+          expect(correctListUpcoming, weekModels);
+        });
+
+        // Check old List
+        bloc.oldWeekModels.listen((List<WeekModel> oldWeekModels) {
+          expect(correctListOld, oldWeekModels);
+        });
+
+        done();
+      }));
+
+  /// test addWeekModel method added to this class
+  test('addWeekModel adds a weekModel to the _weekModel stream',
+      async((DoneFn done) async {
+        final WeekModel weekModel1 = WeekModel();
+        final WeekModel weekModel2 = WeekModel();
+
+        addWeekModel(weekModel1);
+        addWeekModel(weekModel2);
+
+        bloc.weekModels.listen((List<WeekModel> weekModels) {
+          expect(weekModels, contains(weekModel1));
+          expect(weekModels, contains(weekModel2));
+          done();
+        });
+      }));
+
+  /// test addOldWeekModel method added to this class
+  test('addOldWeekModel adds a weekModel to the _oldWeekModel stream',
+      async((DoneFn done) async {
+        final WeekModel weekModel3 = WeekModel();
+        final WeekModel weekModel4 = WeekModel();
+
+        addOldWeekModel(weekModel3);
+        addOldWeekModel(weekModel4);
+
+        bloc.oldWeekModels.listen((List<WeekModel> oldWeekModels) {
+          expect(oldWeekModels, contains(weekModel3));
+          expect(oldWeekModels, contains(weekModel4));
+          done();
+        });
+      }));
 
   test('Test marked week models', async((DoneFn done) {
     final List<WeekModel> correctMarked = <WeekModel>[
@@ -431,7 +486,7 @@ void main() {
 
     test(
         'Check if the correct week number is returned '
-        'from list of dates', async((DoneFn done) {
+            'from list of dates', async((DoneFn done) {
       // Because GitHub CI is stupid
       File file = File('${Directory.current.path}/blocs/'
           'Dates_with_weeks_2020_to_2030_semi.csv');
@@ -471,37 +526,37 @@ void main() {
     }));
   });
 
-  // test('Weekplans should be split into old and upcoming',
-  // async((DoneFn done){
-  //  weekNameModelList.add(weekNameModel2);
-  //  weekNameModelList.add(weekNameModel3);
-  //  weekNameModelList.add(weekNameModel4);
-  //  weekNameModelList.add(weekNameModel5);
-  //
-  //  weekModelList.add(weekModel2);
-  //  weekModelList.add(weekModel3);
-  //  weekModelList.add(weekModel4);
-  //  weekModelList.add(weekModel5);
-  //
-  //  bloc.load(DisplayNameModel(displayName: 'test', role: 'test',
-  //  id: 'test'));
-  //
-  //  bloc.oldWeekModels.listen((List<WeekModel>oldWeekModels) {
-  //    expect(oldWeekModels.contains(weekModel1), true);
-  //    expect(oldWeekModels.contains(weekModel2), false);
-  //    expect(oldWeekModels.contains(weekModel3), false);
-  //    expect(oldWeekModels.contains(weekModel4), true);
-  //    expect(oldWeekModels.contains(weekModel5), true);
-  //  });
-  //
-  //  bloc.weekModels.listen((List<WeekModel>weekModels) {
-  //    expect(weekModels.contains(weekModel1), false);
-  //    expect(weekModels.contains(weekModel2), true);
-  //    expect(weekModels.contains(weekModel3), true);
-  //    expect(weekModels.contains(weekModel4), false);
-  //    expect(weekModels.contains(weekModel5), false);
-  //  });
-  //
-  //  done();
-  // }));
+  test('Weekplans should be split into old and upcoming', async((DoneFn done) {
+    weekModelList.clear();
+    weekModelList.add(weekModel2);
+    weekModelList.add(weekModel3);
+
+    weekNameModelList.clear();
+    handleAddWeekModels(weekModel1);
+    handleAddWeekModels(weekModel2);
+    handleAddWeekModels(weekModel3);
+    handleAddWeekModels(weekModel4);
+    handleAddWeekModels(weekModel5);
+
+    // Check upcoming List
+    bloc.weekModels.listen((List<WeekModel> listUpcoming) {
+      expect(listUpcoming.contains(weekModel1), true);
+      expect(listUpcoming.contains(weekModel2), false);
+      expect(listUpcoming.contains(weekModel3), false);
+      expect(listUpcoming.contains(weekModel4), true);
+      expect(listUpcoming.contains(weekModel5), true);
+    });
+
+    // Check old List
+    bloc.oldWeekModels.listen((List<WeekModel> oldWeekModels) {
+      expect(oldWeekModels.contains(weekModel1), false);
+      expect(oldWeekModels.contains(weekModel2), true);
+      expect(oldWeekModels.contains(weekModel3), true);
+      expect(oldWeekModels.contains(weekModel4), false);
+      expect(oldWeekModels.contains(weekModel5), false);
+    });
+
+    done();
+  }));
+
 }
