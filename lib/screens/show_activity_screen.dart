@@ -6,6 +6,7 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -26,6 +27,8 @@ import 'package:weekplanner/widgets/giraf_activity_time_picker_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import 'package:weekplanner/widgets/giraf_drawer.dart';
+import 'package:weekplanner/widgets/navigation_menu.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
 import 'package:weekplanner/widgets/timer_widgets/timer_countdown.dart';
 import 'package:weekplanner/widgets/timer_widgets/timer_hourglass.dart';
@@ -64,6 +67,8 @@ class ShowActivityScreen extends StatelessWidget {
   final WeekplanBloc _weekplanBloc;
   final WeekdayModel _weekday;
 
+  final TextStyle _style = const TextStyle(fontSize: GirafFont.small);
+
   /// Textfield controller
   final TextEditingController tec = TextEditingController();
 
@@ -90,37 +95,172 @@ class ShowActivityScreen extends StatelessWidget {
   /// depending on the orientation of the device.
   Scaffold buildScreenFromOrientation(
       Orientation orientation, BuildContext context, WeekplanMode mode) {
-    Widget childContainer;
 
-    try {
-      if (orientation == Orientation.portrait) {
-        childContainer = Column(
-          children: buildScreen(context, mode),
-        );
-      } else if (orientation == Orientation.landscape) {
-        childContainer = Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: buildScreen(context, mode),
-        );
-      }
-    } catch (err) {
-      throw OrientationException(
-          'Something is wrong with the screen orientation'
-          '\n Error: ',
-          err.toString());
-    }
+    final Size screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: GirafAppBar(
-          title: 'Aktivitet',
-          appBarIcons: (mode == WeekplanMode.guardian)
-              ? <AppBarIcon, VoidCallback>{AppBarIcon.changeToCitizen: () {}}
-              : <AppBarIcon, VoidCallback>{AppBarIcon.changeToGuardian: () {}},
+        body: Row(
+          children: <Widget>[
+            Expanded(
+                flex: 1,
+                child: InputNavigationMenu(),
+            ),
+            Expanded(
+              flex: 5,
+              child: ListView(
+                children: <Widget>[
+                  AppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    leading: IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.black),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    title: const Text(
+                      'Title',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 50.0,
+                      ),
+                    ),
+                  ),
+                  _startInputField(),
+                  _endInputField(),
+                  Container(
+                   height: 350,
+                   child: _buildActivity(context),
+                  ),
+                  Container(
+                    height: 400,
+                    child: _buildChoiceBoardButton(context),
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Stack(
+                children: [
+                  Container(
+                    height: screenSize.height,
+                    child: Image.asset(
+                      'assets/icons/giraf_blue_long.png',
+                      repeat: ImageRepeat.repeat,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    child: Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(color: Colors.black, width: 2.0),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: IconButton(
+                                key: const Key('CheckIcon'),
+                                padding: const EdgeInsets.all(0.0),
+                                color: Colors.black, // Icon color
+                                icon: const Icon(Icons.check, size: 60),
+                                onPressed: () async {
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 30),
+                            Container(
+                              padding: const EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(color: Colors.black, width: 2.0),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: IconButton(
+                                key: const Key('CloseIcon'),
+                                padding: const EdgeInsets.all(0.0),
+                                color: Colors.black, // Icon color
+                                icon: const Icon(Icons.close, size: 60),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ),
+                          ],
+                        )
+                    ),
+                  ),
+                ],
+              )
+            ),
+          ],
         ),
-        body: childContainer);
+      drawer: GirafDrawer(),
+    );
   }
 
-  /// Builds the activity.
+  Widget _startInputField() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 40, 10, 20),
+      child: StreamBuilder<ActivityModel>(
+          stream: _activityBloc.activityModelStream,
+          builder: (BuildContext context, AsyncSnapshot<ActivityModel> snapshot) {
+            return TextFormField(
+              key: const Key('StartTextFieldKey'),
+              //onChanged: _activityBloc.onTitleChanged.add,
+              initialValue:
+              _activity == null || _activity.timer == null ? '' : _activity.timer.startTime.hour,
+              keyboardType: TextInputType.number,
+              // To avoid emojis and other special characters
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(
+                    RegExp('[ -~\u00C0-\u00FF]'))
+              ],
+              style: _style,
+              decoration: InputDecoration(
+                  labelText: 'Start tid',
+                  errorText:
+                  (snapshot?.data == null) ? null : 'Start tid skal angives',
+                  border: const OutlineInputBorder(borderSide: BorderSide())),
+            );
+          }));
+  }
+
+  Widget _endInputField() {
+    return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+        child: StreamBuilder<ActivityModel>(
+            stream: _activityBloc.activityModelStream,
+            builder: (BuildContext context, AsyncSnapshot<ActivityModel> snapshot) {
+              return TextFormField(
+                key: const Key('EndTextFieldKey'),
+                //onChanged: _activityBloc.onTitleChanged.add,
+                initialValue:
+                _activity == null || _activity.timer == null ? '' : _activity.timer.fullLength,
+                keyboardType: TextInputType.number,
+                // To avoid emojis and other special characters
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(
+                      RegExp('[ -~\u00C0-\u00FF]'))
+                ],
+                style: _style,
+                decoration: InputDecoration(
+                    labelText: 'Slut tid',
+                    errorText:
+                    (snapshot?.data == null) ? null : 'Slut tid skal angives',
+                    border: const OutlineInputBorder(borderSide: BorderSide())),
+              );
+            }));
+  }
+
+  /// Builds the activity (LEGACY)
   List<Widget> buildScreen(BuildContext context, WeekplanMode mode) {
     final List<Widget> list = <Widget>[];
     list.add(Expanded(
@@ -225,14 +365,14 @@ class ShowActivityScreen extends StatelessWidget {
         stream: _authBloc.mode,
         builder: (BuildContext modeContext,
             AsyncSnapshot<WeekplanMode> modeSnapshot) {
-          return Expanded(
-            flex: 4,
-            child: Center(
+          return Container(
+            child: Align(
+              alignment: Alignment.topLeft,
               child: AspectRatio(
                 aspectRatio: 1,
                 child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Card(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                  child: Container(
                     key: const Key('AddChoiceBoardButtonKey'),
                     child: InkWell(
                       onTap: () async {
@@ -252,7 +392,23 @@ class ShowActivityScreen extends StatelessWidget {
                           }
                         });
                       },
-                      child: Column(children: <Widget>[
+                      child: Row(children: <Widget>[
+                        Expanded(
+                          child: AspectRatio(
+                            aspectRatio: 1,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(width: 2, color: Colors.black)
+                              ),
+                              child: const FittedBox(
+                                child: Icon(
+                                  Icons.add,
+                                  color: theme.GirafColors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                         // The title of the choiceBoard widget
                         Center(
                             key: const Key('ChoiceboardTitleKey'),
@@ -268,17 +424,6 @@ class ShowActivityScreen extends StatelessWidget {
                                         textAlign: TextAlign.center);
                                   }),
                             )),
-                        const Expanded(
-                          child: AspectRatio(
-                            aspectRatio: 1,
-                            child: FittedBox(
-                              child: Icon(
-                                Icons.add,
-                                color: theme.GirafColors.black,
-                              ),
-                            ),
-                          ),
-                        ),
                       ]),
                     ),
                   ),
@@ -381,6 +526,116 @@ class ShowActivityScreen extends StatelessWidget {
   );
 
   /// Builds the activity widget.
+  Widget _buildActivity(BuildContext context) {
+    String inputtext = _activity.choiceBoardName;
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(width: 2, color: Colors.grey),
+        ),
+        child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+            child: Column(children: <Widget>[
+              const Center(child: Padding(padding: EdgeInsets.all(0.0))),
+              Visibility(
+                visible: _activity.isChoiceBoard,
+                child: Row(
+                  children: <Widget>[
+                    Flexible(
+                      child: TextFormField(
+                        key: const Key('ChoiceBoardNameText'),
+                        initialValue: _activity.choiceBoardName == ' '
+                            ? ''
+                            : _activity.choiceBoardName,
+                        textAlign: TextAlign.center,
+                        onChanged: (String text) {
+                          inputtext = text.isNotEmpty ? text : ' ';
+                          _activity.choiceBoardName = text;
+                        },
+                        onFieldSubmitted: (String text) {
+                          _activity.choiceBoardName = inputtext;
+                          _activityBloc.update();
+                        },
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: choiceBoardStyle,
+                      key: const Key('ChoiceBoardNameButton'),
+                      onPressed: () {
+                        _activity.choiceBoardName = inputtext;
+                        _activityBloc.update();
+                      },
+                      child:
+                      const Text('Godkend', style: TextStyle(color: Colors.black)),
+                    ),
+                  ],
+                ),
+              ),
+              _activityBloc.getActivity().isChoiceBoard
+                  ? Container()
+                  : buildInputField(context),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(87, 0, 10, 40),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: FittedBox(
+                        child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: theme.GirafColors.blueBorderColor, width: 0.25)),
+                            child: StreamBuilder<ActivityModel>(
+                                stream: _activityBloc.activityModelStream,
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<ActivityModel> snapshot1) {
+                                  return StreamBuilder<TimerRunningMode>(
+                                      stream: _timerBloc.timerRunningMode,
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<TimerRunningMode> snapshot2) {
+                                        if (snapshot1.data == null) {
+                                          return const CircularProgressIndicator();
+                                        }
+                                        return Column(
+                                          children: <Widget>[
+                                            Stack(
+                                              alignment: AlignmentDirectional.center,
+                                              children: <Widget>[
+                                                SizedBox(
+                                                    width:
+                                                    MediaQuery.of(context).size.width,
+                                                    height:
+                                                    MediaQuery.of(context).size.width,
+                                                    child: _activity.isChoiceBoard
+                                                        ? ChoiceBoard(_activity,
+                                                        _activityBloc, _girafUser)
+                                                        : buildLoadPictogramImage()),
+                                                _buildActivityStateIcon(context,
+                                                    snapshot1.data.state, snapshot2.data),
+                                              ],
+                                            ),
+                                            Visibility(
+                                              visible: !_activity.isChoiceBoard,
+                                              child: PictogramText(_activity, _girafUser,
+                                                  minFontSize: 50),
+                                            ),
+                                          ],
+                                        );
+                                      });
+                                }))),
+                  )
+                )
+              ),
+              //buildButtonBar()
+            ])),
+      ),
+    );
+  }
+
+  /// Builds the activity widget (LEGACY)
   Card buildActivity(BuildContext context) {
     String inputtext = _activity.choiceBoardName;
     return Card(
@@ -797,64 +1052,72 @@ class ShowActivityScreen extends StatelessWidget {
 
   /// Builds the input field and buttons for changing the description of
   /// the pictogram for a specific citizen
-  Column buildInputField(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        StreamBuilder<WeekplanMode>(
-            stream: _authBloc.mode,
-            builder: (BuildContext context,
-                AsyncSnapshot<WeekplanMode> weekplanModeSnapshot) {
-              return StreamBuilder<ActivityModel>(
-                  stream: _activityBloc.activityModelStream,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<ActivityModel> activitySnapshot) {
-                    if (activitySnapshot.data == null) {
-                      return const CircularProgressIndicator();
-                    }
-                    if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
-                      return Container(
-                          child: Column(children: <Widget>[
-                        Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 30, 20, 30),
-                            child: TextField(
-                              key: const Key('AlternateNameTextField'),
-                              controller: tec,
-                              style: const TextStyle(
-                                  fontSize: 28,
-                                  height: 1.3,
-                                  color: theme.GirafColors.black),
-                              decoration: InputDecoration(
-                                  hintText: _activity.title,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(50),
-                                  )),
-                            )),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: GirafButton(
-                            key: const Key('SavePictogramTextForCitizenBtn'),
-                            onPressed: () {
-                              _activityBloc.setAlternateName(tec.text);
-                            },
-                            text: 'Gem til borger',
-                          ),
-                        ),
-                        GirafButton(
-                          key: const Key(
-                              'GetStandardPictogramTextForCitizenBtn'),
-                          onPressed: () {
-                            _activityBloc.getStandardTitle();
-                          },
-                          text: 'Hent standard',
-                        )
-                      ]));
-                    } else {
-                      return Container();
-                    }
-                  });
-            }),
-      ],
-    );
+  Widget buildInputField(BuildContext context) {
+    return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+            child: Column(
+              children: <Widget>[
+                StreamBuilder<WeekplanMode>(
+                    stream: _authBloc.mode,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<WeekplanMode> weekplanModeSnapshot) {
+                      return StreamBuilder<ActivityModel>(
+                          stream: _activityBloc.activityModelStream,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<ActivityModel> activitySnapshot) {
+                            if (activitySnapshot.data == null) {
+                              return const CircularProgressIndicator();
+                            }
+                            if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
+                              return Container(
+                                  child: Column(children: <Widget>[
+                                    Padding(
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 00, 30),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: Text(
+                                                _activity.order.toString() + '.',
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(
+                                                  fontSize: 30,
+                                                  height: 1.3,
+                                                  color: theme.GirafColors.black,
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 10,
+                                              child: TextField(
+                                                key: const Key('AlternateNameTextField'),
+                                                controller: tec,
+                                                style: const TextStyle(
+                                                    fontSize: 28,
+                                                    height: 1.3,
+                                                    color: theme.GirafColors.black),
+                                                decoration: InputDecoration(
+                                                    hintText: _activity.title,
+                                                    border: OutlineInputBorder()
+                                                ),
+                                              )
+                                            )
+                                          ],
+                                        )
+                                    ),
+                                  ]
+                                  )
+                              );
+                            }
+                            else {
+                              return Container();
+                            }
+                          });
+                    }),
+              ],
+            ),
+      );
   }
 
   /// Creates a pictogram image from the streambuilder

@@ -9,17 +9,20 @@ class GirafDrawerState extends State<GirafDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      key: const Key('GirafDrawer'),
         child: ListView(
           children: [
             ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text('Ugeplaner TEST XD'),
+              key: const Key('Back'),
+              leading: const Icon(Icons.arrow_back),
+              title: const Text('Tilbage'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.of(context).pop();
               },
             ),
             ListTile(
+              key: const Key('Profile'),
               leading: const Icon(Icons.person),
               title: const Text('Profil'),
               onTap: () {
@@ -28,7 +31,8 @@ class GirafDrawerState extends State<GirafDrawer> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.person),
+              key: const Key('Change user'),
+              leading: const Icon(Icons.change_circle_outlined),
               title: const Text('Skift bruger'),
               onTap: () {
                 Navigator.pop(context);
@@ -36,6 +40,7 @@ class GirafDrawerState extends State<GirafDrawer> {
               },
             ),
             ListTile(
+              key: const Key('Log off'),
               leading: const Icon(Icons.exit_to_app),
               title: const Text('Log af'),
               onTap: () {

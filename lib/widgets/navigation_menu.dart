@@ -31,7 +31,7 @@ class InputNavigationMenuState extends State<InputNavigationMenu> {
                           child: Builder(
                             builder: (BuildContext context) {
                               return IconButton(
-                                key: const Key('NavigationMenu'),
+                                key: const Key('IconButton'),
                                 padding: const EdgeInsets.all(0.0),
                                 color: Colors.white,
                                 icon: const Icon(Icons.menu, size: 55),
