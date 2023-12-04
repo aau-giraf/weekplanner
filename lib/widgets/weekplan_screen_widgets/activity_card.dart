@@ -125,7 +125,6 @@ class ActivityCard extends StatelessWidget {
     final ActivityState _activityState = _activity.state;
     final List<Widget> pictograms = <Widget>[];
     // Access non-nullable SettingsModel
-    final SettingsModel settings = settingsSnapShot.data!;
 
     for (int i = 0; i < _activity.pictograms.length; i++) {
       pictograms.add(
