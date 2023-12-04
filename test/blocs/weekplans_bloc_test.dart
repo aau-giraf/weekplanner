@@ -234,6 +234,7 @@ void main() {
     bloc.toggleMarkedWeekModel(weekModel1);
     expect(bloc.getNumberOfMarkedWeekModels(), 1);
 
+
     bloc.toggleMarkedWeekModel(WeekModel(name: 'testWeekModel'));
     expect(bloc.getNumberOfMarkedWeekModels(), 2);
 
@@ -280,12 +281,14 @@ void main() {
       }
     });
 
+
     done();
   }));
 
   test('check deletion of new weekplan without oldWeekPlan',
       async((DoneFn done) {
     // Creates a list of weekNameModels with one weekNameModel
+
     final List<WeekNameModel> weekNameModelList = <WeekNameModel>[
       weekNameModel6
     ];
@@ -299,6 +302,7 @@ void main() {
     // seeded weekNameModelList
     when(weekApi.getNames(mockUser.id)).thenAnswer((_) =>
         rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
+
     //loads the mockUser, toggles weekModel6 and checks how many
     // weekModels are marked
     bloc.load(mockUser);
@@ -513,6 +517,7 @@ void main() {
           textDelimiter: '"',
           textEndDelimiter: '"',
           eol: ';');
+
       //Converts the csv to a list called datesAndWeeks
       final List<List<dynamic>> datesAndWeeks = converter.convert<dynamic>(csv);
       // Foreach element in the datesAndWeeks, parse the current element to a

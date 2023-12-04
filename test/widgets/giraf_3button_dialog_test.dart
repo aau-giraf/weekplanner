@@ -45,45 +45,67 @@ class MockScreen extends StatelessWidget {
 
 void main() {
   testWidgets('Test if 3 button Dialog is shown', (WidgetTester tester) async {
+    //Pumps the MockScreen widget (calls the runApp on the widget) and finds the
+    // button with the key FirsButton and triggers that frame
+    //
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.tap(find.byKey(const Key('FirstButton')));
     await tester.pump();
+    //Checks that the widget (Giraf3ButtonDialog) can be found
     expect(find.byType(Giraf3ButtonDialog), findsOneWidget);
   });
 
   testWidgets('Test if 3 button Dialog is closed when tapping Cancel button',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: MockScreen()));
-        await tester.tap(find.byKey(const Key('FirstButton')));
-        await tester.pump();
-        expect(find.byType(Giraf3ButtonDialog), findsOneWidget);
-        await tester.tap(find.byKey(const Key('ConfirmDialogCancelButton')));
-        await tester.pump();
-        expect(find.byType(Giraf3ButtonDialog), findsNothing);
-      });
+    //Pumps the MockScreen widget (calls the runApp on the widget) and finds the
+    // button with the key FirsButton and triggers that frame
+    await tester.pumpWidget(MaterialApp(home: MockScreen()));
+    await tester.tap(find.byKey(const Key('FirstButton')));
+    await tester.pump();
+    //Checks that the widget (Giraf3ButtonDialog) can be found
+    expect(find.byType(Giraf3ButtonDialog), findsOneWidget);
+    // Finds the confirmDialogCancelButton and triggers it
+    // Pumps the frame stack (To make sure that the frame activating the
+    // confirmDialogCancelButton has been run)
+    await tester.tap(find.byKey(const Key('ConfirmDialogCancelButton')));
+    await tester.pump();
+    // Checks that 3 button dialog has been closed after activating the
+    // cancel button
+    expect(find.byType(Giraf3ButtonDialog), findsNothing);
+  });
 
   //In this case, the confirmed action is closing the widget
   testWidgets(
       'Test if action 1 is performed when pressing option1',
           (WidgetTester tester) async {
+        //Activates the widget MockScreen and finds the first button
         await tester.pumpWidget(MaterialApp(home: MockScreen()));
         await tester.tap(find.byKey(const Key('FirstButton')));
+        //Makes sure that the frame has been run
         await tester.pump();
+        // Checks that the Griaf3ButtonDialog exists once.
         expect(find.byType(Giraf3ButtonDialog), findsOneWidget);
+        // Clicks the Option1Button and run the frame
         await tester.tap(find.byKey(const Key('Option1Button')));
         await tester.pump();
+        // Checks that the Griaf3ButtonDialog has been removed
         expect(find.byType(Giraf3ButtonDialog), findsNothing);
       });
 
   testWidgets(
       'Test if action 2 is performed when pressing option2',
           (WidgetTester tester) async {
+        // Activates the MockScreen and clicks the FirstButton.
+        // Also run the frame
         await tester.pumpWidget(MaterialApp(home: MockScreen()));
         await tester.tap(find.byKey(const Key('FirstButton')));
         await tester.pump();
+        // Expects Girfat3ButtonDialog to exist only once
         expect(find.byType(Giraf3ButtonDialog), findsOneWidget);
+        // Clicks the option2Button and runs the frame
         await tester.tap(find.byKey(const Key('Option2Button')));
         await tester.pump();
+        //Checks that the Giraf3ButtonDialog has been closed
         expect(find.byType(Giraf3ButtonDialog), findsNothing);
       });
 }

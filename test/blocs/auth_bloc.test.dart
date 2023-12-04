@@ -82,9 +82,16 @@ void main() {
       })
   );
 
+
+
+  ///setup at the top to reflect logins of different user roles
   const String username = 'Graatand';
   const String password = 'password';
-  test('Should check that authenticate works', async((DoneFn done) {
+  ///TODO: test fails with error message below
+  ///NoSuchMethodError: The method 'listen' was called on null.
+  /// Receiver: null
+  /// Tried calling: listen(Closure: (GirafUserModel) => Null)
+  test('Should check that authenticate works guardian', async((DoneFn done) {
     authBloc.mode.skip(1).listen((WeekplanMode mode) {
       expect(mode, WeekplanMode.guardian);
       done();
@@ -92,8 +99,13 @@ void main() {
     authBloc.authenticate(username, password);
   }));
 
+  ///setup at the top to reflect logins of different user roles
   const String username2 = 'Chris';
-  test('Should check that authenticate works', async((DoneFn done) {
+  ///TODO: test fails with error message below
+  ///NoSuchMethodError: The method 'listen' was called on null.
+  /// Receiver: null
+  /// Tried calling: listen(Closure: (GirafUserModel) => Null)
+  test('Should check that authenticate works (trustee)', async((DoneFn done) {
     authBloc.mode.skip(1).listen((WeekplanMode mode) {
       expect(mode, WeekplanMode.trustee);
       done();
@@ -101,8 +113,13 @@ void main() {
     authBloc.authenticate(username2, password);
   }));
 
+  ///setup at the top to reflect logins of different user roles
   const String username3 = 'Janne';
-  test('Should check that authenticate works', async((DoneFn done) {
+  ///TODO: test fails with error message below
+  ///NoSuchMethodError: The method 'listen' was called on null.
+  /// Receiver: null
+  /// Tried calling: listen(Closure: (GirafUserModel) => Null)
+  test('Should check that authenticate works (citizen)', async((DoneFn done) {
     authBloc.mode.skip(1).listen((WeekplanMode mode) {
       expect(mode, WeekplanMode.citizen);
       done();

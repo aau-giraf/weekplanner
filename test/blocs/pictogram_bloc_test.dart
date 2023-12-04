@@ -65,8 +65,12 @@ void main() {
 
     bloc.search(query);
   }));
-
-  // TODO: Is this even a valid test?
+  /*Closes streams for the pictogram bloc
+  test does not return anything on its own (see lack of expect function)
+  but the dispose function should throw an error if something goes wrong within
+  itself. It may however still be relevant to keep this test as it ensures the
+  streams are actually closed at the end of the test file.
+  */
   test('Should dispose stream', async((DoneFn done) {
     bloc.pictograms.listen((_) {}, onDone: done);
     bloc.dispose();
