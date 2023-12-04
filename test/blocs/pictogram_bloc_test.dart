@@ -65,7 +65,6 @@ void main() {
 
     bloc.search(query);
   }));
-
   /*Closes streams for the pictogram bloc
   test does not return anything on its own (see lack of expect function)
   but the dispose function should throw an error if something goes wrong within
