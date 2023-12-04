@@ -11,6 +11,7 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/screens/profil_screen.dart';
 import 'package:weekplanner/screens/login_screen.dart';
+import 'package:weekplanner/screens/edit_profil.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
@@ -83,6 +84,7 @@ void _runApp() {
 
 
     routes: {
+      '/edit': (context) => EditScreen(),
       '/profil': (context) => ProfileScreen(),
       '/skift bruger': (context) => ChooseCitizenScreen(),
       '/log af': (context) => LoginScreen(),

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/widgets/giraf_drawer.dart';
 
 import '../widgets/navigation_menu.dart';
-
+import 'package:weekplanner/screens/edit_profil.dart';
 
 class ProfileScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -70,10 +70,11 @@ class ProfileScreen extends StatelessWidget {
                                     : const EdgeInsets.fromLTRB(310, 0, 40, 0),
                                 color: Colors.black,
                                 icon: const Icon(Icons.create_outlined, size: 50),
-                                onPressed: () {
-                                  ///_pushEditWeekPlan(context); //Does not work yet
+                                onPressed: ()  {
+                                  Navigator.pop(context);
+                                  Navigator.pushNamed(context, '/edit');
                                 },
-                              ),
+                            ),
                             ),
                           ],
                         ),
