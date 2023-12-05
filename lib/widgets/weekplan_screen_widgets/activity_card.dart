@@ -321,6 +321,24 @@ class ActivityCard extends StatelessWidget {
                 }
 
                 return const Center(child: CircularProgressIndicator());
+              case ActivityState.Removed:
+                if (role == WeekplanMode.guardian) {
+                  return Icon(
+                    Icons.check,
+                    key: const Key('IconComplete'),
+                    color: theme.GirafColors.red,
+                    size: MediaQuery.of(context).size.width,
+                  );
+                } else if (role == WeekplanMode.citizen) {
+                  if (settings!.completeMark == null) {
+                    return Container(
+                      width: 0,
+                      height: 0,
+                    );
+                  }
+                }
+
+                return const Center(child: CircularProgressIndicator());
               case ActivityState.Canceled:
                 return Icon(
                   Icons.clear,
@@ -352,7 +370,7 @@ class ActivityCard extends StatelessWidget {
                     height: 0,
                   );
                 }
-                
+
               default:
                 return Container(
                   width: 0,

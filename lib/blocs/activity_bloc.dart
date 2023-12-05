@@ -89,6 +89,14 @@ class ActivityBloc extends BlocBase {
     update();
   }
 
+  /// Update the Activity after removing from the day
+  void removeActivity() {
+    _activityModel.state = _activityModel.state == ActivityState.Removed
+        ? ActivityState.Normal
+        : ActivityState.Removed;
+    update();
+  }
+
   /// Update the Activity with the new state.
   void update() {
     _api.activity
