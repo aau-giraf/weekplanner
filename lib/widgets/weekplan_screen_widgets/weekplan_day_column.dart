@@ -574,7 +574,8 @@ class WeekplanDayColumn extends StatelessWidget {
           title: 'Slet aktiviteter',
           description: 'Vil du slette ' +
               weekplanBloc.getNumberOfMarkedActivities().toString() +
-              '${weekplanBloc.getNumberOfMarkedActivities() == 1 ? ' aktivitet' : ' aktiviteter'}?',
+              '${weekplanBloc.getNumberOfMarkedActivities() == 1 ?
+              ' aktivitet' : ' aktiviteter'}?',
           confirmButtonText: 'Slet',
           confirmButtonIcon:
               const ImageIcon(AssetImage('assets/icons/delete.png')),
