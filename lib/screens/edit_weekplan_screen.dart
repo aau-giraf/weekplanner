@@ -15,9 +15,9 @@ class EditWeekPlanScreen extends StatelessWidget {
   /// Screen for editing a weekplan.
   /// Requires a [UsernameModel] to be able to save the new weekplan.
   EditWeekPlanScreen({
-    @required DisplayNameModel user,
-    @required this.weekModel,
-    @required this.selectorBloc,
+    required DisplayNameModel user,
+    required this.weekModel,
+    required this.selectorBloc,
   }) : _bloc = di.get<EditWeekplanBloc>() {
     _bloc.initializeEditBloc(user, weekModel);
   }
@@ -45,9 +45,7 @@ class EditWeekPlanScreen extends StatelessWidget {
             selectorBloc: selectorBloc);
 
         try {
-          if (result != null) {
-            Routes().pop<WeekModel>(context, result);
-          }
+          Routes().pop<WeekModel>(context, result);
         } catch (err) {
           throw EditWeekplanButtonException(
               'Something went wrong while building the edit week plan button'
@@ -58,7 +56,9 @@ class EditWeekPlanScreen extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: GirafAppBar(title: 'Rediger ugeplan'),
+      appBar: GirafAppBar(
+          key: const ValueKey<String>('editWeekplan'),
+          title: 'Rediger ugeplan'),
       body: InputFieldsWeekPlan(
         bloc: _bloc,
         button: editButton,

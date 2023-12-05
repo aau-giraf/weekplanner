@@ -1,12 +1,13 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
@@ -23,12 +24,14 @@ void main() {
   final PictogramModel mockThumbnail = PictogramModel(
       id: 1,
       lastEdit: null,
-      title: null,
-      accessLevel: null,
+      title: 'null',
+      accessLevel: AccessLevel.PROTECTED,
       imageUrl: 'http://any.tld',
       imageHash: null);
+
   final DisplayNameModel mockUser =
       DisplayNameModel(displayName: 'User', id: '1', role: null);
+
   final WeekModel mockWeek = WeekModel(
       thumbnail: mockThumbnail,
       days: null,
@@ -40,14 +43,15 @@ void main() {
   setUp(() {
     api = Api('any');
     api.week = MockWeekApi();
+    registerFallbackValue(mockWeek);
 
-    when(api.week.update(any, any, any, any)).thenAnswer((_) {
+    when(() => api.week.update(any(), any(), any(), any())).thenAnswer((_) {
       return Stream<WeekModel>.value(mockWeek);
     });
 
-    when(api.week.getNames(any)).thenAnswer(
+    when(() => api.week.getNames(any())).thenAnswer(
       (_) {
-        return Stream<List<WeekNameModel>>.value(<WeekNameModel>[
+        return Stream<List<WeekNameModel>?>.value(<WeekNameModel>[
           WeekNameModel(
               name: mockWeek.name,
               weekNumber: mockWeek.weekNumber,
@@ -56,13 +60,14 @@ void main() {
       },
     );
 
-    when(api.week.get(any, any, any)).thenAnswer(
+    when(() => api.week.get(any(), any(), any())).thenAnswer(
       (_) {
         return Stream<WeekModel>.value(mockWeek);
       },
     );
 
-    when(api.week.delete(mockUser.id, mockWeek.weekYear, mockWeek.weekNumber))
+    when(() => api.week
+            .delete(mockUser.id!, mockWeek.weekYear, mockWeek.weekNumber))
         .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
 
     mockWeekplanSelector = WeekplansBloc(api);
@@ -87,7 +92,7 @@ void main() {
             selectorBloc: mockWeekplanSelector)
         .then(
       (WeekModel w) {
-        verify(api.week.update(any, any, any, any));
+        verify(() => api.week.update(any(), any(), any(), any()));
         done();
       },
     );
@@ -106,7 +111,7 @@ void main() {
             selectorBloc: mockWeekplanSelector)
         .then(
       (WeekModel w) {
-        verify(api.week.update(any, any, any, any));
+        verify(() => api.week.update(any(), any(), any(), any()));
         done();
       },
     );

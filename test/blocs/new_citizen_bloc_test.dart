@@ -5,7 +5,7 @@ import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 
 //tests that features relevant to creating a citizen are functional
@@ -27,8 +27,12 @@ class MockUserApi extends Mock implements UserApi {
 class MockAccountApi extends Mock implements AccountApi {}
 
 void main() {
-  NewCitizenBloc bloc;
-  Api api;
+  setUpAll(() {
+    registerFallbackValue(Role.Unknown);
+  });
+
+  Api api = Api('any');
+  NewCitizenBloc bloc = NewCitizenBloc(api);
 
   final GirafUserModel user = GirafUserModel(
       id: '1',
@@ -45,7 +49,7 @@ void main() {
     bloc = NewCitizenBloc(api);
     bloc.initialize();
 
-//sets api calls to return correct user data
+  //sets api calls to return correct user data
     when(api.account.register(any, any, any, any,
             departmentId: anyNamed('departmentId'), role: anyNamed('role')))
         .thenAnswer((_) {
@@ -60,7 +64,7 @@ void main() {
     bloc.onDisplayNameChange.add(user.displayName);
     bloc.createCitizen();
 
-    verify(bloc.createCitizen());
+    verify(() => bloc.createCitizen());
     done();
   }));
 
@@ -71,7 +75,7 @@ void main() {
     bloc.onDisplayNameChange.add(user.displayName);
     bloc.createGuardian();
 
-    verify(bloc.createGuardian());
+    verify(() => bloc.createGuardian());
     done();
   }));
 
@@ -82,7 +86,7 @@ void main() {
     bloc.onDisplayNameChange.add(user.displayName);
     bloc.createTrustee();
 
-    verify(bloc.createTrustee());
+    verify(() => bloc.createTrustee());
     done();
   }));
 
@@ -205,7 +209,7 @@ void main() {
   }));
 
   test('Username with space in front', async((DoneFn done) {
-    bloc.onUsernameChange.add(' ' + user.username);
+    bloc.onUsernameChange.add(' ' + user.username!);
     bloc.validUsernameStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -214,7 +218,7 @@ void main() {
   }));
 
   test('Username with space after', async((DoneFn done) {
-    bloc.onUsernameChange.add(user.username + ' ');
+    bloc.onUsernameChange.add(user.username! + ' ');
     bloc.validUsernameStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);

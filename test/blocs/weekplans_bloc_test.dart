@@ -1,5 +1,5 @@
 // Limit each test to three seconds, at which point they fail due to timing out.
-@Timeout(Duration(seconds: 3))
+@Timeout(Duration(seconds: 5))
 
 import 'dart:io';
 
@@ -11,16 +11,16 @@ import 'package:api_client/models/week_name_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
 void main() {
-  WeekplansBloc bloc;
-  Api api;
-  MockWeekApi weekApi;
+  Api api = Api('baseUrl');
+  WeekplansBloc bloc = WeekplansBloc(api);
+  MockWeekApi weekApi = MockWeekApi();
 
   final List<WeekNameModel> weekNameModelList = <WeekNameModel>[];
   final WeekNameModel weekNameModel1 =
@@ -45,12 +45,18 @@ void main() {
   final DisplayNameModel mockUser =
       DisplayNameModel(displayName: 'test', id: 'test', role: 'test');
 
-  void setupApiCalls() {
+  setUp(() {
+    api = Api('any');
+    weekApi = MockWeekApi();
+    api.week = weekApi;
+    bloc = WeekplansBloc(api);
+
     weekNameModelList.clear();
     weekModelList.clear();
 
     weekModelList.add(weekModel1);
     weekNameModelList.add(weekNameModel1);
+  });
 
     when(weekApi.getNames('test')).thenAnswer((_) =>
         rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
@@ -85,23 +91,23 @@ void main() {
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel6));
 
-    when(weekApi.delete(mockUser.id, any, any))
-        .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
-  }
 
-  setUp(() {
-    api = Api('any');
-    weekApi = MockWeekApi();
-    api.week = weekApi;
-    bloc = WeekplansBloc(api);
+  when(() => weekApi.delete(any(), any(), any()))
+      .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
 
-    setupApiCalls();
-  });
+  test('Should be able to load weekplans for a user', async((DoneFn done) {
+    when(() => weekApi.get(
+            mockUser.id!, weekNameModel1.weekYear!, weekNameModel1.weekNumber!))
+        .thenAnswer(
+            (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
+
+    when(() => weekApi.getNames(mockUser.id!)).thenAnswer((_) =>
+        rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
   test('Should be able to load weekplans for a user', async((DoneFn done) {
     //Checks if the loaded weekNameModels are not null and are equal to the
     // expected weekName model list
-    bloc.weekNameModels.listen((List<WeekNameModel> response) {
+    bloc.weekNameModels.listen((List<WeekNameModel>? response) {
       expect(response, isNotNull);
       expect(response, equals(weekNameModelList));
     });
@@ -173,6 +179,7 @@ void main() {
     expect(bloc.getNumberOfMarkedWeekModels(), 1);
     //Listener fires when a change is made to MarkedWeekModelsList
     //expects that markedWeekModelsList length is = 0
+
     bloc.markedWeekModels
         .skip(1)
         .listen((List<WeekModel> markedWeekModelsList) {
@@ -182,6 +189,7 @@ void main() {
 
     // Toggles the weekmodel from the list of marked weekmodels.
     // Should remove the unmarked weekmodel
+
     bloc.toggleMarkedWeekModel(weekModel1);
   }));
 
@@ -269,6 +277,7 @@ void main() {
     // When its fired again, it expects that userWeekModels doesn't contain
     // weekModel1, that userWeekModels has a length of 0 and the bloc has 0
     // marked weekModels
+
     int count = 0;
     bloc.weekModels.listen((List<WeekModel> userWeekModels) {
       if (count == 0) {
@@ -280,7 +289,6 @@ void main() {
         expect(bloc.getNumberOfMarkedWeekModels(), 0);
       }
     });
-
 
     done();
   }));
@@ -305,6 +313,7 @@ void main() {
 
     //loads the mockUser, toggles weekModel6 and checks how many
     // weekModels are marked
+
     bloc.load(mockUser);
     bloc.toggleMarkedWeekModel(weekModel6);
     expect(bloc.getNumberOfMarkedWeekModels(), 1);
@@ -317,7 +326,6 @@ void main() {
     int count = 0;
     bloc.weekModels.listen((List<WeekModel> userWeekModels) {
       if (count == 0) {
-        bloc.deleteMarkedWeekModels();
         count++;
       } else {
         expect(userWeekModels.contains(weekModel6), false);

@@ -14,17 +14,16 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
   /// The dialog displays the title and description, with two buttons and a
   /// list of checkboxes
   GirafCopyActivitiesDialog(
-      {Key key,
-      @required this.title,
-      @required this.description,
-      @required this.confirmButtonText,
-      @required this.confirmButtonIcon,
-      @required this.confirmOnPressed})
+      {required Key key,
+      required this.title,
+      required this.description,
+      required this.confirmButtonText,
+      required this.confirmButtonIcon,
+      required this.confirmOnPressed})
       : super(key: key);
 
   /// Bloc to keep track of which checkboxes are marked
-  final CopyActivitiesBloc copyActivitiesBloc =
-      di.get<CopyActivitiesBloc>();
+  final CopyActivitiesBloc copyActivitiesBloc = di.get<CopyActivitiesBloc>();
 
   /// title of the [dialogBox], displayed in the header of the [dialogBox]
   final String title;
@@ -51,6 +50,7 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
       title: Center(
           child: GirafTitleHeader(
         title: title,
+        key: const ValueKey<String>('copyActivitiesKey'),
       )),
       content: StreamBuilder<List<bool>>(
           stream: copyActivitiesBloc.checkboxValues,
@@ -74,12 +74,13 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
                     ))
                   ],
                 ),
-                _buildCheckboxes(snapshot.data),
+                _buildCheckboxes(snapshot.data!),
                 CopyDialogButtons(
                     confirmButtonText: confirmButtonText,
                     confirmButtonIcon: confirmButtonIcon,
                     confirmOnPressed: confirmOnPressed,
-                    checkMarkValues: snapshot.data)
+                    checkMarkValues: snapshot.data!,
+                    key: UniqueKey())
               ],
             );
           }),
@@ -140,7 +141,7 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
     return CheckboxListTile(
       key: checkboxKey,
       value: value,
-      onChanged: (bool value) =>
+      onChanged: (bool? value) =>
           copyActivitiesBloc.toggleCheckboxState(weekday.index),
       title: Text(checkboxTitle),
       controlAffinity: ListTileControlAffinity.trailing,

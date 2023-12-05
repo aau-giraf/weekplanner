@@ -1,7 +1,7 @@
 # Weekplanner
 This repository contains the frontend part of the weekplanner-app, which communicates with the api-client-repository to communicate with the backend (web-api-repository). 
 
-The frontend uses the Flutter framework to maintain the UI, it is currently running on Flutter version 3.3.8. The language used in this repository is Dart, which is the language the Flutter framework uses.
+The frontend uses the Flutter framework to maintain the UI, it is currently running on Flutter version 3.13.9. The language used in this repository is Dart, which is the language the Flutter framework uses.
 
 # Branches
 This repository uses the scaled trunkbased branching strategy, as explained here: [Github setup](https://github.com/aau-giraf/.github/blob/main/wiki/about/github.md). In this repository the "trunk" is named develop, and this is the branch that all developers should branch from when solving an issue. The naming convention for these branches are:

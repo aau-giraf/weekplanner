@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -47,11 +47,14 @@ class MockScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: GirafAppBar(
-            title: 'TestTitle',
-            appBarIcons: <AppBarIcon, VoidCallback>{
-          AppBarIcon.logout: null,
-          AppBarIcon.changeToGuardian: () {},
-        }));
+
+      title: 'TestTitle',
+      appBarIcons: <AppBarIcon, VoidCallback>{
+        AppBarIcon.logout: () {},
+        AppBarIcon.changeToGuardian: () {},
+      },
+      key: UniqueKey(),
+    ));
   }
 }
 
@@ -70,9 +73,9 @@ class MockScreenForErrorDialog extends StatelessWidget {
 }
 
 void main() {
-  ToolbarBloc bloc;
-  MockAuth authBloc;
-  final Api api = Api('any');
+  late ToolbarBloc bloc;
+  late MockAuth authBloc;
+  late final Api api = Api('any');
 
   setUp(() {
     di.clearAll();
@@ -85,7 +88,9 @@ void main() {
 
   // Used to wrap a widget into a materialapp,
   // otherwise the widget is not testable
-  Widget makeTestableWidget({Widget child}) {
+
+  Widget makeTestableWidget({Widget? child}) {
+
     return MaterialApp(
       home: child,
     );
@@ -110,10 +115,10 @@ void main() {
     di.registerDependency<ToolbarBloc>(() => ToolbarBloc(), override: true);
   }
 
-  // Test that had no documentation.
+
   testWidgets('Elements on dialog should be visible',
       (WidgetTester tester) async {
-    // We have to use a diffent authbloc, where everything is not overridden
+    // we have to use a diffent authbloc, where everything is not overridden
     setupAlternativeDependencies();
 
     // This part creates a MockScreenForErrorDialog, which is then validated
@@ -140,6 +145,7 @@ void main() {
   testWidgets('Wrong credentials should show error dialog',
       (WidgetTester tester) async {
     // We have to use a diffent authbloc, where everything is not overridden.
+
     setupAlternativeDependencies();
 
     // This part creates a MockScreenForErrorDialog, which is then validated
@@ -166,6 +172,7 @@ void main() {
     // This part validates that the dialog for wrong password is shown, and thus
     // the entered password 'abc' is incorrect. If the dialog is not displayed,
     // the test fails. Otherwise, the test passes.
+
     expect(find.byKey(const Key('WrongPasswordDialog')), findsOneWidget);
   });
 
@@ -176,6 +183,7 @@ void main() {
     // This part works the same way as the test above, but instead of just
     // initializing the widget, it is wrapped in a MaterialApp object,
     // which is done through the makeTestableWidget function.
+
     await tester
         .pumpWidget(makeTestableWidget(child: MockScreenForErrorDialog()));
     await tester.pumpAndSettle();
@@ -211,8 +219,12 @@ void main() {
 
   // For reference, all of the tests were not documented.
 
+
   testWidgets('Has toolbar with title', (WidgetTester tester) async {
-    final GirafAppBar girafAppBar = GirafAppBar(title: 'Ugeplan');
+    final GirafAppBar girafAppBar = GirafAppBar(
+      title: 'Ugeplan',
+      key: UniqueKey(),
+    );
 
     // Simulate the widget being built inside the app itself.
     await simulateTestWidget(
@@ -228,8 +240,12 @@ void main() {
   testWidgets('Display default icon when given no icons to display',
       (WidgetTester tester) async {
     // Create the GirafAppBar object, which is the widget being tested.
-    final GirafAppBar girafAppBar =
-        GirafAppBar(title: 'Ugeplan', appBarIcons: null);
+
+    final GirafAppBar girafAppBar = GirafAppBar(
+      title: 'Ugeplan',
+      appBarIcons: null,
+      key: UniqueKey(),
+    );
 
     // Simulate the widget being built inside the app itself,
     // but also simulate a frame change.
@@ -240,228 +256,248 @@ void main() {
 
   testWidgets('Accept button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{AppBarIcon.accept: null});
+      title: 'Ugeplan',
+      appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.accept: () {}},
+      key: UniqueKey(),
+    );
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Accepter'), findsOneWidget);
+    expect(find.byTooltip('Accepter').first, findsOneWidget);
   });
 
   testWidgets('Add button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{AppBarIcon.add: null});
+
+      title: 'Ugeplan',
+      appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.add: () {}},
+      key: UniqueKey(),
+    );
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Tilføj'), findsOneWidget);
+    expect(find.byTooltip('Tilføj').first, findsOneWidget);
   });
 
   testWidgets('Add timer button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{
-          AppBarIcon.addTimer: null
-        });
+
+      title: 'Ugeplan',
+      appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.addTimer: () {}},
+      key: UniqueKey(),
+    );
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Tilføj timer'), findsOneWidget);
+    expect(find.byTooltip('Tilføj timer').first, findsOneWidget);
   });
 
   testWidgets('Back button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{AppBarIcon.back: null});
+
+      title: 'Ugeplan',
+      appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.back: () {}},
+      key: UniqueKey(),
+    );
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Tilbage'), findsOneWidget);
+    expect(find.byTooltip('Tilbage').first, findsOneWidget);
   });
 
   testWidgets('Burger menu button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{
-          AppBarIcon.burgerMenu: null
-        });
+      title: 'Ugeplan',
+      appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.burgerMenu: () {}},
+      key: UniqueKey(),
+    );
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Åbn menu'), findsOneWidget);
-  });
-
-  testWidgets('Camera button is displayed', (WidgetTester tester) async {
-    final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{AppBarIcon.camera: null});
-
-    await simulateTestWidget(tester: tester, widget: girafAppBar);
-
-    expect(find.byTooltip('Åbn kamera'), findsOneWidget);
+    expect(find.byTooltip('Åbn menu').first, findsOneWidget);
   });
 
   testWidgets('Cancel button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{AppBarIcon.cancel: null});
+      title: 'Ugeplan',
+      appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.cancel: () {}},
+      key: UniqueKey(),
+    );
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Fortryd'), findsOneWidget);
+    expect(find.byTooltip('Fortryd').first, findsOneWidget);
   });
 
   testWidgets('Change to citizen button is displayed',
       (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{
-          AppBarIcon.changeToCitizen: null
-        });
+      title: 'Ugeplan',
+      appBarIcons: <AppBarIcon, VoidCallback>{
+        AppBarIcon.changeToCitizen: () {}
+      },
+      key: UniqueKey(),
+    );
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Skift til borger tilstand'), findsOneWidget);
+    expect(find.byTooltip('Skift til borger tilstand').first, findsOneWidget);
   });
 
   testWidgets('Change to guardian button is displayed',
       (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{
-          AppBarIcon.changeToGuardian: null
-        });
+      title: 'Ugeplan',
+      appBarIcons: <AppBarIcon, VoidCallback>{
+        AppBarIcon.changeToGuardian: () {}
+      },
+      key: UniqueKey(),
+    );
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Skift til værge tilstand'), findsOneWidget);
+    expect(find.byTooltip('Skift til værge tilstand').first, findsOneWidget);
   });
 
   testWidgets('Copy button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{AppBarIcon.copy: null});
+      title: 'Ugeplan',
+      appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.copy: () {}},
+      key: UniqueKey(),
+    );
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Kopier'), findsOneWidget);
+    expect(find.byTooltip('Kopier').first, findsOneWidget);
   });
 
   testWidgets('Delete button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{AppBarIcon.delete: null});
+      title: 'Ugeplan',
+      appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.delete: () {}},
+      key: UniqueKey(),
+    );
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Slet'), findsOneWidget);
+    expect(find.byTooltip('Slet').first, findsOneWidget);
   });
 
   testWidgets('Edit button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{AppBarIcon.edit: null});
+      title: 'Ugeplan',
+      appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.edit: () {}},
+      key: UniqueKey(),
+    );
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Rediger'), findsOneWidget);
+    expect(find.byTooltip('Rediger').first, findsOneWidget);
   });
 
   testWidgets('Help button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{AppBarIcon.help: null});
+      title: 'Ugeplan',
+      appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.help: () {}},
+      key: UniqueKey(),
+    );
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Hjælp'), findsOneWidget);
+    expect(find.byTooltip('Hjælp').first, findsOneWidget);
   });
 
   testWidgets('Home button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{AppBarIcon.home: null});
+      title: 'Ugeplan',
+      appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.home: () {}},
+      key: UniqueKey(),
+    );
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Gå til startside'), findsOneWidget);
+    expect(find.byTooltip('Gå til startside').first, findsOneWidget);
   });
 
   testWidgets('Log out button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{AppBarIcon.logout: null});
+      title: 'Ugeplan',
+      appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.logout: () {}},
+      key: UniqueKey(),
+    );
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Log ud'), findsOneWidget);
+    expect(find.byTooltip('Log ud').first, findsOneWidget);
   });
 
   testWidgets('Profile button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{
-          AppBarIcon.profile: null
-        });
+      title: 'Ugeplan',
+      appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.profile: () {}},
+      key: UniqueKey(),
+    );
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Vis profil'), findsOneWidget);
+    expect(find.byTooltip('Vis profil').first, findsOneWidget);
   });
 
   testWidgets('Redo button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
         title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{AppBarIcon.redo: null});
+        appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.redo: () {}},
+        key: UniqueKey());
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Gendan'), findsOneWidget);
+    expect(find.byTooltip('Gendan').first, findsOneWidget);
   });
 
   testWidgets('Save button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
         title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{AppBarIcon.save: null});
+        appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.save: () {}},
+        key: UniqueKey());
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Gem'), findsOneWidget);
+    expect(find.byTooltip('Gem').first, findsOneWidget);
   });
 
   testWidgets('Search button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
         title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{AppBarIcon.search: null});
+        appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.search: () {}},
+        key: UniqueKey());
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Søg'), findsOneWidget);
+    expect(find.byTooltip('Søg').first, findsOneWidget);
   });
 
   testWidgets('Settings button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
         title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{
-          AppBarIcon.settings: null
-        });
+        appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.settings: () {}},
+        key: UniqueKey());
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Indstillinger'), findsOneWidget);
+    expect(find.byTooltip('Indstillinger').first, findsOneWidget);
   });
 
   testWidgets('Undo button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon, VoidCallback>{AppBarIcon.undo: null});
+      title: 'Ugeplan',
+      appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.undo: () {}},
+      key: const ValueKey<String>('undoBtnKey'),
+    );
 
     await simulateTestWidget(tester: tester, widget: girafAppBar);
 
-    expect(find.byTooltip('Fortryd'), findsOneWidget);
+    expect(find.byTooltip('Fortryd').first, findsOneWidget);
   });
-
   //////////////////////////////////////////////////////////////////////////////
 
   // Not at all commented

@@ -1,12 +1,13 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -17,12 +18,19 @@ class MockWeekApi extends Mock implements WeekApi {}
 void main() {
   NewWeekplanBloc bloc;
   Api api;
+
+  class MockWeekModel extends Fake implements WeekModel {}
+
+  setUpAll(() {
+    registerFallbackValue(MockWeekModel());
+  });
+
   //create a mock week for use in the tests
   final PictogramModel mockThumbnail = PictogramModel(
       id: 1,
       lastEdit: null,
-      title: null,
-      accessLevel: null,
+      title: 'null',
+      accessLevel: AccessLevel.PRIVATE,
       imageUrl: 'http://any.tld',
       imageHash: null);
   final DisplayNameModel mockUser =
@@ -34,17 +42,17 @@ void main() {
       weekNumber: 1,
       weekYear: 2019);
 
-  WeekplansBloc mockWeekplanSelector;
+  WeekplansBloc mockWeekplanSelector = WeekplansBloc(api);
 
   setUp(() {
-    api = Api('any');
+    api = Api('baseUrl');
     api.week = MockWeekApi();
     //setup api listeners to return the correct values from the mock week created earlier
     when(api.week.update(any, any, any, any)).thenAnswer((_) {
       return Stream<WeekModel>.value(mockWeek);
     });
 
-    when(api.week.getNames(any)).thenAnswer(
+    when(() => api.week.getNames(any())).thenAnswer(
       (_) {
         return Stream<List<WeekNameModel>>.value(<WeekNameModel>[
           WeekNameModel(
@@ -55,7 +63,7 @@ void main() {
       },
     );
 
-    when(api.week.get(any, any, any)).thenAnswer(
+    when(() => api.week.get(any(), any(), any())).thenAnswer(
       (_) {
         return Stream<WeekModel>.value(mockWeek);
       },
@@ -83,7 +91,7 @@ void main() {
               existingWeekPlans: mockWeekplanSelector.weekNameModels)
           .then(
         (WeekModel w) {
-          verify(api.week.update(any, any, any, any));
+          verify(() => api.week.update(any(), any(), any(), any()));
           done();
         },
       );
@@ -92,7 +100,7 @@ void main() {
 
   test('Should save the new weekplan even when there are no existing', async(
     (DoneFn done) {
-      when(api.week.getNames(any)).thenAnswer(
+      when(() => api.week.getNames(any())).thenAnswer(
           (_) => Stream<List<WeekNameModel>>.value(<WeekNameModel>[]));
 
       mockWeekplanSelector = WeekplansBloc(api);
@@ -108,7 +116,7 @@ void main() {
               existingWeekPlans: mockWeekplanSelector.weekNameModels)
           .then(
         (WeekModel w) {
-          verify(api.week.update(any, any, any, any));
+          verify(() => api.week.update(any(), any(), any(), any()));
           done();
         },
       );

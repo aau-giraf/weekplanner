@@ -1,3 +1,5 @@
+@Timeout(Duration(seconds: 5))
+
 import 'package:api_client/api/api.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +10,8 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 
 void main() {
-  ToolbarBloc bloc;
-  Api api;
+  Api api = Api('baseUrl');
+  late ToolbarBloc bloc;
 
   setUp(() {
     di.clearAll();
@@ -35,7 +37,7 @@ void main() {
   test('Defined icon is added to stream', async((DoneFn done) {
     // Creates a map method Icon setting AppBarIcon.undo to null.
     final Map<AppBarIcon, VoidCallback> icons = <AppBarIcon, VoidCallback>{
-      AppBarIcon.undo: null
+      AppBarIcon.undo: () {}
     };
     // Creates listener for visibleButtons to a list of IconButton
     //When fired, the response is expected to have one element.
@@ -51,8 +53,8 @@ void main() {
     // Creates map method called icons, setting AppBarIcon.undo and .search
     // to null
     final Map<AppBarIcon, VoidCallback> icons = <AppBarIcon, VoidCallback>{
-      AppBarIcon.undo: null,
-      AppBarIcon.search: null
+      AppBarIcon.undo: () {},
+      AppBarIcon.search: () {}
     };
     // Creates Listener on visibleButtons to a list of IconButtons
     // Expects the response be to have two elements

@@ -10,14 +10,14 @@ class MockScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
           child: Column(
-            children: <Widget>[
-              GirafButton(
-                  key: const Key('FirstButton'),
-                  onPressed: () {
-                    confirmDialog(context);
-                  }),
-            ],
-          )),
+        children: <Widget>[
+          GirafButton(
+              key: const Key('FirstButton'),
+              onPressed: () {
+                confirmDialog(context);
+              }),
+        ],
+      )),
     );
   }
 
@@ -38,7 +38,9 @@ class MockScreen extends StatelessWidget {
             option2Icon: const ImageIcon(null),
             option2OnPressed: () {
               Routes().pop(context);
-            });
+            },
+            key: UniqueKey(),
+          );
         });
   }
 }
@@ -71,6 +73,7 @@ void main() {
     await tester.pump();
     // Checks that 3 button dialog has been closed after activating the
     // cancel button
+
     expect(find.byType(Giraf3ButtonDialog), findsNothing);
   });
 
@@ -109,3 +112,4 @@ void main() {
         expect(find.byType(Giraf3ButtonDialog), findsNothing);
       });
 }
+

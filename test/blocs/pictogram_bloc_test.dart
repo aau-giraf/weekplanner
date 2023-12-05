@@ -4,7 +4,7 @@ import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 
@@ -18,9 +18,9 @@ class MockPictogramApi extends Mock implements PictogramApi {
 }
 
 void main() {
-  PictogramBloc bloc;
-  Api api;
-  MockPictogramApi pictogramApi;
+  Api api = Api('baseUrl');
+  PictogramBloc bloc = PictogramBloc(api);
+  MockPictogramApi pictogramApi = MockPictogramApi();
 
   setUp(() {
     api = Api('any');
@@ -36,6 +36,7 @@ void main() {
     // Make a mock call to the api.
     // It deposes the result and returns with an empty, seeded list.
     when(pictogramApi.getAll(
+
             page: bloc.latestPage, pageSize: pageSize, query: query))
         .thenAnswer((_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[]));
@@ -44,17 +45,20 @@ void main() {
     // bloc.pictograms: one null and one placeholder PictogramModel.
     // The listener below is called every time bloc.pictograms is updated.
     bloc.pictograms.listen((List<PictogramModel> response) {
+
       switch (count) {
         case 0:
           // If the stream is empty, ie. no results,
           // the response should be null, since bloc.search adds a null object
           // to the stream first. Otherwise, the test fails.
           expect(response, isNull);
+          done();
           break;
         case 1:
           // If the stream is not empty, the 'getAll' method must have been run.
           // 'verify' makes the test fail if 'getAll' was not called.
           verify(pictogramApi.getAll(
+
               page: bloc.latestPage, pageSize: pageSize, query: query));
           done();
           break;

@@ -5,7 +5,7 @@ import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 
 //Creates a mock for the test
@@ -32,7 +32,8 @@ class MockUserApi extends Mock implements UserApi {
 
 void main() {
   //Setting up the environment
-  ChooseCitizenBloc bloc;
+  late ChooseCitizenBloc bloc;
+
   Api api;
   setUp(() {
     api = Api('any');

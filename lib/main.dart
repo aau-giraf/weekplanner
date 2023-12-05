@@ -1,7 +1,4 @@
 import 'package:api_client/api/api.dart';
-import 'package:api_client/models/displayname_model.dart';
-import 'package:api_client/models/enums/role_enum.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/bootstrap.dart';
@@ -10,11 +7,9 @@ import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/screens/login_screen.dart';
-import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 final Api _api = di.get<Api>();
-final AuthBloc _authBloc = di.get<AuthBloc>();
 
 void main() {
   // Register all dependencies for injector
@@ -45,11 +40,13 @@ void _runApp() {
       //debugShowCheckedModeBanner: false,
       home: StreamBuilder<bool>(
           initialData: false,
-          stream: di.get<AuthBloc>().loggedIn.where((bool currentState) =>
-              lastState != currentState || firstTimeLogIn),
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            lastState = snapshot.data;
-            //To make sure we only listen to the stream once we take advantage
+          stream: di.get<AuthBloc>().loggedIn.where(
+                (bool? currentState) =>
+                    lastState != currentState || firstTimeLogIn,
+              ),
+          builder: (BuildContext context, AsyncSnapshot<bool?> snapshot) {
+            lastState = snapshot.data ?? false;
+            // To make sure we only listen to the stream once, take advantage
             // of firstTimeLogin bool value
             if (firstTimeLogIn == true) {
               _api.connectivity.connectivityStream.listen((dynamic event) {
@@ -59,17 +56,23 @@ void _runApp() {
               });
             }
             firstTimeLogIn = false;
-            if (snapshot.data) {
+
+            final bool loggedIn = snapshot.data ?? false; // Handle null value
+
+            if (loggedIn) {
               // Show screen dependent on logged in role
-              switch (_authBloc.loggedInUser.role) {
-                case Role.Citizen:
-                  return WeekplanSelectorScreen(DisplayNameModel(
-                      displayName: _authBloc.loggedInUser.displayName,
-                      role: describeEnum(_authBloc.loggedInUser.role),
-                      id: _authBloc.loggedInUser.id));
-                default:
-                  return ChooseCitizenScreen();
-              }
+              // switch (_authBloc.loggedInUser.role ?? 'lol') {
+              //   // case Role.Citizen:
+              //   //   return WeekplanSelectorScreen(
+              //   //     DisplayNameModel(
+              //   //       displayName: _authBloc!.loggedInUser.displayName,
+              //   //       role: describeEnum(_authBloc!.loggedInUser.role!),
+              //   //       id: _authBloc!.loggedInUser.id,
+              //   //     ),
+              //   //   );
+              //   default:
+              return ChooseCitizenScreen();
+              // }
             } else {
               // Not loggedIn pop context to login screen.
               Routes().goHome(context);
@@ -84,6 +87,7 @@ void lostConnectionDialog(BuildContext context) {
       context: context,
       builder: (BuildContext context) {
         return const GirafNotifyDialog(
+            key: ValueKey<String>('noConnectionKey'),
             title: 'Mistet forbindelse',
             description: 'Ændringer bliver gemt når du får forbindelse igen');
       });

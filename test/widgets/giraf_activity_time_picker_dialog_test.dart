@@ -5,7 +5,7 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/timer_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/widgets/giraf_activity_time_picker_dialog.dart';
@@ -50,7 +50,11 @@ class MockScreen extends StatelessWidget {
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
-          return GirafActivityTimerPickerDialog(_activityModel, _mockTimerBloc);
+          return GirafActivityTimerPickerDialog(
+            _activityModel,
+            _mockTimerBloc,
+            key: UniqueKey(),
+          );
         });
   }
 }
@@ -188,7 +192,7 @@ void main() {
     });
     // Checks that the timer and expected duration is equal in milliseconds.
     expect(
-        _activityModel.timer.fullLength,
+        _activityModel.timer!.fullLength,
         const Duration(hours: hours, minutes: minutes, seconds: seconds)
             .inMilliseconds);
   });
@@ -197,6 +201,7 @@ void main() {
       'Test that wrong 0 time input on textfields prompts a notify dialog'
           'with correct message', (WidgetTester tester) async {
     // Activates the MockScreen widget and click the TimePickerOpenButton widget
+
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.tap(find.byKey(const Key('TimePickerOpenButton')));
     // Runs next frame and enters the textfield with key TimerTextFieldKey and
@@ -205,13 +210,12 @@ void main() {
     await tester.enterText(find.byKey(const Key('TimerTextFieldKey')), '0');
     // Runs next frame and enters 0 in min and 0 sec into their textFields
     await tester.pump();
-    await tester.enterText(
-        find.byKey(const Key('MinutterTextFieldKey')), '0');
+    await tester.enterText(find.byKey(const Key('MinutterTextFieldKey')), '0');
     await tester.pump();
-    await tester.enterText(
-        find.byKey(const Key('SekunderTextFieldKey')), '0');
+
     // Runs the next frame and clicks widget with
     // TimePickerDialogAcceptButton key
+    await tester.enterText(find.byKey(const Key('SekunderTextFieldKey')), '0');
     await tester.pump();
     await tester.tap(find.byKey(const Key('TimePickerDialogAcceptButton')));
     // Runs next frame and checks that the text
@@ -224,6 +228,7 @@ void main() {
       'Test that no input on textfields prompts a notify dialog'
           'with correct message', (WidgetTester tester) async {
     // Activates the MockScreen widget and click the TimePickerOpenButton widget
+
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.tap(find.byKey(const Key('TimePickerOpenButton')));
     // Runs next frame and click widget with key TimePickerDialogAcceptButton
