@@ -1,15 +1,16 @@
+// ignore_for_file: always_specify_types
+
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
 /// Shows the currently picked pictograms in either making pictogram code
 /// or logging in with it
-class PictogramInputField  extends StatefulWidget {
-
+class PictogramInputField extends StatefulWidget {
   /// Shows the currently picked pictograms in either making pictogram code
   /// or logging in with it
-  const PictogramInputField({Key key, @required this.onPasswordChanged})
-  : super(key: key);
+  const PictogramInputField({required Key key, required this.onPasswordChanged})
+      : super(key: key);
 
   /// Function called when an input is changed to update save button
   /// usability
@@ -24,11 +25,10 @@ const double MAXWIDTH = 500;
 
 /// State for PassWordInputField
 class PictogramInputFieldState extends State<PictogramInputField> {
-
-  List<PictogramModel> _inputCode;
+  late List<PictogramModel?> _inputCode;
   @override
   void initState() {
-    _inputCode = List<PictogramModel>.filled(4, null);
+    _inputCode = List<PictogramModel?>.filled(4, null);
     super.initState();
   }
 
@@ -44,11 +44,12 @@ class PictogramInputFieldState extends State<PictogramInputField> {
     //Reloads the widget with the new input
     setState(() {});
   }
+
   /// Validates whether all four needed pictograms have been input and returns
   /// value of password
-  String validateAndConvertPass() {
+  String? validateAndConvertPass() {
     String output = '';
-    for (PictogramModel m in _inputCode) {
+    for (PictogramModel? m in _inputCode) {
       if (m != null) {
         output += m.id.toString();
       } else {
@@ -61,9 +62,10 @@ class PictogramInputFieldState extends State<PictogramInputField> {
   /// Returns the list of widgets that is the currently input pictograms
   /// or empty boxes
   List<Widget> passwordList() {
-    final List<Widget> password = List<Widget>.filled(4, null);
+    final List<Widget> password =
+        List<Widget>.filled(4, ErrorWidget(const Stream.empty()));
     for (int i = 0; i < 4; i++) {
-      final PictogramModel pictogram = _inputCode[i];
+      final PictogramModel? pictogram = _inputCode[i];
       Widget widget;
       if (pictogram == null) {
         widget = Container(
@@ -72,11 +74,11 @@ class PictogramInputFieldState extends State<PictogramInputField> {
             color: const Color(0xFFe0dede),
           ),
         );
-      }
-      else
-      {
+      } else {
         widget = PictogramImage(
-            pictogram: pictogram, onPressed: () => removeFromPass(i));
+            pictogram: pictogram,
+            onPressed: () => removeFromPass(i),
+            key: UniqueKey());
       }
       password[i] = widget;
     }

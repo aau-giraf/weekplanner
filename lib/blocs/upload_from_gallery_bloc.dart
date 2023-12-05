@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -15,10 +16,10 @@ class UploadFromGalleryBloc extends BlocBase {
   ///
   UploadFromGalleryBloc(this._api);
   final Api _api;
-  String _pictogramName;
+  late String _pictogramName;
 
   /// Publishes the image file, while it is nut null
-  Stream<File> get file => _file.stream.where((File f) => f != null);
+  Stream<File> get file => _file.stream.where((File? f) => f != null);
 
   /// Publishes true while waiting for the pictogram to be uploaded
   Stream<bool> get isUploading => _isUploading.stream;
@@ -42,7 +43,7 @@ class UploadFromGalleryBloc extends BlocBase {
   void chooseImageFromGallery() {
     ImagePicker()
         .pickImage(source: ImageSource.gallery)
-        .then<dynamic>((XFile f) {
+        .then<dynamic>((XFile? f) {
       if (f != null) {
         _publishImage(File(f.path));
         _checkInput();
@@ -52,9 +53,7 @@ class UploadFromGalleryBloc extends BlocBase {
 
   /// Checks if the input fields are filled out
   void _checkInput() {
-    if (_file.value != null &&
-        _pictogramName != null &&
-        _pictogramName.isNotEmpty) {
+    if (_pictogramName.isNotEmpty) {
       _isInputValid.add(true);
     } else {
       _isInputValid.add(false);
@@ -71,9 +70,15 @@ class UploadFromGalleryBloc extends BlocBase {
     _file.add(file);
   }
 
-  Uint8List _encodePng(File file) {
-    return encodePng(copyResize(decodeImage(file.readAsBytesSync()),
-        width: 512)); // 512 bytes chosen as a reasonable input size.
+  /// Encodes the given file into an integer list.
+  List<int>? encodePicture(File? file) {
+    if (file != null) {
+      final Image? image = decodeImage(file.readAsBytesSync());
+      if (image != null) {
+        return encodePng(copyResize(image, width: 512));
+      }
+    }
+    return null;
   }
 
   /// Creates a [PictogramModel]
@@ -86,7 +91,8 @@ class UploadFromGalleryBloc extends BlocBase {
       title: _pictogramName,
     ))
         .flatMap((PictogramModel pictogram) {
-      return _api.pictogram.updateImage(pictogram.id, _encodePng(_file.value));
+      return _api.pictogram
+          .updateImage(pictogram.id!, encodePicture(_file.value) as Uint8List);
     }).map((PictogramModel pictogram) {
       _isUploading.add(false);
       return pictogram;

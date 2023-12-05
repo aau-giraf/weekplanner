@@ -33,11 +33,11 @@ class SettingsCheckMarkButton extends SettingsSectionItem {
   final VoidCallback callback;
 
   /// Optional timer parameter for timer settings
-  final DefaultTimer timer;
+  final DefaultTimer? timer;
 
   @override
   ListTile build(BuildContext context) {
-    Widget trailing;
+    Widget? trailing;
     if (expected == current) {
       trailing = const Icon(Icons.check, color: theme.GirafColors.black);
     } else {
@@ -60,7 +60,10 @@ class SettingsCheckMarkButton extends SettingsSectionItem {
         _imagePath = 'assets/timer/hourglass_icon.png';
       } else if (timer == DefaultTimer.Numeric) {
         _imagePath = 'assets/timer/countdowntimer_icon.png';
+      } else {
+        _imagePath = '';
       }
+
       checkBoxButton = ListTile(
           title: Text(text),
           leading: Image(image: AssetImage(_imagePath)),

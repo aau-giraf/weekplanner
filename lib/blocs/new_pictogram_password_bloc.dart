@@ -13,23 +13,23 @@ class NewPictogramPasswordBloc extends BlocBase {
   NewPictogramPasswordBloc(this._api);
 
   final Api _api;
-  GirafUserModel _user;
+  GirafUserModel _user = GirafUserModel();
 
   /// The username for the citizen that one is creating a password for.
-  String userName;
+  late String? userName;
 
   /// The display name for the citizen that one is creating a password for.
-  String displayName;
+  late String? displayName;
 
   /// The profile picture for the citizen that one is creating a password for.
-  Uint8List profilePicture;
+  late List<int>? profilePicture;
 
   /// Controller that contains the stream & sink of the pictogram password.
-  final rx_dart.BehaviorSubject<String> pictogramPasswordController =
-      rx_dart.BehaviorSubject<String>();
+  final rx_dart.BehaviorSubject<String?> pictogramPasswordController =
+      rx_dart.BehaviorSubject<String?>();
 
   /// To be called whenever somethings needs to be added to the controller.
-  Sink<String> get onPictogramPasswordChanged =>
+  Sink<String?> get onPictogramPasswordChanged =>
       pictogramPasswordController.sink;
 
   /// Streams a bool that tells whether the password is valid.
@@ -38,9 +38,9 @@ class NewPictogramPasswordBloc extends BlocBase {
 
   /// This validation method just null-checks, as there is validation
   /// in the [PictogramPassword] widget.
-  final StreamTransformer<String, bool> _passwordValidation =
-      StreamTransformer<String, bool>.fromHandlers(
-          handleData: (String input, EventSink<bool> sink) {
+  final StreamTransformer<String?, bool> _passwordValidation =
+      StreamTransformer<String?, bool>.fromHandlers(
+          handleData: (String? input, EventSink<bool> sink) {
     if (input == null) {
       sink.add(false);
     } else {
@@ -50,14 +50,14 @@ class NewPictogramPasswordBloc extends BlocBase {
 
   /// Creates a user with the given information.
   Stream<GirafUserModel> createCitizen() {
-    return _api.account.register(
-        userName, pictogramPasswordController.value, displayName,
-        profilePicture, departmentId: _user.department, role: Role.Citizen);
+    return _api.account.register(userName!, pictogramPasswordController.value!,
+        displayName!, profilePicture,
+        departmentId: _user.department!, role: Role.Citizen);
   }
 
   /// Initializes the bloc.
-  void initialize(String _userName, String _displayName,
-                  Uint8List _profilePicture) {
+  void initialize(
+      String _userName, String _displayName, Uint8List _profilePicture) {
     reset();
     userName = _userName;
     displayName = _displayName;
@@ -72,7 +72,7 @@ class NewPictogramPasswordBloc extends BlocBase {
     userName = null;
     displayName = null;
     pictogramPasswordController.add(null);
-    _user = null;
+    _user = GirafUserModel();
   }
 
   @override

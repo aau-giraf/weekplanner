@@ -7,8 +7,8 @@ class TimerHourglass extends StatelessWidget {
   /// Constructor
   const TimerHourglass(this._timerBloc);
 
-   /// Bloc for timer logic
-    final TimerBloc _timerBloc;
+  /// Bloc for timer logic
+  final TimerBloc _timerBloc;
 
   /// Builds an hourglass representing the progress of a timer in
   /// an activity screen
@@ -21,7 +21,7 @@ class TimerHourglass extends StatelessWidget {
           if (timerProgressSnapshot.hasData) {
             // The stream timerProgressSnapshot seems to over shoot,
             // so to counter this, we check above or equal to 1
-            if (timerProgressSnapshot.data >= 1) {
+            if (timerProgressSnapshot.data! >= 1) {
               return _drawDoneHourglass();
             } else {
               return _drawHourglass(timerProgressSnapshot);
@@ -92,7 +92,7 @@ double _offsetBoxHeight(BoxConstraints constraints) {
 // container from the total height of the hourglass.
 double _topBoxHeight(
     BoxConstraints constraints, AsyncSnapshot<double> timerProgressSnapshot) {
-  double baseHeight = timerProgressSnapshot.data >= 1
+  double baseHeight = timerProgressSnapshot.data! >= 1
       ? 0
       : (constraints.maxHeight / 2) -
           _middleBoxHeight(constraints, timerProgressSnapshot);
@@ -110,9 +110,9 @@ double _topBoxHeight(
 // the percentage of time remaining is.
 double _middleBoxHeight(
     BoxConstraints constraints, AsyncSnapshot<double> timerProgressSnapshot) {
-  double baseHeight = timerProgressSnapshot.data >= 1
+  double baseHeight = timerProgressSnapshot.data! >= 1
       ? 0
-      : (constraints.maxHeight / 2 * (1 - timerProgressSnapshot.data));
+      : (constraints.maxHeight / 2 * (1 - timerProgressSnapshot.data!));
   if (baseHeight - _offsetBoxHeight(constraints) < 0) {
     baseHeight = 0;
   } else {
@@ -131,11 +131,11 @@ double _middleBoxHeight(
 // hourglass.
 double _bottomBoxHeight(
     BoxConstraints constraints, AsyncSnapshot<double> timerProgressSnapshot) {
-  double baseHeight = timerProgressSnapshot.data >= 1
+  double baseHeight = timerProgressSnapshot.data! >= 1
       ? 0
       : (constraints.maxHeight / 2 -
           ((constraints.maxHeight / 2) -
-              (constraints.maxHeight / 2 * (1 - timerProgressSnapshot.data))));
+              (constraints.maxHeight / 2 * (1 - timerProgressSnapshot.data!))));
   if (baseHeight - _offsetBoxHeight(constraints) < 0) {
     baseHeight = 0;
   } else {
