@@ -113,11 +113,17 @@ class ShowActivityScreen extends StatelessWidget {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: GirafAppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              _weekplanBloc.loadWeek(_girafUser);
+              Routes().pop(context);
+            },
+          ),
           title: 'Aktivitet',
           appBarIcons: (mode == WeekplanMode.guardian)
               ? <AppBarIcon, VoidCallback>{AppBarIcon.changeToCitizen: () {}}
               : <AppBarIcon, VoidCallback>{AppBarIcon.changeToGuardian: () {}},
-          key: UniqueKey(),
         ),
         body: childContainer);
   }
@@ -843,6 +849,8 @@ class ShowActivityScreen extends StatelessWidget {
                             key: const Key('SavePictogramTextForCitizenBtn'),
                             onPressed: () {
                               _activityBloc.setAlternateName(tec.text);
+                              _weekplanBloc.loadWeek(_girafUser);
+                              Routes().pop(context);
                             },
                             text: 'Gem til borger',
                           ),
