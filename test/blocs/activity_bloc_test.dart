@@ -57,7 +57,7 @@ void main() {
             mockWeekModel.weekNumber, mockWeekModel))
         .thenAnswer(
             (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(mockWeekModel));
-    when(activityApi.update(mockActivity, mockUser.id)).thenAnswer(
+    when(() => activityApi.update(mockActivity, mockUser.id!)).thenAnswer(
         (_) => rx_dart.BehaviorSubject<ActivityModel>.seeded(mockActivity));
   }
 

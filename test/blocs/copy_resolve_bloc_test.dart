@@ -8,8 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
 
 void main() {
-  CopyResolveBloc bloc;
-  Api api;
+  Api api = Api('any');
+  CopyResolveBloc bloc = CopyResolveBloc(api);
   final WeekModel oldWeekmodel = WeekModel(
       thumbnail:
           PictogramModel(title: 'title', accessLevel: AccessLevel.PRIVATE),

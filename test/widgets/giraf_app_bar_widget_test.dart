@@ -47,7 +47,6 @@ class MockScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: GirafAppBar(
-
       title: 'TestTitle',
       appBarIcons: <AppBarIcon, VoidCallback>{
         AppBarIcon.logout: () {},
@@ -90,7 +89,6 @@ void main() {
   // otherwise the widget is not testable
 
   Widget makeTestableWidget({Widget? child}) {
-
     return MaterialApp(
       home: child,
     );
@@ -101,10 +99,10 @@ void main() {
   // simulate a frame change, which is done using tester.pump.
   // This is done through the doUpdate parameter, which is true by default.
   Future<void> simulateTestWidget(
-      {WidgetTester tester, Widget widget, bool doUpdate = true}) async {
-    await tester.pumpWidget(makeTestableWidget(child: widget));
+      {WidgetTester? tester, Widget? widget, bool doUpdate = true}) async {
+    await tester?.pumpWidget(makeTestableWidget(child: widget));
     if (doUpdate) {
-      await tester.pump();
+      await tester?.pump();
     }
   }
 
@@ -114,7 +112,6 @@ void main() {
     di.registerDependency<AuthBloc>(() => MockAuthBloc(api), override: true);
     di.registerDependency<ToolbarBloc>(() => ToolbarBloc(), override: true);
   }
-
 
   testWidgets('Elements on dialog should be visible',
       (WidgetTester tester) async {
@@ -219,7 +216,6 @@ void main() {
 
   // For reference, all of the tests were not documented.
 
-
   testWidgets('Has toolbar with title', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
       title: 'Ugeplan',
@@ -268,7 +264,6 @@ void main() {
 
   testWidgets('Add button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-
       title: 'Ugeplan',
       appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.add: () {}},
       key: UniqueKey(),
@@ -281,7 +276,6 @@ void main() {
 
   testWidgets('Add timer button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-
       title: 'Ugeplan',
       appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.addTimer: () {}},
       key: UniqueKey(),
@@ -294,7 +288,6 @@ void main() {
 
   testWidgets('Back button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-
       title: 'Ugeplan',
       appBarIcons: <AppBarIcon, VoidCallback>{AppBarIcon.back: () {}},
       key: UniqueKey(),
@@ -550,7 +543,7 @@ void main() {
       // If there is a discrepancy between the stream and
       // the expected value 'false', the test fails.
       expect(statusLogout, isFalse);
-      done.complete();
+      done.complete(true);
     });
 
     // Wait for the stream above to update.

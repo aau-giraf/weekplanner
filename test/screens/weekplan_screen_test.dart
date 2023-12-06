@@ -1305,12 +1305,8 @@ void main() {
             WidgetTester tester) async {
       await tester.runAsync(() async {
         final Completer<bool> checkCompleted = Completer<bool>();
-        int i = 0;
-        if(DateTime.now().toString() == DateTime.monday.toString()){
-          i++;
-        }
-        mockActivities[2].state = ActivityState.Normal;
 
+        mockActivities[2].state = ActivityState.Normal;
         mockActivities[2].timer!.paused = true;
         mockActivities[2].timer!.fullLength = 100;
         mockWeek.days![0].activities!.add(mockActivities[2]);

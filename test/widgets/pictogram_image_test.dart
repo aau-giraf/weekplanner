@@ -138,16 +138,14 @@ void main() {
 
     //sets up the widget.
     await tester.pumpWidget(PictogramImage(
-      key: Key('pictogram_image_key'),
-      pictogram: pictogramModel,
-      onPressed: () {
-        onPressedCallbackTriggered = true;
-      },
-      key: const ValueKey<String>('callbackKey'),
-    ));
+        key: const ValueKey<String>('pictogram_image_key'),
+        pictogram: pictogramModel,
+        onPressed: () {
+          onPressedCallbackTriggered = true;
+        }));
 
     // Finder that gets the PictogramImage widget by key.
-    final Finder f = find.byKey(Key('pictogram_image_key'));
+    final Finder f = find.byKey(const ValueKey<String>('pictogram_image_key'));
 
     // Tap the PictogramImage widget.
     await tester.tap(f);

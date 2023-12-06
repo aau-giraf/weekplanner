@@ -49,10 +49,10 @@ void main() {
     bloc = NewCitizenBloc(api);
     bloc.initialize();
 
-  //sets api calls to return correct user data
-    when(api.account.register(any, any, any, any,
-            departmentId: anyNamed('departmentId'), role: anyNamed('role')))
-        .thenAnswer((_) {
+    //sets api calls to return correct user data
+    when(() => api.account.register(any(), any(), any(), any(),
+        departmentId: any(named: 'departmentId'),
+        role: any(named: 'role'))).thenAnswer((_) {
       return Stream<GirafUserModel>.value(user);
     });
   });
