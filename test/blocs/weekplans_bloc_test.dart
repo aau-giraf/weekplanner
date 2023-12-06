@@ -260,6 +260,37 @@ void main() {
         done();
       }));
 
+
+  test('Check deletion of a weekmodel from WeekModels',
+      async((DoneFn done) {
+
+        when(() => weekApi.get(
+            mockUser.id!, weekNameModel1.weekYear!, weekNameModel1.weekNumber!))
+            .thenAnswer(
+                (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
+
+        when(() => weekApi.getNames(mockUser.id!)).thenAnswer((_) =>
+        rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
+
+        bloc.load(mockUser);
+
+
+        bloc.weekModels.listen((List<WeekModel>? response) {
+          expect(response, isNull);
+        });
+
+
+
+
+
+        done();
+
+
+      }));
+
+
+
+
   test('Checks if the edit mode toggles from true', async((DoneFn done) {
     /// Edit mode stream initial value is false.
     bloc.toggleEditMode();
