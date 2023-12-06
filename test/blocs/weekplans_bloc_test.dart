@@ -92,12 +92,21 @@ void main() {
       .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
 
   test('Should be able to load weekplans for a user', async((DoneFn done) {
-    //Checks if the loaded weekNameModels are not null and are equal to the
+    when(() => weekApi.get(
+            mockUser.id!, weekNameModel1.weekYear!, weekNameModel1.weekNumber!))
+        .thenAnswer(
+            (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
+
+    when(() => weekApi.getNames(mockUser.id!)).thenAnswer((_) =>
+        rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
+
+    // Checks if the loaded weekNameModels are not null and are equal to the
     // expected weekName model list
     bloc.weekNameModels.listen((List<WeekNameModel>? response) {
       expect(response, isNotNull);
       expect(response, equals(weekNameModelList));
     });
+
     // Checks if the response of oldWeekModels are not null and are equal to the
     // expected weekmodelList
     bloc.oldWeekModels.listen((List<WeekModel> response) {
@@ -105,7 +114,8 @@ void main() {
       expect(response, equals(weekModelList));
       done();
     });
-    //Loads the mockUser with the WeekNameModel and OldWeekModels. This should
+
+    // Loads the mockUser with the WeekNameModel and OldWeekModels. This should
     // trigger the listeners
     bloc.load(mockUser);
   }));
