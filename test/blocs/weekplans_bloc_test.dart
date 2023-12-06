@@ -80,12 +80,25 @@ void main() {
   when(() => weekApi.get(
           'test', weekNameModel5.weekYear!, weekNameModel5.weekNumber!))
       .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel5));
+
   when(() => weekApi.get(
           'test', weekNameModel6.weekYear!, weekNameModel6.weekNumber!))
       .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel6));
 
   when(() => weekApi.delete(any(), any(), any()))
       .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
+
+  when(() => weekApi.delete(any(), any(), any()))
+      .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
+
+  test('Should be able to load weekplans for a user', async((DoneFn done) {
+    when(() => weekApi.get(
+            mockUser.id!, weekNameModel1.weekYear!, weekNameModel1.weekNumber!))
+        .thenAnswer(
+            (_) => rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1));
+
+    when(() => weekApi.getNames(mockUser.id!)).thenAnswer((_) =>
+        rx_dart.BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
     // Checks if the loaded weekNameModels are not null and are equal to the
     // expected weekName model list
