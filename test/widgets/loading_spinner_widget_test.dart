@@ -40,8 +40,9 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.tap(find.byKey(const Key('FirstButton')));
     await tester.pump();
-    //As the "FirstButton" is set to toggle the loading spinner (can be seen in the mock above),
-    //It is now expected that the loading spinner is being shown
+    // As the "FirstButton" is set to toggle the loading spinner
+    // (can be seen in the mock above),
+    // It is now expected that the loading spinner is being shown
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 

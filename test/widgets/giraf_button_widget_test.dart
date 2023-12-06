@@ -1,3 +1,5 @@
+// ignore_for_file: flutter_style_todos
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -55,11 +57,10 @@ void main() {
     expect(find.byWidget(acceptIcon), findsOneWidget);
   });
 
-
   testWidgets(
       'GirafButton is pressed and'
       ' works when enabled', (WidgetTester tester) async {
-        // TODO; Skal revuderes, mange af disse ting er nok unødvendige
+    // TODO; Skal revuderes, mange af disse ting er nok unødvendige
     final Completer<bool> done = Completer<bool>();
     final MockScreen screen = MockScreen();
     // Opens the MockScreen widget and enables the GirafButton
