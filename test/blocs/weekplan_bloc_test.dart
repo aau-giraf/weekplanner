@@ -253,13 +253,9 @@ void main() {
   test('Checks if marked activities are deleted from a users weekplan',
       async((DoneFn done) {
     //Test if the api.week.update function get called
-    //This test should propperly ensure that the activities are deleted
-    //though an expect, instead of just making sure that the function
-    //is called
-    // TODO:Add expect to ensure that the list is empty
     final DisplayNameModel user = DisplayNameModel(
         role: Role.Citizen.toString(), displayName: 'User', id: '1');
-
+    // Creates an activity model
     final ActivityModel activity = ActivityModel(pictograms: <PictogramModel>[
       PictogramModel(
           accessLevel: AccessLevel.PRIVATE,
@@ -269,13 +265,24 @@ void main() {
           lastEdit: null,
           title: 'test123')
     ], id: 2, isChoiceBoard: true, order: 0, state: ActivityState.Normal);
+    // Adds the activitymodel to activities and gets the week
     week.days![0].activities!.add(activity);
     weekplanBloc.getWeek(week, user).whenComplete(() {
       weekplanBloc.setDaysToDisplay(1, 0);
       weekplanBloc.addWeekdayStream();
       weekplanBloc.addMarkedActivity(activity);
+      //Marks the activities and creates a listener for updates on activityModel
+      //Checks that no marked activities are within the list
+      weekplanBloc.markedActivities
+          .skip(1)
+          .listen((List<ActivityModel> markedActivitiesList) {
+        expect(markedActivitiesList.length, 0);
+        verify(() => api.week.updateDay(any(), any(), any(), any()));
+
+        done();
+      });
+      //Fires the listener and deletes all marked activities
       weekplanBloc.deleteMarkedActivities();
-      verify(() => api.week.updateDay(any(), any(), any(), any()));
       done();
     });
   }));
