@@ -35,8 +35,7 @@ void main() {
 
     // Make a mock call to the api.
     // It deposes the result and returns with an empty, seeded list.
-    when(pictogramApi.getAll(
-
+    when(() => pictogramApi.getAll(
             page: bloc.latestPage, pageSize: pageSize, query: query))
         .thenAnswer((_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[]));
@@ -44,8 +43,7 @@ void main() {
     // Validate behaviour of the stream. bloc.search adds two objects to
     // bloc.pictograms: one null and one placeholder PictogramModel.
     // The listener below is called every time bloc.pictograms is updated.
-    bloc.pictograms.listen((List<PictogramModel> response) {
-
+    bloc.pictograms.listen((List<PictogramModel>? response) {
       switch (count) {
         case 0:
           // If the stream is empty, ie. no results,
@@ -57,8 +55,7 @@ void main() {
         case 1:
           // If the stream is not empty, the 'getAll' method must have been run.
           // 'verify' makes the test fail if 'getAll' was not called.
-          verify(pictogramApi.getAll(
-
+          verify(() => pictogramApi.getAll(
               page: bloc.latestPage, pageSize: pageSize, query: query));
           done();
           break;

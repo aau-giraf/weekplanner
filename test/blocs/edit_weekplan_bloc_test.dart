@@ -17,9 +17,9 @@ class MockWeekApi extends Mock implements WeekApi {}
 
 //test functionality for editing a weekplan bloc
 void main() {
-  EditWeekplanBloc bloc;
-  WeekplansBloc mockWeekplanSelector;
-  Api api;
+  Api api = Api('any');
+  EditWeekplanBloc bloc = EditWeekplanBloc(api);
+  WeekplansBloc mockWeekplanSelector = WeekplansBloc(api);
   //Create mockup pictogram
   final PictogramModel mockThumbnail = PictogramModel(
       id: 1,
