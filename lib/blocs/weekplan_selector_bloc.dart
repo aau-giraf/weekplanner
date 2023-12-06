@@ -303,24 +303,8 @@ class WeekplansBloc extends BlocBase {
     clearMarkedWeekModels();
   }
 
-  /// This method deletes the given week model from the database after checking
-  /// if it's an old weekplan or an upcoming
-  void deleteWeekModel(WeekModel weekModel) {
-    final List<WeekModel>? localWeekModels =
-        _weekModel.hasValue ? _weekModel.value : null;
-    final List<WeekModel>? oldLocalWeekModels =
-        _oldWeekModel.hasValue ? _oldWeekModel.value : null;
-
-    if (localWeekModels != null && localWeekModels.contains(weekModel)) {
-      deleteWeek(localWeekModels, weekModel);
-    } else if (oldLocalWeekModels != null &&
-        oldLocalWeekModels.contains(weekModel)) {
-      deleteWeek(oldLocalWeekModels, weekModel);
-    }
-  }
-
-  /// This method deletes the given week model from the database
-  void deleteWeek(List<WeekModel> weekModels, WeekModel weekModel) {
+  /// This helper-method deletes the given week model from the database
+  void _deleteWeekFromDatabase(List<WeekModel> weekModels, WeekModel weekModel) {
     _api.week
         .delete(_user.id!, weekModel.weekYear, weekModel.weekNumber)
         .listen((bool deleted) {
@@ -330,6 +314,24 @@ class WeekplansBloc extends BlocBase {
       }
     });
   }
+
+  /// This method deletes the given weekmodel from the database after checking
+  /// if it's an old weekplan or an upcoming. It uses deleteWeekFromDatabase
+  void deleteWeekModel(WeekModel weekModel) {
+    final List<WeekModel>? localWeekModels =
+        _weekModel.hasValue ? _weekModel.value : null;
+    final List<WeekModel>? oldLocalWeekModels =
+        _oldWeekModel.hasValue ? _oldWeekModel.value : null;
+
+    if (localWeekModels != null && localWeekModels.contains(weekModel)) {
+      _deleteWeekFromDatabase(localWeekModels, weekModel);
+    } else if (oldLocalWeekModels != null &&
+        oldLocalWeekModels.contains(weekModel)) {
+      _deleteWeekFromDatabase(oldLocalWeekModels, weekModel);
+    }
+  }
+
+
 
   /// Returns the number of marked week models
   int getNumberOfMarkedWeekModels() {
