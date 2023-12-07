@@ -89,6 +89,14 @@ class ActivityBloc extends BlocBase {
     update();
   }
 
+  /// Mark the selected activity as Removed when using long press
+  void removeActivity() {
+    _activityModel.state = _activityModel.state == ActivityState.Removed
+        ? ActivityState.Normal
+        : ActivityState.Removed;
+    update();
+  }
+
   /// Update the Activity with the new state.
   void update() {
     _api.activity
@@ -144,17 +152,18 @@ class ActivityBloc extends BlocBase {
   }
 
   /// Method to get alternate name from api
-  Future<void> getAlternateName() {
+  Future<Future<AlternateNameModel>> getAlternateName() async {
     final Completer<AlternateNameModel> f = Completer<AlternateNameModel>();
-    _api.alternateName
-        .get(_user.id!, _activityModel.pictograms.first.id!)
-        .listen((Object result) {
-      _alternateName = result as AlternateNameModel?;
-      f.complete();
-    }).onError((Object error) {
+    try {
+      final AlternateNameModel result = await _api.alternateName
+          .get(_user.id!, _activityModel.pictograms.first.id!)
+          .first;
+      _alternateName = result;
+      f.complete(result);
+    } catch (error) {
       _alternateName = null;
-      f.complete();
-    });
+      f.completeError(error);
+    }
     return f.future;
   }
 
