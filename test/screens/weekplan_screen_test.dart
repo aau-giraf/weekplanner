@@ -1263,15 +1263,15 @@ void main() {
           i++;
         }
         mockActivities[2].state = ActivityState.Normal;
-        mockActivities[2].timer.paused = true;
-        mockActivities[2].timer.fullLength = 100;
-        mockWeek.days[i].activities.add(mockActivities[2]);
+        mockActivities[2].timer!.paused = true;
+        mockActivities[2].timer!.fullLength = 100;
+        mockWeek.days![i].activities!.add(mockActivities[2]);
         authBloc.setMode(WeekplanMode.citizen);
-        final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
+        final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user, key: UniqueKey());
         await tester.pumpWidget(MaterialApp(home: weekplanScreen));
 
         await tester.pumpAndSettle();
-        await tester.tap(find.byKey(Key(mockWeek.days[i].day.index.toString() +
+        await tester.tap(find.byKey(Key(mockWeek.days![i].day!.index.toString() +
           mockActivities[2].id.toString())));
       await tester.pumpAndSettle();
 
@@ -1313,15 +1313,15 @@ void main() {
           i++;
         }
         mockActivities[2].state = ActivityState.Normal;
-        mockActivities[2].timer.paused = true;
-        mockActivities[2].timer.fullLength = 100;
-        mockWeek.days[i].activities.add(mockActivities[2]);
+        mockActivities[2].timer!.paused = true;
+        mockActivities[2].timer!.fullLength = 100;
+        mockWeek.days![i].activities!.add(mockActivities[2]);
         authBloc.setMode(WeekplanMode.citizen);
         final WeekplanScreen weekplanScreen =
             WeekplanScreen(mockWeek, user, key: UniqueKey());
         await tester.pumpWidget(MaterialApp(home: weekplanScreen));
         await tester.pumpAndSettle();
-        await tester.tap(find.byKey(Key(mockWeek.days[i].day.index.toString()
+        await tester.tap(find.byKey(Key(mockWeek.days![i].day!.index.toString()
             + mockActivities[2].id.toString())));
         await tester.pumpAndSettle();
 
