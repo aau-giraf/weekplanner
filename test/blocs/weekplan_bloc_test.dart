@@ -271,16 +271,14 @@ void main() {
       weekplanBloc.setDaysToDisplay(1, 0);
       weekplanBloc.addWeekdayStream();
       weekplanBloc.addMarkedActivity(activity);
-      //Marks the activities and creates a listener for updates on activityModel
-      //Checks that no marked activities are within the list
       weekplanBloc.markedActivities
           .skip(1)
           .listen((List<ActivityModel> markedActivitiesList) {
         expect(markedActivitiesList.length, 0);
         verify(() => api.week.updateDay(any(), any(), any(), any()));
-
-        done();
       });
+      //Marks the activities and creates a listener for updates on activityModel
+      //Checks that no marked activities are within the list
       //Fires the listener and deletes all marked activities
       weekplanBloc.deleteMarkedActivities();
       done();
