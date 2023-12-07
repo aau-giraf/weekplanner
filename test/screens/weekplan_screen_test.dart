@@ -1187,6 +1187,7 @@ void main() {
           MaterialApp(home: WeekplanScreen(mockWeek, user, key: UniqueKey())));
       await tester.pumpAndSettle();
 
+
       // Find cross (cancelled) icon by key
       expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
     }
@@ -1257,18 +1258,20 @@ void main() {
     Future<void> _activityCardStartTimeWhenActivatedAndShowsItForCitizen(
         WidgetTester tester) async {
       final Completer<bool> checkCompleted = Completer<bool>();
+        int i = 0;
+        if(DateTime.now().toString() == DateTime.monday.toString()){
+          i++;
+        }
+        mockActivities[2].state = ActivityState.Normal;
+        mockActivities[2].timer!.paused = true;
+        mockActivities[2].timer!.fullLength = 100;
+        mockWeek.days![i].activities!.add(mockActivities[2]);
+        authBloc.setMode(WeekplanMode.citizen);
+        final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user, key: UniqueKey());
+        await tester.pumpWidget(MaterialApp(home: weekplanScreen));
 
-      mockActivities[2].state = ActivityState.Normal;
-      mockActivities[2].timer!.paused = true;
-      mockActivities[2].timer!.fullLength = 100;
-      mockWeek.days![0].activities!.add(mockActivities[2]);
-      authBloc.setMode(WeekplanMode.citizen);
-      final WeekplanScreen weekplanScreen =
-          WeekplanScreen(mockWeek, user, key: UniqueKey());
-      await tester.pumpWidget(MaterialApp(home: weekplanScreen));
-
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(Key(mockWeek.days![0].day!.index.toString() +
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(Key(mockWeek.days![i].day!.index.toString() +
           mockActivities[2].id.toString())));
       await tester.pumpAndSettle();
 
@@ -1305,20 +1308,21 @@ void main() {
             WidgetTester tester) async {
       await tester.runAsync(() async {
         final Completer<bool> checkCompleted = Completer<bool>();
-
+        int i = 0;
+        if(DateTime.now().toString() == DateTime.monday.toString()){
+          i++;
+        }
         mockActivities[2].state = ActivityState.Normal;
         mockActivities[2].timer!.paused = true;
         mockActivities[2].timer!.fullLength = 100;
-        mockWeek.days![0].activities!.add(mockActivities[2]);
+        mockWeek.days![i].activities!.add(mockActivities[2]);
         authBloc.setMode(WeekplanMode.citizen);
         final WeekplanScreen weekplanScreen =
             WeekplanScreen(mockWeek, user, key: UniqueKey());
         await tester.pumpWidget(MaterialApp(home: weekplanScreen));
-
         await tester.pumpAndSettle();
-        await tester.tap(find.byKey(Key(
-            mockWeek.days![0].day!.index.toString() +
-                mockActivities[2].id.toString())));
+        await tester.tap(find.byKey(Key(mockWeek.days![i].day!.index.toString()
+            + mockActivities[2].id.toString())));
         await tester.pumpAndSettle();
 
         expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
