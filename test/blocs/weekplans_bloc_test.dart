@@ -16,6 +16,10 @@ import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
+/// HERE THE MOCK-API IS SETUP IN ORDER TO RUN THE TESTS
+/// HER BØR DER VÆRE EN BESKRIVELSE AF HVAD DER SÆTTES OP OG HVORFOR DET ER
+/// NØDVENDIGT
+
 void main() {
   Api api = Api('baseUrl');
   WeekplansBloc bloc = WeekplansBloc(api);
@@ -87,6 +91,15 @@ void main() {
   when(() => weekApi.delete(any(), any(), any()))
       .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
 
+  /// TESTING STARTS HERE
+  /// HER SKAL DER VÆRE EN BESKRIVELSE AF HVILKE TESTS DER KOMMER OG I
+  /// HVILKEN RÆKKEFØLGE DER BLIVER TESTET
+
+
+  /// BØR DENNE UNIT TEST DELES I TO - SÅDAN AT DER FØRST TESTES FOR AT
+  /// DEN LOADER EN LISTE MED WEEKPLANS OG AT DEN LOADER EN LISTE MED GAMLE
+  /// WEEKPLANS? TESTER VI IKKE TO TING I DEN SAMME TEST - OG ER DET
+  /// GOD KODEPRAKSIS?
   test('Should be able to load weekplans for a user', async((DoneFn done) {
     when(() => weekApi.get(
         mockUser.id!, weekNameModel1.weekYear!, weekNameModel1.weekNumber!))
@@ -110,6 +123,9 @@ void main() {
     bloc.load(mockUser);
   }));
 
+  /// OVERVEJ AT FLYTTE DE SIMPLESTE TEST TIL TOPPEN
+  /// DER ER INGEN EXPECT I DE TO NÆSTE TESTS
+
   test('Should dispose weekModels stream', async((DoneFn done) {
     bloc.weekModels.listen((_) {}, onDone: done);
     bloc.dispose();
@@ -119,6 +135,11 @@ void main() {
     bloc.weekNameModels.listen((_) {}, onDone: done);
     bloc.dispose();
   }));
+
+
+  /// HVORFOR LAVER DENNE TEST EN DONE OG DEREFTER TILFØJER DEN NOGET TIL
+  /// DEN MARKEREDE LISTE? DEN BØR VEL IKKE ÆNDRE PÅ STATE'N EFTER
+  /// EXPECT ER KØRT?
 
   test('Adds a weekmodel to a list of marked weekmodels', async((DoneFn done) {
     bloc.markedWeekModels
@@ -131,6 +152,9 @@ void main() {
     // Add the ActivityModel to the list of marked weekmodels.
     bloc.toggleMarkedWeekModel(weekModel1);
   }));
+
+
+  /// FORKERT RÆKKEFØLGE?
 
   test('Removes a weekmodel from the list of marked weekmodels',
       async((DoneFn done) {
@@ -149,6 +173,10 @@ void main() {
         bloc.toggleMarkedWeekModel(weekModel1);
       }));
 
+
+
+  /// GØR DEN DET IKKE I DEN FORKERTE RÆKKEFØLGE HER IGEN?
+
   test('Clear the list of marked weekmodels', async((DoneFn done) {
     // Add the weekmodel to list of marked weekmodels
     bloc.toggleMarkedWeekModel(weekModel1);
@@ -165,6 +193,8 @@ void main() {
     bloc.clearMarkedWeekModels();
   }));
 
+
+  /// DENNE TEST SER KORREKT UD
   test('Checks if a weekmodel is marked', async((DoneFn done) {
     bloc.toggleMarkedWeekModel(weekModel1);
     expect(bloc.getNumberOfMarkedWeekModels(), 1);
@@ -173,6 +203,7 @@ void main() {
     done();
   }));
 
+  /// TESTER DENNE IKKE FLERE TING PÅ ÉN GANG?
   test('Returns false if a weekmodel is not marked', async((DoneFn done) {
     bloc.toggleMarkedWeekModel(weekModel1);
     expect(bloc.getNumberOfMarkedWeekModels(), 1);
@@ -184,6 +215,9 @@ void main() {
     done();
   }));
 
+
+  /// HVORFOR TESTER DEN SIDSTE EXPECT AT DET ER 1 MARKERET MODEL
+  /// DER BLIVER JO IKKE SLETTET NOGET I MELLEMTIDEN?
   test('Checks if the number of marked weekmodels matches',
       async((DoneFn done) {
         bloc.toggleMarkedWeekModel(weekModel1);
@@ -196,6 +230,9 @@ void main() {
         expect(bloc.getNumberOfMarkedWeekModels(), 1);
         done();
       }));
+
+  /// JEG FORSTÅR IKKE HVORFOR DET ER NØDVENDIGT AT LAVE IF-SÆTNINGEN
+  /// OG HVORFOR SÆTTES ALT DETTE OP NÅR DET IKKE GØRES I DE ANDRE TESTS?
 
   test('Checks if the marked weekmodels are deleted from the weekmodels',
       async((DoneFn done) {
@@ -229,6 +266,8 @@ void main() {
         done();
       }));
 
+
+/// DET ER UKLART HVAD DENNE GØR
   test('check deletion of new weekplan without oldWeekPlan',
       async((DoneFn done) {
         final List<WeekNameModel> weekNameModelList = <WeekNameModel>[
@@ -260,6 +299,8 @@ void main() {
         done();
       }));
 
+
+  /// DENNE TEST VIRKER IKKE LIGE NU
 
   test('Check deletion of a weekmodel from WeekModels',
       async((DoneFn done) {
@@ -299,7 +340,7 @@ void main() {
 
 
 
-
+/// HVORFOR KØRES toggleEditMode() TIL SIDST IGEN?
 
   test('Checks if the edit mode toggles from true', async((DoneFn done) {
     /// Edit mode stream initial value is false.
@@ -312,6 +353,8 @@ void main() {
 
     bloc.toggleEditMode();
   }));
+
+  /// DISSE METODER BØR IKKE STÅ HER MEN I STARTEN AF TEST-FILEN
 
   /// Method adds weekModel to the _weekModel stream
   void addWeekModel(WeekModel weekModel) {
@@ -334,6 +377,9 @@ void main() {
     }
   }
 
+
+  /// DET ER IKKE HELT KLART FRA DENNE TEST HVORFOR DEN FAKTISK
+  /// TESTER OM DE ER SORTERET PÅ DATO?
   test('Check if the week models are sorted by date',
       async((DoneFn done) async {
         final List<WeekModel> correctListOld = <WeekModel>[
@@ -368,7 +414,8 @@ void main() {
         done();
       }));
 
-  /// test addWeekModel method added to this class
+
+    /// test addWeekModel method added to this class
   test('addWeekModel adds a weekModel to the _weekModel stream',
       async((DoneFn done) async {
         final WeekModel weekModel1 = WeekModel();
@@ -414,6 +461,13 @@ void main() {
     done();
   }));
 
+
+  /// DENNE TEST BØR FLYTTES TIL EN ANDEN FIL
+  /// DEN BØR OGSÅ SPECIFICERE NOGLE KRITISKE CASES HVOR DER KAN VÆRE
+  /// PROBLEMER MED FUNKTIONALITETEN - MÅSKE RELATERET TIL FORSKELLIGE
+  /// LOCALES OG FORSKELLE I DAYTIME-ZONES - DET ER UKLART
+  /// HVORFOR DE PÅGÆLDENDE DATOER ER VALGT OG HVORFOR DE ER GODE
+  /// TEST CASES
   group('getWeekNumberFromDate', () {
     /*
   This test is to find errors with getWeekNumberFromDate if the next test
@@ -525,6 +579,11 @@ void main() {
       done();
     }) /*, skip: 'Only needed if the function breaks'*/);
 
+
+    /// ER DET GOD TESTPRAKSIS AT INDLÆSE EN FIL - DET ER JO IKKE
+    /// EN DEL AF FUNKTIONALITETEN AT SKULLE GØRE DET - SÅ DET BØR
+    /// REFAKTORERES
+
     test(
         'Check if the correct week number is returned '
             'from list of dates', async((DoneFn done) {
@@ -566,6 +625,10 @@ void main() {
       done();
     }));
   });
+
+  /// JEG FORSTÅR IKKE HELT DENNE TEST OG HVORDAN DEN TESTER FOR OM
+  /// DEN SPLITTER KORREKT - HVIS DET ER DENNE FUNKTIOANLITET DER
+  /// TESTES?
 
   test('Weekplans should be split into old and upcoming', async((DoneFn done) {
     weekModelList.clear();
