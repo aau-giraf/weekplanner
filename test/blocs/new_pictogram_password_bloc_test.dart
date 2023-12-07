@@ -9,6 +9,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/new_pictogram_password_bloc.dart';
 
+//tests if a new pictogram password can be properly created
+
 class MockUserApi extends Mock implements UserApi {
   @override
   Stream<GirafUserModel> me() {

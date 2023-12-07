@@ -87,17 +87,25 @@ void main() {
   });
 
   test('Can load settings from username model', async((DoneFn done) {
+    // Creates listener, fires then SettingsModel is loaded
+    //Checks that the response is not null, that the response is equal to the
+    // current setting and verifies that the getSettings method is used.
+
     settingsBloc.settings.listen((SettingsModel? response) {
       expect(response, isNotNull);
       expect(response!.toJson(), equals(settings.toJson()));
       verify(() => api.user.getSettings(any()));
       done();
     });
-
+    //Loads the setting for user
     settingsBloc.loadSettings(user);
   }));
 
   test('Can update settings', async((DoneFn done) {
+    // Creates listener for SettingModel, fires when a setting is loaded.
+    //Checks that the loaded setting is not null, and equal to the
+    // updatedSettings
+
     settingsBloc.settings.listen((SettingsModel? loadedSettings) {
       expect(loadedSettings, isNotNull);
       expect(loadedSettings!.toJson(), equals(updatedSettings.toJson()));
@@ -109,7 +117,9 @@ void main() {
   }));
 
   test('Should dispose stream', async((DoneFn done) {
+    //Creates listener for settings, uses done when fired
     settingsBloc.settings.listen((_) {}, onDone: done);
+    //Disposes the settingsBloc and triggers the listener
     settingsBloc.dispose();
   }));
 }

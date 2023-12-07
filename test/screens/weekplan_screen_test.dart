@@ -1316,6 +1316,7 @@ void main() {
         await tester.pumpWidget(MaterialApp(home: weekplanScreen));
 
         await tester.pumpAndSettle();
+
         await tester.tap(find.byKey(Key(
             mockWeek.days![0].day!.index.toString() +
                 mockActivities[2].id.toString())));

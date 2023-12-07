@@ -16,6 +16,7 @@ class MockWeekApi extends Mock implements WeekApi {}
 
 class MockWeekModel extends Fake implements WeekModel {}
 
+//tests for various functions related to creating new weekplans
 void main() {
   setUpAll(() {
     registerFallbackValue(MockWeekModel());
@@ -23,6 +24,7 @@ void main() {
 
   Api api = Api('baseUrl');
   NewWeekplanBloc bloc = NewWeekplanBloc(api);
+  //create a mock week for use in the tests
   final PictogramModel mockThumbnail = PictogramModel(
       id: 1,
       lastEdit: null,
@@ -42,9 +44,10 @@ void main() {
   WeekplansBloc mockWeekplanSelector = WeekplansBloc(api);
 
   setUp(() {
-    api = Api('any');
+    api = Api('baseUrl');
     api.week = MockWeekApi();
-
+    // Setup api listeners to return the correct values
+    // from the mock week created earlier
     when(() => api.week.update(any(), any(), any(), any())).thenAnswer((_) {
       return Stream<WeekModel>.value(mockWeek);
     });

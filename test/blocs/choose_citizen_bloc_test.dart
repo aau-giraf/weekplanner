@@ -8,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 
+//Creates a mock for the test
 class MockUserApi extends Mock implements UserApi {
   @override
   Stream<GirafUserModel> me() {
@@ -30,7 +31,9 @@ class MockUserApi extends Mock implements UserApi {
 }
 
 void main() {
+  //Setting up the environment
   late ChooseCitizenBloc bloc;
+
   Api api;
   setUp(() {
     api = Api('any');
@@ -40,11 +43,16 @@ void main() {
 
   test('Should be able to get UsernameModel from API', async((DoneFn done) {
     int _count = 0;
+    //Set up citizen listener
     bloc.citizen.listen((List<DisplayNameModel> response) {
+      //When "_count" is zero it expects length to be 0, and iterates "_count"
       if (_count == 0) {
         expect(response.length, 0);
         _count++;
-      } else {
+      }
+      //Otherwise it expects the length to be 1,
+      //and checks if the data matches with the mock made above.
+      else {
         expect(response.length, 1);
         final DisplayNameModel rsp = response[0];
         expect(rsp.displayName, 'test1');
