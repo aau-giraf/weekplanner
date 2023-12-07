@@ -499,57 +499,24 @@ class WeekplanDayColumn extends StatelessWidget {
                         ),
                         feedbackOffset: const Offset(-5, -5),
                         onDragEnd: (DraggableDetails details) {
-                          // Only the guardian can delete activities
-                          if (modeSnapshot.data == WeekplanMode.guardian) {
+                          // Drag and remove activities for citizen
+                          if (modeSnapshot.data == WeekplanMode.citizen ||
+                              modeSnapshot.data == WeekplanMode.trustee) {
+                            if (currActivity.state == ActivityState.Canceled ||
+                                currActivity.state == ActivityState.Completed) {
+                              _activityBloc.load(currActivity, user);
+                              _activityBloc.accesWeekPlanBloc(
+                                  weekplanBloc, weekday);
+                              _activityBloc.addHandlerToActivityStateOnce();
+                              _activityBloc.removeActivity();
+                           }
+                          } else {
+                            // Only the guardian can delete activities
                             weekplanBloc.addMarkedActivity(currActivity);
                             showRemoveDialog(context);
                           }
                         },
                       ),
-                      // Long press for citizens
-                      if (modeSnapshot.data == WeekplanMode.citizen)
-                        Positioned(
-                          top: 420,
-                          left: 420,
-                          child: GestureDetector(
-                            onLongPress: () {
-                              if (modeSnapshot.data == WeekplanMode.citizen ||
-                                  modeSnapshot.data == WeekplanMode.trustee) {
-                                if (currActivity.state ==
-                                        ActivityState.Canceled ||
-                                    currActivity.state ==
-                                        ActivityState.Completed) {
-                                  // Handle the long press logic
-                                  _activityBloc.load(currActivity, user);
-                                  _activityBloc.accesWeekPlanBloc(
-                                      weekplanBloc, weekday);
-                                  _activityBloc.addHandlerToActivityStateOnce();
-                                  _activityBloc.removeActivity();
-                                  weekplanBloc.loadWeek(user);
-                                }
-                              }
-                            },
-                            child: Container(
-                              width: 150,
-                              height: 150,
-                              color: Colors.green,
-                              child: GestureDetector(
-                                key: Key(weekday.day!.index.toString() +
-                                    currActivity.id.toString()),
-                                child:
-                                    (modeSnapshot.data == WeekplanMode.guardian)
-                                        ? _buildIsMarked(isMarked, context,
-                                            weekday, weekday.activities!, index)
-                                        : _buildIsMarked(
-                                            false,
-                                            context,
-                                            weekday,
-                                            weekday.activities!,
-                                            index),
-                              ),
-                            ),
-                          ),
-                        ),
                     ],
                   );
                 } else {
@@ -694,9 +661,9 @@ class WeekplanDayColumn extends StatelessWidget {
   );
 
   Container _buildAddActivityButton(
-      WeekdayModel weekday,
-      BuildContext context,
-      ) {
+    WeekdayModel weekday,
+    BuildContext context,
+  ) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: MediaQuery.of(context).orientation == Orientation.portrait
@@ -716,10 +683,10 @@ class WeekplanDayColumn extends StatelessWidget {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       fixedSize:
-                      const Size(160, 40), // Adjust the size as needed
+                          const Size(160, 40), // Adjust the size as needed
                     ).copyWith(
                         backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white54)),
+                            MaterialStateProperty.all<Color>(Colors.white54)),
                     key: const Key('AddActivityButton'),
                     child: Image.asset('assets/icons/add.png'),
                     onPressed: () async {
@@ -757,7 +724,7 @@ class WeekplanDayColumn extends StatelessWidget {
                       fixedSize: const Size(160, 40),
                     ).copyWith(
                         backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white60)),
+                            MaterialStateProperty.all<Color>(Colors.white60)),
                     key: const Key('AddActivityButton'),
                     child: Image.asset('assets/icons/folder.png'),
                     onPressed: () {
