@@ -306,17 +306,7 @@ class WeekplansBloc extends BlocBase {
     clearMarkedWeekModels();
   }
 
-  /// This helper-method deletes the given week model from the database
-  void _deleteWeekFromDatabase(List<WeekModel> weekModels, WeekModel weekModel) {
-    _api.week
-        .delete(_user.id!, weekModel.weekYear, weekModel.weekNumber)
-        .listen((bool deleted) {
-      if (deleted) {
-        weekModels.remove(weekModel);
-        _weekModels.add(weekModels);
-      }
-    });
-  }
+
 
   /// This method deletes the given weekmodel from the database after checking
   /// if it's an old weekplan or an upcoming. It uses deleteWeekFromDatabase
@@ -332,6 +322,26 @@ class WeekplansBloc extends BlocBase {
         oldLocalWeekModels.contains(weekModel)) {
       _deleteWeekFromDatabase(oldLocalWeekModels, weekModel);
     }
+  }
+
+  /// This helper-method deletes the given week model from the database
+  void _deleteWeekFromDatabase(List<WeekModel> weekModels, WeekModel weekModel) {
+    _api.week
+        .delete(_user.id!, weekModel.weekYear, weekModel.weekNumber)
+        .listen((bool deleted) {
+      if (deleted) {
+        deleteWeekFromStream(weekModels, weekModel);
+      }
+    });
+  }
+
+
+  //This method was created during refactoring to simplify unit-testing.
+  // In this way it is possible to test removing it from the stream independently
+  // of testing working with the database
+  void deleteWeekFromStream(List<WeekModel> weekModels, WeekModel weekModel) {
+    weekModels.remove(weekModel);
+    _weekModels.add(weekModels);
   }
 
 
