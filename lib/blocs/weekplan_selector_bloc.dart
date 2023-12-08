@@ -89,37 +89,38 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// Gets all the information for a [Weekmodel].
-  /// [weekPlanNames] parameter contains all the information
+  /// [weekNameModels] parameter contains all the information
   /// needed for getting all [WeekModel]'s.
   /// The upcoming weekplans are published in [_weekModels].
   /// Old weekplans are published in [_oldWeekModels].
-  void getAllWeekInfo(List<WeekNameModel>? weekPlanNames) {
-    final List<WeekModel> weekPlans = <WeekModel>[];
+  /// This function is only used in the load function
+  void getAllWeekInfo(List<WeekNameModel>? weekNameModels) {
+    final List<WeekModel> weekModels = <WeekModel>[];
 
     // This is used by weekplan_selector_screen for adding a new weekplan.
     if (_addWeekplan) {
-      weekPlans.add(WeekModel(name: 'Tilføj ugeplan'));
+      weekModels.add(WeekModel(name: 'Tilføj ugeplan'));
     }
 
-    if (weekPlanNames!.isEmpty) {
-      _weekModels.add(weekPlans);
+    if (weekNameModels!.isEmpty) {
+      _weekModels.add(weekModels);
       return;
     }
 
-    final List<Stream<WeekModel>> weekDetails = <Stream<WeekModel>>[];
-    final List<Stream<WeekModel>> oldWeekDetails = <Stream<WeekModel>>[];
+    final List<Stream<WeekModel>> weekModelList = <Stream<WeekModel>>[];
+    final List<Stream<WeekModel>> oldWeekmodelList = <Stream<WeekModel>>[];
 
-    getWeekDetails(weekPlanNames, weekDetails, oldWeekDetails);
+    getWeekDetails(weekNameModels, weekModelList, oldWeekmodelList);
 
     final Stream<List<WeekModel>> getWeekPlans =
-        reformatWeekDetailsToObservableList(weekDetails);
+        reformatWeekDetailsToObservableList(weekModelList);
 
     final Stream<List<WeekModel>> getOldWeekPlans =
-        reformatWeekDetailsToObservableList(oldWeekDetails);
+        reformatWeekDetailsToObservableList(oldWeekmodelList);
 
     getWeekPlans
         .take(1)
-        .map((List<WeekModel> plans) => weekPlans + plans)
+        .map((List<WeekModel> plans) => weekModels + plans)
         .map(_sortWeekPlans)
         .listen(_weekModels.add);
 
@@ -144,21 +145,22 @@ class WeekplansBloc extends BlocBase {
             : rx_dart.Rx.combineLatestList(details);
   }
 
-  /// Makes API calls to get the weekplan details
-  /// Old weekplans are stored in [oldWeekDetails]
-  /// and current/upcoming weekplans are stored in [weekDetails]
+  /// Makes API calls to get the weekmodels from the weekNameModels
+  /// Old weekplans are stored in [oldWeekModels]
+  /// and current/upcoming weekModels are stored in [weekModels]. Note this
+  /// function is only used as part of getAllWeekInfo.
   void getWeekDetails(
-      List<WeekNameModel>? weekPlanNames,
-      List<Stream<WeekModel>> weekDetails,
-      List<Stream<WeekModel>> oldWeekDetails) {
+      List<WeekNameModel>? weekNameModels,
+      List<Stream<WeekModel>> weekModels,
+      List<Stream<WeekModel>> oldWeekModels) {
     // Loops through all weekplans and sort them into old and upcoming weekplans
-    for (WeekNameModel weekPlanName in weekPlanNames!) {
+    for (WeekNameModel weekPlanName in weekNameModels!) {
       if (isWeekDone(weekPlanName)) {
-        oldWeekDetails.add(_api.week
+        oldWeekModels.add(_api.week
             .get(_user.id!, weekPlanName.weekYear!, weekPlanName.weekNumber!)
             .take(1));
       } else {
-        weekDetails.add(_api.week
+        weekModels.add(_api.week
             .get(_user.id!, weekPlanName.weekYear!, weekPlanName.weekNumber!)
             .take(1));
       }
@@ -336,9 +338,9 @@ class WeekplansBloc extends BlocBase {
   }
 
 
-  //This method was created during refactoring to simplify unit-testing.
-  // In this way it is possible to test removing it from the stream independently
-  // of testing working with the database
+  ///This method was created during refactoring to simplify unit-testing.
+  /// In this way it is possible to test removing it from the stream independently
+  /// of testing working with the database
   void deleteWeekFromStream(List<WeekModel> weekModels, WeekModel weekModel) {
     weekModels.remove(weekModel);
     _weekModels.add(weekModels);

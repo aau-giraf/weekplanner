@@ -87,6 +87,8 @@ void main() {
   when(() => weekApi.delete(any(), any(), any()))
       .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
 
+
+
   test('Should be able to load weekplans for a user', async((DoneFn done) {
     when(() => weekApi.get(
         mockUser.id!, weekNameModel1.weekYear!, weekNameModel1.weekNumber!))
