@@ -62,7 +62,9 @@ class WeekplansBloc extends BlocBase {
   /// [addWeekplan] parameter controls if there should be a result
   ///  for adding a new [WeekModel].
 
-  /// The result are published in [_weekNameModels].
+  /// The result are published in [_weekNameModels]. The function does several things. It loads the parameters into local variables.
+  /// Next it calls getAllWeekInfo on the weekNameModels returned from the stream
+  /// (This is a function that retrieves the weekModels and oldWeekModels from a list of weekNameModels).
   void load(DisplayNameModel user, [bool addWeekplan = false]) {
     _user = user;
     _addWeekplan = addWeekplan;
@@ -336,7 +338,6 @@ class WeekplansBloc extends BlocBase {
       }
     });
   }
-
 
   ///This method was created during refactoring to simplify unit-testing.
   /// In this way it is possible to test removing it from the stream independently
