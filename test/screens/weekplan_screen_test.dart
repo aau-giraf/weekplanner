@@ -1320,7 +1320,7 @@ void main() {
         findsOneWidget);
   });
 
-  testWidgets('_activityCardStartTimeWhenActivatedAndShowsItForCitizen', (
+  testWidgets('activity Card Start Time When Activated And Shows It For Citizen', (
       WidgetTester tester) async {
     final Completer<bool> checkCompleted = Completer<bool>();
 
@@ -1368,7 +1368,7 @@ void main() {
   });
 
   testWidgets(
-      '_clickActivityCardDoesNothingIfCompletedOrTimerRunningForCitizen', (
+      'click Activity Card Does Nothing If Completed Or Timer Running For Citizen', (
       WidgetTester tester) async {
     await tester.runAsync(() async {
       final Completer<bool> checkCompleted = Completer<bool>();
