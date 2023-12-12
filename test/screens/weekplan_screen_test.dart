@@ -1322,29 +1322,36 @@ void main() {
 
   testWidgets('activity Card Start Time When Activated And Shows It For Citizen', (
       WidgetTester tester) async {
-    final Completer<bool> checkCompleted = Completer<bool>();
+    await tester.runAsync(() async{
+      final Completer<bool> checkCompleted = Completer<bool>();
 
-    mockActivities[2].state = ActivityState.Normal;
-    mockActivities[2].timer!.paused = true;
-    mockActivities[2].timer!.fullLength = 100;
-    mockWeek.days![0].activities!.add(mockActivities[2]);
-    authBloc.setMode(WeekplanMode.citizen);
-    final WeekplanScreen weekplanScreen =
-    WeekplanScreen(mockWeek, user, key: UniqueKey());
-    await tester.pumpWidget(MaterialApp(home: weekplanScreen));
+      mockActivities[2].state = ActivityState.Normal;
+      mockActivities[2].timer!.paused = true;
+      mockActivities[2].timer!.fullLength = 100;
+      mockWeek.days![0].activities!.add(mockActivities[2]);
+      authBloc.setMode(WeekplanMode.citizen);
+      final WeekplanScreen weekplanScreen =
+      WeekplanScreen(mockWeek, user, key: UniqueKey());
+      await tester.pumpWidget(MaterialApp(home: weekplanScreen));
 
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(Key(mockWeek.days![0].day!.index.toString() +
-        mockActivities[2].id.toString())));
-    await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key(mockWeek.days![0].day!.index.toString() +
+          mockActivities[2].id.toString())));
+      await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
-    // ignore: always_specify_types
-    Future.delayed(const Duration(seconds: 2), () async {
-      checkCompleted.complete(true);
-      await checkCompleted.future;
-      expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+      expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
+
+      await tester.tap(find.byKey(Key(mockWeek.days![0].day!.index.toString() +
+          mockActivities[2].id.toString())));
+      // ignore: always_specify_types
+      Future.delayed(const Duration(seconds: 2), () async {
+        checkCompleted.complete(true);
+        await checkCompleted.future;
+
+        expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+      });
     });
+
   });
 
   testWidgets('_activityCardHasCompletedIconWhenActivityIsCompleted', (
