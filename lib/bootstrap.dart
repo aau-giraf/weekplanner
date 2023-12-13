@@ -17,7 +17,7 @@ import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
-import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
+import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
 

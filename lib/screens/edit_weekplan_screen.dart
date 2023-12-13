@@ -2,7 +2,7 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
-import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
+import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/exceptions/custom_exceptions.dart';
 import 'package:weekplanner/routes.dart';

@@ -12,7 +12,7 @@ import 'package:csv/csv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
-import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
+import 'package:weekplanner/blocs/weekplans_bloc.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 

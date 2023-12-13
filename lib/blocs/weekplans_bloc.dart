@@ -328,13 +328,15 @@ class WeekplansBloc extends BlocBase {
     }
   }
 
+
+
   /// This helper-method deletes the given week model from the database
   void _deleteWeekFromDatabase(List<WeekModel> weekModels, WeekModel weekModel) {
     _api.week
         .delete(_user.id!, weekModel.weekYear, weekModel.weekNumber)
         .listen((bool deleted) {
       if (deleted) {
-        deleteWeekFromStream(weekModels, weekModel);
+        _deleteWeekFromStream(weekModels, weekModel);
       }
     });
   }
@@ -342,7 +344,7 @@ class WeekplansBloc extends BlocBase {
   ///This method was created during refactoring to simplify unit-testing.
   /// In this way it is possible to test removing it from the stream independently
   /// of testing working with the database
-  void deleteWeekFromStream(List<WeekModel> weekModels, WeekModel weekModel) {
+  void _deleteWeekFromStream(List<WeekModel> weekModels, WeekModel weekModel) {
     weekModels.remove(weekModel);
     _weekModels.add(weekModels);
   }
@@ -394,7 +396,9 @@ class WeekplansBloc extends BlocBase {
     _editMode.add(!_editMode.value);
   }
 
-  /// This stream checks that you have only marked one week model
+
+  /// This stream checks that you have only marked one week model. It is currently
+  /// not being used
   Stream<bool> onlyOneModelMarkedStream() {
     return _markedWeekModels.map((List<WeekModel> event) => event.length == 1);
   }
