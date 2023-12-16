@@ -13,6 +13,7 @@ import 'package:csv/csv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
+import 'package:week_of_year/date_week_extensions.dart';
 import 'package:weekplanner/blocs/weekplans_bloc.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
@@ -609,6 +610,16 @@ void main() {
       done();
     }));
   });
+  
+  test('Test if package works', async((DoneFn done) { 
+    
+    final int currentWeek = DateTime.now().weekOfYear;
+    
+    expect(currentWeek, 50);
+
+    done();
+    
+  }));
 
   test('Weekplans should be split into old and upcoming', async((DoneFn done) {
     weekModelList.clear();

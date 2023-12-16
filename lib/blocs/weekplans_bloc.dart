@@ -5,6 +5,10 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
+import 'package:weekplanner/extensions/DateTimeExtension.dart';
+import 'package:week_of_year/week_of_year.dart';
+
+
 
 
 /// WeekplansBloc to get weekplans for a user
@@ -173,7 +177,9 @@ class WeekplansBloc extends BlocBase {
 
   /// Returns the current week number
   int getCurrentWeekNum() {
-    return getWeekNumberFromDate(DateTime.now());
+
+    return DateTime.now().weekNumber;
+    //return getWeekNumberFromDate(DateTime.now());
   }
 
   /// Calculates the current week number from a given date
@@ -254,7 +260,7 @@ class WeekplansBloc extends BlocBase {
   /// Checks if a week is in the past/expired
   bool isWeekDone(WeekNameModel? weekPlan) {
     final int currentYear = DateTime.now().year;
-    final int currentWeek = getCurrentWeekNum();
+    final int currentWeek = DateTime.now().weekNumber;
 
     if (weekPlan!.weekYear! < currentYear ||
         (weekPlan.weekYear == currentYear &&
