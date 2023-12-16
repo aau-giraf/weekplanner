@@ -22,7 +22,6 @@ class EditWeekplanBloc extends NewWeekplanBloc {
     super.onWeekNumberChanged.add(weekModel.weekNumber.toString());
     super.onThumbnailChanged.add(weekModel.thumbnail);
   }
-
   /// This method allows one to save the new information stored in the week
   /// model object and also deletes the old object if necessary
   Future<WeekModel> editWeekPlan(

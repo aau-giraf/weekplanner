@@ -1,11 +1,11 @@
 import 'dart:async';
-
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
+
 
 /// WeekplansBloc to get weekplans for a user
 class WeekplansBloc extends BlocBase {
@@ -169,6 +169,8 @@ class WeekplansBloc extends BlocBase {
     }
   }
 
+
+
   /// Returns the current week number
   int getCurrentWeekNum() {
     return getWeekNumberFromDate(DateTime.now());
@@ -327,8 +329,6 @@ class WeekplansBloc extends BlocBase {
       _deleteWeekFromDatabase(oldLocalWeekModels, weekModel);
     }
   }
-
-
 
   /// This helper-method deletes the given week model from the database
   void _deleteWeekFromDatabase(List<WeekModel> weekModels, WeekModel weekModel) {
