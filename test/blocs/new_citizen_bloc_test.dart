@@ -8,6 +8,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 
+//tests that features relevant to creating a citizen are functional
+
+//creates an example user
 class MockUserApi extends Mock implements UserApi {
   @override
   Stream<GirafUserModel> me() {
@@ -46,6 +49,7 @@ void main() {
     bloc = NewCitizenBloc(api);
     bloc.initialize();
 
+    //sets api calls to return correct user data
     when(() => api.account.register(any(), any(), any(), any(),
         departmentId: any(named: 'departmentId'),
         role: any(named: 'role'))).thenAnswer((_) {

@@ -22,6 +22,7 @@ import 'package:weekplanner/widgets/pictogram_text.dart';
 
 late SettingsModel mockSettings;
 
+//tests for pictogram text being rendered as expected
 class MockUserApi extends Mock implements UserApi {
   @override
   Stream<GirafUserModel> me() {
@@ -40,7 +41,7 @@ void main() {
   late SettingsBloc settingsBloc;
   late ActivityBloc activityBloc;
   late AuthBloc authBloc;
-
+  //create data for use in the tests, such as users, pictograms, and activites
   final DisplayNameModel user = DisplayNameModel(
       displayName: 'Anders And', id: '101', role: Role.Guardian.toString());
 

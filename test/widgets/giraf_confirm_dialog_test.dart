@@ -41,20 +41,26 @@ class MockScreen extends StatelessWidget {
 
 void main() {
   testWidgets('Test if Confirm Dialog is shown', (WidgetTester tester) async {
+    // Activates mockScreen and clicks widget with key FistButton
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.tap(find.byKey(const Key('FirstButton')));
+    //Runs next frame and checks that GirafConfirmDialog exists once
     await tester.pump();
     expect(find.byType(GirafConfirmDialog), findsOneWidget);
   });
 
   testWidgets('Test if Confirm Dialog is closed when tapping Cancel button',
       (WidgetTester tester) async {
+    // Activates mockScreen and clicks widget with key FistButton
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.tap(find.byKey(const Key('FirstButton')));
+    //Runs next frame and checks that GirafConfirmDialog exists once
     await tester.pump();
     expect(find.byType(GirafConfirmDialog), findsOneWidget);
+    // Clicks the widget with key ConfirmDialogCancelButton and runs next frame
     await tester.tap(find.byKey(const Key('ConfirmDialogCancelButton')));
     await tester.pump();
+    // Checks that GirafConfirmDialog has been closed.
     expect(find.byType(GirafConfirmDialog), findsNothing);
   });
 
@@ -62,12 +68,16 @@ void main() {
   testWidgets(
       'Test if confirmed action is performed when tapping Confirm button',
       (WidgetTester tester) async {
+    // Activates mockScreen and clicks widget with key FistButton
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.tap(find.byKey(const Key('FirstButton')));
+    //Runs next frame and checks that GirafConfirmDialog exists once
     await tester.pump();
     expect(find.byType(GirafConfirmDialog), findsOneWidget);
+    // Clicks the widget with key ConfirmDialogConfirmButton and runs next frame
     await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
     await tester.pump();
+    // Checks that GirafConfirmDialog has been closed.
     expect(find.byType(GirafConfirmDialog), findsNothing);
   });
 }

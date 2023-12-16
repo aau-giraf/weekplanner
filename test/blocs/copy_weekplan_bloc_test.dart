@@ -65,17 +65,20 @@ void main() {
   });
 
   test('toggleMarkedUserModel', async((DoneFn done) {
+    //Toggles the user
     bloc.toggleMarkedUserModel(user);
-
+    //Creates listener, which listens for activities on markedUserModels.
+    // Expects that the user is part of the activated toggleMarkedUserModel
     bloc.markedUserModels.listen((List<DisplayNameModel> response) {
       expect(response.contains(user), true);
     });
     done();
   }));
-
-  test(
-      'Test whether the copyToCitizens method '
-      'copies the weekplan to the citizens', async((DoneFn done) {
+  
+  test('Test whether the copyToCitizens method '
+    'copies the weekplan to the citizens', async((DoneFn done) {
+      // Creates 10 different users, marks them, and listens for
+      // them to be marked. Ensures that all users are marked.
     for (int i = 0; i < 10; i++) {
       final DisplayNameModel user = DisplayNameModel(
           displayName: 'Hans', role: Role.Citizen.toString(), id: i.toString());
@@ -84,9 +87,11 @@ void main() {
         expect(markedUsers.contains(user), true);
       });
     }
-
+    // Copies one weekplan to a user.
     bloc.copyWeekplan(<WeekModel>[weekplan1], user, false);
 
+    // Creates Listener for marked users and checks if the right user
+    // has the right weekplan.
     bloc.markedUserModels.listen((List<DisplayNameModel> markedUsers) {
       for (DisplayNameModel user in markedUsers) {
         expect(map.containsKey(user.id), true);
