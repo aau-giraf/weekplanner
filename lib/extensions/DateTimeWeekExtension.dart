@@ -1,11 +1,11 @@
 /// Adds functionality for calculating week number
-extension DateTimeExtension on DateTime {
+extension DateTimeWeekExtension on DateTime {
 
 
   /// Calculates the current week number from a given date
-  int _getWeekNumberFromDate(DateTime date) {
+  int getWeekNumberFromDate(DateTime date) {
     // Get the preliminary week number
-    final int weekNum = _getWeekNumberFromNearestThursday(date);
+    final int weekNum = getWeekNumberFromNearestThursday(date);
 
     /// Define a day that is in the last week of the year.
     /// ## December 28th is always in the last week of the year ##
@@ -15,12 +15,12 @@ extension DateTimeExtension on DateTime {
     // If the preliminary week number is 0,
     // the given date is in last year's last week
     if (weekNum == 0) {
-      return _getWeekNumberFromNearestThursday(dayInLastWeekLastYear);
+      return getWeekNumberFromNearestThursday(dayInLastWeekLastYear);
     }
     // If the preliminary week number is bigger than the amount of weeks in
     // the given date's year, it is in the next year's week 1
     else if (weekNum >
-        _getWeekNumberFromNearestThursday(dayInLastWeekThisYear)) {
+        getWeekNumberFromNearestThursday(dayInLastWeekThisYear)) {
       return 1;
     }
     // If none of the cases described above are true, the
@@ -31,7 +31,7 @@ extension DateTimeExtension on DateTime {
   }
 
   /// Calculates the week number from the nearest Thursday of the given date
-  int _getWeekNumberFromNearestThursday(DateTime date) {
+  int getWeekNumberFromNearestThursday(DateTime date) {
     // Sets the time of day to be noon, thus mitigating the summer time issue
     date = DateTime(date.year, date.month, date.day, 12);
 
@@ -50,8 +50,14 @@ extension DateTimeExtension on DateTime {
     return (nearestThursday / 7).floor() + 1;
   }
 
-  /// Gets the current weeknumber as an integer
-  int get weekNumber {
-    return _getWeekNumberFromDate(DateTime.now());
+  /// Gets the current weeknumber as an integer by using our own custom implementation.
+  // This is because previously a custom implementation was made and it has been preserved just to be sure
+   int customWeekNumber(DateTime dateTime) {
+    return getWeekNumberFromDate(dateTime);
   }
 }
+
+
+
+
+

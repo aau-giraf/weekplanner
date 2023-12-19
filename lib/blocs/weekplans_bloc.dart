@@ -5,7 +5,6 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:weekplanner/extensions/DateTimeExtension.dart';
 import 'package:week_of_year/week_of_year.dart';
 
 
@@ -174,16 +173,16 @@ class WeekplansBloc extends BlocBase {
   }
 
 
-
+/*
   /// Returns the current week number
-  int getCurrentWeekNum() {
+  // int getCurrentWeekNum() {
 
-    return DateTime.now().weekNumber;
+    //return DateTime.now().customWeekNumber;
     //return getWeekNumberFromDate(DateTime.now());
   }
 
   /// Calculates the current week number from a given date
-  int getWeekNumberFromDate(DateTime date) {
+   int getWeekNumberFromDate(DateTime date) {
     // Get the preliminary week number
     final int weekNum = getWeekNumberFromNearestThursday(date);
 
@@ -211,7 +210,7 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// Calculates the week number from the nearest Thursday of the given date
-  int getWeekNumberFromNearestThursday(DateTime date) {
+  //int getWeekNumberFromNearestThursday(DateTime date) {
     // Sets the time of day to be noon, thus mitigating the summer time issue
     date = DateTime(date.year, date.month, date.day, 12);
 
@@ -229,7 +228,7 @@ class WeekplansBloc extends BlocBase {
     // ## The first Thursday of a year is always in week 1 ##
     return (nearestThursday / 7).floor() + 1;
   }
-
+*/
   /// Upcoming weekplans is sorted in ascending order
   List<WeekModel> _sortWeekPlans(List<WeekModel> list) {
     list.sort((WeekModel a, WeekModel b) {
@@ -260,7 +259,7 @@ class WeekplansBloc extends BlocBase {
   /// Checks if a week is in the past/expired
   bool isWeekDone(WeekNameModel? weekPlan) {
     final int currentYear = DateTime.now().year;
-    final int currentWeek = DateTime.now().weekNumber;
+    final int currentWeek = DateTime.now().weekOfYear;
 
     if (weekPlan!.weekYear! < currentYear ||
         (weekPlan.weekYear == currentYear &&
