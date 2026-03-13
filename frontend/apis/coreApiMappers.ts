@@ -46,7 +46,7 @@ export function mapCoreUser(u: CoreUserOut): ProfileDTO {
 // --- Member mapping ---
 
 export interface CoreMemberOut {
-  id: number;
+  membership_id: number;
   user_id: number;
   username: string;
   first_name: string;

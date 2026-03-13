@@ -100,6 +100,7 @@ public class JwtOrgRoleHandler :
         }
 
         var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                     ?? context.User.FindFirst("user_id")?.Value
                      ?? context.User.FindFirst("sub")?.Value;
         var userIdInUrl = httpContext.Request.RouteValues["userId"]?.ToString();
 

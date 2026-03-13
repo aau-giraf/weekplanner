@@ -18,8 +18,8 @@ export function getUserIdFromToken(token: string): string {
     parsed = parsed.substring(0, parsed.lastIndexOf("}") + 1);
     const payload = JSON.parse(parsed);
 
-    const userId = payload["sub"];
-    return userId;
+    const userId = payload["user_id"];
+    return String(userId);
   } catch {
     return "";
   }
