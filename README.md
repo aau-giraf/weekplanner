@@ -19,6 +19,12 @@ The backend stores only **Activities**. All shared entities (users, organization
 
 ## Quick Start
 
+### Full Stack (recommended)
+
+Use [giraf-deploy](https://github.com/aau-giraf/giraf-deploy) to run the entire GIRAF stack (giraf-core, weekplanner, giraf-ai) with a single `docker compose up`.
+
+### Standalone (weekplanner only)
+
 **Prerequisites:** Docker, Node.js 20+, [giraf-core](https://github.com/aau-giraf/giraf-core) running on port 8000.
 
 ```bash
