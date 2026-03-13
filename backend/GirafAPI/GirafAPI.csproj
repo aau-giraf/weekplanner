@@ -15,7 +15,6 @@
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.8" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
         <PackageReference Include="MinimalApis.Extensions" Version="0.11.0" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.8" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
@@ -25,12 +24,5 @@
         <InternalsVisibleTo Include="Giraf.IntegrationTests" />
     </ItemGroup>
     
-    <ItemGroup>
-      <Folder Include="wwwroot\" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <Compile Remove="Migrations\GirafDbContextModelSnapshot.cs" />
-    </ItemGroup>
 
 </Project>
