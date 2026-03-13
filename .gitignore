@@ -1,6 +1,10 @@
 # Environment secrets
 .env
 
+# Weird AI log files
+CLAUDE.md
+AGENTS.md
+
 # --- Backend (.NET) ---
 backend/GirafAPI/bin/
 backend/GirafAPI/obj/
