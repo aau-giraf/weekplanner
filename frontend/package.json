@@ -74,10 +74,10 @@
     "jest-expo": "~54.0.17",
     "prettier": "3.3.3",
     "regenerator-runtime": "^0.14.1",
+    "react-test-renderer": "19.1.0",
     "typescript": "~5.9.2"
   },
   "overrides": {
-    "react-test-renderer": "$react",
     "react-native-worklets": "0.5.1"
   },
   "private": true,
