@@ -32,7 +32,7 @@ jest.mock("../utils/jwtDecode", () => ({
   getUserIdFromToken: jest.fn((token: string) => {
     try {
       const payload = JSON.parse(atob(token.split(".")[1]));
-      return payload.sub;
+      return payload.user_id;
     } catch {
       return null;
     }
@@ -231,9 +231,8 @@ describe("AuthenticationProvider and useAuthentication", () => {
   });
 
   it("should extract userId from access token", async () => {
-    // Create a mock JWT with 'sub' claim (Core uses 'sub' for user ID)
     const mockUserId = "user-123";
-    const mockPayload = { sub: mockUserId, exp: Date.now() / 1000 + 3600 };
+    const mockPayload = { user_id: mockUserId, exp: Date.now() / 1000 + 3600 };
     const mockAccessToken = "header." + btoa(JSON.stringify(mockPayload)) + ".signature";
 
     (tryLogin as jest.Mock).mockResolvedValueOnce({
@@ -257,7 +256,7 @@ describe("AuthenticationProvider and useAuthentication", () => {
 
   it("should handle Core login with all fields (access, refresh, org_roles)", async () => {
     const mockUserId = "user-456";
-    const mockPayload = { sub: mockUserId, exp: Date.now() / 1000 + 3600 };
+    const mockPayload = { user_id: mockUserId, exp: Date.now() / 1000 + 3600 };
     const mockAccessToken = "header." + btoa(JSON.stringify(mockPayload)) + ".signature";
     const mockRefreshToken = "refresh.token.here";
     const mockOrgRoles = { "2": "admin", "7": "member" };
@@ -290,8 +289,10 @@ describe("AuthenticationProvider and useAuthentication", () => {
   });
 
   it("should handle empty org_roles gracefully", async () => {
+    const mockPayload = { user_id: "user-1", exp: Date.now() / 1000 + 3600 };
+    const mockToken = "header." + btoa(JSON.stringify(mockPayload)) + ".signature";
     (tryLogin as jest.Mock).mockResolvedValueOnce({
-      access: "mockAccessToken",
+      access: mockToken,
       refresh: "mockRefreshToken",
       org_roles: undefined, // User has no org memberships yet
     });
@@ -306,7 +307,7 @@ describe("AuthenticationProvider and useAuthentication", () => {
 
     await waitFor(() => {
       expect(result.current.orgRoles).toEqual({});
+      expect(result.current.isAuthenticated()).toBe(true);
     });
-    expect(result.current.isAuthenticated()).toBe(true);
   });
 });

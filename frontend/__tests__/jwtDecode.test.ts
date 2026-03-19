@@ -15,7 +15,7 @@ describe("isTokenExpired", () => {
 describe("getUserIdFromToken", () => {
   it("extracts user ID from token sub claim", () => {
     const userId = "user-123";
-    const payload = { sub: userId, exp: Date.now() / 1000 + 3600 };
+    const payload = { user_id: userId, exp: Date.now() / 1000 + 3600 };
     const token = "header." + btoa(JSON.stringify(payload)) + ".signature";
 
     expect(getUserIdFromToken(token)).toBe(userId);

@@ -30,7 +30,14 @@ internal class GirafWebApplicationFactory : WebApplicationFactory<Program>
         builder.UseEnvironment("Testing");
         builder.ConfigureTestServices(services =>
         {
+            // Remove all production EF Core / Npgsql registrations so Sqlite can replace them
             services.RemoveAll(typeof(DbContextOptions<GirafDbContext>));
+            services.RemoveAll(typeof(DbContextOptions));
+            var efDescriptors = services
+                .Where(d => d.ServiceType.FullName?.Contains("EntityFrameworkCore") == true
+                         || d.ImplementationType?.FullName?.Contains("Npgsql") == true)
+                .ToList();
+            foreach (var d in efDescriptors) services.Remove(d);
 
             var dbFileName = $"GirafTestDb_{Guid.NewGuid()}.db";
             _dbFiles.Add(dbFileName);

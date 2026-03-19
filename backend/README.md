@@ -1,6 +1,6 @@
 # weekplanner-api
 This is the backend REST API for the weekplanner branch of the GIRAF project.
-The weekplanner API uses Microsoft's .NET 8 architecture with a modern MinimalAPI
+The weekplanner API uses Microsoft's .NET 10 architecture with a modern MinimalAPI
 setup. It also includes a containerized PostgreSql database.
 
 ## Architecture
@@ -21,7 +21,7 @@ Frontend → Weekplanner Backend (validates Core JWT)
 
 1. **giraf-core must be running first** — weekplanner validates Core-issued JWTs
 
-2. Download and install .NET 8 from:
+2. Download and install .NET 10 from:
 
    https://dotnet.microsoft.com/en-us/download/dotnet
 

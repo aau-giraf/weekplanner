@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using System.Text;
 
 namespace GirafAPI.Extensions
@@ -102,35 +102,30 @@ namespace GirafAPI.Extensions
             return services;
         }
 
-        public static IServiceCollection ConfigureSwagger(this IServiceCollection services)
+        public static IServiceCollection ConfigureOpenApi(this IServiceCollection services)
         {
-            services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen(c =>
+            services.AddOpenApi(options =>
             {
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                options.AddDocumentTransformer((document, context, cancellationToken) =>
                 {
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
-                });
-
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                {
+                    var components = document.Components ??= new OpenApiComponents();
+                    components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+                    components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme
                     {
-                        new OpenApiSecurityScheme
+                        Type = SecuritySchemeType.Http,
+                        Scheme = "bearer",
+                        BearerFormat = "JWT",
+                        Description = "Enter your JWT token"
+                    };
+                    document.Security ??= [];
+                    document.Security.Add(new OpenApiSecurityRequirement
+                    {
                         {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            },
-                            Scheme = "oauth2",
-                            Name = "Bearer",
-                            In = ParameterLocation.Header,
-                        },
-                        new List<string>()
-                    }
+                            new OpenApiSecuritySchemeReference("Bearer"),
+                            new List<string>()
+                        }
+                    });
+                    return Task.CompletedTask;
                 });
             });
 

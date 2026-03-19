@@ -27,7 +27,9 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["android.permission.RECORD_AUDIO"],
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
       "package": "com.girafsvenner.ugeplan"
     },
     "plugins": [
@@ -43,7 +45,8 @@
         {
           "faceIDPermission": "Allow weekplanner to access your Face ID biometric data."
         }
-      ]
+      ],
+      "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": true

@@ -6,7 +6,7 @@ For general workflow and guidelines, see the [organization CONTRIBUTING.md](http
 
 ### Prerequisites
 
-- .NET 8 SDK
+- .NET 10 SDK
 - Node.js 18+
 - Docker (for PostgreSQL)
 - A running [giraf-core](https://github.com/aau-giraf/giraf-core) instance
