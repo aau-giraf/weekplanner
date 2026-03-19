@@ -8,7 +8,7 @@ Schedule management app for the GIRAF ecosystem — an app environment for child
 Expo mobile app (frontend/)
          │
          ▼
-  Weekplanner API (backend/)    ←── Activity-only, .NET 8
+  Weekplanner API (backend/)    ←── Activity-only, .NET 10
          │
          ▼
   GIRAF Core API (external)     ←── Users, orgs, citizens, pictograms
@@ -44,7 +44,7 @@ The backend API will be available at `http://localhost:5171`.
 
 | Directory | Description |
 |-----------|-------------|
-| `backend/` | .NET 8 Minimal API — Activity CRUD with Core JWT validation |
+| `backend/` | .NET 10 Minimal API — Activity CRUD with Core JWT validation |
 | `frontend/` | Expo / React Native app with TanStack Query |
 | `docker-compose.yml` | Dev: backend + PostgreSQL |
 | `docker-compose.prod.yml` | Prod: env-var driven configuration |
