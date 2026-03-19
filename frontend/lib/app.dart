@@ -14,24 +14,31 @@ import 'package:weekplanner/features/weekplan/presentation/views/add_activity_vi
 import 'package:weekplanner/features/weekplan/presentation/views/edit_activity_view.dart';
 import 'package:weekplanner/features/weekplan/presentation/views/weekplan_view.dart';
 
-class WeekplannerApp extends StatelessWidget {
+class WeekplannerApp extends StatefulWidget {
   const WeekplannerApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'GIRAF Ugeplan',
-      theme: girafTheme,
-      routerConfig: _router(context),
-      debugShowCheckedModeBanner: false,
-    );
+  State<WeekplannerApp> createState() => _WeekplannerAppState();
+}
+
+class _WeekplannerAppState extends State<WeekplannerApp> {
+  late final GoRouter _router;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
-  GoRouter _router(BuildContext context) {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  GoRouter _createRouter(AuthRepository authRepo) {
     return GoRouter(
       initialLocation: '/login',
+      refreshListenable: authRepo,
       redirect: (context, state) {
-        final authRepo = context.read<AuthRepository>();
         final isAuthenticated = authRepo.isAuthenticated;
         final isLoginRoute = state.matchedLocation == '/login';
 
@@ -116,6 +123,18 @@ class WeekplannerApp extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final authRepo = context.read<AuthRepository>();
+    _router = _createRouter(authRepo);
+    return MaterialApp.router(
+      title: 'GIRAF Ugeplan',
+      theme: girafTheme,
+      routerConfig: _router,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
