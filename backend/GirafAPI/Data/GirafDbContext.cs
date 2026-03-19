@@ -10,5 +10,17 @@ namespace GirafAPI.Data
         }
 
         public DbSet<Activity> Activities { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Activity>(entity =>
+            {
+                entity.HasIndex(e => e.CitizenId);
+                entity.HasIndex(e => e.GradeId);
+                entity.HasIndex(e => e.PictogramId);
+            });
+        }
     }
 }

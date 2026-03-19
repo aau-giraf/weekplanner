@@ -77,9 +77,6 @@
     "typescript": "~5.9.2"
   },
   "overrides": {
-    "react-test-renderer": {
-      "react": "$react"
-    },
     "react-native-worklets": "0.5.1"
   },
   "private": true,

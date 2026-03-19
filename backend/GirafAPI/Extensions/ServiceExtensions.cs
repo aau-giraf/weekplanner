@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using System.Text;
 
 namespace GirafAPI.Extensions
@@ -103,7 +104,30 @@ namespace GirafAPI.Extensions
 
         public static IServiceCollection ConfigureOpenApi(this IServiceCollection services)
         {
-            services.AddOpenApi();
+            services.AddOpenApi(options =>
+            {
+                options.AddDocumentTransformer((document, context, cancellationToken) =>
+                {
+                    var components = document.Components ??= new OpenApiComponents();
+                    components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+                    components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme
+                    {
+                        Type = SecuritySchemeType.Http,
+                        Scheme = "bearer",
+                        BearerFormat = "JWT",
+                        Description = "Enter your JWT token"
+                    };
+                    document.Security ??= [];
+                    document.Security.Add(new OpenApiSecurityRequirement
+                    {
+                        {
+                            new OpenApiSecuritySchemeReference("Bearer"),
+                            new List<string>()
+                        }
+                    });
+                    return Task.CompletedTask;
+                });
+            });
 
             return services;
         }

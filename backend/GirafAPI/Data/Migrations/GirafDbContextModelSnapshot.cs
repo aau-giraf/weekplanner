@@ -53,6 +53,12 @@ namespace GirafAPI.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CitizenId");
+
+                    b.HasIndex("GradeId");
+
+                    b.HasIndex("PictogramId");
+
                     b.ToTable("Activities");
                 });
 #pragma warning restore 612, 618
