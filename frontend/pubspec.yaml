@@ -1,0 +1,32 @@
+name: weekplanner
+description: "GIRAF Weekplanner — schedule management for children with autism."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  provider: ^6.1.5
+  go_router: ^17.1.0
+  dio: ^5.9.2
+  flutter_secure_storage: ^10.0.0
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.11.0
+  intl: ^0.20.2
+  flutter_slidable: ^4.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  freezed: ^3.2.5
+  json_serializable: ^6.13.0
+  build_runner: ^2.13.0
+  mockito: ^5.6.3
+
+flutter:
+  uses-material-design: true
