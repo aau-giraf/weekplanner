@@ -3,7 +3,6 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/activity_repository.dart';
 import 'package:weekplanner/shared/models/activity.dart';
-import 'package:weekplanner/shared/models/paginated_response.dart';
 import 'package:weekplanner/shared/services/activity_api_service.dart';
 
 @GenerateNiceMocks([MockSpec<ActivityApiService>()])
@@ -30,10 +29,7 @@ void main() {
   group('ActivityRepository', () {
     test('fetchActivities loads citizen activities', () async {
       when(mockApi.fetchActivitiesByCitizen(42, '2025-03-17'))
-          .thenAnswer((_) async => const PaginatedResponse(
-                items: [testActivity],
-                count: 1,
-              ));
+          .thenAnswer((_) async => [testActivity]);
 
       await repo.fetchActivities(
         id: 42,
@@ -49,10 +45,7 @@ void main() {
 
     test('fetchActivities loads grade activities', () async {
       when(mockApi.fetchActivitiesByGrade(10, '2025-03-17'))
-          .thenAnswer((_) async => const PaginatedResponse(
-                items: [testActivity],
-                count: 1,
-              ));
+          .thenAnswer((_) async => [testActivity]);
 
       await repo.fetchActivities(
         id: 10,
@@ -92,12 +85,8 @@ void main() {
     });
 
     test('deleteActivity removes optimistically', () async {
-      // Pre-populate
       when(mockApi.fetchActivitiesByCitizen(42, '2025-03-17'))
-          .thenAnswer((_) async => const PaginatedResponse(
-                items: [testActivity],
-                count: 1,
-              ));
+          .thenAnswer((_) async => [testActivity]);
       await repo.fetchActivities(
         id: 42,
         isCitizen: true,
@@ -112,12 +101,8 @@ void main() {
     });
 
     test('deleteActivity rolls back on failure', () async {
-      // Pre-populate
       when(mockApi.fetchActivitiesByCitizen(42, '2025-03-17'))
-          .thenAnswer((_) async => const PaginatedResponse(
-                items: [testActivity],
-                count: 1,
-              ));
+          .thenAnswer((_) async => [testActivity]);
       await repo.fetchActivities(
         id: 42,
         isCitizen: true,
@@ -134,12 +119,8 @@ void main() {
     });
 
     test('toggleActivityStatus toggles optimistically', () async {
-      // Pre-populate
       when(mockApi.fetchActivitiesByCitizen(42, '2025-03-17'))
-          .thenAnswer((_) async => const PaginatedResponse(
-                items: [testActivity],
-                count: 1,
-              ));
+          .thenAnswer((_) async => [testActivity]);
       await repo.fetchActivities(
         id: 42,
         isCitizen: true,
@@ -159,10 +140,7 @@ void main() {
       repo.addListener(() => notifyCount++);
 
       when(mockApi.fetchActivitiesByCitizen(42, '2025-03-17'))
-          .thenAnswer((_) async => const PaginatedResponse(
-                items: [testActivity],
-                count: 1,
-              ));
+          .thenAnswer((_) async => [testActivity]);
 
       await repo.fetchActivities(
         id: 42,
@@ -170,7 +148,6 @@ void main() {
         date: DateTime(2025, 3, 17),
       );
 
-      // Should have notified at least twice (loading start + done)
       expect(notifyCount, greaterThanOrEqualTo(2));
     });
   });

@@ -21,17 +21,6 @@ class EditActivityView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Title field
-                TextFormField(
-                  initialValue: vm.title,
-                  onChanged: vm.setTitle,
-                  decoration: const InputDecoration(
-                    labelText: 'Titel (valgfri)',
-                    prefixIcon: Icon(Icons.title),
-                  ),
-                ),
-                const SizedBox(height: 24),
-
                 // Time pickers
                 Row(
                   children: [

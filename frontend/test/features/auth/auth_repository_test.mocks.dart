@@ -306,53 +306,32 @@ class MockActivityApiService extends _i1.Mock
   );
 
   @override
-  _i7.Future<_i3.PaginatedResponse<_i6.Activity>> fetchActivitiesByCitizen(
+  _i7.Future<List<_i6.Activity>> fetchActivitiesByCitizen(
     int? citizenId,
     String? date,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#fetchActivitiesByCitizen, [citizenId, date]),
-            returnValue: _i7.Future<_i3.PaginatedResponse<_i6.Activity>>.value(
-              _FakePaginatedResponse_1<_i6.Activity>(
-                this,
-                Invocation.method(#fetchActivitiesByCitizen, [citizenId, date]),
-              ),
+            returnValue: _i7.Future<List<_i6.Activity>>.value(<_i6.Activity>[]),
+            returnValueForMissingStub: _i7.Future<List<_i6.Activity>>.value(
+              <_i6.Activity>[],
             ),
-            returnValueForMissingStub:
-                _i7.Future<_i3.PaginatedResponse<_i6.Activity>>.value(
-                  _FakePaginatedResponse_1<_i6.Activity>(
-                    this,
-                    Invocation.method(#fetchActivitiesByCitizen, [
-                      citizenId,
-                      date,
-                    ]),
-                  ),
-                ),
           )
-          as _i7.Future<_i3.PaginatedResponse<_i6.Activity>>);
+          as _i7.Future<List<_i6.Activity>>);
 
   @override
-  _i7.Future<_i3.PaginatedResponse<_i6.Activity>> fetchActivitiesByGrade(
+  _i7.Future<List<_i6.Activity>> fetchActivitiesByGrade(
     int? gradeId,
     String? date,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#fetchActivitiesByGrade, [gradeId, date]),
-            returnValue: _i7.Future<_i3.PaginatedResponse<_i6.Activity>>.value(
-              _FakePaginatedResponse_1<_i6.Activity>(
-                this,
-                Invocation.method(#fetchActivitiesByGrade, [gradeId, date]),
-              ),
+            returnValue: _i7.Future<List<_i6.Activity>>.value(<_i6.Activity>[]),
+            returnValueForMissingStub: _i7.Future<List<_i6.Activity>>.value(
+              <_i6.Activity>[],
             ),
-            returnValueForMissingStub:
-                _i7.Future<_i3.PaginatedResponse<_i6.Activity>>.value(
-                  _FakePaginatedResponse_1<_i6.Activity>(
-                    this,
-                    Invocation.method(#fetchActivitiesByGrade, [gradeId, date]),
-                  ),
-                ),
           )
-          as _i7.Future<_i3.PaginatedResponse<_i6.Activity>>);
+          as _i7.Future<List<_i6.Activity>>);
 
   @override
   _i7.Future<_i6.Activity> fetchActivity(int? activityId) =>

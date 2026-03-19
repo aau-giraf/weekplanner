@@ -3,12 +3,11 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i5;
+import 'dart:async' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:weekplanner/shared/models/activity.dart' as _i3;
-import 'package:weekplanner/shared/models/paginated_response.dart' as _i2;
-import 'package:weekplanner/shared/services/activity_api_service.dart' as _i4;
+import 'package:weekplanner/shared/models/activity.dart' as _i2;
+import 'package:weekplanner/shared/services/activity_api_service.dart' as _i3;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -25,14 +24,8 @@ import 'package:weekplanner/shared/services/activity_api_service.dart' as _i4;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
-class _FakePaginatedResponse_0<T> extends _i1.SmartFake
-    implements _i2.PaginatedResponse<T> {
-  _FakePaginatedResponse_0(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
-}
-
-class _FakeActivity_1 extends _i1.SmartFake implements _i3.Activity {
-  _FakeActivity_1(Object parent, Invocation parentInvocation)
+class _FakeActivity_0 extends _i1.SmartFake implements _i2.Activity {
+  _FakeActivity_0(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
@@ -40,7 +33,7 @@ class _FakeActivity_1 extends _i1.SmartFake implements _i3.Activity {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockActivityApiService extends _i1.Mock
-    implements _i4.ActivityApiService {
+    implements _i3.ActivityApiService {
   @override
   void setAuthToken(String? token) => super.noSuchMethod(
     Invocation.method(#setAuthToken, [token]),
@@ -54,164 +47,143 @@ class MockActivityApiService extends _i1.Mock
   );
 
   @override
-  _i5.Future<_i2.PaginatedResponse<_i3.Activity>> fetchActivitiesByCitizen(
+  _i4.Future<List<_i2.Activity>> fetchActivitiesByCitizen(
     int? citizenId,
     String? date,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#fetchActivitiesByCitizen, [citizenId, date]),
-            returnValue: _i5.Future<_i2.PaginatedResponse<_i3.Activity>>.value(
-              _FakePaginatedResponse_0<_i3.Activity>(
-                this,
-                Invocation.method(#fetchActivitiesByCitizen, [citizenId, date]),
-              ),
+            returnValue: _i4.Future<List<_i2.Activity>>.value(<_i2.Activity>[]),
+            returnValueForMissingStub: _i4.Future<List<_i2.Activity>>.value(
+              <_i2.Activity>[],
             ),
-            returnValueForMissingStub:
-                _i5.Future<_i2.PaginatedResponse<_i3.Activity>>.value(
-                  _FakePaginatedResponse_0<_i3.Activity>(
-                    this,
-                    Invocation.method(#fetchActivitiesByCitizen, [
-                      citizenId,
-                      date,
-                    ]),
-                  ),
-                ),
           )
-          as _i5.Future<_i2.PaginatedResponse<_i3.Activity>>);
+          as _i4.Future<List<_i2.Activity>>);
 
   @override
-  _i5.Future<_i2.PaginatedResponse<_i3.Activity>> fetchActivitiesByGrade(
+  _i4.Future<List<_i2.Activity>> fetchActivitiesByGrade(
     int? gradeId,
     String? date,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#fetchActivitiesByGrade, [gradeId, date]),
-            returnValue: _i5.Future<_i2.PaginatedResponse<_i3.Activity>>.value(
-              _FakePaginatedResponse_0<_i3.Activity>(
-                this,
-                Invocation.method(#fetchActivitiesByGrade, [gradeId, date]),
-              ),
+            returnValue: _i4.Future<List<_i2.Activity>>.value(<_i2.Activity>[]),
+            returnValueForMissingStub: _i4.Future<List<_i2.Activity>>.value(
+              <_i2.Activity>[],
             ),
-            returnValueForMissingStub:
-                _i5.Future<_i2.PaginatedResponse<_i3.Activity>>.value(
-                  _FakePaginatedResponse_0<_i3.Activity>(
-                    this,
-                    Invocation.method(#fetchActivitiesByGrade, [gradeId, date]),
-                  ),
-                ),
           )
-          as _i5.Future<_i2.PaginatedResponse<_i3.Activity>>);
+          as _i4.Future<List<_i2.Activity>>);
 
   @override
-  _i5.Future<_i3.Activity> fetchActivity(int? activityId) =>
+  _i4.Future<_i2.Activity> fetchActivity(int? activityId) =>
       (super.noSuchMethod(
             Invocation.method(#fetchActivity, [activityId]),
-            returnValue: _i5.Future<_i3.Activity>.value(
-              _FakeActivity_1(
+            returnValue: _i4.Future<_i2.Activity>.value(
+              _FakeActivity_0(
                 this,
                 Invocation.method(#fetchActivity, [activityId]),
               ),
             ),
-            returnValueForMissingStub: _i5.Future<_i3.Activity>.value(
-              _FakeActivity_1(
+            returnValueForMissingStub: _i4.Future<_i2.Activity>.value(
+              _FakeActivity_0(
                 this,
                 Invocation.method(#fetchActivity, [activityId]),
               ),
             ),
           )
-          as _i5.Future<_i3.Activity>);
+          as _i4.Future<_i2.Activity>);
 
   @override
-  _i5.Future<_i3.Activity> createActivityForCitizen(
+  _i4.Future<_i2.Activity> createActivityForCitizen(
     int? citizenId,
     Map<String, dynamic>? data,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#createActivityForCitizen, [citizenId, data]),
-            returnValue: _i5.Future<_i3.Activity>.value(
-              _FakeActivity_1(
+            returnValue: _i4.Future<_i2.Activity>.value(
+              _FakeActivity_0(
                 this,
                 Invocation.method(#createActivityForCitizen, [citizenId, data]),
               ),
             ),
-            returnValueForMissingStub: _i5.Future<_i3.Activity>.value(
-              _FakeActivity_1(
+            returnValueForMissingStub: _i4.Future<_i2.Activity>.value(
+              _FakeActivity_0(
                 this,
                 Invocation.method(#createActivityForCitizen, [citizenId, data]),
               ),
             ),
           )
-          as _i5.Future<_i3.Activity>);
+          as _i4.Future<_i2.Activity>);
 
   @override
-  _i5.Future<_i3.Activity> createActivityForGrade(
+  _i4.Future<_i2.Activity> createActivityForGrade(
     int? gradeId,
     Map<String, dynamic>? data,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#createActivityForGrade, [gradeId, data]),
-            returnValue: _i5.Future<_i3.Activity>.value(
-              _FakeActivity_1(
+            returnValue: _i4.Future<_i2.Activity>.value(
+              _FakeActivity_0(
                 this,
                 Invocation.method(#createActivityForGrade, [gradeId, data]),
               ),
             ),
-            returnValueForMissingStub: _i5.Future<_i3.Activity>.value(
-              _FakeActivity_1(
+            returnValueForMissingStub: _i4.Future<_i2.Activity>.value(
+              _FakeActivity_0(
                 this,
                 Invocation.method(#createActivityForGrade, [gradeId, data]),
               ),
             ),
           )
-          as _i5.Future<_i3.Activity>);
+          as _i4.Future<_i2.Activity>);
 
   @override
-  _i5.Future<_i3.Activity> updateActivity(
+  _i4.Future<_i2.Activity> updateActivity(
     int? activityId,
     Map<String, dynamic>? data,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#updateActivity, [activityId, data]),
-            returnValue: _i5.Future<_i3.Activity>.value(
-              _FakeActivity_1(
+            returnValue: _i4.Future<_i2.Activity>.value(
+              _FakeActivity_0(
                 this,
                 Invocation.method(#updateActivity, [activityId, data]),
               ),
             ),
-            returnValueForMissingStub: _i5.Future<_i3.Activity>.value(
-              _FakeActivity_1(
+            returnValueForMissingStub: _i4.Future<_i2.Activity>.value(
+              _FakeActivity_0(
                 this,
                 Invocation.method(#updateActivity, [activityId, data]),
               ),
             ),
           )
-          as _i5.Future<_i3.Activity>);
+          as _i4.Future<_i2.Activity>);
 
   @override
-  _i5.Future<void> deleteActivity(int? activityId) =>
+  _i4.Future<void> deleteActivity(int? activityId) =>
       (super.noSuchMethod(
             Invocation.method(#deleteActivity, [activityId]),
-            returnValue: _i5.Future<void>.value(),
-            returnValueForMissingStub: _i5.Future<void>.value(),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
           )
-          as _i5.Future<void>);
+          as _i4.Future<void>);
 
   @override
-  _i5.Future<_i3.Activity> toggleActivityStatus(int? activityId) =>
+  _i4.Future<_i2.Activity> toggleActivityStatus(int? activityId) =>
       (super.noSuchMethod(
             Invocation.method(#toggleActivityStatus, [activityId]),
-            returnValue: _i5.Future<_i3.Activity>.value(
-              _FakeActivity_1(
+            returnValue: _i4.Future<_i2.Activity>.value(
+              _FakeActivity_0(
                 this,
                 Invocation.method(#toggleActivityStatus, [activityId]),
               ),
             ),
-            returnValueForMissingStub: _i5.Future<_i3.Activity>.value(
-              _FakeActivity_1(
+            returnValueForMissingStub: _i4.Future<_i2.Activity>.value(
+              _FakeActivity_0(
                 this,
                 Invocation.method(#toggleActivityStatus, [activityId]),
               ),
             ),
           )
-          as _i5.Future<_i3.Activity>);
+          as _i4.Future<_i2.Activity>);
 }

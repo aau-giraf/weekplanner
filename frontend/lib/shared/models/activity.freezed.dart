@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Activity {
 
-@JsonKey(name: 'activity_id') int get activityId; String get date;@JsonKey(name: 'start_time') String get startTime;@JsonKey(name: 'end_time') String get endTime;@JsonKey(name: 'is_completed') bool get isCompleted;@JsonKey(name: 'pictogram_id') int? get pictogramId;@JsonKey(name: 'citizen_id') int? get citizenId;@JsonKey(name: 'grade_id') int? get gradeId; String? get title;
+ int get activityId; String get date; String get startTime; String get endTime; bool get isCompleted; int? get pictogramId;
 /// Create a copy of Activity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ActivityCopyWith<Activity> get copyWith => _$ActivityCopyWithImpl<Activity>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Activity&&(identical(other.activityId, activityId) || other.activityId == activityId)&&(identical(other.date, date) || other.date == date)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.pictogramId, pictogramId) || other.pictogramId == pictogramId)&&(identical(other.citizenId, citizenId) || other.citizenId == citizenId)&&(identical(other.gradeId, gradeId) || other.gradeId == gradeId)&&(identical(other.title, title) || other.title == title));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Activity&&(identical(other.activityId, activityId) || other.activityId == activityId)&&(identical(other.date, date) || other.date == date)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.pictogramId, pictogramId) || other.pictogramId == pictogramId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,activityId,date,startTime,endTime,isCompleted,pictogramId,citizenId,gradeId,title);
+int get hashCode => Object.hash(runtimeType,activityId,date,startTime,endTime,isCompleted,pictogramId);
 
 @override
 String toString() {
-  return 'Activity(activityId: $activityId, date: $date, startTime: $startTime, endTime: $endTime, isCompleted: $isCompleted, pictogramId: $pictogramId, citizenId: $citizenId, gradeId: $gradeId, title: $title)';
+  return 'Activity(activityId: $activityId, date: $date, startTime: $startTime, endTime: $endTime, isCompleted: $isCompleted, pictogramId: $pictogramId)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ActivityCopyWith<$Res>  {
   factory $ActivityCopyWith(Activity value, $Res Function(Activity) _then) = _$ActivityCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'activity_id') int activityId, String date,@JsonKey(name: 'start_time') String startTime,@JsonKey(name: 'end_time') String endTime,@JsonKey(name: 'is_completed') bool isCompleted,@JsonKey(name: 'pictogram_id') int? pictogramId,@JsonKey(name: 'citizen_id') int? citizenId,@JsonKey(name: 'grade_id') int? gradeId, String? title
+ int activityId, String date, String startTime, String endTime, bool isCompleted, int? pictogramId
 });
 
 
@@ -65,7 +65,7 @@ class _$ActivityCopyWithImpl<$Res>
 
 /// Create a copy of Activity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? activityId = null,Object? date = null,Object? startTime = null,Object? endTime = null,Object? isCompleted = null,Object? pictogramId = freezed,Object? citizenId = freezed,Object? gradeId = freezed,Object? title = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? activityId = null,Object? date = null,Object? startTime = null,Object? endTime = null,Object? isCompleted = null,Object? pictogramId = freezed,}) {
   return _then(_self.copyWith(
 activityId: null == activityId ? _self.activityId : activityId // ignore: cast_nullable_to_non_nullable
 as int,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
@@ -73,10 +73,7 @@ as String,startTime: null == startTime ? _self.startTime : startTime // ignore: 
 as String,endTime: null == endTime ? _self.endTime : endTime // ignore: cast_nullable_to_non_nullable
 as String,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
 as bool,pictogramId: freezed == pictogramId ? _self.pictogramId : pictogramId // ignore: cast_nullable_to_non_nullable
-as int?,citizenId: freezed == citizenId ? _self.citizenId : citizenId // ignore: cast_nullable_to_non_nullable
-as int?,gradeId: freezed == gradeId ? _self.gradeId : gradeId // ignore: cast_nullable_to_non_nullable
-as int?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String?,
+as int?,
   ));
 }
 
@@ -161,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'activity_id')  int activityId,  String date, @JsonKey(name: 'start_time')  String startTime, @JsonKey(name: 'end_time')  String endTime, @JsonKey(name: 'is_completed')  bool isCompleted, @JsonKey(name: 'pictogram_id')  int? pictogramId, @JsonKey(name: 'citizen_id')  int? citizenId, @JsonKey(name: 'grade_id')  int? gradeId,  String? title)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int activityId,  String date,  String startTime,  String endTime,  bool isCompleted,  int? pictogramId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Activity() when $default != null:
-return $default(_that.activityId,_that.date,_that.startTime,_that.endTime,_that.isCompleted,_that.pictogramId,_that.citizenId,_that.gradeId,_that.title);case _:
+return $default(_that.activityId,_that.date,_that.startTime,_that.endTime,_that.isCompleted,_that.pictogramId);case _:
   return orElse();
 
 }
@@ -182,10 +179,10 @@ return $default(_that.activityId,_that.date,_that.startTime,_that.endTime,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'activity_id')  int activityId,  String date, @JsonKey(name: 'start_time')  String startTime, @JsonKey(name: 'end_time')  String endTime, @JsonKey(name: 'is_completed')  bool isCompleted, @JsonKey(name: 'pictogram_id')  int? pictogramId, @JsonKey(name: 'citizen_id')  int? citizenId, @JsonKey(name: 'grade_id')  int? gradeId,  String? title)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int activityId,  String date,  String startTime,  String endTime,  bool isCompleted,  int? pictogramId)  $default,) {final _that = this;
 switch (_that) {
 case _Activity():
-return $default(_that.activityId,_that.date,_that.startTime,_that.endTime,_that.isCompleted,_that.pictogramId,_that.citizenId,_that.gradeId,_that.title);case _:
+return $default(_that.activityId,_that.date,_that.startTime,_that.endTime,_that.isCompleted,_that.pictogramId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +199,10 @@ return $default(_that.activityId,_that.date,_that.startTime,_that.endTime,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'activity_id')  int activityId,  String date, @JsonKey(name: 'start_time')  String startTime, @JsonKey(name: 'end_time')  String endTime, @JsonKey(name: 'is_completed')  bool isCompleted, @JsonKey(name: 'pictogram_id')  int? pictogramId, @JsonKey(name: 'citizen_id')  int? citizenId, @JsonKey(name: 'grade_id')  int? gradeId,  String? title)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int activityId,  String date,  String startTime,  String endTime,  bool isCompleted,  int? pictogramId)?  $default,) {final _that = this;
 switch (_that) {
 case _Activity() when $default != null:
-return $default(_that.activityId,_that.date,_that.startTime,_that.endTime,_that.isCompleted,_that.pictogramId,_that.citizenId,_that.gradeId,_that.title);case _:
+return $default(_that.activityId,_that.date,_that.startTime,_that.endTime,_that.isCompleted,_that.pictogramId);case _:
   return null;
 
 }
@@ -217,18 +214,15 @@ return $default(_that.activityId,_that.date,_that.startTime,_that.endTime,_that.
 @JsonSerializable()
 
 class _Activity implements Activity {
-  const _Activity({@JsonKey(name: 'activity_id') required this.activityId, required this.date, @JsonKey(name: 'start_time') required this.startTime, @JsonKey(name: 'end_time') required this.endTime, @JsonKey(name: 'is_completed') this.isCompleted = false, @JsonKey(name: 'pictogram_id') this.pictogramId, @JsonKey(name: 'citizen_id') this.citizenId, @JsonKey(name: 'grade_id') this.gradeId, this.title});
+  const _Activity({required this.activityId, required this.date, required this.startTime, required this.endTime, this.isCompleted = false, this.pictogramId});
   factory _Activity.fromJson(Map<String, dynamic> json) => _$ActivityFromJson(json);
 
-@override@JsonKey(name: 'activity_id') final  int activityId;
+@override final  int activityId;
 @override final  String date;
-@override@JsonKey(name: 'start_time') final  String startTime;
-@override@JsonKey(name: 'end_time') final  String endTime;
-@override@JsonKey(name: 'is_completed') final  bool isCompleted;
-@override@JsonKey(name: 'pictogram_id') final  int? pictogramId;
-@override@JsonKey(name: 'citizen_id') final  int? citizenId;
-@override@JsonKey(name: 'grade_id') final  int? gradeId;
-@override final  String? title;
+@override final  String startTime;
+@override final  String endTime;
+@override@JsonKey() final  bool isCompleted;
+@override final  int? pictogramId;
 
 /// Create a copy of Activity
 /// with the given fields replaced by the non-null parameter values.
@@ -243,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Activity&&(identical(other.activityId, activityId) || other.activityId == activityId)&&(identical(other.date, date) || other.date == date)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.pictogramId, pictogramId) || other.pictogramId == pictogramId)&&(identical(other.citizenId, citizenId) || other.citizenId == citizenId)&&(identical(other.gradeId, gradeId) || other.gradeId == gradeId)&&(identical(other.title, title) || other.title == title));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Activity&&(identical(other.activityId, activityId) || other.activityId == activityId)&&(identical(other.date, date) || other.date == date)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.pictogramId, pictogramId) || other.pictogramId == pictogramId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,activityId,date,startTime,endTime,isCompleted,pictogramId,citizenId,gradeId,title);
+int get hashCode => Object.hash(runtimeType,activityId,date,startTime,endTime,isCompleted,pictogramId);
 
 @override
 String toString() {
-  return 'Activity(activityId: $activityId, date: $date, startTime: $startTime, endTime: $endTime, isCompleted: $isCompleted, pictogramId: $pictogramId, citizenId: $citizenId, gradeId: $gradeId, title: $title)';
+  return 'Activity(activityId: $activityId, date: $date, startTime: $startTime, endTime: $endTime, isCompleted: $isCompleted, pictogramId: $pictogramId)';
 }
 
 
@@ -263,7 +257,7 @@ abstract mixin class _$ActivityCopyWith<$Res> implements $ActivityCopyWith<$Res>
   factory _$ActivityCopyWith(_Activity value, $Res Function(_Activity) _then) = __$ActivityCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'activity_id') int activityId, String date,@JsonKey(name: 'start_time') String startTime,@JsonKey(name: 'end_time') String endTime,@JsonKey(name: 'is_completed') bool isCompleted,@JsonKey(name: 'pictogram_id') int? pictogramId,@JsonKey(name: 'citizen_id') int? citizenId,@JsonKey(name: 'grade_id') int? gradeId, String? title
+ int activityId, String date, String startTime, String endTime, bool isCompleted, int? pictogramId
 });
 
 
@@ -280,7 +274,7 @@ class __$ActivityCopyWithImpl<$Res>
 
 /// Create a copy of Activity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? activityId = null,Object? date = null,Object? startTime = null,Object? endTime = null,Object? isCompleted = null,Object? pictogramId = freezed,Object? citizenId = freezed,Object? gradeId = freezed,Object? title = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? activityId = null,Object? date = null,Object? startTime = null,Object? endTime = null,Object? isCompleted = null,Object? pictogramId = freezed,}) {
   return _then(_Activity(
 activityId: null == activityId ? _self.activityId : activityId // ignore: cast_nullable_to_non_nullable
 as int,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
@@ -288,10 +282,7 @@ as String,startTime: null == startTime ? _self.startTime : startTime // ignore: 
 as String,endTime: null == endTime ? _self.endTime : endTime // ignore: cast_nullable_to_non_nullable
 as String,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
 as bool,pictogramId: freezed == pictogramId ? _self.pictogramId : pictogramId // ignore: cast_nullable_to_non_nullable
-as int?,citizenId: freezed == citizenId ? _self.citizenId : citizenId // ignore: cast_nullable_to_non_nullable
-as int?,gradeId: freezed == gradeId ? _self.gradeId : gradeId // ignore: cast_nullable_to_non_nullable
-as int?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String?,
+as int?,
   ));
 }
 

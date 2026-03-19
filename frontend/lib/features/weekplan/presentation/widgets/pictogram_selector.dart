@@ -102,7 +102,7 @@ class _PictogramSelectorState extends State<PictogramSelector> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: Text(
-                            pictogram.title,
+                            pictogram.name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(fontSize: 10),

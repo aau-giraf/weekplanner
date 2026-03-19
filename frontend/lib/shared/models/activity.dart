@@ -6,15 +6,12 @@ part 'activity.g.dart';
 @freezed
 abstract class Activity with _$Activity {
   const factory Activity({
-    @JsonKey(name: 'activity_id') required int activityId,
+    required int activityId,
     required String date,
-    @JsonKey(name: 'start_time') required String startTime,
-    @JsonKey(name: 'end_time') required String endTime,
-    @JsonKey(name: 'is_completed') @Default(false) bool isCompleted,
-    @JsonKey(name: 'pictogram_id') int? pictogramId,
-    @JsonKey(name: 'citizen_id') int? citizenId,
-    @JsonKey(name: 'grade_id') int? gradeId,
-    String? title,
+    required String startTime,
+    required String endTime,
+    @Default(false) bool isCompleted,
+    int? pictogramId,
   }) = _Activity;
 
   factory Activity.fromJson(Map<String, dynamic> json) => _$ActivityFromJson(json);

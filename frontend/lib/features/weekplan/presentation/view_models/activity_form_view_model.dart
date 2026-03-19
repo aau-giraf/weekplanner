@@ -29,7 +29,6 @@ class ActivityFormViewModel extends ChangeNotifier {
       );
       _selectedPictogramId = existingActivity!.pictogramId;
       _date = DateTime.parse(existingActivity!.date);
-      _title = existingActivity!.title ?? '';
     } else {
       _date = initialDate;
     }
@@ -44,7 +43,6 @@ class ActivityFormViewModel extends ChangeNotifier {
   int? _selectedPictogramId;
   Pictogram? _selectedPictogram;
   late DateTime _date;
-  String _title = '';
   bool _isLoading = false;
   String? _error;
 
@@ -53,7 +51,6 @@ class ActivityFormViewModel extends ChangeNotifier {
   int? get selectedPictogramId => _selectedPictogramId;
   Pictogram? get selectedPictogram => _selectedPictogram;
   DateTime get date => _date;
-  String get title => _title;
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get isEditing => existingActivity != null;
@@ -68,11 +65,6 @@ class ActivityFormViewModel extends ChangeNotifier {
 
   void setEndTime(TimeOfDay time) {
     _endTime = time;
-    notifyListeners();
-  }
-
-  void setTitle(String value) {
-    _title = value;
     notifyListeners();
   }
 
@@ -109,12 +101,11 @@ class ActivityFormViewModel extends ChangeNotifier {
     try {
       final data = {
         'date': GirafDateUtils.formatQueryDate(_date),
-        'start_time':
+        'startTime':
             '${_startTime.hour.toString().padLeft(2, '0')}:${_startTime.minute.toString().padLeft(2, '0')}:00',
-        'end_time':
+        'endTime':
             '${_endTime.hour.toString().padLeft(2, '0')}:${_endTime.minute.toString().padLeft(2, '0')}:00',
-        if (_selectedPictogramId != null) 'pictogram_id': _selectedPictogramId,
-        if (_title.isNotEmpty) 'title': _title,
+        if (_selectedPictogramId != null) 'pictogramId': _selectedPictogramId,
       };
 
       if (isEditing) {

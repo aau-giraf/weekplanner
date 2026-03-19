@@ -31,7 +31,7 @@ class ActivityRepository extends ChangeNotifier {
       final response = isCitizen
           ? await _apiService.fetchActivitiesByCitizen(id, dateStr)
           : await _apiService.fetchActivitiesByGrade(id, dateStr);
-      _activities = response.items;
+      _activities = response;
     } catch (e) {
       _error = 'Kunne ikke hente aktiviteter';
     }

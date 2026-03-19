@@ -29,8 +29,8 @@ class AuthService {
 
   Future<AuthTokens> login(String email, String password) async {
     final response = await _dio.post(
-      '/token/pair',
-      data: {'email': email, 'password': password},
+      '/api/v1/token/pair',
+      data: {'username': email, 'password': password},
     );
     final data = response.data as Map<String, dynamic>;
     final tokens = AuthTokens(

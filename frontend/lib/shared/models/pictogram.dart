@@ -7,7 +7,7 @@ part 'pictogram.g.dart';
 abstract class Pictogram with _$Pictogram {
   const factory Pictogram({
     required int id,
-    required String title,
+    required String name,
     @JsonKey(name: 'image_url') String? imageUrl,
     @JsonKey(name: 'organization_id') int? organizationId,
   }) = _Pictogram;

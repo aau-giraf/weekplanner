@@ -89,14 +89,6 @@ class ActivityListItem extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (activity.title != null && activity.title!.isNotEmpty)
-                          Text(
-                            activity.title!,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            ),
-                          ),
                         Text(
                           '${_formatTime(activity.startTime)} - ${_formatTime(activity.endTime)}',
                           style: TextStyle(

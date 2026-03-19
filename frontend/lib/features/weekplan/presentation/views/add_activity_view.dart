@@ -21,16 +21,6 @@ class AddActivityView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Title field
-                TextField(
-                  onChanged: vm.setTitle,
-                  decoration: const InputDecoration(
-                    labelText: 'Titel (valgfri)',
-                    prefixIcon: Icon(Icons.title),
-                  ),
-                ),
-                const SizedBox(height: 24),
-
                 // Time pickers
                 Row(
                   children: [

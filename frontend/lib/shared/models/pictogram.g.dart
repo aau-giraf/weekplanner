@@ -8,7 +8,7 @@ part of 'pictogram.dart';
 
 _Pictogram _$PictogramFromJson(Map<String, dynamic> json) => _Pictogram(
   id: (json['id'] as num).toInt(),
-  title: json['title'] as String,
+  name: json['name'] as String,
   imageUrl: json['image_url'] as String?,
   organizationId: (json['organization_id'] as num?)?.toInt(),
 );
@@ -16,7 +16,7 @@ _Pictogram _$PictogramFromJson(Map<String, dynamic> json) => _Pictogram(
 Map<String, dynamic> _$PictogramToJson(_Pictogram instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'title': instance.title,
+      'name': instance.name,
       'image_url': instance.imageUrl,
       'organization_id': instance.organizationId,
     };

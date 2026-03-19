@@ -24,9 +24,9 @@ class CoreApiService {
     _dio.options.headers.remove('Authorization');
   }
 
-  // Organisations
+  // Organizations
   Future<PaginatedResponse<Organisation>> fetchOrganisations() async {
-    final response = await _dio.get('/organisations/');
+    final response = await _dio.get('/api/v1/organizations');
     return PaginatedResponse.fromJson(
       response.data as Map<String, dynamic>,
       Organisation.fromJson,
@@ -34,13 +34,13 @@ class CoreApiService {
   }
 
   Future<Organisation> fetchOrganisation(int orgId) async {
-    final response = await _dio.get('/organisations/$orgId/');
+    final response = await _dio.get('/api/v1/organizations/$orgId');
     return Organisation.fromJson(response.data as Map<String, dynamic>);
   }
 
   // Citizens
   Future<PaginatedResponse<Citizen>> fetchCitizens(int orgId) async {
-    final response = await _dio.get('/organisations/$orgId/citizens/');
+    final response = await _dio.get('/api/v1/organizations/$orgId/citizens');
     return PaginatedResponse.fromJson(
       response.data as Map<String, dynamic>,
       Citizen.fromJson,
@@ -49,7 +49,7 @@ class CoreApiService {
 
   // Grades
   Future<PaginatedResponse<Grade>> fetchGrades(int orgId) async {
-    final response = await _dio.get('/organisations/$orgId/grades/');
+    final response = await _dio.get('/api/v1/organizations/$orgId/grades');
     return PaginatedResponse.fromJson(
       response.data as Map<String, dynamic>,
       Grade.fromJson,
@@ -62,7 +62,7 @@ class CoreApiService {
     int limit = 20,
     int offset = 0,
   }) async {
-    final response = await _dio.get('/pictograms/', queryParameters: {
+    final response = await _dio.get('/api/v1/pictograms', queryParameters: {
       if (query != null && query.isNotEmpty) 'search': query,
       'limit': limit,
       'offset': offset,
@@ -74,7 +74,7 @@ class CoreApiService {
   }
 
   Future<Pictogram> fetchPictogram(int id) async {
-    final response = await _dio.get('/pictograms/$id/');
+    final response = await _dio.get('/api/v1/pictograms/$id');
     return Pictogram.fromJson(response.data as Map<String, dynamic>);
   }
 }
