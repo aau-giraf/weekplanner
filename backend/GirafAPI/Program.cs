@@ -1,6 +1,7 @@
 using GirafAPI.Data;
 using GirafAPI.Endpoints;
 using GirafAPI.Extensions;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,7 @@ builder.Services.ConfigureDatabase(builder.Configuration, builder.Environment)
     .ConfigureJwt(builder.Configuration, builder.Environment)
     .ConfigureAuthorizationPolicies()
     .ConfigureCoreClient(builder.Configuration)
-    .ConfigureSwagger();
+    .ConfigureOpenApi();
 
 builder.Services.AddAntiforgery(options =>
     {
@@ -19,8 +20,8 @@ builder.Services.AddAntiforgery(options =>
 var app = builder.Build();
 
 // Configure middleware
-app.UseSwagger();
-app.UseSwaggerUI();
+app.MapOpenApi();
+app.MapScalarApiReference();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();

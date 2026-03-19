@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG TARGETARCH
 WORKDIR /app
 ENV ASPNETCORE_ENVIRONMENT=Production
@@ -15,7 +15,7 @@ RUN dotnet build ./GirafAPI/GirafAPI.csproj -c Release -o /app/build -a $TARGETA
 RUN dotnet publish ./GirafAPI/GirafAPI.csproj -c Release -o /app/publish -a $TARGETARCH --no-restore
 
 # Stage 2: Runtime
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 
 # Copy the published app from the build stage
