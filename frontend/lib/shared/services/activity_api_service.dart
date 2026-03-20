@@ -91,8 +91,10 @@ class ActivityApiService {
   }
 
   // Toggle activity completion status
-  Future<Activity> toggleActivityStatus(int activityId) async {
-    final response = await _dio.put('/weekplan/activity/$activityId/iscomplete');
-    return Activity.fromJson(response.data as Map<String, dynamic>);
+  Future<void> toggleActivityStatus(int activityId, {required bool isComplete}) async {
+    await _dio.put(
+      '/weekplan/activity/$activityId/iscomplete',
+      queryParameters: {'IsComplete': isComplete},
+    );
   }
 }

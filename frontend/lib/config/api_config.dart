@@ -4,9 +4,4 @@ class ApiConfig {
   static const String weekplannerBaseUrl =
       String.fromEnvironment('WEEKPLANNER_BASE_URL', defaultValue: 'http://10.0.2.2:5171');
 
-  static String pictogramImageUrl(int pictogramId) =>
-      '$coreBaseUrl/pictograms/$pictogramId/image/';
-
-  static String pictogramSoundUrl(int pictogramId) =>
-      '$coreBaseUrl/pictograms/$pictogramId/sound/';
 }

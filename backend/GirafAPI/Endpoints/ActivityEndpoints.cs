@@ -17,6 +17,20 @@ public static class ActivityEndpoints
         return null;
     }
 
+    /// Validate date/time fields and return an error message, or null if valid.
+    private static string? ValidateActivityTimes(string date, string startTime, string endTime)
+    {
+        if (!DateOnly.TryParse(date, out _))
+            return "Invalid date format.";
+        if (!TimeOnly.TryParse(startTime, out var start))
+            return "Invalid start time format.";
+        if (!TimeOnly.TryParse(endTime, out var end))
+            return "Invalid end time format.";
+        if (end <= start)
+            return "End time must be after start time.";
+        return null;
+    }
+
     public static RouteGroupBuilder MapActivityEndpoints(this WebApplication app)
     {
         var group = app.MapGroup("weekplan");
@@ -51,7 +65,8 @@ public static class ActivityEndpoints
             {
                 try
                 {
-                    var parsedDate = DateOnly.Parse(date);
+                    if (!DateOnly.TryParse(date, out var parsedDate))
+                        return Results.BadRequest("Invalid date format.");
 
                     var activities = await dbContext.Activities
                         .Where(a => a.CitizenId == citizenId && a.Date == parsedDate)
@@ -79,7 +94,8 @@ public static class ActivityEndpoints
             {
                 try
                 {
-                    var parsedDate = DateOnly.Parse(date);
+                    if (!DateOnly.TryParse(date, out var parsedDate))
+                        return Results.BadRequest("Invalid date format.");
 
                     var activities = await dbContext.Activities
                         .Where(a => a.GradeId == gradeId && a.Date == parsedDate)
@@ -137,6 +153,11 @@ public static class ActivityEndpoints
                 {
                     try
                     {
+                        var validationError = ValidateActivityTimes(
+                            newActivityDto.Date, newActivityDto.StartTime, newActivityDto.EndTime);
+                        if (validationError is not null)
+                            return Results.BadRequest(validationError);
+
                         var token = GetAccessToken(httpContext);
                         if (token is null)
                             return Results.Unauthorized();
@@ -177,6 +198,11 @@ public static class ActivityEndpoints
                 {
                     try
                     {
+                        var validationError = ValidateActivityTimes(
+                            newActivityDto.Date, newActivityDto.StartTime, newActivityDto.EndTime);
+                        if (validationError is not null)
+                            return Results.BadRequest(validationError);
+
                         var token = GetAccessToken(httpContext);
                         if (token is null)
                             return Results.Unauthorized();
@@ -217,8 +243,10 @@ public static class ActivityEndpoints
                 {
                     try
                     {
-                        var sourceDate = DateOnly.Parse(dateStr);
-                        var targetDate = DateOnly.Parse(newDateStr);
+                        if (!DateOnly.TryParse(dateStr, out var sourceDate))
+                            return Results.BadRequest("Invalid source date format.");
+                        if (!DateOnly.TryParse(newDateStr, out var targetDate))
+                            return Results.BadRequest("Invalid target date format.");
 
                         var activities = await dbContext.Activities
                             .Where(a => a.CitizenId == citizenId &&
@@ -249,11 +277,6 @@ public static class ActivityEndpoints
                         await dbContext.SaveChangesAsync();
                         return Results.Ok("Activities successfully copied.");
                     }
-                    catch (FormatException)
-                    {
-                        return Results.BadRequest(
-                            "Invalid date format. Please provide the date in 'YYYY-MM-DD' format.");
-                    }
                     catch (Exception)
                     {
                         return Results.Problem("An error occurred while copying the activities.",
@@ -272,8 +295,10 @@ public static class ActivityEndpoints
                 {
                     try
                     {
-                        var sourceDate = DateOnly.Parse(dateStr);
-                        var targetDate = DateOnly.Parse(newDateStr);
+                        if (!DateOnly.TryParse(dateStr, out var sourceDate))
+                            return Results.BadRequest("Invalid source date format.");
+                        if (!DateOnly.TryParse(newDateStr, out var targetDate))
+                            return Results.BadRequest("Invalid target date format.");
 
                         var activities = await dbContext.Activities
                             .Where(a => a.GradeId == gradeId &&
@@ -304,11 +329,6 @@ public static class ActivityEndpoints
                         await dbContext.SaveChangesAsync();
                         return Results.Ok("Activities successfully copied.");
                     }
-                    catch (FormatException)
-                    {
-                        return Results.BadRequest(
-                            "Invalid date format. Please provide the date in 'YYYY-MM-DD' format.");
-                    }
                     catch (Exception)
                     {
                         return Results.Problem("An error occurred while copying the activities.",
@@ -329,6 +349,11 @@ public static class ActivityEndpoints
                 {
                     try
                     {
+                        var validationError = ValidateActivityTimes(
+                            updatedActivity.Date, updatedActivity.StartTime, updatedActivity.EndTime);
+                        if (validationError is not null)
+                            return Results.BadRequest(validationError);
+
                         var activity = await dbContext.Activities.FindAsync(id);
 
                         if (activity is null)

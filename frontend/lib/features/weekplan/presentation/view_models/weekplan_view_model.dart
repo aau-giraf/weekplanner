@@ -24,6 +24,7 @@ class WeekplanViewModel extends ChangeNotifier {
   late DateTime _selectedDate;
   late List<DateTime> _weekDates;
   final Map<int, String?> _pictogramSoundUrls = {};
+  final Map<int, String?> _pictogramImageUrls = {};
 
   DateTime get selectedDate => _selectedDate;
   List<DateTime> get weekDates => _weekDates;
@@ -35,26 +36,30 @@ class WeekplanViewModel extends ChangeNotifier {
   /// Get cached sound URL for a pictogram, or null if not yet fetched.
   String? getSoundUrl(int pictogramId) => _pictogramSoundUrls[pictogramId];
 
+  /// Get cached image URL for a pictogram, or null if not yet fetched.
+  String? getImageUrl(int pictogramId) => _pictogramImageUrls[pictogramId];
+
   Future<void> loadActivities() async {
     await _activityRepository.fetchActivities(
       id: subjectId,
       isCitizen: isCitizen,
       date: _selectedDate,
     );
-    _fetchPictogramSounds();
+    _fetchPictogramMediaUrls();
   }
 
-  /// Fetch sound URLs for pictograms referenced by current activities.
-  Future<void> _fetchPictogramSounds() async {
+  /// Fetch image and sound URLs for pictograms referenced by current activities.
+  Future<void> _fetchPictogramMediaUrls() async {
     final ids = activities
         .where((a) => a.pictogramId != null)
         .map((a) => a.pictogramId!)
-        .where((id) => !_pictogramSoundUrls.containsKey(id))
+        .where((id) => !_pictogramImageUrls.containsKey(id))
         .toSet();
 
     for (final id in ids) {
       final pictogram = await _pictogramRepository.fetchPictogram(id);
       _pictogramSoundUrls[id] = pictogram?.soundUrl;
+      _pictogramImageUrls[id] = pictogram?.imageUrl;
     }
     if (ids.isNotEmpty) notifyListeners();
   }

@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
 import 'package:weekplanner/shared/services/auth_service.dart';
 import 'package:weekplanner/shared/services/activity_api_service.dart';
 import 'package:weekplanner/shared/services/core_api_service.dart';
 import 'package:weekplanner/shared/utils/jwt_decode.dart';
+
+final _log = Logger('AuthRepository');
 
 enum AuthState { unknown, authenticated, unauthenticated }
 
@@ -44,8 +47,8 @@ class AuthRepository extends ChangeNotifier {
         try {
           await login(creds.email!, creds.password!);
           return;
-        } catch (_) {
-          // Auto-login failed, proceed to unauthenticated
+        } catch (e, stackTrace) {
+          _log.warning('Auto-login failed', e, stackTrace);
         }
       }
       _state = AuthState.unauthenticated;

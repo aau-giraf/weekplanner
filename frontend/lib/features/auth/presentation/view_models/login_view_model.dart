@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
 import 'package:weekplanner/features/auth/data/repositories/auth_repository.dart';
+
+final _log = Logger('LoginViewModel');
 
 class LoginViewModel extends ChangeNotifier {
   final AuthRepository _authRepository;
@@ -58,17 +61,20 @@ class LoginViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       return true;
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
       _isLoading = false;
       if (e.response?.statusCode == 401) {
+        _log.warning('Login failed: invalid credentials', e, stackTrace);
         _error = 'Forkert brugernavn eller adgangskode';
       } else {
+        _log.severe('Login failed: server error', e, stackTrace);
         _error = 'Kunne ikke oprette forbindelse til serveren';
       }
       notifyListeners();
       return false;
-    } catch (e) {
+    } catch (e, stackTrace) {
       _isLoading = false;
+      _log.severe('Login failed: unexpected error', e, stackTrace);
       _error = 'Der opstod en uventet fejl';
       notifyListeners();
       return false;

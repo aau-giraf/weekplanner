@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 import 'package:weekplanner/shared/services/core_api_service.dart';
+
+final _log = Logger('PictogramRepository');
 
 class PictogramRepository extends ChangeNotifier {
   final CoreApiService _coreApiService;
@@ -26,7 +29,8 @@ class PictogramRepository extends ChangeNotifier {
     try {
       final response = await _coreApiService.searchPictograms(query: query);
       _pictograms = response.items;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _log.severe('Failed to search pictograms', e, stackTrace);
       _error = 'Kunne ikke søge piktogrammer';
     }
 
@@ -37,7 +41,8 @@ class PictogramRepository extends ChangeNotifier {
   Future<Pictogram?> fetchPictogram(int id) async {
     try {
       return await _coreApiService.fetchPictogram(id);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _log.severe('Failed to fetch pictogram $id', e, stackTrace);
       return null;
     }
   }

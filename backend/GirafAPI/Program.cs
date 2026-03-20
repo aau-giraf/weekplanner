@@ -17,9 +17,30 @@ builder.Services.AddAntiforgery(options =>
       options.Cookie.Expiration = TimeSpan.Zero;
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        if (builder.Environment.IsDevelopment())
+        {
+            policy.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        }
+        else
+        {
+            var origins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? [];
+            policy.WithOrigins(origins)
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        }
+    });
+});
+
 var app = builder.Build();
 
 // Configure middleware
+app.UseCors();
 app.MapOpenApi();
 app.MapScalarApiReference();
 app.UseAuthentication();
