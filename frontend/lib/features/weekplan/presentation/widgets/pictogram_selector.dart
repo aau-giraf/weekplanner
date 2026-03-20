@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/config/api_config.dart';
 import 'package:weekplanner/config/theme.dart';
@@ -222,14 +223,8 @@ class _UploadTab extends StatelessWidget {
         const SizedBox(height: 12),
         OutlinedButton.icon(
           onPressed: () async {
-            // image_picker integration — requires the package to be installed
-            // For now, we use file_picker which works on all platforms
-            try {
-              final picker = await _pickFile(context, ['jpg', 'jpeg', 'png', 'webp']);
-              if (picker != null) viewModel.setSelectedImagePath(picker);
-            } catch (_) {
-              // Package not available yet
-            }
+            final path = await _pickFile(context, ['jpg', 'jpeg', 'png', 'webp']);
+            if (path != null) viewModel.setSelectedImagePath(path);
           },
           icon: const Icon(Icons.image),
           label: Text(viewModel.selectedImagePath != null
@@ -239,12 +234,8 @@ class _UploadTab extends StatelessWidget {
         const SizedBox(height: 8),
         OutlinedButton.icon(
           onPressed: () async {
-            try {
-              final picker = await _pickFile(context, ['mp3']);
-              if (picker != null) viewModel.setSelectedSoundPath(picker);
-            } catch (_) {
-              // Package not available yet
-            }
+            final path = await _pickFile(context, ['mp3']);
+            if (path != null) viewModel.setSelectedSoundPath(path);
           },
           icon: const Icon(Icons.audiotrack),
           label: Text(viewModel.selectedSoundPath != null
@@ -277,9 +268,11 @@ class _UploadTab extends StatelessWidget {
   }
 
   Future<String?> _pickFile(BuildContext context, List<String> extensions) async {
-    // Placeholder — will use file_picker package
-    // The actual implementation requires the file_picker package
-    return null;
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: extensions,
+    );
+    return result?.files.single.path;
   }
 }
 

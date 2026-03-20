@@ -71,6 +71,7 @@ class _WeekplannerAppState extends State<WeekplannerApp> {
             return ChangeNotifierProvider(
               create: (_) => WeekplanViewModel(
                 activityRepository: context.read<ActivityRepository>(),
+                pictogramRepository: context.read<PictogramRepository>(),
                 subjectId: citizenId,
                 isCitizen: isCitizen,
               ),

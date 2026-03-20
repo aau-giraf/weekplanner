@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -27,18 +29,20 @@ class ActivityListItem extends StatefulWidget {
 
 class _ActivityListItemState extends State<ActivityListItem> {
   final AudioPlayer _audioPlayer = AudioPlayer();
+  late final StreamSubscription _onCompleteSubscription;
   bool _isPlaying = false;
 
   @override
   void initState() {
     super.initState();
-    _audioPlayer.onPlayerComplete.listen((_) {
+    _onCompleteSubscription = _audioPlayer.onPlayerComplete.listen((_) {
       if (mounted) setState(() => _isPlaying = false);
     });
   }
 
   @override
   void dispose() {
+    _onCompleteSubscription.cancel();
     _audioPlayer.dispose();
     super.dispose();
   }

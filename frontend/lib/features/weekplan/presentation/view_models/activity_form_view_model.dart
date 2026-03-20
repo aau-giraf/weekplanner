@@ -156,6 +156,10 @@ class ActivityFormViewModel extends ChangeNotifier {
   }
 
   /// Create a pictogram via AI generation and select it.
+  ///
+  /// giraf-core uses the pictogram name as the AI image prompt, so when
+  /// the user provides a detailed description we use that as the name
+  /// to get a more specific AI-generated image.
   Future<bool> generatePictogram() async {
     final prompt = _generatePrompt.isNotEmpty ? _generatePrompt : _pictogramName;
     if (prompt.isEmpty) {
@@ -169,8 +173,9 @@ class ActivityFormViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
+      // Use prompt as name — giraf-core passes name to the AI image generator.
       final pictogram = await _pictogramRepository.createPictogram(
-        name: _pictogramName.isNotEmpty ? _pictogramName : prompt,
+        name: prompt,
         generateImage: true,
         generateSound: _generateSound,
       );

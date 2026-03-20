@@ -3,13 +3,16 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
-import 'dart:ui' as _i5;
+import 'dart:async' as _i5;
+import 'dart:ui' as _i6;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:weekplanner/features/weekplan/data/repositories/activity_repository.dart'
-    as _i2;
-import 'package:weekplanner/shared/models/activity.dart' as _i3;
+    as _i3;
+import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart'
+    as _i7;
+import 'package:weekplanner/shared/models/activity.dart' as _i4;
+import 'package:weekplanner/shared/models/pictogram.dart' as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -26,19 +29,24 @@ import 'package:weekplanner/shared/models/activity.dart' as _i3;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
+class _FakePictogram_0 extends _i1.SmartFake implements _i2.Pictogram {
+  _FakePictogram_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [ActivityRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockActivityRepository extends _i1.Mock
-    implements _i2.ActivityRepository {
+    implements _i3.ActivityRepository {
   @override
-  List<_i3.Activity> get activities =>
+  List<_i4.Activity> get activities =>
       (super.noSuchMethod(
             Invocation.getter(#activities),
-            returnValue: <_i3.Activity>[],
-            returnValueForMissingStub: <_i3.Activity>[],
+            returnValue: <_i4.Activity>[],
+            returnValueForMissingStub: <_i4.Activity>[],
           )
-          as List<_i3.Activity>);
+          as List<_i4.Activity>);
 
   @override
   bool get isLoading =>
@@ -59,7 +67,7 @@ class MockActivityRepository extends _i1.Mock
           as bool);
 
   @override
-  _i4.Future<void> fetchActivities({
+  _i5.Future<void> fetchActivities({
     required int? id,
     required bool? isCitizen,
     required DateTime? date,
@@ -70,13 +78,13 @@ class MockActivityRepository extends _i1.Mock
               #isCitizen: isCitizen,
               #date: date,
             }),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i4.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i4.Future<void> createActivity({
+  _i5.Future<void> createActivity({
     required int? id,
     required bool? isCitizen,
     required Map<String, dynamic>? data,
@@ -87,49 +95,241 @@ class MockActivityRepository extends _i1.Mock
               #isCitizen: isCitizen,
               #data: data,
             }),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i4.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i4.Future<void> updateActivity(
+  _i5.Future<void> updateActivity(
     int? activityId,
     Map<String, dynamic>? data,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#updateActivity, [activityId, data]),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i4.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i4.Future<void> deleteActivity(int? activityId) =>
+  _i5.Future<void> deleteActivity(int? activityId) =>
       (super.noSuchMethod(
             Invocation.method(#deleteActivity, [activityId]),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i4.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i4.Future<void> toggleActivityStatus(int? activityId) =>
+  _i5.Future<void> toggleActivityStatus(int? activityId) =>
       (super.noSuchMethod(
             Invocation.method(#toggleActivityStatus, [activityId]),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i4.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  void addListener(_i5.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i6.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#addListener, [listener]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void removeListener(_i5.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+    Invocation.method(#removeListener, [listener]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void dispose() => super.noSuchMethod(
+    Invocation.method(#dispose, []),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void notifyListeners() => super.noSuchMethod(
+    Invocation.method(#notifyListeners, []),
+    returnValueForMissingStub: null,
+  );
+}
+
+/// A class which mocks [PictogramRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockPictogramRepository extends _i1.Mock
+    implements _i7.PictogramRepository {
+  @override
+  List<_i2.Pictogram> get pictograms =>
+      (super.noSuchMethod(
+            Invocation.getter(#pictograms),
+            returnValue: <_i2.Pictogram>[],
+            returnValueForMissingStub: <_i2.Pictogram>[],
+          )
+          as List<_i2.Pictogram>);
+
+  @override
+  bool get isLoading =>
+      (super.noSuchMethod(
+            Invocation.getter(#isLoading),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
+
+  @override
+  bool get hasListeners =>
+      (super.noSuchMethod(
+            Invocation.getter(#hasListeners),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
+
+  @override
+  _i5.Future<void> searchPictograms(String? query) =>
+      (super.noSuchMethod(
+            Invocation.method(#searchPictograms, [query]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<_i2.Pictogram?> fetchPictogram(int? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#fetchPictogram, [id]),
+            returnValue: _i5.Future<_i2.Pictogram?>.value(),
+            returnValueForMissingStub: _i5.Future<_i2.Pictogram?>.value(),
+          )
+          as _i5.Future<_i2.Pictogram?>);
+
+  @override
+  _i5.Future<_i2.Pictogram> createPictogram({
+    required String? name,
+    String? imageUrl,
+    int? organizationId,
+    bool? generateImage = false,
+    bool? generateSound = true,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#createPictogram, [], {
+              #name: name,
+              #imageUrl: imageUrl,
+              #organizationId: organizationId,
+              #generateImage: generateImage,
+              #generateSound: generateSound,
+            }),
+            returnValue: _i5.Future<_i2.Pictogram>.value(
+              _FakePictogram_0(
+                this,
+                Invocation.method(#createPictogram, [], {
+                  #name: name,
+                  #imageUrl: imageUrl,
+                  #organizationId: organizationId,
+                  #generateImage: generateImage,
+                  #generateSound: generateSound,
+                }),
+              ),
+            ),
+            returnValueForMissingStub: _i5.Future<_i2.Pictogram>.value(
+              _FakePictogram_0(
+                this,
+                Invocation.method(#createPictogram, [], {
+                  #name: name,
+                  #imageUrl: imageUrl,
+                  #organizationId: organizationId,
+                  #generateImage: generateImage,
+                  #generateSound: generateSound,
+                }),
+              ),
+            ),
+          )
+          as _i5.Future<_i2.Pictogram>);
+
+  @override
+  _i5.Future<_i2.Pictogram> uploadPictogram({
+    required String? name,
+    required String? imagePath,
+    String? soundPath,
+    int? organizationId,
+    bool? generateSound = true,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#uploadPictogram, [], {
+              #name: name,
+              #imagePath: imagePath,
+              #soundPath: soundPath,
+              #organizationId: organizationId,
+              #generateSound: generateSound,
+            }),
+            returnValue: _i5.Future<_i2.Pictogram>.value(
+              _FakePictogram_0(
+                this,
+                Invocation.method(#uploadPictogram, [], {
+                  #name: name,
+                  #imagePath: imagePath,
+                  #soundPath: soundPath,
+                  #organizationId: organizationId,
+                  #generateSound: generateSound,
+                }),
+              ),
+            ),
+            returnValueForMissingStub: _i5.Future<_i2.Pictogram>.value(
+              _FakePictogram_0(
+                this,
+                Invocation.method(#uploadPictogram, [], {
+                  #name: name,
+                  #imagePath: imagePath,
+                  #soundPath: soundPath,
+                  #organizationId: organizationId,
+                  #generateSound: generateSound,
+                }),
+              ),
+            ),
+          )
+          as _i5.Future<_i2.Pictogram>);
+
+  @override
+  _i5.Future<_i2.Pictogram> uploadSound({
+    required int? pictogramId,
+    required String? soundPath,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#uploadSound, [], {
+              #pictogramId: pictogramId,
+              #soundPath: soundPath,
+            }),
+            returnValue: _i5.Future<_i2.Pictogram>.value(
+              _FakePictogram_0(
+                this,
+                Invocation.method(#uploadSound, [], {
+                  #pictogramId: pictogramId,
+                  #soundPath: soundPath,
+                }),
+              ),
+            ),
+            returnValueForMissingStub: _i5.Future<_i2.Pictogram>.value(
+              _FakePictogram_0(
+                this,
+                Invocation.method(#uploadSound, [], {
+                  #pictogramId: pictogramId,
+                  #soundPath: soundPath,
+                }),
+              ),
+            ),
+          )
+          as _i5.Future<_i2.Pictogram>);
+
+  @override
+  void addListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+    Invocation.method(#addListener, [listener]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void removeListener(_i6.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#removeListener, [listener]),
     returnValueForMissingStub: null,
   );
