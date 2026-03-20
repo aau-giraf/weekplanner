@@ -68,6 +68,7 @@ class _WeekplannerAppState extends State<WeekplannerApp> {
             final citizenId = int.parse(state.pathParameters['citizenId']!);
             final type = state.uri.queryParameters['type'] ?? 'citizen';
             final isCitizen = type == 'citizen';
+            final orgId = int.tryParse(state.uri.queryParameters['orgId'] ?? '');
             return ChangeNotifierProvider(
               create: (_) => WeekplanViewModel(
                 activityRepository: context.read<ActivityRepository>(),
@@ -75,7 +76,7 @@ class _WeekplannerAppState extends State<WeekplannerApp> {
                 subjectId: citizenId,
                 isCitizen: isCitizen,
               ),
-              child: WeekplanView(citizenId: citizenId, isCitizen: isCitizen),
+              child: WeekplanView(citizenId: citizenId, isCitizen: isCitizen, orgId: orgId),
             );
           },
           routes: [
@@ -85,12 +86,14 @@ class _WeekplannerAppState extends State<WeekplannerApp> {
                 final citizenId = int.parse(state.pathParameters['citizenId']!);
                 final type = state.uri.queryParameters['type'] ?? 'citizen';
                 final isCitizen = type == 'citizen';
+                final orgId = int.tryParse(state.uri.queryParameters['orgId'] ?? '');
                 return ChangeNotifierProvider(
                   create: (_) => ActivityFormViewModel(
                     activityRepository: context.read<ActivityRepository>(),
                     pictogramRepository: context.read<PictogramRepository>(),
                     subjectId: citizenId,
                     isCitizen: isCitizen,
+                    organizationId: orgId,
                     initialDate: DateTime.now(),
                   ),
                   child: const AddActivityView(),
@@ -103,6 +106,7 @@ class _WeekplannerAppState extends State<WeekplannerApp> {
                 final citizenId = int.parse(state.pathParameters['citizenId']!);
                 final type = state.uri.queryParameters['type'] ?? 'citizen';
                 final isCitizen = type == 'citizen';
+                final orgId = int.tryParse(state.uri.queryParameters['orgId'] ?? '');
                 final activityRepo = context.read<ActivityRepository>();
                 final actId = int.parse(state.pathParameters['actId']!);
                 final existing = activityRepo.activities
@@ -115,6 +119,7 @@ class _WeekplannerAppState extends State<WeekplannerApp> {
                     existingActivity: existing,
                     subjectId: citizenId,
                     isCitizen: isCitizen,
+                    organizationId: orgId,
                     initialDate: DateTime.now(),
                   ),
                   child: const EditActivityView(),

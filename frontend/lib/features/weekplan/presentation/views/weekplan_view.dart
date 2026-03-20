@@ -10,11 +10,13 @@ import 'package:weekplanner/shared/utils/date_utils.dart';
 class WeekplanView extends StatefulWidget {
   final int citizenId;
   final bool isCitizen;
+  final int? orgId;
 
   const WeekplanView({
     super.key,
     required this.citizenId,
     required this.isCitizen,
+    this.orgId,
   });
 
   @override
@@ -38,7 +40,7 @@ class _WeekplanViewState extends State<WeekplanView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.go('/weekplan/${widget.citizenId}/add?type=${widget.isCitizen ? 'citizen' : 'grade'}');
+          context.go('/weekplan/${widget.citizenId}/add?type=${widget.isCitizen ? 'citizen' : 'grade'}&orgId=${widget.orgId}');
         },
         backgroundColor: GirafColors.orange,
         child: const Icon(Icons.add, color: GirafColors.white),
@@ -119,7 +121,7 @@ class _WeekplanViewState extends State<WeekplanView> {
             onEdit: () {
               context.go(
                 '/weekplan/${widget.citizenId}/edit/${activity.activityId}'
-                '?type=${widget.isCitizen ? 'citizen' : 'grade'}',
+                '?type=${widget.isCitizen ? 'citizen' : 'grade'}&orgId=${widget.orgId}',
               );
             },
             onDelete: () => vm.deleteActivity(activity.activityId),

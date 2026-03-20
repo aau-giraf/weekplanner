@@ -18,6 +18,7 @@ class ActivityFormViewModel extends ChangeNotifier {
     this.existingActivity,
     required this.subjectId,
     required this.isCitizen,
+    this.organizationId,
     required DateTime initialDate,
   })  : _activityRepository = activityRepository,
         _pictogramRepository = pictogramRepository {
@@ -40,6 +41,7 @@ class ActivityFormViewModel extends ChangeNotifier {
   final Activity? existingActivity;
   final int subjectId;
   final bool isCitizen;
+  final int? organizationId;
 
   TimeOfDay _startTime = const TimeOfDay(hour: 8, minute: 0);
   TimeOfDay _endTime = const TimeOfDay(hour: 9, minute: 0);
@@ -142,6 +144,7 @@ class ActivityFormViewModel extends ChangeNotifier {
         name: _pictogramName,
         imageFile: _selectedImageFile!,
         soundFile: _selectedSoundFile,
+        organizationId: organizationId,
         generateSound: _generateSound,
       );
       selectPictogram(pictogram);
@@ -177,6 +180,7 @@ class ActivityFormViewModel extends ChangeNotifier {
       // Use prompt as name — giraf-core passes name to the AI image generator.
       final pictogram = await _pictogramRepository.createPictogram(
         name: prompt,
+        organizationId: organizationId,
         generateImage: true,
         generateSound: _generateSound,
       );

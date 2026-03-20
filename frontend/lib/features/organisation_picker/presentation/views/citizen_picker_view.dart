@@ -90,7 +90,7 @@ class _CitizenPickerViewState extends State<CitizenPickerView> {
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () {
                     final type = item.isCitizen ? 'citizen' : 'grade';
-                    context.go('/weekplan/${item.id}?type=$type');
+                    context.go('/weekplan/${item.id}?type=$type&orgId=${widget.orgId}');
                   },
                 ),
               );
