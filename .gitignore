@@ -4,6 +4,7 @@
 # Weird AI log files
 CLAUDE.md
 AGENTS.md
+.claude/
 
 # --- Backend (.NET) ---
 backend/GirafAPI/bin/
