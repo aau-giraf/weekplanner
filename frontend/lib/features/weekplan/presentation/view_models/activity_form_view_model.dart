@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/activity_repository.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart';
@@ -52,8 +53,8 @@ class ActivityFormViewModel extends ChangeNotifier {
   PictogramMode _pictogramMode = PictogramMode.search;
   String _pictogramName = '';
   String _generatePrompt = '';
-  String? _selectedImagePath;
-  String? _selectedSoundPath;
+  PlatformFile? _selectedImageFile;
+  PlatformFile? _selectedSoundFile;
   bool _generateSound = true;
   bool _isCreatingPictogram = false;
 
@@ -72,8 +73,8 @@ class ActivityFormViewModel extends ChangeNotifier {
   PictogramMode get pictogramMode => _pictogramMode;
   String get pictogramName => _pictogramName;
   String get generatePrompt => _generatePrompt;
-  String? get selectedImagePath => _selectedImagePath;
-  String? get selectedSoundPath => _selectedSoundPath;
+  PlatformFile? get selectedImageFile => _selectedImageFile;
+  PlatformFile? get selectedSoundFile => _selectedSoundFile;
   bool get generateSound => _generateSound;
   bool get isCreatingPictogram => _isCreatingPictogram;
 
@@ -90,13 +91,13 @@ class ActivityFormViewModel extends ChangeNotifier {
     _generatePrompt = prompt;
   }
 
-  void setSelectedImagePath(String? path) {
-    _selectedImagePath = path;
+  void setSelectedImageFile(PlatformFile? file) {
+    _selectedImageFile = file;
     notifyListeners();
   }
 
-  void setSelectedSoundPath(String? path) {
-    _selectedSoundPath = path;
+  void setSelectedSoundFile(PlatformFile? file) {
+    _selectedSoundFile = file;
     notifyListeners();
   }
 
@@ -126,7 +127,7 @@ class ActivityFormViewModel extends ChangeNotifier {
 
   /// Upload a local image as a new pictogram and select it.
   Future<bool> uploadPictogramFromFile() async {
-    if (_selectedImagePath == null || _pictogramName.isEmpty) {
+    if (_selectedImageFile == null || _pictogramName.isEmpty) {
       _error = 'Angiv navn og vælg et billede';
       notifyListeners();
       return false;
@@ -139,8 +140,8 @@ class ActivityFormViewModel extends ChangeNotifier {
     try {
       final pictogram = await _pictogramRepository.uploadPictogram(
         name: _pictogramName,
-        imagePath: _selectedImagePath!,
-        soundPath: _selectedSoundPath,
+        imageFile: _selectedImageFile!,
+        soundFile: _selectedSoundFile,
         generateSound: _generateSound,
       );
       selectPictogram(pictogram);

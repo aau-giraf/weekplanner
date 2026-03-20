@@ -223,23 +223,23 @@ class _UploadTab extends StatelessWidget {
         const SizedBox(height: 12),
         OutlinedButton.icon(
           onPressed: () async {
-            final path = await _pickFile(context, ['jpg', 'jpeg', 'png', 'webp']);
-            if (path != null) viewModel.setSelectedImagePath(path);
+            final file = await _pickFile(['jpg', 'jpeg', 'png', 'webp']);
+            if (file != null) viewModel.setSelectedImageFile(file);
           },
           icon: const Icon(Icons.image),
-          label: Text(viewModel.selectedImagePath != null
-              ? viewModel.selectedImagePath!.split('/').last
+          label: Text(viewModel.selectedImageFile != null
+              ? viewModel.selectedImageFile!.name
               : 'Vælg billede'),
         ),
         const SizedBox(height: 8),
         OutlinedButton.icon(
           onPressed: () async {
-            final path = await _pickFile(context, ['mp3']);
-            if (path != null) viewModel.setSelectedSoundPath(path);
+            final file = await _pickFile(['mp3']);
+            if (file != null) viewModel.setSelectedSoundFile(file);
           },
           icon: const Icon(Icons.audiotrack),
-          label: Text(viewModel.selectedSoundPath != null
-              ? viewModel.selectedSoundPath!.split('/').last
+          label: Text(viewModel.selectedSoundFile != null
+              ? viewModel.selectedSoundFile!.name
               : 'Vælg lydfil (valgfrit)'),
         ),
         const SizedBox(height: 8),
@@ -267,12 +267,13 @@ class _UploadTab extends StatelessWidget {
     );
   }
 
-  Future<String?> _pickFile(BuildContext context, List<String> extensions) async {
+  Future<PlatformFile?> _pickFile(List<String> extensions) async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: extensions,
+      withData: true,
     );
-    return result?.files.single.path;
+    return result?.files.single;
   }
 }
 

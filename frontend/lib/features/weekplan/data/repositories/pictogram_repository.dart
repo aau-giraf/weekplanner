@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 import 'package:weekplanner/shared/services/core_api_service.dart';
@@ -59,20 +60,15 @@ class PictogramRepository extends ChangeNotifier {
 
   Future<Pictogram> uploadPictogram({
     required String name,
-    required String imagePath,
-    String? soundPath,
+    required PlatformFile imageFile,
+    PlatformFile? soundFile,
     int? organizationId,
     bool generateSound = true,
   }) async {
-    final imageFile = await MultipartFile.fromFile(imagePath, filename: imagePath.split('/').last);
-    MultipartFile? soundFile;
-    if (soundPath != null) {
-      soundFile = await MultipartFile.fromFile(soundPath, filename: soundPath.split('/').last);
-    }
     return await _coreApiService.uploadPictogram(
       name: name,
-      imageFile: imageFile,
-      soundFile: soundFile,
+      imageFile: _toMultipartFile(imageFile),
+      soundFile: soundFile != null ? _toMultipartFile(soundFile) : null,
       organizationId: organizationId,
       generateSound: generateSound,
     );
@@ -80,12 +76,21 @@ class PictogramRepository extends ChangeNotifier {
 
   Future<Pictogram> uploadSound({
     required int pictogramId,
-    required String soundPath,
+    required PlatformFile soundFile,
   }) async {
-    final soundFile = await MultipartFile.fromFile(soundPath, filename: soundPath.split('/').last);
     return await _coreApiService.uploadPictogramSound(
       pictogramId: pictogramId,
-      soundFile: soundFile,
+      soundFile: _toMultipartFile(soundFile),
     );
+  }
+
+  /// Convert a [PlatformFile] to a Dio [MultipartFile].
+  /// Uses bytes on web (where path is unavailable) and path on native.
+  MultipartFile _toMultipartFile(PlatformFile file) {
+    if (file.bytes != null) {
+      return MultipartFile.fromBytes(file.bytes!, filename: file.name);
+    }
+    // file.path is only available on native platforms
+    return MultipartFile.fromFileSync(file.path!, filename: file.name);
   }
 }

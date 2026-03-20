@@ -18,11 +18,20 @@ class _CitizenPickerViewState extends State<CitizenPickerView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final vm = context.read<OrganisationPickerViewModel>();
-      // Find org by ID and select it to load citizens/grades
-      final org = vm.organisations.firstWhere((o) => o.id == widget.orgId);
-      vm.selectOrganisation(org);
+      _loadData();
     });
+  }
+
+  Future<void> _loadData() async {
+    final vm = context.read<OrganisationPickerViewModel>();
+    // Ensure orgs are loaded before looking up by ID
+    if (vm.organisations.isEmpty) {
+      await vm.loadOrganisations();
+    }
+    final org = vm.organisations.where((o) => o.id == widget.orgId).firstOrNull;
+    if (org != null) {
+      vm.selectOrganisation(org);
+    }
   }
 
   @override

@@ -6,6 +6,7 @@
 import 'dart:async' as _i5;
 import 'dart:ui' as _i6;
 
+import 'package:file_picker/file_picker.dart' as _i8;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:weekplanner/features/weekplan/data/repositories/activity_repository.dart'
     as _i3;
@@ -251,16 +252,16 @@ class MockPictogramRepository extends _i1.Mock
   @override
   _i5.Future<_i2.Pictogram> uploadPictogram({
     required String? name,
-    required String? imagePath,
-    String? soundPath,
+    required _i8.PlatformFile? imageFile,
+    _i8.PlatformFile? soundFile,
     int? organizationId,
     bool? generateSound = true,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#uploadPictogram, [], {
               #name: name,
-              #imagePath: imagePath,
-              #soundPath: soundPath,
+              #imageFile: imageFile,
+              #soundFile: soundFile,
               #organizationId: organizationId,
               #generateSound: generateSound,
             }),
@@ -269,8 +270,8 @@ class MockPictogramRepository extends _i1.Mock
                 this,
                 Invocation.method(#uploadPictogram, [], {
                   #name: name,
-                  #imagePath: imagePath,
-                  #soundPath: soundPath,
+                  #imageFile: imageFile,
+                  #soundFile: soundFile,
                   #organizationId: organizationId,
                   #generateSound: generateSound,
                 }),
@@ -281,8 +282,8 @@ class MockPictogramRepository extends _i1.Mock
                 this,
                 Invocation.method(#uploadPictogram, [], {
                   #name: name,
-                  #imagePath: imagePath,
-                  #soundPath: soundPath,
+                  #imageFile: imageFile,
+                  #soundFile: soundFile,
                   #organizationId: organizationId,
                   #generateSound: generateSound,
                 }),
@@ -294,19 +295,19 @@ class MockPictogramRepository extends _i1.Mock
   @override
   _i5.Future<_i2.Pictogram> uploadSound({
     required int? pictogramId,
-    required String? soundPath,
+    required _i8.PlatformFile? soundFile,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#uploadSound, [], {
               #pictogramId: pictogramId,
-              #soundPath: soundPath,
+              #soundFile: soundFile,
             }),
             returnValue: _i5.Future<_i2.Pictogram>.value(
               _FakePictogram_0(
                 this,
                 Invocation.method(#uploadSound, [], {
                   #pictogramId: pictogramId,
-                  #soundPath: soundPath,
+                  #soundFile: soundFile,
                 }),
               ),
             ),
@@ -315,7 +316,7 @@ class MockPictogramRepository extends _i1.Mock
                 this,
                 Invocation.method(#uploadSound, [], {
                   #pictogramId: pictogramId,
-                  #soundPath: soundPath,
+                  #soundFile: soundFile,
                 }),
               ),
             ),
