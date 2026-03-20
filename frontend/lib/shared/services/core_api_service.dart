@@ -56,7 +56,7 @@ class CoreApiService {
     );
   }
 
-  // Pictograms
+  // Pictograms — Read
   Future<PaginatedResponse<Pictogram>> searchPictograms({
     String? query,
     int limit = 20,
@@ -75,6 +75,54 @@ class CoreApiService {
 
   Future<Pictogram> fetchPictogram(int id) async {
     final response = await _dio.get('/api/v1/pictograms/$id');
+    return Pictogram.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  // Pictograms — Write
+  Future<Pictogram> createPictogram({
+    required String name,
+    String? imageUrl,
+    int? organizationId,
+    bool generateImage = false,
+    bool generateSound = true,
+  }) async {
+    final response = await _dio.post('/api/v1/pictograms', data: {
+      'name': name,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (organizationId != null) 'organization_id': organizationId,
+      'generate_image': generateImage,
+      'generate_sound': generateSound,
+    });
+    return Pictogram.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  Future<Pictogram> uploadPictogram({
+    required String name,
+    required MultipartFile imageFile,
+    MultipartFile? soundFile,
+    int? organizationId,
+    bool generateSound = true,
+  }) async {
+    final formData = FormData.fromMap({
+      'name': name,
+      'image': imageFile,
+      if (soundFile != null) 'sound': soundFile,
+      if (organizationId != null) 'organization_id': organizationId,
+      'generate_sound': generateSound,
+    });
+    final response = await _dio.post('/api/v1/pictograms/upload', data: formData);
+    return Pictogram.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  Future<Pictogram> uploadPictogramSound({
+    required int pictogramId,
+    required MultipartFile soundFile,
+  }) async {
+    final formData = FormData.fromMap({'sound': soundFile});
+    final response = await _dio.post(
+      '/api/v1/pictograms/$pictogramId/sound',
+      data: formData,
+    );
     return Pictogram.fromJson(response.data as Map<String, dynamic>);
   }
 }

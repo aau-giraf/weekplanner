@@ -2,14 +2,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/activity_repository.dart';
+import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart';
 import 'package:weekplanner/features/weekplan/presentation/view_models/weekplan_view_model.dart';
 import 'package:weekplanner/shared/models/activity.dart';
 
-@GenerateNiceMocks([MockSpec<ActivityRepository>()])
+@GenerateNiceMocks([
+  MockSpec<ActivityRepository>(),
+  MockSpec<PictogramRepository>(),
+])
 import 'weekplan_view_model_test.mocks.dart';
 
 void main() {
   late MockActivityRepository mockRepo;
+  late MockPictogramRepository mockPictogramRepo;
   late WeekplanViewModel vm;
 
   final testActivities = [
@@ -31,6 +36,7 @@ void main() {
 
   setUp(() {
     mockRepo = MockActivityRepository();
+    mockPictogramRepo = MockPictogramRepository();
     when(mockRepo.activities).thenReturn([]);
     when(mockRepo.isLoading).thenReturn(false);
     when(mockRepo.error).thenReturn(null);
@@ -42,6 +48,7 @@ void main() {
 
     vm = WeekplanViewModel(
       activityRepository: mockRepo,
+      pictogramRepository: mockPictogramRepo,
       subjectId: 42,
       isCitizen: true,
     );

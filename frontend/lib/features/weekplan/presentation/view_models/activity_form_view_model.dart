@@ -5,6 +5,8 @@ import 'package:weekplanner/shared/models/activity.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';
 
+enum PictogramMode { search, upload, generate }
+
 class ActivityFormViewModel extends ChangeNotifier {
   final ActivityRepository _activityRepository;
   final PictogramRepository _pictogramRepository;
@@ -46,6 +48,15 @@ class ActivityFormViewModel extends ChangeNotifier {
   bool _isLoading = false;
   String? _error;
 
+  // Pictogram creation state
+  PictogramMode _pictogramMode = PictogramMode.search;
+  String _pictogramName = '';
+  String _generatePrompt = '';
+  String? _selectedImagePath;
+  String? _selectedSoundPath;
+  bool _generateSound = true;
+  bool _isCreatingPictogram = false;
+
   TimeOfDay get startTime => _startTime;
   TimeOfDay get endTime => _endTime;
   int? get selectedPictogramId => _selectedPictogramId;
@@ -57,6 +68,42 @@ class ActivityFormViewModel extends ChangeNotifier {
 
   List<Pictogram> get searchResults => _pictogramRepository.pictograms;
   bool get isSearching => _pictogramRepository.isLoading;
+
+  PictogramMode get pictogramMode => _pictogramMode;
+  String get pictogramName => _pictogramName;
+  String get generatePrompt => _generatePrompt;
+  String? get selectedImagePath => _selectedImagePath;
+  String? get selectedSoundPath => _selectedSoundPath;
+  bool get generateSound => _generateSound;
+  bool get isCreatingPictogram => _isCreatingPictogram;
+
+  void setPictogramMode(PictogramMode mode) {
+    _pictogramMode = mode;
+    notifyListeners();
+  }
+
+  void setPictogramName(String name) {
+    _pictogramName = name;
+  }
+
+  void setGeneratePrompt(String prompt) {
+    _generatePrompt = prompt;
+  }
+
+  void setSelectedImagePath(String? path) {
+    _selectedImagePath = path;
+    notifyListeners();
+  }
+
+  void setSelectedSoundPath(String? path) {
+    _selectedSoundPath = path;
+    notifyListeners();
+  }
+
+  void setGenerateSound(bool value) {
+    _generateSound = value;
+    notifyListeners();
+  }
 
   void setStartTime(TimeOfDay time) {
     _startTime = time;
@@ -76,6 +123,73 @@ class ActivityFormViewModel extends ChangeNotifier {
 
   Future<void> searchPictograms(String query) =>
       _pictogramRepository.searchPictograms(query);
+
+  /// Upload a local image as a new pictogram and select it.
+  Future<bool> uploadPictogramFromFile() async {
+    if (_selectedImagePath == null || _pictogramName.isEmpty) {
+      _error = 'Angiv navn og vælg et billede';
+      notifyListeners();
+      return false;
+    }
+
+    _isCreatingPictogram = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final pictogram = await _pictogramRepository.uploadPictogram(
+        name: _pictogramName,
+        imagePath: _selectedImagePath!,
+        soundPath: _selectedSoundPath,
+        generateSound: _generateSound,
+      );
+      selectPictogram(pictogram);
+      _isCreatingPictogram = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _isCreatingPictogram = false;
+      _error = 'Kunne ikke uploade piktogram';
+      notifyListeners();
+      return false;
+    }
+  }
+
+  /// Create a pictogram via AI generation and select it.
+  ///
+  /// giraf-core uses the pictogram name as the AI image prompt, so when
+  /// the user provides a detailed description we use that as the name
+  /// to get a more specific AI-generated image.
+  Future<bool> generatePictogram() async {
+    final prompt = _generatePrompt.isNotEmpty ? _generatePrompt : _pictogramName;
+    if (prompt.isEmpty) {
+      _error = 'Angiv et navn eller en beskrivelse';
+      notifyListeners();
+      return false;
+    }
+
+    _isCreatingPictogram = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      // Use prompt as name — giraf-core passes name to the AI image generator.
+      final pictogram = await _pictogramRepository.createPictogram(
+        name: prompt,
+        generateImage: true,
+        generateSound: _generateSound,
+      );
+      selectPictogram(pictogram);
+      _isCreatingPictogram = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _isCreatingPictogram = false;
+      _error = 'Kunne ikke generere piktogram';
+      notifyListeners();
+      return false;
+    }
+  }
 
   String? validate() {
     final startMinutes = _startTime.hour * 60 + _startTime.minute;

@@ -9,6 +9,7 @@ abstract class Pictogram with _$Pictogram {
     required int id,
     required String name,
     @JsonKey(name: 'image_url') String? imageUrl,
+    @JsonKey(name: 'sound_url') String? soundUrl,
     @JsonKey(name: 'organization_id') int? organizationId,
   }) = _Pictogram;
 

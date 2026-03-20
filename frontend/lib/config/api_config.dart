@@ -6,4 +6,7 @@ class ApiConfig {
 
   static String pictogramImageUrl(int pictogramId) =>
       '$coreBaseUrl/pictograms/$pictogramId/image/';
+
+  static String pictogramSoundUrl(int pictogramId) =>
+      '$coreBaseUrl/pictograms/$pictogramId/sound/';
 }

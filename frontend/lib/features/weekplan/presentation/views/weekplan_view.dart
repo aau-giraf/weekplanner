@@ -113,6 +113,9 @@ class _WeekplanViewState extends State<WeekplanView> {
           final activity = vm.activities[index];
           return ActivityListItem(
             activity: activity,
+            soundUrl: activity.pictogramId != null
+                ? vm.getSoundUrl(activity.pictogramId!)
+                : null,
             onEdit: () {
               context.go(
                 '/weekplan/${widget.citizenId}/edit/${activity.activityId}'

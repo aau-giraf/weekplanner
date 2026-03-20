@@ -1,24 +1,29 @@
 import 'package:flutter/foundation.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/activity_repository.dart';
+import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart';
 import 'package:weekplanner/shared/models/activity.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';
 
 class WeekplanViewModel extends ChangeNotifier {
   final ActivityRepository _activityRepository;
+  final PictogramRepository _pictogramRepository;
   final int subjectId;
   final bool isCitizen;
 
   WeekplanViewModel({
     required ActivityRepository activityRepository,
+    required PictogramRepository pictogramRepository,
     required this.subjectId,
     required this.isCitizen,
-  }) : _activityRepository = activityRepository {
+  })  : _activityRepository = activityRepository,
+        _pictogramRepository = pictogramRepository {
     _selectedDate = DateTime.now();
     _weekDates = GirafDateUtils.getWeekDates(_selectedDate);
   }
 
   late DateTime _selectedDate;
   late List<DateTime> _weekDates;
+  final Map<int, String?> _pictogramSoundUrls = {};
 
   DateTime get selectedDate => _selectedDate;
   List<DateTime> get weekDates => _weekDates;
@@ -27,11 +32,32 @@ class WeekplanViewModel extends ChangeNotifier {
   bool get isLoading => _activityRepository.isLoading;
   String? get error => _activityRepository.error;
 
-  Future<void> loadActivities() => _activityRepository.fetchActivities(
-        id: subjectId,
-        isCitizen: isCitizen,
-        date: _selectedDate,
-      );
+  /// Get cached sound URL for a pictogram, or null if not yet fetched.
+  String? getSoundUrl(int pictogramId) => _pictogramSoundUrls[pictogramId];
+
+  Future<void> loadActivities() async {
+    await _activityRepository.fetchActivities(
+      id: subjectId,
+      isCitizen: isCitizen,
+      date: _selectedDate,
+    );
+    _fetchPictogramSounds();
+  }
+
+  /// Fetch sound URLs for pictograms referenced by current activities.
+  Future<void> _fetchPictogramSounds() async {
+    final ids = activities
+        .where((a) => a.pictogramId != null)
+        .map((a) => a.pictogramId!)
+        .where((id) => !_pictogramSoundUrls.containsKey(id))
+        .toSet();
+
+    for (final id in ids) {
+      final pictogram = await _pictogramRepository.fetchPictogram(id);
+      _pictogramSoundUrls[id] = pictogram?.soundUrl;
+    }
+    if (ids.isNotEmpty) notifyListeners();
+  }
 
   void selectDate(DateTime date) {
     _selectedDate = date;

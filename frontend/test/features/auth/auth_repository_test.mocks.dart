@@ -5,6 +5,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i7;
 
+import 'package:dio/dio.dart' as _i11;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:weekplanner/shared/models/activity.dart' as _i6;
 import 'package:weekplanner/shared/models/citizen.dart' as _i9;
@@ -12,7 +13,7 @@ import 'package:weekplanner/shared/models/grade.dart' as _i10;
 import 'package:weekplanner/shared/models/organisation.dart' as _i4;
 import 'package:weekplanner/shared/models/paginated_response.dart' as _i3;
 import 'package:weekplanner/shared/models/pictogram.dart' as _i5;
-import 'package:weekplanner/shared/services/activity_api_service.dart' as _i11;
+import 'package:weekplanner/shared/services/activity_api_service.dart' as _i12;
 import 'package:weekplanner/shared/services/auth_service.dart' as _i2;
 import 'package:weekplanner/shared/services/core_api_service.dart' as _i8;
 
@@ -286,13 +287,130 @@ class MockCoreApiService extends _i1.Mock implements _i8.CoreApiService {
             ),
           )
           as _i7.Future<_i5.Pictogram>);
+
+  @override
+  _i7.Future<_i5.Pictogram> createPictogram({
+    required String? name,
+    String? imageUrl,
+    int? organizationId,
+    bool? generateImage = false,
+    bool? generateSound = true,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#createPictogram, [], {
+              #name: name,
+              #imageUrl: imageUrl,
+              #organizationId: organizationId,
+              #generateImage: generateImage,
+              #generateSound: generateSound,
+            }),
+            returnValue: _i7.Future<_i5.Pictogram>.value(
+              _FakePictogram_3(
+                this,
+                Invocation.method(#createPictogram, [], {
+                  #name: name,
+                  #imageUrl: imageUrl,
+                  #organizationId: organizationId,
+                  #generateImage: generateImage,
+                  #generateSound: generateSound,
+                }),
+              ),
+            ),
+            returnValueForMissingStub: _i7.Future<_i5.Pictogram>.value(
+              _FakePictogram_3(
+                this,
+                Invocation.method(#createPictogram, [], {
+                  #name: name,
+                  #imageUrl: imageUrl,
+                  #organizationId: organizationId,
+                  #generateImage: generateImage,
+                  #generateSound: generateSound,
+                }),
+              ),
+            ),
+          )
+          as _i7.Future<_i5.Pictogram>);
+
+  @override
+  _i7.Future<_i5.Pictogram> uploadPictogram({
+    required String? name,
+    required _i11.MultipartFile? imageFile,
+    _i11.MultipartFile? soundFile,
+    int? organizationId,
+    bool? generateSound = true,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#uploadPictogram, [], {
+              #name: name,
+              #imageFile: imageFile,
+              #soundFile: soundFile,
+              #organizationId: organizationId,
+              #generateSound: generateSound,
+            }),
+            returnValue: _i7.Future<_i5.Pictogram>.value(
+              _FakePictogram_3(
+                this,
+                Invocation.method(#uploadPictogram, [], {
+                  #name: name,
+                  #imageFile: imageFile,
+                  #soundFile: soundFile,
+                  #organizationId: organizationId,
+                  #generateSound: generateSound,
+                }),
+              ),
+            ),
+            returnValueForMissingStub: _i7.Future<_i5.Pictogram>.value(
+              _FakePictogram_3(
+                this,
+                Invocation.method(#uploadPictogram, [], {
+                  #name: name,
+                  #imageFile: imageFile,
+                  #soundFile: soundFile,
+                  #organizationId: organizationId,
+                  #generateSound: generateSound,
+                }),
+              ),
+            ),
+          )
+          as _i7.Future<_i5.Pictogram>);
+
+  @override
+  _i7.Future<_i5.Pictogram> uploadPictogramSound({
+    required int? pictogramId,
+    required _i11.MultipartFile? soundFile,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#uploadPictogramSound, [], {
+              #pictogramId: pictogramId,
+              #soundFile: soundFile,
+            }),
+            returnValue: _i7.Future<_i5.Pictogram>.value(
+              _FakePictogram_3(
+                this,
+                Invocation.method(#uploadPictogramSound, [], {
+                  #pictogramId: pictogramId,
+                  #soundFile: soundFile,
+                }),
+              ),
+            ),
+            returnValueForMissingStub: _i7.Future<_i5.Pictogram>.value(
+              _FakePictogram_3(
+                this,
+                Invocation.method(#uploadPictogramSound, [], {
+                  #pictogramId: pictogramId,
+                  #soundFile: soundFile,
+                }),
+              ),
+            ),
+          )
+          as _i7.Future<_i5.Pictogram>);
 }
 
 /// A class which mocks [ActivityApiService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockActivityApiService extends _i1.Mock
-    implements _i11.ActivityApiService {
+    implements _i12.ActivityApiService {
   @override
   void setAuthToken(String? token) => super.noSuchMethod(
     Invocation.method(#setAuthToken, [token]),

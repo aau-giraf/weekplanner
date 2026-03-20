@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Pictogram {
 
- int get id; String get name;@JsonKey(name: 'image_url') String? get imageUrl;@JsonKey(name: 'organization_id') int? get organizationId;
+ int get id; String get name;@JsonKey(name: 'image_url') String? get imageUrl;@JsonKey(name: 'sound_url') String? get soundUrl;@JsonKey(name: 'organization_id') int? get organizationId;
 /// Create a copy of Pictogram
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $PictogramCopyWith<Pictogram> get copyWith => _$PictogramCopyWithImpl<Pictogram>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Pictogram&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.organizationId, organizationId) || other.organizationId == organizationId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Pictogram&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.soundUrl, soundUrl) || other.soundUrl == soundUrl)&&(identical(other.organizationId, organizationId) || other.organizationId == organizationId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,imageUrl,organizationId);
+int get hashCode => Object.hash(runtimeType,id,name,imageUrl,soundUrl,organizationId);
 
 @override
 String toString() {
-  return 'Pictogram(id: $id, name: $name, imageUrl: $imageUrl, organizationId: $organizationId)';
+  return 'Pictogram(id: $id, name: $name, imageUrl: $imageUrl, soundUrl: $soundUrl, organizationId: $organizationId)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $PictogramCopyWith<$Res>  {
   factory $PictogramCopyWith(Pictogram value, $Res Function(Pictogram) _then) = _$PictogramCopyWithImpl;
 @useResult
 $Res call({
- int id, String name,@JsonKey(name: 'image_url') String? imageUrl,@JsonKey(name: 'organization_id') int? organizationId
+ int id, String name,@JsonKey(name: 'image_url') String? imageUrl,@JsonKey(name: 'sound_url') String? soundUrl,@JsonKey(name: 'organization_id') int? organizationId
 });
 
 
@@ -65,11 +65,12 @@ class _$PictogramCopyWithImpl<$Res>
 
 /// Create a copy of Pictogram
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? imageUrl = freezed,Object? organizationId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? imageUrl = freezed,Object? soundUrl = freezed,Object? organizationId = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
+as String?,soundUrl: freezed == soundUrl ? _self.soundUrl : soundUrl // ignore: cast_nullable_to_non_nullable
 as String?,organizationId: freezed == organizationId ? _self.organizationId : organizationId // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
@@ -156,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'organization_id')  int? organizationId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'sound_url')  String? soundUrl, @JsonKey(name: 'organization_id')  int? organizationId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Pictogram() when $default != null:
-return $default(_that.id,_that.name,_that.imageUrl,_that.organizationId);case _:
+return $default(_that.id,_that.name,_that.imageUrl,_that.soundUrl,_that.organizationId);case _:
   return orElse();
 
 }
@@ -177,10 +178,10 @@ return $default(_that.id,_that.name,_that.imageUrl,_that.organizationId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'organization_id')  int? organizationId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'sound_url')  String? soundUrl, @JsonKey(name: 'organization_id')  int? organizationId)  $default,) {final _that = this;
 switch (_that) {
 case _Pictogram():
-return $default(_that.id,_that.name,_that.imageUrl,_that.organizationId);case _:
+return $default(_that.id,_that.name,_that.imageUrl,_that.soundUrl,_that.organizationId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +198,10 @@ return $default(_that.id,_that.name,_that.imageUrl,_that.organizationId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'organization_id')  int? organizationId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'sound_url')  String? soundUrl, @JsonKey(name: 'organization_id')  int? organizationId)?  $default,) {final _that = this;
 switch (_that) {
 case _Pictogram() when $default != null:
-return $default(_that.id,_that.name,_that.imageUrl,_that.organizationId);case _:
+return $default(_that.id,_that.name,_that.imageUrl,_that.soundUrl,_that.organizationId);case _:
   return null;
 
 }
@@ -212,12 +213,13 @@ return $default(_that.id,_that.name,_that.imageUrl,_that.organizationId);case _:
 @JsonSerializable()
 
 class _Pictogram implements Pictogram {
-  const _Pictogram({required this.id, required this.name, @JsonKey(name: 'image_url') this.imageUrl, @JsonKey(name: 'organization_id') this.organizationId});
+  const _Pictogram({required this.id, required this.name, @JsonKey(name: 'image_url') this.imageUrl, @JsonKey(name: 'sound_url') this.soundUrl, @JsonKey(name: 'organization_id') this.organizationId});
   factory _Pictogram.fromJson(Map<String, dynamic> json) => _$PictogramFromJson(json);
 
 @override final  int id;
 @override final  String name;
 @override@JsonKey(name: 'image_url') final  String? imageUrl;
+@override@JsonKey(name: 'sound_url') final  String? soundUrl;
 @override@JsonKey(name: 'organization_id') final  int? organizationId;
 
 /// Create a copy of Pictogram
@@ -233,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Pictogram&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.organizationId, organizationId) || other.organizationId == organizationId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Pictogram&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.soundUrl, soundUrl) || other.soundUrl == soundUrl)&&(identical(other.organizationId, organizationId) || other.organizationId == organizationId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,imageUrl,organizationId);
+int get hashCode => Object.hash(runtimeType,id,name,imageUrl,soundUrl,organizationId);
 
 @override
 String toString() {
-  return 'Pictogram(id: $id, name: $name, imageUrl: $imageUrl, organizationId: $organizationId)';
+  return 'Pictogram(id: $id, name: $name, imageUrl: $imageUrl, soundUrl: $soundUrl, organizationId: $organizationId)';
 }
 
 
@@ -253,7 +255,7 @@ abstract mixin class _$PictogramCopyWith<$Res> implements $PictogramCopyWith<$Re
   factory _$PictogramCopyWith(_Pictogram value, $Res Function(_Pictogram) _then) = __$PictogramCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name,@JsonKey(name: 'image_url') String? imageUrl,@JsonKey(name: 'organization_id') int? organizationId
+ int id, String name,@JsonKey(name: 'image_url') String? imageUrl,@JsonKey(name: 'sound_url') String? soundUrl,@JsonKey(name: 'organization_id') int? organizationId
 });
 
 
@@ -270,11 +272,12 @@ class __$PictogramCopyWithImpl<$Res>
 
 /// Create a copy of Pictogram
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? imageUrl = freezed,Object? organizationId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? imageUrl = freezed,Object? soundUrl = freezed,Object? organizationId = freezed,}) {
   return _then(_Pictogram(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
+as String?,soundUrl: freezed == soundUrl ? _self.soundUrl : soundUrl // ignore: cast_nullable_to_non_nullable
 as String?,organizationId: freezed == organizationId ? _self.organizationId : organizationId // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
