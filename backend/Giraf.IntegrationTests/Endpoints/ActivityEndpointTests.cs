@@ -476,5 +476,281 @@ namespace Giraf.IntegrationTests.Endpoints
         }
 
         #endregion
+
+        #region Validation - Time and date input
+
+        [Fact]
+        public async Task CreateActivityForCitizen_ReturnsBadRequest_WhenEndTimeBeforeStartTime()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new EmptyDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            var newActivityDto = new CreateActivityDTO
+            (
+                Date: DateOnly.FromDateTime(DateTime.UtcNow).ToString(),
+                StartTime: "10:00",
+                EndTime: "08:00",
+                PictogramId: null
+            );
+
+            var response = await client.PostAsJsonAsync("/weekplan/to-citizen/1", newActivityDto);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task CreateActivityForGrade_ReturnsBadRequest_WhenEndTimeBeforeStartTime()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new EmptyDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "admin");
+
+            var newActivityDto = new CreateActivityDTO
+            (
+                Date: DateOnly.FromDateTime(DateTime.UtcNow).ToString(),
+                StartTime: "10:00",
+                EndTime: "08:00",
+                PictogramId: null
+            );
+
+            var response = await client.PostAsJsonAsync("/weekplan/to-grade/1", newActivityDto);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task CreateActivityForCitizen_ReturnsBadRequest_WhenDateIsInvalid()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new EmptyDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            var newActivityDto = new CreateActivityDTO
+            (
+                Date: "not-a-date",
+                StartTime: "10:00",
+                EndTime: "11:00",
+                PictogramId: null
+            );
+
+            var response = await client.PostAsJsonAsync("/weekplan/to-citizen/1", newActivityDto);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetActivitiesForCitizenOnDate_ReturnsBadRequest_WhenDateIsInvalid()
+        {
+            var factory = new GirafWebApplicationFactory();
+            var seeder = new EmptyDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            var response = await client.GetAsync("/weekplan/1?date=not-a-date");
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateActivity_ReturnsBadRequest_WhenEndTimeBeforeStartTime()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new BaseCaseDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            int activityId = seeder.Activities[0].Id;
+
+            var updateDto = new UpdateActivityDTO
+            (
+                Date: DateOnly.FromDateTime(DateTime.UtcNow).ToString(),
+                StartTime: "14:00",
+                EndTime: "12:00",
+                IsCompleted: false,
+                PictogramId: null
+            );
+
+            var response = await client.PutAsJsonAsync($"/weekplan/activity/{activityId}", updateDto);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        #endregion
+
+        #region POST /weekplan/activity/copy-citizen/{citizenId:int} - Copy activities for citizen
+
+        [Fact]
+        public async Task CopyActivityForCitizen_ReturnsOk_WhenActivitiesExist()
+        {
+            var factory = new GirafWebApplicationFactory();
+            var seeder = new BaseCaseDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            var sourceDate = DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd");
+            var targetDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).ToString("yyyy-MM-dd");
+            var activityIds = new List<int> { seeder.Activities[0].Id };
+
+            var response = await client.PostAsJsonAsync(
+                $"/weekplan/activity/copy-citizen/1?dateStr={sourceDate}&newDateStr={targetDate}",
+                activityIds);
+
+            response.EnsureSuccessStatusCode();
+
+            using var verifyScope = factory.Services.CreateScope();
+            var dbContext = verifyScope.ServiceProvider.GetRequiredService<GirafDbContext>();
+            var copiedActivities = dbContext.Activities
+                .Where(a => a.CitizenId == 1 && a.Date == DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)))
+                .ToList();
+            Assert.NotEmpty(copiedActivities);
+        }
+
+        [Fact]
+        public async Task CopyActivityForCitizen_ReturnsNotFound_WhenNoActivitiesExist()
+        {
+            var factory = new GirafWebApplicationFactory();
+            var seeder = new EmptyDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            var sourceDate = DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd");
+            var targetDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).ToString("yyyy-MM-dd");
+            var activityIds = new List<int>();
+
+            var response = await client.PostAsJsonAsync(
+                $"/weekplan/activity/copy-citizen/1?dateStr={sourceDate}&newDateStr={targetDate}",
+                activityIds);
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        #endregion
+
+        #region POST /weekplan/activity/copy-grade/{gradeId:int} - Copy activities for grade
+
+        [Fact]
+        public async Task CopyActivityForGrade_ReturnsOk_WhenActivitiesExist()
+        {
+            var factory = new GirafWebApplicationFactory();
+            var seeder = new BaseCaseDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "admin");
+
+            var sourceDate = DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd");
+            var targetDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).ToString("yyyy-MM-dd");
+            var activityIds = new List<int> { seeder.Activities[1].Id };
+
+            var response = await client.PostAsJsonAsync(
+                $"/weekplan/activity/copy-grade/1?dateStr={sourceDate}&newDateStr={targetDate}",
+                activityIds);
+
+            response.EnsureSuccessStatusCode();
+
+            using var verifyScope = factory.Services.CreateScope();
+            var dbContext = verifyScope.ServiceProvider.GetRequiredService<GirafDbContext>();
+            var copiedActivities = dbContext.Activities
+                .Where(a => a.GradeId == 1 && a.Date == DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)))
+                .ToList();
+            Assert.NotEmpty(copiedActivities);
+        }
+
+        [Fact]
+        public async Task CopyActivityForGrade_ReturnsNotFound_WhenNoActivitiesExist()
+        {
+            var factory = new GirafWebApplicationFactory();
+            var seeder = new EmptyDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "admin");
+
+            var sourceDate = DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd");
+            var targetDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).ToString("yyyy-MM-dd");
+            var activityIds = new List<int>();
+
+            var response = await client.PostAsJsonAsync(
+                $"/weekplan/activity/copy-grade/1?dateStr={sourceDate}&newDateStr={targetDate}",
+                activityIds);
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        #endregion
+
+        #region Authentication - Unauthenticated requests
+
+        [Fact]
+        public async Task GetAllActivities_ReturnsUnauthorized_WhenNoToken()
+        {
+            var factory = new GirafWebApplicationFactory();
+            var seeder = new EmptyDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            // No token attached
+
+            var response = await client.GetAsync("/weekplan");
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task CreateActivityForCitizen_ReturnsUnauthorized_WhenNoToken()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new EmptyDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+
+            var newActivityDto = new CreateActivityDTO
+            (
+                Date: DateOnly.FromDateTime(DateTime.UtcNow).ToString(),
+                StartTime: "10:00",
+                EndTime: "11:00",
+                PictogramId: null
+            );
+
+            var response = await client.PostAsJsonAsync("/weekplan/to-citizen/1", newActivityDto);
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task DeleteActivity_ReturnsUnauthorized_WhenNoToken()
+        {
+            var factory = new GirafWebApplicationFactory();
+            var seeder = new BaseCaseDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+
+            int activityId = seeder.Activities[0].Id;
+            var response = await client.DeleteAsync($"/weekplan/activity/{activityId}");
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        #endregion
     }
 }
