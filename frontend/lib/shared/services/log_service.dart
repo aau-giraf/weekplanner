@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -8,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 ///
 /// Log file is written to the app's documents directory as `weekplanner.log`.
 /// On web (where dart:io is unavailable) only console output is used.
+/// The file sink is flushed when the app is paused or detached.
 Future<void> setupLogging() async {
   Logger.root.level = Level.ALL;
 
@@ -16,6 +18,15 @@ Future<void> setupLogging() async {
     final dir = await getApplicationDocumentsDirectory();
     final file = File('${dir.path}/weekplanner.log');
     fileSink = file.openWrite(mode: FileMode.append);
+
+    AppLifecycleListener(
+      onStateChange: (state) {
+        if (state == AppLifecycleState.paused ||
+            state == AppLifecycleState.detached) {
+          fileSink?.flush();
+        }
+      },
+    );
   }
 
   Logger.root.onRecord.listen((record) {

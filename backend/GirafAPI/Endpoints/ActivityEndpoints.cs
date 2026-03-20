@@ -243,8 +243,10 @@ public static class ActivityEndpoints
                 {
                     try
                     {
-                        var sourceDate = DateOnly.Parse(dateStr);
-                        var targetDate = DateOnly.Parse(newDateStr);
+                        if (!DateOnly.TryParse(dateStr, out var sourceDate))
+                            return Results.BadRequest("Invalid source date format.");
+                        if (!DateOnly.TryParse(newDateStr, out var targetDate))
+                            return Results.BadRequest("Invalid target date format.");
 
                         var activities = await dbContext.Activities
                             .Where(a => a.CitizenId == citizenId &&
@@ -275,11 +277,6 @@ public static class ActivityEndpoints
                         await dbContext.SaveChangesAsync();
                         return Results.Ok("Activities successfully copied.");
                     }
-                    catch (FormatException)
-                    {
-                        return Results.BadRequest(
-                            "Invalid date format. Please provide the date in 'YYYY-MM-DD' format.");
-                    }
                     catch (Exception)
                     {
                         return Results.Problem("An error occurred while copying the activities.",
@@ -298,8 +295,10 @@ public static class ActivityEndpoints
                 {
                     try
                     {
-                        var sourceDate = DateOnly.Parse(dateStr);
-                        var targetDate = DateOnly.Parse(newDateStr);
+                        if (!DateOnly.TryParse(dateStr, out var sourceDate))
+                            return Results.BadRequest("Invalid source date format.");
+                        if (!DateOnly.TryParse(newDateStr, out var targetDate))
+                            return Results.BadRequest("Invalid target date format.");
 
                         var activities = await dbContext.Activities
                             .Where(a => a.GradeId == gradeId &&
@@ -329,11 +328,6 @@ public static class ActivityEndpoints
 
                         await dbContext.SaveChangesAsync();
                         return Results.Ok("Activities successfully copied.");
-                    }
-                    catch (FormatException)
-                    {
-                        return Results.BadRequest(
-                            "Invalid date format. Please provide the date in 'YYYY-MM-DD' format.");
                     }
                     catch (Exception)
                     {
