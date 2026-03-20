@@ -45,15 +45,15 @@ class WeekplanViewModel extends ChangeNotifier {
       isCitizen: isCitizen,
       date: _selectedDate,
     );
-    _fetchPictogramSounds();
+    _fetchPictogramMediaUrls();
   }
 
-  /// Fetch sound URLs for pictograms referenced by current activities.
-  Future<void> _fetchPictogramSounds() async {
+  /// Fetch image and sound URLs for pictograms referenced by current activities.
+  Future<void> _fetchPictogramMediaUrls() async {
     final ids = activities
         .where((a) => a.pictogramId != null)
         .map((a) => a.pictogramId!)
-        .where((id) => !_pictogramSoundUrls.containsKey(id))
+        .where((id) => !_pictogramImageUrls.containsKey(id))
         .toSet();
 
     for (final id in ids) {

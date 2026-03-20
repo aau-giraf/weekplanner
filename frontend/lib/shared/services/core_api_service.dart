@@ -16,11 +16,23 @@ class CoreApiService {
               headers: {'Content-Type': 'application/json'},
             ));
 
-  /// Resolve relative media URLs on a [Pictogram] to absolute URLs.
+  /// Resolve media URLs on a [Pictogram] to absolute URLs.
+  ///
+  /// giraf-core may return:
+  /// - A relative path (`/media/pictograms/...`) for uploaded/generated files.
+  /// - An absolute URL (`https://...`) for externally-provided images.
+  /// - An empty string when no media is present (e.g. no sound).
   Pictogram _resolvePictogramUrls(Pictogram p) => p.copyWith(
-        imageUrl: p.imageUrl != null ? '${ApiConfig.coreBaseUrl}${p.imageUrl}' : null,
-        soundUrl: p.soundUrl != null ? '${ApiConfig.coreBaseUrl}${p.soundUrl}' : null,
+        imageUrl: _resolveMediaUrl(p.imageUrl),
+        soundUrl: _resolveMediaUrl(p.soundUrl),
       );
+
+  String? _resolveMediaUrl(String? url) {
+    if (url == null || url.isEmpty) return null;
+    final parsed = Uri.tryParse(url);
+    if (parsed != null && parsed.hasScheme) return url;
+    return '${ApiConfig.coreBaseUrl}$url';
+  }
 
   void setAuthToken(String token) {
     _dio.options.headers['Authorization'] = 'Bearer $token';

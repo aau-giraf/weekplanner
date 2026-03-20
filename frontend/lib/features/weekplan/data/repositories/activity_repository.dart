@@ -97,20 +97,23 @@ class ActivityRepository extends ChangeNotifier {
   }
 
   Future<void> toggleActivityStatus(int activityId) async {
-    // Find the current activity to determine the new value
-    final current = _activities.firstWhere((a) => a.activityId == activityId);
-    final newValue = !current.isCompleted;
-
-    // Optimistic toggle
-    _activities = _activities.map((a) {
-      if (a.activityId == activityId) {
-        return a.copyWith(isCompleted: newValue);
-      }
-      return a;
-    }).toList();
-    notifyListeners();
-
     try {
+      final index = _activities.indexWhere((a) => a.activityId == activityId);
+      if (index == -1) {
+        _log.warning('toggleActivityStatus called for unknown activity $activityId');
+        return;
+      }
+      final newValue = !_activities[index].isCompleted;
+
+      // Optimistic toggle
+      _activities = _activities.map((a) {
+        if (a.activityId == activityId) {
+          return a.copyWith(isCompleted: newValue);
+        }
+        return a;
+      }).toList();
+      notifyListeners();
+
       await _apiService.toggleActivityStatus(activityId, isComplete: newValue);
     } catch (e, stackTrace) {
       _log.severe('Failed to toggle activity status', e, stackTrace);
