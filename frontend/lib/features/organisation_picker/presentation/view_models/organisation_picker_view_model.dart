@@ -19,7 +19,10 @@ class OrganisationPickerViewModel extends ChangeNotifier {
   bool get isLoading => _repository.isLoading;
   String? get error => _repository.error;
 
-  Future<void> loadOrganisations() => _repository.fetchOrganisations();
+  Future<void> loadOrganisations() async {
+    await _repository.fetchOrganisations();
+    notifyListeners();
+  }
 
   Future<void> selectOrganisation(Organisation org) async {
     _selectedOrganisation = org;
