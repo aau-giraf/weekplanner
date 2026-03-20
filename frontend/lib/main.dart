@@ -10,9 +10,11 @@ import 'package:weekplanner/features/weekplan/data/repositories/pictogram_reposi
 import 'package:weekplanner/shared/services/activity_api_service.dart';
 import 'package:weekplanner/shared/services/auth_service.dart';
 import 'package:weekplanner/shared/services/core_api_service.dart';
+import 'package:weekplanner/shared/services/log_service.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await setupLogging();
 
   // Services
   final authService = AuthService();

@@ -128,8 +128,8 @@ void main() {
       );
       expect(repo.activities[0].isCompleted, false);
 
-      when(mockApi.toggleActivityStatus(1))
-          .thenAnswer((_) async => testActivity.copyWith(isCompleted: true));
+      when(mockApi.toggleActivityStatus(1, isComplete: true))
+          .thenAnswer((_) async {});
 
       await repo.toggleActivityStatus(1);
       expect(repo.activities[0].isCompleted, true);

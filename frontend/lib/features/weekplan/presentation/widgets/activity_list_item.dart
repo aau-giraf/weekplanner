@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:weekplanner/config/api_config.dart';
 import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/shared/models/activity.dart';
 
@@ -12,6 +11,7 @@ class ActivityListItem extends StatefulWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback onToggleStatus;
+  final String? imageUrl;
   final String? soundUrl;
 
   const ActivityListItem({
@@ -20,6 +20,7 @@ class ActivityListItem extends StatefulWidget {
     required this.onEdit,
     required this.onDelete,
     required this.onToggleStatus,
+    this.imageUrl,
     this.soundUrl,
   });
 
@@ -106,14 +107,19 @@ class _ActivityListItemState extends State<ActivityListItem> {
                         borderRadius: BorderRadius.circular(28),
                       ),
                       clipBehavior: Clip.antiAlias,
-                      child: Image.network(
-                        ApiConfig.pictogramImageUrl(activity.pictogramId!),
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, _, _) => const Icon(
-                          Icons.image,
-                          color: GirafColors.white,
-                        ),
-                      ),
+                      child: widget.imageUrl != null
+                          ? Image.network(
+                              widget.imageUrl!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, _, _) => const Icon(
+                                Icons.image,
+                                color: GirafColors.white,
+                              ),
+                            )
+                          : const Icon(
+                              Icons.image,
+                              color: GirafColors.white,
+                            ),
                     )
                   else
                     Container(

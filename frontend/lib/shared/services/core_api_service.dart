@@ -16,6 +16,12 @@ class CoreApiService {
               headers: {'Content-Type': 'application/json'},
             ));
 
+  /// Resolve relative media URLs on a [Pictogram] to absolute URLs.
+  Pictogram _resolvePictogramUrls(Pictogram p) => p.copyWith(
+        imageUrl: p.imageUrl != null ? '${ApiConfig.coreBaseUrl}${p.imageUrl}' : null,
+        soundUrl: p.soundUrl != null ? '${ApiConfig.coreBaseUrl}${p.soundUrl}' : null,
+      );
+
   void setAuthToken(String token) {
     _dio.options.headers['Authorization'] = 'Bearer $token';
   }
@@ -67,15 +73,21 @@ class CoreApiService {
       'limit': limit,
       'offset': offset,
     });
-    return PaginatedResponse.fromJson(
+    final page = PaginatedResponse.fromJson(
       response.data as Map<String, dynamic>,
       Pictogram.fromJson,
+    );
+    return PaginatedResponse(
+      items: page.items.map(_resolvePictogramUrls).toList(),
+      count: page.count,
     );
   }
 
   Future<Pictogram> fetchPictogram(int id) async {
     final response = await _dio.get('/api/v1/pictograms/$id');
-    return Pictogram.fromJson(response.data as Map<String, dynamic>);
+    return _resolvePictogramUrls(
+      Pictogram.fromJson(response.data as Map<String, dynamic>),
+    );
   }
 
   // Pictograms — Write
@@ -93,7 +105,9 @@ class CoreApiService {
       'generate_image': generateImage,
       'generate_sound': generateSound,
     });
-    return Pictogram.fromJson(response.data as Map<String, dynamic>);
+    return _resolvePictogramUrls(
+      Pictogram.fromJson(response.data as Map<String, dynamic>),
+    );
   }
 
   Future<Pictogram> uploadPictogram({
@@ -111,7 +125,9 @@ class CoreApiService {
       'generate_sound': generateSound,
     });
     final response = await _dio.post('/api/v1/pictograms/upload', data: formData);
-    return Pictogram.fromJson(response.data as Map<String, dynamic>);
+    return _resolvePictogramUrls(
+      Pictogram.fromJson(response.data as Map<String, dynamic>),
+    );
   }
 
   Future<Pictogram> uploadPictogramSound({
@@ -123,6 +139,8 @@ class CoreApiService {
       '/api/v1/pictograms/$pictogramId/sound',
       data: formData,
     );
-    return Pictogram.fromJson(response.data as Map<String, dynamic>);
+    return _resolvePictogramUrls(
+      Pictogram.fromJson(response.data as Map<String, dynamic>),
+    );
   }
 }

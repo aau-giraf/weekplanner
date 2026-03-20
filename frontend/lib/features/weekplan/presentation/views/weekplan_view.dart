@@ -115,6 +115,9 @@ class _WeekplanViewState extends State<WeekplanView> {
           final activity = vm.activities[index];
           return ActivityListItem(
             activity: activity,
+            imageUrl: activity.pictogramId != null
+                ? vm.getImageUrl(activity.pictogramId!)
+                : null,
             soundUrl: activity.pictogramId != null
                 ? vm.getSoundUrl(activity.pictogramId!)
                 : null,

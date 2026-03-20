@@ -546,21 +546,18 @@ class MockActivityApiService extends _i1.Mock
           as _i7.Future<void>);
 
   @override
-  _i7.Future<_i6.Activity> toggleActivityStatus(int? activityId) =>
+  _i7.Future<void> toggleActivityStatus(
+    int? activityId, {
+    required bool? isComplete,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#toggleActivityStatus, [activityId]),
-            returnValue: _i7.Future<_i6.Activity>.value(
-              _FakeActivity_4(
-                this,
-                Invocation.method(#toggleActivityStatus, [activityId]),
-              ),
+            Invocation.method(
+              #toggleActivityStatus,
+              [activityId],
+              {#isComplete: isComplete},
             ),
-            returnValueForMissingStub: _i7.Future<_i6.Activity>.value(
-              _FakeActivity_4(
-                this,
-                Invocation.method(#toggleActivityStatus, [activityId]),
-              ),
-            ),
+            returnValue: _i7.Future<void>.value(),
+            returnValueForMissingStub: _i7.Future<void>.value(),
           )
-          as _i7.Future<_i6.Activity>);
+          as _i7.Future<void>);
 }

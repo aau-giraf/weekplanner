@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
 import 'package:weekplanner/shared/models/citizen.dart';
 import 'package:weekplanner/shared/models/grade.dart';
 import 'package:weekplanner/shared/models/organisation.dart';
 import 'package:weekplanner/shared/services/core_api_service.dart';
+
+final _log = Logger('OrganisationRepository');
 
 class OrganisationRepository extends ChangeNotifier {
   final CoreApiService _coreApiService;
@@ -30,7 +33,8 @@ class OrganisationRepository extends ChangeNotifier {
     try {
       final response = await _coreApiService.fetchOrganisations();
       _organisations = response.items;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _log.severe('Failed to fetch organisations', e, stackTrace);
       _error = 'Kunne ikke hente organisationer';
     }
 
@@ -50,7 +54,8 @@ class OrganisationRepository extends ChangeNotifier {
       ]);
       _citizens = results[0].items as List<Citizen>;
       _grades = results[1].items as List<Grade>;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _log.severe('Failed to fetch citizens and grades', e, stackTrace);
       _error = 'Kunne ikke hente borgere';
     }
 

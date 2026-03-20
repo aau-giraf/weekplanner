@@ -1,7 +1,10 @@
 import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
 import 'package:weekplanner/shared/models/activity.dart';
 import 'package:weekplanner/shared/services/activity_api_service.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';
+
+final _log = Logger('ActivityRepository');
 
 class ActivityRepository extends ChangeNotifier {
   final ActivityApiService _apiService;
@@ -32,7 +35,8 @@ class ActivityRepository extends ChangeNotifier {
           ? await _apiService.fetchActivitiesByCitizen(id, dateStr)
           : await _apiService.fetchActivitiesByGrade(id, dateStr);
       _activities = response;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _log.severe('Failed to fetch activities', e, stackTrace);
       _error = 'Kunne ikke hente aktiviteter';
     }
 
@@ -51,7 +55,8 @@ class ActivityRepository extends ChangeNotifier {
           : await _apiService.createActivityForGrade(id, data);
       _activities = [..._activities, activity];
       notifyListeners();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _log.severe('Failed to create activity', e, stackTrace);
       _error = 'Kunne ikke oprette aktivitet';
       notifyListeners();
       rethrow;
@@ -65,7 +70,8 @@ class ActivityRepository extends ChangeNotifier {
         return a.activityId == activityId ? updated : a;
       }).toList();
       notifyListeners();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _log.severe('Failed to update activity', e, stackTrace);
       _error = 'Kunne ikke opdatere aktivitet';
       notifyListeners();
       rethrow;
@@ -80,7 +86,8 @@ class ActivityRepository extends ChangeNotifier {
 
     try {
       await _apiService.deleteActivity(activityId);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _log.severe('Failed to delete activity', e, stackTrace);
       // Rollback
       _activities = backup;
       _error = 'Kunne ikke slette aktivitet';
@@ -90,18 +97,23 @@ class ActivityRepository extends ChangeNotifier {
   }
 
   Future<void> toggleActivityStatus(int activityId) async {
+    // Find the current activity to determine the new value
+    final current = _activities.firstWhere((a) => a.activityId == activityId);
+    final newValue = !current.isCompleted;
+
     // Optimistic toggle
     _activities = _activities.map((a) {
       if (a.activityId == activityId) {
-        return a.copyWith(isCompleted: !a.isCompleted);
+        return a.copyWith(isCompleted: newValue);
       }
       return a;
     }).toList();
     notifyListeners();
 
     try {
-      await _apiService.toggleActivityStatus(activityId);
-    } catch (e) {
+      await _apiService.toggleActivityStatus(activityId, isComplete: newValue);
+    } catch (e, stackTrace) {
+      _log.severe('Failed to toggle activity status', e, stackTrace);
       // Rollback
       _activities = _activities.map((a) {
         if (a.activityId == activityId) {

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:weekplanner/config/api_config.dart';
 import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/weekplan/presentation/view_models/activity_form_view_model.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
@@ -167,12 +166,14 @@ class _SearchTab extends StatelessWidget {
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.all(4),
-                            child: Image.network(
-                              ApiConfig.pictogramImageUrl(pictogram.id),
-                              fit: BoxFit.contain,
-                              errorBuilder: (_, _, _) =>
-                                  const Icon(Icons.image, color: GirafColors.gray),
-                            ),
+                            child: pictogram.imageUrl != null
+                                ? Image.network(
+                                    pictogram.imageUrl!,
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (_, _, _) =>
+                                        const Icon(Icons.image, color: GirafColors.gray),
+                                  )
+                                : const Icon(Icons.image, color: GirafColors.gray),
                           ),
                         ),
                         Padding(
@@ -361,14 +362,16 @@ class _SelectedPictogramPreview extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
-            child: Image.network(
-              ApiConfig.pictogramImageUrl(pictogram.id),
-              width: 48,
-              height: 48,
-              fit: BoxFit.contain,
-              errorBuilder: (_, _, _) =>
-                  const Icon(Icons.image, size: 48, color: GirafColors.gray),
-            ),
+            child: pictogram.imageUrl != null
+                ? Image.network(
+                    pictogram.imageUrl!,
+                    width: 48,
+                    height: 48,
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, _, _) =>
+                        const Icon(Icons.image, size: 48, color: GirafColors.gray),
+                  )
+                : const Icon(Icons.image, size: 48, color: GirafColors.gray),
           ),
           const SizedBox(width: 12),
           Expanded(

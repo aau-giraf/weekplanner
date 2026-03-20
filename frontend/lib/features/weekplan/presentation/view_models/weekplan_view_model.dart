@@ -24,6 +24,7 @@ class WeekplanViewModel extends ChangeNotifier {
   late DateTime _selectedDate;
   late List<DateTime> _weekDates;
   final Map<int, String?> _pictogramSoundUrls = {};
+  final Map<int, String?> _pictogramImageUrls = {};
 
   DateTime get selectedDate => _selectedDate;
   List<DateTime> get weekDates => _weekDates;
@@ -34,6 +35,9 @@ class WeekplanViewModel extends ChangeNotifier {
 
   /// Get cached sound URL for a pictogram, or null if not yet fetched.
   String? getSoundUrl(int pictogramId) => _pictogramSoundUrls[pictogramId];
+
+  /// Get cached image URL for a pictogram, or null if not yet fetched.
+  String? getImageUrl(int pictogramId) => _pictogramImageUrls[pictogramId];
 
   Future<void> loadActivities() async {
     await _activityRepository.fetchActivities(
@@ -55,6 +59,7 @@ class WeekplanViewModel extends ChangeNotifier {
     for (final id in ids) {
       final pictogram = await _pictogramRepository.fetchPictogram(id);
       _pictogramSoundUrls[id] = pictogram?.soundUrl;
+      _pictogramImageUrls[id] = pictogram?.imageUrl;
     }
     if (ids.isNotEmpty) notifyListeners();
   }

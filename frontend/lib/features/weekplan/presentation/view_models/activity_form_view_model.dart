@@ -1,10 +1,13 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/activity_repository.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart';
 import 'package:weekplanner/shared/models/activity.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';
+
+final _log = Logger('ActivityFormViewModel');
 
 enum PictogramMode { search, upload, generate }
 
@@ -151,7 +154,8 @@ class ActivityFormViewModel extends ChangeNotifier {
       _isCreatingPictogram = false;
       notifyListeners();
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _log.severe('Failed to upload pictogram', e, stackTrace);
       _isCreatingPictogram = false;
       _error = 'Kunne ikke uploade piktogram';
       notifyListeners();
@@ -188,7 +192,8 @@ class ActivityFormViewModel extends ChangeNotifier {
       _isCreatingPictogram = false;
       notifyListeners();
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _log.severe('Failed to generate pictogram', e, stackTrace);
       _isCreatingPictogram = false;
       _error = 'Kunne ikke generere piktogram';
       notifyListeners();
@@ -240,7 +245,8 @@ class ActivityFormViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _log.severe('Failed to save activity', e, stackTrace);
       _isLoading = false;
       _error = isEditing
           ? 'Kunne ikke opdatere aktivitet'
