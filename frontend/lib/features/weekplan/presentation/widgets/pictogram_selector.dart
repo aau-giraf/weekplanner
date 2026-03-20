@@ -3,22 +3,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/config/api_config.dart';
 import 'package:weekplanner/config/theme.dart';
+import 'package:weekplanner/features/weekplan/presentation/view_models/activity_form_view_model.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 
 class PictogramSelector extends StatefulWidget {
-  final List<Pictogram> pictograms;
-  final bool isLoading;
-  final int? selectedId;
-  final ValueChanged<Pictogram> onSelect;
-  final ValueChanged<String> onSearch;
+  final ActivityFormViewModel viewModel;
 
   const PictogramSelector({
     super.key,
-    required this.pictograms,
-    required this.isLoading,
-    required this.selectedId,
-    required this.onSelect,
-    required this.onSearch,
+    required this.viewModel,
   });
 
   @override
@@ -26,12 +19,18 @@ class PictogramSelector extends StatefulWidget {
 }
 
 class _PictogramSelectorState extends State<PictogramSelector> {
-  final _controller = TextEditingController();
+  final _searchController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _promptController = TextEditingController();
   Timer? _debounce;
+
+  ActivityFormViewModel get vm => widget.viewModel;
 
   @override
   void dispose() {
-    _controller.dispose();
+    _searchController.dispose();
+    _nameController.dispose();
+    _promptController.dispose();
     _debounce?.cancel();
     super.dispose();
   }
@@ -39,7 +38,7 @@ class _PictogramSelectorState extends State<PictogramSelector> {
   void _onSearchChanged(String query) {
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 400), () {
-      widget.onSearch(query);
+      vm.searchPictograms(query);
     });
   }
 
@@ -48,18 +47,94 @@ class _PictogramSelectorState extends State<PictogramSelector> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Mode tabs
+        SegmentedButton<PictogramMode>(
+          segments: const [
+            ButtonSegment(
+              value: PictogramMode.search,
+              label: Text('Søg'),
+              icon: Icon(Icons.search),
+            ),
+            ButtonSegment(
+              value: PictogramMode.upload,
+              label: Text('Upload'),
+              icon: Icon(Icons.upload_file),
+            ),
+            ButtonSegment(
+              value: PictogramMode.generate,
+              label: Text('Generer'),
+              icon: Icon(Icons.auto_awesome),
+            ),
+          ],
+          selected: {vm.pictogramMode},
+          onSelectionChanged: (modes) => vm.setPictogramMode(modes.first),
+        ),
+        const SizedBox(height: 12),
+
+        // Content per mode
+        if (vm.pictogramMode == PictogramMode.search)
+          _SearchTab(
+            controller: _searchController,
+            onSearchChanged: _onSearchChanged,
+            pictograms: vm.searchResults,
+            isLoading: vm.isSearching,
+            selectedId: vm.selectedPictogramId,
+            onSelect: vm.selectPictogram,
+          )
+        else if (vm.pictogramMode == PictogramMode.upload)
+          _UploadTab(viewModel: vm, nameController: _nameController)
+        else
+          _GenerateTab(
+            viewModel: vm,
+            nameController: _nameController,
+            promptController: _promptController,
+          ),
+
+        // Selected pictogram preview
+        if (vm.selectedPictogram != null) ...[
+          const SizedBox(height: 12),
+          _SelectedPictogramPreview(pictogram: vm.selectedPictogram!),
+        ],
+      ],
+    );
+  }
+}
+
+// ── Search tab (existing behavior) ──────────────────────────
+
+class _SearchTab extends StatelessWidget {
+  final TextEditingController controller;
+  final ValueChanged<String> onSearchChanged;
+  final List<Pictogram> pictograms;
+  final bool isLoading;
+  final int? selectedId;
+  final ValueChanged<Pictogram> onSelect;
+
+  const _SearchTab({
+    required this.controller,
+    required this.onSearchChanged,
+    required this.pictograms,
+    required this.isLoading,
+    required this.selectedId,
+    required this.onSelect,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
         TextField(
-          controller: _controller,
-          onChanged: _onSearchChanged,
+          controller: controller,
+          onChanged: onSearchChanged,
           decoration: const InputDecoration(
             hintText: 'Søg piktogrammer...',
             prefixIcon: Icon(Icons.search),
           ),
         ),
         const SizedBox(height: 12),
-        if (widget.isLoading)
+        if (isLoading)
           const Center(child: CircularProgressIndicator())
-        else if (widget.pictograms.isEmpty && _controller.text.isNotEmpty)
+        else if (pictograms.isEmpty && controller.text.isNotEmpty)
           const Center(child: Text('Ingen piktogrammer fundet'))
         else
           SizedBox(
@@ -70,12 +145,12 @@ class _PictogramSelectorState extends State<PictogramSelector> {
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
               ),
-              itemCount: widget.pictograms.length,
+              itemCount: pictograms.length,
               itemBuilder: (context, index) {
-                final pictogram = widget.pictograms[index];
-                final isSelected = pictogram.id == widget.selectedId;
+                final pictogram = pictograms[index];
+                final isSelected = pictogram.id == selectedId;
                 return GestureDetector(
-                  onTap: () => widget.onSelect(pictogram),
+                  onTap: () => onSelect(pictogram),
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -116,6 +191,211 @@ class _PictogramSelectorState extends State<PictogramSelector> {
             ),
           ),
       ],
+    );
+  }
+}
+
+// ── Upload tab ──────────────────────────────────────────────
+
+class _UploadTab extends StatelessWidget {
+  final ActivityFormViewModel viewModel;
+  final TextEditingController nameController;
+
+  const _UploadTab({
+    required this.viewModel,
+    required this.nameController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        TextField(
+          controller: nameController,
+          onChanged: viewModel.setPictogramName,
+          decoration: const InputDecoration(
+            labelText: 'Navn',
+            hintText: 'Giv piktogrammet et navn...',
+          ),
+        ),
+        const SizedBox(height: 12),
+        OutlinedButton.icon(
+          onPressed: () async {
+            // image_picker integration — requires the package to be installed
+            // For now, we use file_picker which works on all platforms
+            try {
+              final picker = await _pickFile(context, ['jpg', 'jpeg', 'png', 'webp']);
+              if (picker != null) viewModel.setSelectedImagePath(picker);
+            } catch (_) {
+              // Package not available yet
+            }
+          },
+          icon: const Icon(Icons.image),
+          label: Text(viewModel.selectedImagePath != null
+              ? viewModel.selectedImagePath!.split('/').last
+              : 'Vælg billede'),
+        ),
+        const SizedBox(height: 8),
+        OutlinedButton.icon(
+          onPressed: () async {
+            try {
+              final picker = await _pickFile(context, ['mp3']);
+              if (picker != null) viewModel.setSelectedSoundPath(picker);
+            } catch (_) {
+              // Package not available yet
+            }
+          },
+          icon: const Icon(Icons.audiotrack),
+          label: Text(viewModel.selectedSoundPath != null
+              ? viewModel.selectedSoundPath!.split('/').last
+              : 'Vælg lydfil (valgfrit)'),
+        ),
+        const SizedBox(height: 8),
+        SwitchListTile(
+          title: const Text('Generer lyd automatisk'),
+          subtitle: const Text('AI-genereret udtale af navnet'),
+          value: viewModel.generateSound,
+          onChanged: viewModel.setGenerateSound,
+          contentPadding: EdgeInsets.zero,
+        ),
+        const SizedBox(height: 12),
+        ElevatedButton(
+          onPressed: viewModel.isCreatingPictogram
+              ? null
+              : () => viewModel.uploadPictogramFromFile(),
+          child: viewModel.isCreatingPictogram
+              ? const SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Text('Upload piktogram'),
+        ),
+      ],
+    );
+  }
+
+  Future<String?> _pickFile(BuildContext context, List<String> extensions) async {
+    // Placeholder — will use file_picker package
+    // The actual implementation requires the file_picker package
+    return null;
+  }
+}
+
+// ── Generate tab ────────────────────────────────────────────
+
+class _GenerateTab extends StatelessWidget {
+  final ActivityFormViewModel viewModel;
+  final TextEditingController nameController;
+  final TextEditingController promptController;
+
+  const _GenerateTab({
+    required this.viewModel,
+    required this.nameController,
+    required this.promptController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        TextField(
+          controller: nameController,
+          onChanged: viewModel.setPictogramName,
+          decoration: const InputDecoration(
+            labelText: 'Navn',
+            hintText: 'Giv piktogrammet et navn...',
+          ),
+        ),
+        const SizedBox(height: 12),
+        TextField(
+          controller: promptController,
+          onChanged: viewModel.setGeneratePrompt,
+          maxLines: 2,
+          decoration: const InputDecoration(
+            labelText: 'Beskrivelse til AI (valgfrit)',
+            hintText: 'Beskriv hvad billedet skal vise...',
+            helperText: 'Lad feltet stå tomt for at bruge navnet som beskrivelse',
+          ),
+        ),
+        const SizedBox(height: 8),
+        SwitchListTile(
+          title: const Text('Generer lyd'),
+          subtitle: const Text('AI-genereret udtale af navnet'),
+          value: viewModel.generateSound,
+          onChanged: viewModel.setGenerateSound,
+          contentPadding: EdgeInsets.zero,
+        ),
+        const SizedBox(height: 12),
+        ElevatedButton.icon(
+          onPressed: viewModel.isCreatingPictogram
+              ? null
+              : () => viewModel.generatePictogram(),
+          icon: viewModel.isCreatingPictogram
+              ? const SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.auto_awesome),
+          label: const Text('Generer piktogram'),
+        ),
+      ],
+    );
+  }
+}
+
+// ── Selected pictogram preview ──────────────────────────────
+
+class _SelectedPictogramPreview extends StatelessWidget {
+  final Pictogram pictogram;
+
+  const _SelectedPictogramPreview({required this.pictogram});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: GirafColors.lightGray,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: GirafColors.orange, width: 2),
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: Image.network(
+              ApiConfig.pictogramImageUrl(pictogram.id),
+              width: 48,
+              height: 48,
+              fit: BoxFit.contain,
+              errorBuilder: (_, _, _) =>
+                  const Icon(Icons.image, size: 48, color: GirafColors.gray),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  pictogram.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                if (pictogram.soundUrl != null && pictogram.soundUrl!.isNotEmpty)
+                  const Text(
+                    'Med lyd',
+                    style: TextStyle(fontSize: 12, color: GirafColors.gray),
+                  ),
+              ],
+            ),
+          ),
+          const Icon(Icons.check_circle, color: GirafColors.orange),
+        ],
+      ),
     );
   }
 }

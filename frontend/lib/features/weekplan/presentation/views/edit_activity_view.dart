@@ -61,13 +61,7 @@ class EditActivityView extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 8),
-                PictogramSelector(
-                  pictograms: vm.searchResults,
-                  isLoading: vm.isSearching,
-                  selectedId: vm.selectedPictogramId,
-                  onSelect: vm.selectPictogram,
-                  onSearch: vm.searchPictograms,
-                ),
+                PictogramSelector(viewModel: vm),
                 const SizedBox(height: 24),
 
                 // Error

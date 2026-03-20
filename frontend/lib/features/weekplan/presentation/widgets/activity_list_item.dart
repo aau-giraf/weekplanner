@@ -1,14 +1,16 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:weekplanner/config/api_config.dart';
 import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/shared/models/activity.dart';
 
-class ActivityListItem extends StatelessWidget {
+class ActivityListItem extends StatefulWidget {
   final Activity activity;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback onToggleStatus;
+  final String? soundUrl;
 
   const ActivityListItem({
     super.key,
@@ -16,10 +18,49 @@ class ActivityListItem extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
     required this.onToggleStatus,
+    this.soundUrl,
   });
 
   @override
+  State<ActivityListItem> createState() => _ActivityListItemState();
+}
+
+class _ActivityListItemState extends State<ActivityListItem> {
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  bool _isPlaying = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _audioPlayer.onPlayerComplete.listen((_) {
+      if (mounted) setState(() => _isPlaying = false);
+    });
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  Future<void> _togglePlayback() async {
+    if (_isPlaying) {
+      await _audioPlayer.stop();
+      setState(() => _isPlaying = false);
+    } else {
+      final url = widget.soundUrl;
+      if (url != null && url.isNotEmpty) {
+        await _audioPlayer.play(UrlSource(url));
+        setState(() => _isPlaying = true);
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final activity = widget.activity;
+    final hasSound = widget.soundUrl != null && widget.soundUrl!.isNotEmpty;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Slidable(
@@ -27,14 +68,14 @@ class ActivityListItem extends StatelessWidget {
           motion: const BehindMotion(),
           children: [
             SlidableAction(
-              onPressed: (_) => onEdit(),
+              onPressed: (_) => widget.onEdit(),
               backgroundColor: GirafColors.blue,
               foregroundColor: GirafColors.white,
               icon: Icons.edit,
               label: 'Rediger',
             ),
             SlidableAction(
-              onPressed: (_) => onDelete(),
+              onPressed: (_) => widget.onDelete(),
               backgroundColor: GirafColors.red,
               foregroundColor: GirafColors.white,
               icon: Icons.delete,
@@ -45,7 +86,7 @@ class ActivityListItem extends StatelessWidget {
         child: Card(
           color: activity.isCompleted ? GirafColors.lightGreen : GirafColors.lightBlue,
           child: InkWell(
-            onTap: onToggleStatus,
+            onTap: widget.onToggleStatus,
             borderRadius: BorderRadius.circular(12),
             child: Padding(
               padding: const EdgeInsets.all(12),
@@ -99,6 +140,16 @@ class ActivityListItem extends StatelessWidget {
                       ],
                     ),
                   ),
+                  // Sound playback button
+                  if (hasSound)
+                    IconButton(
+                      onPressed: _togglePlayback,
+                      icon: Icon(
+                        _isPlaying ? Icons.stop_circle : Icons.volume_up,
+                        color: GirafColors.blue,
+                      ),
+                      tooltip: _isPlaying ? 'Stop' : 'Afspil lyd',
+                    ),
                   // Status indicator
                   Icon(
                     activity.isCompleted

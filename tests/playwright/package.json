@@ -1,0 +1,11 @@
+{
+  "name": "weekplanner-e2e",
+  "private": true,
+  "scripts": {
+    "test": "npx playwright test",
+    "test:pictograms": "npx playwright test pictogram"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0"
+  }
+}
