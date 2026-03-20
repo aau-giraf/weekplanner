@@ -39,7 +39,7 @@ class LoginViewModel extends ChangeNotifier {
 
   Future<bool> login() async {
     if (_email.isEmpty || _password.isEmpty) {
-      _error = 'Udfyld venligst email og adgangskode';
+      _error = 'Udfyld venligst brugernavn og adgangskode';
       notifyListeners();
       return false;
     }
@@ -61,7 +61,7 @@ class LoginViewModel extends ChangeNotifier {
     } on DioException catch (e) {
       _isLoading = false;
       if (e.response?.statusCode == 401) {
-        _error = 'Forkert email eller adgangskode';
+        _error = 'Forkert brugernavn eller adgangskode';
       } else {
         _error = 'Kunne ikke oprette forbindelse til serveren';
       }

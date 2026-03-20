@@ -37,14 +37,13 @@ class LoginView extends StatelessWidget {
                     ),
                     const SizedBox(height: 48),
 
-                    // Email field
+                    // Username field
                     TextField(
                       onChanged: vm.setEmail,
-                      keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
-                        labelText: 'Email',
-                        prefixIcon: Icon(Icons.email_outlined),
+                        labelText: 'Brugernavn',
+                        prefixIcon: Icon(Icons.person_outlined),
                       ),
                     ),
                     const SizedBox(height: 16),
