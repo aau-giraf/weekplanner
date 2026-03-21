@@ -8,7 +8,9 @@ class OrganisationPickerViewModel extends ChangeNotifier {
   final OrganisationRepository _repository;
 
   OrganisationPickerViewModel({required OrganisationRepository repository})
-      : _repository = repository;
+      : _repository = repository {
+    _repository.addListener(notifyListeners);
+  }
 
   Organisation? _selectedOrganisation;
 
@@ -41,5 +43,11 @@ class OrganisationPickerViewModel extends ChangeNotifier {
     notifyListeners();
     await _repository.fetchCitizensAndGrades(org.id);
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _repository.removeListener(notifyListeners);
+    super.dispose();
   }
 }

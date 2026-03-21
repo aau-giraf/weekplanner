@@ -19,6 +19,7 @@ class WeekplanViewModel extends ChangeNotifier {
         _pictogramRepository = pictogramRepository {
     _selectedDate = DateTime.now();
     _weekDates = GirafDateUtils.getWeekDates(_selectedDate);
+    _activityRepository.addListener(notifyListeners);
   }
 
   late DateTime _selectedDate;
@@ -92,4 +93,10 @@ class WeekplanViewModel extends ChangeNotifier {
 
   Future<void> toggleActivityStatus(int activityId) =>
       _activityRepository.toggleActivityStatus(activityId);
+
+  @override
+  void dispose() {
+    _activityRepository.removeListener(notifyListeners);
+    super.dispose();
+  }
 }
