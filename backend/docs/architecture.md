@@ -46,7 +46,6 @@ GirafAPI/
 ├── Mapping/              # Entity ↔ DTO mapping extensions
 ├── Clients/              # ICoreClient port + GirafCoreClient adapter
 ├── Data/                 # GirafDbContext
-├── Authorization/        # JWT claim-based policy handlers
 ├── Configuration/        # JwtSettings POCO
 └── Extensions/           # DI registration extension methods
 ```
@@ -65,6 +64,13 @@ return ToHttpResult(result);
 ```
 
 `ServiceErrorKind` values: `NotFound`, `Validation`, `Unauthorized`, `Conflict`, `Internal`.
+
+## Authentication & Authorization
+
+- **Authentication**: JWT Bearer tokens issued by giraf-core. The weekplanner backend validates the signature using a shared `JWT_SECRET` and extracts the `user_id` claim.
+- **Authorization**: There are no custom authorization policies in this backend. Endpoints call `.RequireAuthorization()` (which simply requires a valid JWT). Access control for citizen/grade ownership is **delegated to giraf-core** — the service layer forwards the user's token via `ICoreClient.ValidateCitizenAsync()` / `ValidateGradeAsync()`, and giraf-core checks whether the user belongs to the correct organization.
+
+This keeps the weekplanner backend simple: it trusts giraf-core as the authority for organizational access control.
 
 ## Request Flow Example
 
