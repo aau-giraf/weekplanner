@@ -1,6 +1,14 @@
 using GirafAPI.Entities.Activities;
 using GirafAPI.Entities.Activities.DTOs;
 using GirafAPI.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
+
+using ActivityListResult = Microsoft.AspNetCore.Http.HttpResults.Results<Microsoft.AspNetCore.Http.HttpResults.Ok<System.Collections.Generic.List<GirafAPI.Entities.Activities.DTOs.ActivityDTO>>, Microsoft.AspNetCore.Http.HttpResults.NotFound<string>, Microsoft.AspNetCore.Http.HttpResults.BadRequest<string>, Microsoft.AspNetCore.Http.HttpResults.UnauthorizedHttpResult, Microsoft.AspNetCore.Http.HttpResults.ProblemHttpResult>;
+using ActivityDtoResult = Microsoft.AspNetCore.Http.HttpResults.Results<Microsoft.AspNetCore.Http.HttpResults.Ok<GirafAPI.Entities.Activities.DTOs.ActivityDTO>, Microsoft.AspNetCore.Http.HttpResults.NotFound<string>, Microsoft.AspNetCore.Http.HttpResults.BadRequest<string>, Microsoft.AspNetCore.Http.HttpResults.UnauthorizedHttpResult, Microsoft.AspNetCore.Http.HttpResults.ProblemHttpResult>;
+using CreatedActivityDtoResult = Microsoft.AspNetCore.Http.HttpResults.Results<Microsoft.AspNetCore.Http.HttpResults.Created<GirafAPI.Entities.Activities.DTOs.ActivityDTO>, Microsoft.AspNetCore.Http.HttpResults.NotFound<string>, Microsoft.AspNetCore.Http.HttpResults.BadRequest<string>, Microsoft.AspNetCore.Http.HttpResults.UnauthorizedHttpResult, Microsoft.AspNetCore.Http.HttpResults.ProblemHttpResult>;
+using OkNoPayloadResult = Microsoft.AspNetCore.Http.HttpResults.Results<Microsoft.AspNetCore.Http.HttpResults.Ok, Microsoft.AspNetCore.Http.HttpResults.NotFound<string>, Microsoft.AspNetCore.Http.HttpResults.BadRequest<string>, Microsoft.AspNetCore.Http.HttpResults.UnauthorizedHttpResult, Microsoft.AspNetCore.Http.HttpResults.ProblemHttpResult>;
+using OkStringResult = Microsoft.AspNetCore.Http.HttpResults.Results<Microsoft.AspNetCore.Http.HttpResults.Ok<string>, Microsoft.AspNetCore.Http.HttpResults.NotFound<string>, Microsoft.AspNetCore.Http.HttpResults.BadRequest<string>, Microsoft.AspNetCore.Http.HttpResults.UnauthorizedHttpResult, Microsoft.AspNetCore.Http.HttpResults.ProblemHttpResult>;
+using NoContentResult = Microsoft.AspNetCore.Http.HttpResults.Results<Microsoft.AspNetCore.Http.HttpResults.NoContent, Microsoft.AspNetCore.Http.HttpResults.NotFound<string>, Microsoft.AspNetCore.Http.HttpResults.BadRequest<string>, Microsoft.AspNetCore.Http.HttpResults.UnauthorizedHttpResult, Microsoft.AspNetCore.Http.HttpResults.ProblemHttpResult>;
 
 namespace GirafAPI.Endpoints;
 
@@ -14,27 +22,75 @@ public static class ActivityEndpoints
         return null;
     }
 
-    private static IResult ToHttpResult(ServiceResult result) =>
+    private static OkNoPayloadResult ToOkResult(ServiceResult result) =>
         result.IsSuccess
-            ? Results.Ok()
+            ? TypedResults.Ok()
             : result.Error!.Kind switch
             {
-                ServiceErrorKind.NotFound => Results.NotFound(result.Error.Message),
-                ServiceErrorKind.Validation => Results.BadRequest(result.Error.Message),
-                ServiceErrorKind.Unauthorized => Results.Unauthorized(),
-                _ => Results.Problem(result.Error.Message,
+                ServiceErrorKind.NotFound => TypedResults.NotFound(result.Error.Message),
+                ServiceErrorKind.Validation => TypedResults.BadRequest(result.Error.Message),
+                ServiceErrorKind.Unauthorized => TypedResults.Unauthorized(),
+                _ => TypedResults.Problem(result.Error.Message,
                     statusCode: StatusCodes.Status500InternalServerError)
             };
 
-    private static IResult ToHttpResult<T>(ServiceResult<T> result, Func<T, IResult>? onSuccess = null) =>
+    private static ActivityListResult ToActivityListResult(ServiceResult<List<ActivityDTO>> result) =>
         result.IsSuccess
-            ? (onSuccess ?? (v => Results.Ok(v)))(result.Value!)
+            ? TypedResults.Ok(result.Value!)
             : result.Error!.Kind switch
             {
-                ServiceErrorKind.NotFound => Results.NotFound(result.Error.Message),
-                ServiceErrorKind.Validation => Results.BadRequest(result.Error.Message),
-                ServiceErrorKind.Unauthorized => Results.Unauthorized(),
-                _ => Results.Problem(result.Error.Message,
+                ServiceErrorKind.NotFound => TypedResults.NotFound(result.Error.Message),
+                ServiceErrorKind.Validation => TypedResults.BadRequest(result.Error.Message),
+                ServiceErrorKind.Unauthorized => TypedResults.Unauthorized(),
+                _ => TypedResults.Problem(result.Error.Message,
+                    statusCode: StatusCodes.Status500InternalServerError)
+            };
+
+    private static ActivityDtoResult ToActivityDtoResult(ServiceResult<ActivityDTO> result) =>
+        result.IsSuccess
+            ? TypedResults.Ok(result.Value!)
+            : result.Error!.Kind switch
+            {
+                ServiceErrorKind.NotFound => TypedResults.NotFound(result.Error.Message),
+                ServiceErrorKind.Validation => TypedResults.BadRequest(result.Error.Message),
+                ServiceErrorKind.Unauthorized => TypedResults.Unauthorized(),
+                _ => TypedResults.Problem(result.Error.Message,
+                    statusCode: StatusCodes.Status500InternalServerError)
+            };
+
+    private static CreatedActivityDtoResult ToCreatedActivityDtoResult(ServiceResult<ActivityDTO> result) =>
+        result.IsSuccess
+            ? TypedResults.Created($"/activity/{result.Value!.ActivityId}", result.Value)
+            : result.Error!.Kind switch
+            {
+                ServiceErrorKind.NotFound => TypedResults.NotFound(result.Error.Message),
+                ServiceErrorKind.Validation => TypedResults.BadRequest(result.Error.Message),
+                ServiceErrorKind.Unauthorized => TypedResults.Unauthorized(),
+                _ => TypedResults.Problem(result.Error.Message,
+                    statusCode: StatusCodes.Status500InternalServerError)
+            };
+
+    private static OkStringResult ToOkStringResult(ServiceResult result, string successMessage) =>
+        result.IsSuccess
+            ? TypedResults.Ok(successMessage)
+            : result.Error!.Kind switch
+            {
+                ServiceErrorKind.NotFound => TypedResults.NotFound(result.Error.Message),
+                ServiceErrorKind.Validation => TypedResults.BadRequest(result.Error.Message),
+                ServiceErrorKind.Unauthorized => TypedResults.Unauthorized(),
+                _ => TypedResults.Problem(result.Error.Message,
+                    statusCode: StatusCodes.Status500InternalServerError)
+            };
+
+    private static NoContentResult ToNoContentResult(ServiceResult result) =>
+        result.IsSuccess
+            ? TypedResults.NoContent()
+            : result.Error!.Kind switch
+            {
+                ServiceErrorKind.NotFound => TypedResults.NotFound(result.Error.Message),
+                ServiceErrorKind.Validation => TypedResults.BadRequest(result.Error.Message),
+                ServiceErrorKind.Unauthorized => TypedResults.Unauthorized(),
+                _ => TypedResults.Problem(result.Error.Message,
                     statusCode: StatusCodes.Status500InternalServerError)
             };
 
@@ -43,10 +99,10 @@ public static class ActivityEndpoints
         var group = app.MapGroup("weekplan");
 
         // GET all activities (mainly for debugging)
-        group.MapGet("/", async (IActivityService service, CancellationToken ct) =>
+        group.MapGet("/", async Task<ActivityListResult> (IActivityService service, CancellationToken ct) =>
             {
                 var result = await service.GetAllActivitiesAsync(ct);
-                return ToHttpResult(result);
+                return ToActivityListResult(result);
             })
             .WithName("GetAllActivities")
             .WithDescription("Gets all activities.")
@@ -57,12 +113,12 @@ public static class ActivityEndpoints
 
 
         // GET activities for one day for a citizen
-        group.MapGet("/{citizenId:int}", async (int citizenId, DateOnly date,
+        group.MapGet("/{citizenId:int}", async Task<ActivityListResult> (int citizenId, DateOnly date,
                 IActivityService service, CancellationToken ct) =>
             {
                 var result = await service.GetActivitiesByOwnerAsync(
                     new ActivityOwner.Citizen(citizenId), date, ct);
-                return ToHttpResult(result);
+                return ToActivityListResult(result);
             })
             .WithName("GetActivitiesForCitizenOnDate")
             .WithDescription("Gets activities for a specific citizen on a given date.")
@@ -72,12 +128,12 @@ public static class ActivityEndpoints
             .Produces(StatusCodes.Status500InternalServerError);
 
         // GET activities for one day for a grade
-        group.MapGet("/grade/{gradeId:int}", async (int gradeId, DateOnly date,
+        group.MapGet("/grade/{gradeId:int}", async Task<ActivityListResult> (int gradeId, DateOnly date,
                 IActivityService service, CancellationToken ct) =>
             {
                 var result = await service.GetActivitiesByOwnerAsync(
                     new ActivityOwner.Grade(gradeId), date, ct);
-                return ToHttpResult(result);
+                return ToActivityListResult(result);
             })
             .WithName("GetActivitiesForGradeOnDate")
             .WithDescription("Gets activities for a specific grade on a given date.")
@@ -89,10 +145,10 @@ public static class ActivityEndpoints
 
 
         // GET single activity by ID
-        group.MapGet("/activity/{id:int}", async (int id, IActivityService service, CancellationToken ct) =>
+        group.MapGet("/activity/{id:int}", async Task<ActivityDtoResult> (int id, IActivityService service, CancellationToken ct) =>
             {
                 var result = await service.GetActivityByIdAsync(id, ct);
-                return ToHttpResult(result);
+                return ToActivityDtoResult(result);
             })
             .WithName("GetActivityById")
             .WithDescription("Gets a specific activity by ID.")
@@ -110,12 +166,11 @@ public static class ActivityEndpoints
                 {
                     var token = GetAccessToken(httpContext);
                     if (token is null)
-                        return Results.Unauthorized();
+                        return TypedResults.Unauthorized();
 
                     var result = await service.CreateActivityAsync(
                         new ActivityOwner.Citizen(citizenId), dto, token, ct);
-                    return ToHttpResult(result,
-                        v => Results.Created($"/activity/{v.ActivityId}", v));
+                    return ToCreatedActivityDtoResult(result);
                 })
             .WithName("CreateActivityForCitizen")
             .WithDescription("Creates a new activity for a citizen.")
@@ -133,12 +188,11 @@ public static class ActivityEndpoints
                 {
                     var token = GetAccessToken(httpContext);
                     if (token is null)
-                        return Results.Unauthorized();
+                        return TypedResults.Unauthorized();
 
                     var result = await service.CreateActivityAsync(
                         new ActivityOwner.Grade(gradeId), dto, token, ct);
-                    return ToHttpResult(result,
-                        v => Results.Created($"/activity/{v.ActivityId}", v));
+                    return ToCreatedActivityDtoResult(result);
                 })
             .WithName("CreateActivityForGrade")
             .WithDescription("Creates a new activity for a grade.")
@@ -156,9 +210,7 @@ public static class ActivityEndpoints
                 {
                     var result = await service.CopyActivitiesAsync(
                         new ActivityOwner.Citizen(citizenId), sourceDate, targetDate, toCopyIds, ct);
-                    return result.IsSuccess
-                        ? Results.Ok("Activities successfully copied.")
-                        : ToHttpResult(result);
+                    return ToOkStringResult(result, "Activities successfully copied.");
                 })
             .WithName("CopyActivityForCitizen")
             .WithDescription("Copies activities between days for a citizen")
@@ -173,9 +225,7 @@ public static class ActivityEndpoints
                 {
                     var result = await service.CopyActivitiesAsync(
                         new ActivityOwner.Grade(gradeId), sourceDate, targetDate, toCopyIds, ct);
-                    return result.IsSuccess
-                        ? Results.Ok("Activities successfully copied.")
-                        : ToHttpResult(result);
+                    return ToOkStringResult(result, "Activities successfully copied.");
                 })
             .WithName("CopyActivityForGrade")
             .WithDescription("Copies activities between days for a grade")
@@ -191,10 +241,10 @@ public static class ActivityEndpoints
                 {
                     var token = GetAccessToken(httpContext);
                     if (token is null)
-                        return Results.Unauthorized();
+                        return TypedResults.Unauthorized();
 
                     var result = await service.UpdateActivityAsync(id, dto, token, ct);
-                    return ToHttpResult(result);
+                    return ToOkResult(result);
                 })
             .WithName("UpdateActivity")
             .WithDescription("Updates an existing activity using ID.")
@@ -212,7 +262,7 @@ public static class ActivityEndpoints
                 async (int id, bool IsComplete, IActivityService service, CancellationToken ct) =>
                 {
                     var result = await service.ToggleActivityStatusAsync(id, IsComplete, ct);
-                    return ToHttpResult(result);
+                    return ToOkResult(result);
                 })
             .WithName("CompleteActivity")
             .WithDescription("Completes an existing activity using ID.")
@@ -227,7 +277,7 @@ public static class ActivityEndpoints
         group.MapDelete("/activity/{id:int}", async (int id, IActivityService service, CancellationToken ct) =>
             {
                 var result = await service.DeleteActivityAsync(id, ct);
-                return result.IsSuccess ? Results.NoContent() : ToHttpResult(result);
+                return ToNoContentResult(result);
             })
             .WithName("DeleteActivity")
             .WithDescription("Deletes an activity by ID.")
@@ -244,10 +294,10 @@ public static class ActivityEndpoints
                 {
                     var token = GetAccessToken(httpContext);
                     if (token is null)
-                        return Results.Unauthorized();
+                        return TypedResults.Unauthorized();
 
                     var result = await service.AssignPictogramAsync(activityId, pictogramId, token, ct);
-                    return ToHttpResult(result);
+                    return ToActivityDtoResult(result);
                 })
             .WithName("AssignPictogram")
             .WithDescription("Assigns a pictogram by ID.")
