@@ -4,18 +4,19 @@ namespace Giraf.IntegrationTests.Utils;
 
 /// <summary>
 /// Stub CoreClient for integration tests.
-/// Returns true for IDs 1-100, false for anything else.
+/// Returns Valid for IDs 1-100, NotFound for anything else.
 /// </summary>
 public class StubCoreClient : ICoreClient
 {
-    private static bool IsKnownId(int id) => id >= 1 && id <= 100;
+    private static CoreValidationResult Check(int id) =>
+        id >= 1 && id <= 100 ? CoreValidationResult.Valid : CoreValidationResult.NotFound;
 
-    public Task<bool> ValidateCitizenAsync(int id, string accessToken) =>
-        Task.FromResult(IsKnownId(id));
+    public Task<CoreValidationResult> ValidateCitizenAsync(int id, string accessToken, CancellationToken ct = default) =>
+        Task.FromResult(Check(id));
 
-    public Task<bool> ValidateGradeAsync(int id, string accessToken) =>
-        Task.FromResult(IsKnownId(id));
+    public Task<CoreValidationResult> ValidateGradeAsync(int id, string accessToken, CancellationToken ct = default) =>
+        Task.FromResult(Check(id));
 
-    public Task<bool> ValidatePictogramAsync(int id, string accessToken) =>
-        Task.FromResult(IsKnownId(id));
+    public Task<CoreValidationResult> ValidatePictogramAsync(int id, string accessToken, CancellationToken ct = default) =>
+        Task.FromResult(Check(id));
 }

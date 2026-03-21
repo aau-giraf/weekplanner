@@ -43,9 +43,9 @@ public static class ActivityEndpoints
         var group = app.MapGroup("weekplan");
 
         // GET all activities (mainly for debugging)
-        group.MapGet("/", async (IActivityService service) =>
+        group.MapGet("/", async (IActivityService service, CancellationToken ct) =>
             {
-                var result = await service.GetAllActivitiesAsync();
+                var result = await service.GetAllActivitiesAsync(ct);
                 return ToHttpResult(result);
             })
             .WithName("GetAllActivities")
@@ -57,10 +57,11 @@ public static class ActivityEndpoints
 
 
         // GET activities for one day for a citizen
-        group.MapGet("/{citizenId:int}", async (int citizenId, string date, IActivityService service) =>
+        group.MapGet("/{citizenId:int}", async (int citizenId, DateOnly date,
+                IActivityService service, CancellationToken ct) =>
             {
                 var result = await service.GetActivitiesByOwnerAsync(
-                    new ActivityOwner.Citizen(citizenId), date);
+                    new ActivityOwner.Citizen(citizenId), date, ct);
                 return ToHttpResult(result);
             })
             .WithName("GetActivitiesForCitizenOnDate")
@@ -71,10 +72,11 @@ public static class ActivityEndpoints
             .Produces(StatusCodes.Status500InternalServerError);
 
         // GET activities for one day for a grade
-        group.MapGet("/grade/{gradeId:int}", async (int gradeId, string date, IActivityService service) =>
+        group.MapGet("/grade/{gradeId:int}", async (int gradeId, DateOnly date,
+                IActivityService service, CancellationToken ct) =>
             {
                 var result = await service.GetActivitiesByOwnerAsync(
-                    new ActivityOwner.Grade(gradeId), date);
+                    new ActivityOwner.Grade(gradeId), date, ct);
                 return ToHttpResult(result);
             })
             .WithName("GetActivitiesForGradeOnDate")
@@ -87,9 +89,9 @@ public static class ActivityEndpoints
 
 
         // GET single activity by ID
-        group.MapGet("/activity/{id:int}", async (int id, IActivityService service) =>
+        group.MapGet("/activity/{id:int}", async (int id, IActivityService service, CancellationToken ct) =>
             {
-                var result = await service.GetActivityByIdAsync(id);
+                var result = await service.GetActivityByIdAsync(id, ct);
                 return ToHttpResult(result);
             })
             .WithName("GetActivityById")
@@ -104,14 +106,14 @@ public static class ActivityEndpoints
         // POST new activity for citizen
         group.MapPost("/to-citizen/{citizenId:int}",
                 async (int citizenId, CreateActivityDTO dto, IActivityService service,
-                    HttpContext httpContext) =>
+                    HttpContext httpContext, CancellationToken ct) =>
                 {
                     var token = GetAccessToken(httpContext);
                     if (token is null)
                         return Results.Unauthorized();
 
                     var result = await service.CreateActivityAsync(
-                        new ActivityOwner.Citizen(citizenId), dto, token);
+                        new ActivityOwner.Citizen(citizenId), dto, token, ct);
                     return ToHttpResult(result,
                         v => Results.Created($"/activity/{v.ActivityId}", v));
                 })
@@ -127,14 +129,14 @@ public static class ActivityEndpoints
         // POST new activity for grade
         group.MapPost("/to-grade/{gradeId:int}",
                 async (int gradeId, CreateActivityDTO dto, IActivityService service,
-                    HttpContext httpContext) =>
+                    HttpContext httpContext, CancellationToken ct) =>
                 {
                     var token = GetAccessToken(httpContext);
                     if (token is null)
                         return Results.Unauthorized();
 
                     var result = await service.CreateActivityAsync(
-                        new ActivityOwner.Grade(gradeId), dto, token);
+                        new ActivityOwner.Grade(gradeId), dto, token, ct);
                     return ToHttpResult(result,
                         v => Results.Created($"/activity/{v.ActivityId}", v));
                 })
@@ -149,11 +151,11 @@ public static class ActivityEndpoints
 
 
         group.MapPost("/activity/copy-citizen/{citizenId:int}",
-                async (int citizenId, string dateStr, string newDateStr, List<int> toCopyIds,
-                    IActivityService service) =>
+                async (int citizenId, DateOnly sourceDate, DateOnly targetDate, List<int> toCopyIds,
+                    IActivityService service, CancellationToken ct) =>
                 {
                     var result = await service.CopyActivitiesAsync(
-                        new ActivityOwner.Citizen(citizenId), dateStr, newDateStr, toCopyIds);
+                        new ActivityOwner.Citizen(citizenId), sourceDate, targetDate, toCopyIds, ct);
                     return result.IsSuccess
                         ? Results.Ok("Activities successfully copied.")
                         : ToHttpResult(result);
@@ -166,11 +168,11 @@ public static class ActivityEndpoints
             .Produces(StatusCodes.Status200OK);
 
         group.MapPost("/activity/copy-grade/{gradeId:int}",
-                async (int gradeId, string dateStr, string newDateStr, List<int> toCopyIds,
-                    IActivityService service) =>
+                async (int gradeId, DateOnly sourceDate, DateOnly targetDate, List<int> toCopyIds,
+                    IActivityService service, CancellationToken ct) =>
                 {
                     var result = await service.CopyActivitiesAsync(
-                        new ActivityOwner.Grade(gradeId), dateStr, newDateStr, toCopyIds);
+                        new ActivityOwner.Grade(gradeId), sourceDate, targetDate, toCopyIds, ct);
                     return result.IsSuccess
                         ? Results.Ok("Activities successfully copied.")
                         : ToHttpResult(result);
@@ -185,13 +187,13 @@ public static class ActivityEndpoints
         // PUT updated activity
         group.MapPut("/activity/{id:int}",
                 async (int id, UpdateActivityDTO dto, IActivityService service,
-                    HttpContext httpContext) =>
+                    HttpContext httpContext, CancellationToken ct) =>
                 {
                     var token = GetAccessToken(httpContext);
                     if (token is null)
                         return Results.Unauthorized();
 
-                    var result = await service.UpdateActivityAsync(id, dto, token);
+                    var result = await service.UpdateActivityAsync(id, dto, token, ct);
                     return ToHttpResult(result);
                 })
             .WithName("UpdateActivity")
@@ -207,9 +209,9 @@ public static class ActivityEndpoints
 
         // PUT IsComplete activity
         group.MapPut("/activity/{id:int}/iscomplete",
-                async (int id, bool IsComplete, IActivityService service) =>
+                async (int id, bool IsComplete, IActivityService service, CancellationToken ct) =>
                 {
-                    var result = await service.ToggleActivityStatusAsync(id, IsComplete);
+                    var result = await service.ToggleActivityStatusAsync(id, IsComplete, ct);
                     return ToHttpResult(result);
                 })
             .WithName("CompleteActivity")
@@ -222,9 +224,9 @@ public static class ActivityEndpoints
 
 
         // DELETE activity
-        group.MapDelete("/activity/{id:int}", async (int id, IActivityService service) =>
+        group.MapDelete("/activity/{id:int}", async (int id, IActivityService service, CancellationToken ct) =>
             {
-                var result = await service.DeleteActivityAsync(id);
+                var result = await service.DeleteActivityAsync(id, ct);
                 return result.IsSuccess ? Results.NoContent() : ToHttpResult(result);
             })
             .WithName("DeleteActivity")
@@ -238,13 +240,13 @@ public static class ActivityEndpoints
 
         group.MapPost("/activity/assign-pictogram/{activityId:int}/{pictogramId:int}",
                 async (int activityId, int pictogramId, IActivityService service,
-                    HttpContext httpContext) =>
+                    HttpContext httpContext, CancellationToken ct) =>
                 {
                     var token = GetAccessToken(httpContext);
                     if (token is null)
                         return Results.Unauthorized();
 
-                    var result = await service.AssignPictogramAsync(activityId, pictogramId, token);
+                    var result = await service.AssignPictogramAsync(activityId, pictogramId, token, ct);
                     return ToHttpResult(result);
                 })
             .WithName("AssignPictogram")

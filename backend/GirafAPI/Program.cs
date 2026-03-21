@@ -13,11 +13,6 @@ builder.Services.ConfigureDatabase(builder.Configuration, builder.Environment)
     .ConfigureApplicationServices()
     .ConfigureOpenApi();
 
-builder.Services.AddAntiforgery(options =>
-    {
-      options.Cookie.Expiration = TimeSpan.Zero;
-    });
-
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -46,9 +41,9 @@ app.MapOpenApi();
 app.MapScalarApiReference();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseAntiforgery();
 
 // Map endpoints
+app.MapGet("/health", () => Results.Ok()).ExcludeFromDescription();
 app.MapActivityEndpoints();
 
 // Apply migrations

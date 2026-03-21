@@ -18,28 +18,25 @@ public class ActivityService : IActivityService
         _coreClient = coreClient;
     }
 
-    public async Task<ServiceResult<List<ActivityDTO>>> GetAllActivitiesAsync()
+    public async Task<ServiceResult<List<ActivityDTO>>> GetAllActivitiesAsync(CancellationToken ct = default)
     {
         var activities = await _db.Activities
             .Select(a => a.ToDTO())
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(ct);
 
         return ServiceResult<List<ActivityDTO>>.Success(activities);
     }
 
-    public async Task<ServiceResult<List<ActivityDTO>>> GetActivitiesByOwnerAsync(ActivityOwner owner, string date)
+    public async Task<ServiceResult<List<ActivityDTO>>> GetActivitiesByOwnerAsync(
+        ActivityOwner owner, DateOnly date, CancellationToken ct = default)
     {
-        if (!DateOnly.TryParse(date, out var parsedDate))
-            return ServiceResult<List<ActivityDTO>>.Fail(
-                new ServiceError(ServiceErrorKind.Validation, "Invalid date format."));
-
         var activities = await _db.Activities
             .Where(owner.ToFilter())
-            .Where(a => a.Date == parsedDate)
+            .Where(a => a.Date == date)
             .Select(a => a.ToDTO())
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(ct);
 
         return owner is ActivityOwner.Grade && activities.Count == 0
             ? ServiceResult<List<ActivityDTO>>.Fail(
@@ -47,11 +44,11 @@ public class ActivityService : IActivityService
             : ServiceResult<List<ActivityDTO>>.Success(activities);
     }
 
-    public async Task<ServiceResult<ActivityDTO>> GetActivityByIdAsync(int id)
+    public async Task<ServiceResult<ActivityDTO>> GetActivityByIdAsync(int id, CancellationToken ct = default)
     {
         var activity = await _db.Activities
             .AsNoTracking()
-            .FirstOrDefaultAsync(a => a.Id == id);
+            .FirstOrDefaultAsync(a => a.Id == id, ct);
 
         return activity is null
             ? ServiceResult<ActivityDTO>.Fail(
@@ -60,108 +57,106 @@ public class ActivityService : IActivityService
     }
 
     public async Task<ServiceResult<ActivityDTO>> CreateActivityAsync(
-        ActivityOwner owner, CreateActivityDTO dto, string accessToken)
+        ActivityOwner owner, CreateActivityDTO dto, string accessToken, CancellationToken ct = default)
     {
-        var validationError = ValidateActivityTimes(dto.Date, dto.StartTime, dto.EndTime);
-        if (validationError is not null)
+        if (dto.EndTime <= dto.StartTime)
             return ServiceResult<ActivityDTO>.Fail(
-                new ServiceError(ServiceErrorKind.Validation, validationError));
+                new ServiceError(ServiceErrorKind.Validation, "End time must be after start time."));
 
-        if (!await ValidateOwnerAsync(owner, accessToken))
-            return ServiceResult<ActivityDTO>.Fail(
-                new ServiceError(ServiceErrorKind.NotFound, OwnerNotFoundMessage(owner)));
+        var ownerResult = await ValidateOwnerAsync(owner, accessToken, ct);
+        if (ownerResult is not null)
+            return ServiceResult<ActivityDTO>.Fail(ownerResult);
 
-        if (dto.PictogramId is not null &&
-            !await _coreClient.ValidatePictogramAsync(dto.PictogramId.Value, accessToken))
-            return ServiceResult<ActivityDTO>.Fail(
-                new ServiceError(ServiceErrorKind.NotFound, "Pictogram not found."));
+        if (dto.PictogramId is not null)
+        {
+            var picResult = await _coreClient.ValidatePictogramAsync(dto.PictogramId.Value, accessToken, ct);
+            if (picResult is not CoreValidationResult.Valid)
+                return ServiceResult<ActivityDTO>.Fail(ToCoreError(picResult, "Pictogram"));
+        }
 
         var activity = dto.ToEntity();
         owner.ApplyTo(activity);
 
         _db.Activities.Add(activity);
-        await _db.SaveChangesAsync();
+        await _db.SaveChangesAsync(ct);
 
         return ServiceResult<ActivityDTO>.Success(activity.ToDTO());
     }
 
     public async Task<ServiceResult> UpdateActivityAsync(
-        int id, UpdateActivityDTO dto, string accessToken)
+        int id, UpdateActivityDTO dto, string accessToken, CancellationToken ct = default)
     {
-        var validationError = ValidateActivityTimes(dto.Date, dto.StartTime, dto.EndTime);
-        if (validationError is not null)
-            return ServiceResult.Fail(new ServiceError(ServiceErrorKind.Validation, validationError));
+        if (dto.EndTime <= dto.StartTime)
+            return ServiceResult.Fail(
+                new ServiceError(ServiceErrorKind.Validation, "End time must be after start time."));
 
-        var activity = await _db.Activities.FindAsync(id);
+        var activity = await _db.Activities.FindAsync([id], ct);
         if (activity is null)
             return ServiceResult.Fail(new ServiceError(ServiceErrorKind.NotFound, "Activity not found."));
 
-        if (dto.PictogramId is not null &&
-            !await _coreClient.ValidatePictogramAsync(dto.PictogramId.Value, accessToken))
-            return ServiceResult.Fail(
-                new ServiceError(ServiceErrorKind.Validation, "Pictogram not found."));
+        if (dto.PictogramId is not null)
+        {
+            var picResult = await _coreClient.ValidatePictogramAsync(dto.PictogramId.Value, accessToken, ct);
+            if (picResult is not CoreValidationResult.Valid)
+                return ServiceResult.Fail(ToCoreError(picResult, "Pictogram"));
+        }
 
-        activity.Date = DateOnly.Parse(dto.Date);
-        activity.StartTime = TimeOnly.Parse(dto.StartTime);
-        activity.EndTime = TimeOnly.Parse(dto.EndTime);
+        activity.Date = dto.Date;
+        activity.StartTime = dto.StartTime;
+        activity.EndTime = dto.EndTime;
         activity.IsCompleted = dto.IsCompleted;
         activity.PictogramId = dto.PictogramId;
-        await _db.SaveChangesAsync();
+        await _db.SaveChangesAsync(ct);
 
         return ServiceResult.Success();
     }
 
-    public async Task<ServiceResult> ToggleActivityStatusAsync(int id, bool isComplete)
+    public async Task<ServiceResult> ToggleActivityStatusAsync(int id, bool isComplete, CancellationToken ct = default)
     {
-        var activity = await _db.Activities.FindAsync(id);
+        var activity = await _db.Activities.FindAsync([id], ct);
         if (activity is null)
             return ServiceResult.Fail(new ServiceError(ServiceErrorKind.NotFound, "Activity not found."));
 
         activity.IsCompleted = isComplete;
-        await _db.SaveChangesAsync();
+        await _db.SaveChangesAsync(ct);
 
         return ServiceResult.Success();
     }
 
-    public async Task<ServiceResult> DeleteActivityAsync(int id)
+    public async Task<ServiceResult> DeleteActivityAsync(int id, CancellationToken ct = default)
     {
-        var rowsAffected = await _db.Activities.Where(a => a.Id == id).ExecuteDeleteAsync();
+        var rowsAffected = await _db.Activities.Where(a => a.Id == id).ExecuteDeleteAsync(ct);
         return rowsAffected == 0
             ? ServiceResult.Fail(new ServiceError(ServiceErrorKind.NotFound, "Activity not found."))
             : ServiceResult.Success();
     }
 
     public async Task<ServiceResult<ActivityDTO>> AssignPictogramAsync(
-        int activityId, int pictogramId, string accessToken)
+        int activityId, int pictogramId, string accessToken, CancellationToken ct = default)
     {
-        var activity = await _db.Activities.FindAsync(activityId);
+        var activity = await _db.Activities.FindAsync([activityId], ct);
         if (activity is null)
             return ServiceResult<ActivityDTO>.Fail(
                 new ServiceError(ServiceErrorKind.NotFound, "Activity not found."));
 
-        if (!await _coreClient.ValidatePictogramAsync(pictogramId, accessToken))
-            return ServiceResult<ActivityDTO>.Fail(
-                new ServiceError(ServiceErrorKind.NotFound, "Pictogram not found."));
+        var picResult = await _coreClient.ValidatePictogramAsync(pictogramId, accessToken, ct);
+        if (picResult is not CoreValidationResult.Valid)
+            return ServiceResult<ActivityDTO>.Fail(ToCoreError(picResult, "Pictogram"));
 
         activity.PictogramId = pictogramId;
-        await _db.SaveChangesAsync();
+        await _db.SaveChangesAsync(ct);
 
         return ServiceResult<ActivityDTO>.Success(activity.ToDTO());
     }
 
     public async Task<ServiceResult> CopyActivitiesAsync(
-        ActivityOwner owner, string sourceDate, string targetDate, List<int> activityIds)
+        ActivityOwner owner, DateOnly sourceDate, DateOnly targetDate, List<int> activityIds, CancellationToken ct = default)
     {
-        if (!DateOnly.TryParse(sourceDate, out var source))
-            return ServiceResult.Fail(new ServiceError(ServiceErrorKind.Validation, "Invalid source date format."));
-        if (!DateOnly.TryParse(targetDate, out var target))
-            return ServiceResult.Fail(new ServiceError(ServiceErrorKind.Validation, "Invalid target date format."));
-
         var activities = await _db.Activities
             .Where(owner.ToFilter())
-            .Where(a => a.Date == source || activityIds.Contains(a.Id))
+            .Where(a => a.Date == sourceDate || activityIds.Contains(a.Id))
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(ct);
 
         if (activities.Count is 0)
             return ServiceResult.Fail(
@@ -171,7 +166,7 @@ public class ActivityService : IActivityService
         {
             var copy = new Activity
             {
-                Date = target,
+                Date = targetDate,
                 StartTime = a.StartTime,
                 EndTime = a.EndTime,
                 IsCompleted = false,
@@ -181,36 +176,33 @@ public class ActivityService : IActivityService
             _db.Activities.Add(copy);
         }
 
-        await _db.SaveChangesAsync();
+        await _db.SaveChangesAsync(ct);
         return ServiceResult.Success();
     }
 
-    private async Task<bool> ValidateOwnerAsync(ActivityOwner owner, string accessToken) =>
-        owner switch
-        {
-            ActivityOwner.Citizen c => await _coreClient.ValidateCitizenAsync(c.Id, accessToken),
-            ActivityOwner.Grade g => await _coreClient.ValidateGradeAsync(g.Id, accessToken),
-            _ => false
-        };
-
-    private static string OwnerNotFoundMessage(ActivityOwner owner) =>
-        owner switch
-        {
-            ActivityOwner.Citizen => "Citizen not found.",
-            ActivityOwner.Grade => "Grade not found.",
-            _ => "Owner not found."
-        };
-
-    private static string? ValidateActivityTimes(string date, string startTime, string endTime)
+    private async Task<ServiceError?> ValidateOwnerAsync(ActivityOwner owner, string accessToken, CancellationToken ct)
     {
-        if (!DateOnly.TryParse(date, out _))
-            return "Invalid date format.";
-        if (!TimeOnly.TryParse(startTime, out var start))
-            return "Invalid start time format.";
-        if (!TimeOnly.TryParse(endTime, out var end))
-            return "Invalid end time format.";
-        if (end <= start)
-            return "End time must be after start time.";
-        return null;
+        var result = owner switch
+        {
+            ActivityOwner.Citizen c => await _coreClient.ValidateCitizenAsync(c.Id, accessToken, ct),
+            ActivityOwner.Grade g => await _coreClient.ValidateGradeAsync(g.Id, accessToken, ct),
+            _ => CoreValidationResult.NotFound
+        };
+        return result is CoreValidationResult.Valid ? null : ToCoreError(result, OwnerLabel(owner));
     }
+
+    private static string OwnerLabel(ActivityOwner owner) =>
+        owner switch
+        {
+            ActivityOwner.Citizen => "Citizen",
+            ActivityOwner.Grade => "Grade",
+            _ => "Owner"
+        };
+
+    private static ServiceError ToCoreError(CoreValidationResult result, string entity) =>
+        result switch
+        {
+            CoreValidationResult.Forbidden => new ServiceError(ServiceErrorKind.Unauthorized, $"Not authorized to access {entity.ToLowerInvariant()}."),
+            _ => new ServiceError(ServiceErrorKind.NotFound, $"{entity} not found.")
+        };
 }

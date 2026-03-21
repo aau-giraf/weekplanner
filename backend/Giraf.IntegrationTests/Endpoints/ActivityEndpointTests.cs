@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text;
 using Giraf.IntegrationTests.Utils;
 using Giraf.IntegrationTests.Utils.DbSeeders;
 using GirafAPI.Data;
@@ -184,9 +185,9 @@ namespace Giraf.IntegrationTests.Endpoints
 
             var newActivityDto = new CreateActivityDTO
             (
-                Date: DateOnly.FromDateTime(DateTime.UtcNow).ToString(),
-                StartTime: TimeOnly.FromDateTime(DateTime.UtcNow).ToString(),
-                EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)).ToString(),
+                Date: DateOnly.FromDateTime(DateTime.UtcNow),
+                StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
+                EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
                 PictogramId: 1
             );
 
@@ -211,13 +212,13 @@ namespace Giraf.IntegrationTests.Endpoints
 
             var newActivityDto = new CreateActivityDTO
             (
-                Date: DateOnly.FromDateTime(DateTime.UtcNow).ToString(),
-                StartTime: TimeOnly.FromDateTime(DateTime.UtcNow).ToString(),
-                EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)).ToString(),
+                Date: DateOnly.FromDateTime(DateTime.UtcNow),
+                StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
+                EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
                 PictogramId: null
             );
 
-            // StubCoreClient returns false for id >= 101
+            // StubCoreClient returns NotFound for id >= 101
             var response = await client.PostAsJsonAsync("/weekplan/to-citizen/999", newActivityDto);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -239,9 +240,9 @@ namespace Giraf.IntegrationTests.Endpoints
 
             var newActivityDto = new CreateActivityDTO
             (
-                Date: DateOnly.FromDateTime(DateTime.UtcNow).ToString(),
-                StartTime: TimeOnly.FromDateTime(DateTime.UtcNow).ToString(),
-                EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)).ToString(),
+                Date: DateOnly.FromDateTime(DateTime.UtcNow),
+                StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
+                EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
                 PictogramId: 1
             );
 
@@ -265,9 +266,9 @@ namespace Giraf.IntegrationTests.Endpoints
 
             var newActivityDto = new CreateActivityDTO
             (
-                Date: DateOnly.FromDateTime(DateTime.UtcNow).ToString(),
-                StartTime: TimeOnly.FromDateTime(DateTime.UtcNow).ToString(),
-                EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)).ToString(),
+                Date: DateOnly.FromDateTime(DateTime.UtcNow),
+                StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
+                EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
                 PictogramId: null
             );
 
@@ -294,9 +295,9 @@ namespace Giraf.IntegrationTests.Endpoints
 
             var updateActivityDto = new UpdateActivityDTO
             (
-                Date: DateOnly.FromDateTime(DateTime.UtcNow).ToString(),
-                StartTime: TimeOnly.FromDateTime(DateTime.UtcNow).ToString(),
-                EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)).ToString(),
+                Date: DateOnly.FromDateTime(DateTime.UtcNow),
+                StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
+                EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
                 IsCompleted: true,
                 PictogramId: 1
             );
@@ -324,9 +325,9 @@ namespace Giraf.IntegrationTests.Endpoints
 
             var updateDto = new UpdateActivityDTO
             (
-                Date: DateOnly.FromDateTime(DateTime.UtcNow).ToString(),
-                StartTime: TimeOnly.FromDateTime(DateTime.UtcNow).ToString(),
-                EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)).ToString(),
+                Date: DateOnly.FromDateTime(DateTime.UtcNow),
+                StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
+                EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
                 IsCompleted: false,
                 PictogramId: null
             );
@@ -491,9 +492,9 @@ namespace Giraf.IntegrationTests.Endpoints
 
             var newActivityDto = new CreateActivityDTO
             (
-                Date: DateOnly.FromDateTime(DateTime.UtcNow).ToString(),
-                StartTime: "10:00",
-                EndTime: "08:00",
+                Date: DateOnly.FromDateTime(DateTime.UtcNow),
+                StartTime: new TimeOnly(10, 0),
+                EndTime: new TimeOnly(8, 0),
                 PictogramId: null
             );
 
@@ -514,9 +515,9 @@ namespace Giraf.IntegrationTests.Endpoints
 
             var newActivityDto = new CreateActivityDTO
             (
-                Date: DateOnly.FromDateTime(DateTime.UtcNow).ToString(),
-                StartTime: "10:00",
-                EndTime: "08:00",
+                Date: DateOnly.FromDateTime(DateTime.UtcNow),
+                StartTime: new TimeOnly(10, 0),
+                EndTime: new TimeOnly(8, 0),
                 PictogramId: null
             );
 
@@ -535,15 +536,11 @@ namespace Giraf.IntegrationTests.Endpoints
             var client = factory.CreateClient();
             client.AttachClaimsToken(role: "member");
 
-            var newActivityDto = new CreateActivityDTO
-            (
-                Date: "not-a-date",
-                StartTime: "10:00",
-                EndTime: "11:00",
-                PictogramId: null
-            );
+            var content = new StringContent(
+                """{"date":"not-a-date","startTime":"10:00:00","endTime":"11:00:00"}""",
+                Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsJsonAsync("/weekplan/to-citizen/1", newActivityDto);
+            var response = await client.PostAsync("/weekplan/to-citizen/1", content);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
@@ -577,9 +574,9 @@ namespace Giraf.IntegrationTests.Endpoints
 
             var updateDto = new UpdateActivityDTO
             (
-                Date: DateOnly.FromDateTime(DateTime.UtcNow).ToString(),
-                StartTime: "14:00",
-                EndTime: "12:00",
+                Date: DateOnly.FromDateTime(DateTime.UtcNow),
+                StartTime: new TimeOnly(14, 0),
+                EndTime: new TimeOnly(12, 0),
                 IsCompleted: false,
                 PictogramId: null
             );
@@ -608,7 +605,7 @@ namespace Giraf.IntegrationTests.Endpoints
             var activityIds = new List<int> { seeder.Activities[0].Id };
 
             var response = await client.PostAsJsonAsync(
-                $"/weekplan/activity/copy-citizen/1?dateStr={sourceDate}&newDateStr={targetDate}",
+                $"/weekplan/activity/copy-citizen/1?sourceDate={sourceDate}&targetDate={targetDate}",
                 activityIds);
 
             response.EnsureSuccessStatusCode();
@@ -636,7 +633,7 @@ namespace Giraf.IntegrationTests.Endpoints
             var activityIds = new List<int>();
 
             var response = await client.PostAsJsonAsync(
-                $"/weekplan/activity/copy-citizen/1?dateStr={sourceDate}&newDateStr={targetDate}",
+                $"/weekplan/activity/copy-citizen/1?sourceDate={sourceDate}&targetDate={targetDate}",
                 activityIds);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -661,7 +658,7 @@ namespace Giraf.IntegrationTests.Endpoints
             var activityIds = new List<int> { seeder.Activities[1].Id };
 
             var response = await client.PostAsJsonAsync(
-                $"/weekplan/activity/copy-grade/1?dateStr={sourceDate}&newDateStr={targetDate}",
+                $"/weekplan/activity/copy-grade/1?sourceDate={sourceDate}&targetDate={targetDate}",
                 activityIds);
 
             response.EnsureSuccessStatusCode();
@@ -689,7 +686,7 @@ namespace Giraf.IntegrationTests.Endpoints
             var activityIds = new List<int>();
 
             var response = await client.PostAsJsonAsync(
-                $"/weekplan/activity/copy-grade/1?dateStr={sourceDate}&newDateStr={targetDate}",
+                $"/weekplan/activity/copy-grade/1?sourceDate={sourceDate}&targetDate={targetDate}",
                 activityIds);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -725,9 +722,9 @@ namespace Giraf.IntegrationTests.Endpoints
 
             var newActivityDto = new CreateActivityDTO
             (
-                Date: DateOnly.FromDateTime(DateTime.UtcNow).ToString(),
-                StartTime: "10:00",
-                EndTime: "11:00",
+                Date: DateOnly.FromDateTime(DateTime.UtcNow),
+                StartTime: new TimeOnly(10, 0),
+                EndTime: new TimeOnly(11, 0),
                 PictogramId: null
             );
 

@@ -82,6 +82,7 @@ namespace GirafAPI.Extensions
             services.AddHttpClient<ICoreClient, GirafCoreClient>(client =>
             {
                 client.BaseAddress = new Uri(baseUrl);
+                client.Timeout = TimeSpan.FromSeconds(10);
             });
 
             return services;

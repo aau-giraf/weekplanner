@@ -5,28 +5,28 @@ namespace GirafAPI.Mapping;
 
 public static class ActivityMapping
 {
-    public static Activity ToEntity(this CreateActivityDTO activityDto)
+    public static Activity ToEntity(this CreateActivityDTO dto)
     {
         return new Activity
         {
-            Date = DateOnly.Parse(activityDto.Date),
-            StartTime = TimeOnly.Parse(activityDto.StartTime),
-            EndTime = TimeOnly.Parse(activityDto.EndTime),
+            Date = dto.Date,
+            StartTime = dto.StartTime,
+            EndTime = dto.EndTime,
             IsCompleted = false,
-            PictogramId = activityDto.PictogramId
+            PictogramId = dto.PictogramId
         };
     }
 
-    public static Activity ToEntity(this UpdateActivityDTO activityDto, int id)
+    public static Activity ToEntity(this UpdateActivityDTO dto, int id)
     {
         return new Activity
         {
             Id = id,
-            Date = DateOnly.Parse(activityDto.Date),
-            StartTime = TimeOnly.Parse(activityDto.StartTime),
-            EndTime = TimeOnly.Parse(activityDto.EndTime),
-            IsCompleted = activityDto.IsCompleted,
-            PictogramId = activityDto.PictogramId
+            Date = dto.Date,
+            StartTime = dto.StartTime,
+            EndTime = dto.EndTime,
+            IsCompleted = dto.IsCompleted,
+            PictogramId = dto.PictogramId
         };
     }
 
@@ -34,9 +34,9 @@ public static class ActivityMapping
     {
         return new ActivityDTO(
             activity.Id,
-            activity.Date.ToString("yyyy-MM-dd"),
-            activity.StartTime.ToString("HH:mm"),
-            activity.EndTime.ToString("HH:mm"),
+            activity.Date,
+            activity.StartTime,
+            activity.EndTime,
             activity.IsCompleted,
             activity.PictogramId
         );

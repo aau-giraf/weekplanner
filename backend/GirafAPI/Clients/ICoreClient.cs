@@ -1,8 +1,10 @@
 namespace GirafAPI.Clients;
 
+public enum CoreValidationResult { Valid, NotFound, Forbidden }
+
 public interface ICoreClient
 {
-    Task<bool> ValidateCitizenAsync(int id, string accessToken);
-    Task<bool> ValidateGradeAsync(int id, string accessToken);
-    Task<bool> ValidatePictogramAsync(int id, string accessToken);
+    Task<CoreValidationResult> ValidateCitizenAsync(int id, string accessToken, CancellationToken ct = default);
+    Task<CoreValidationResult> ValidateGradeAsync(int id, string accessToken, CancellationToken ct = default);
+    Task<CoreValidationResult> ValidatePictogramAsync(int id, string accessToken, CancellationToken ct = default);
 }
