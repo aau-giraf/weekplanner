@@ -73,7 +73,7 @@ Log in with `test@giraf.dk` / `GirafUgeplan2025`.
 | Directory | Stack | Description |
 |-----------|-------|-------------|
 | `frontend/` | Flutter, Provider, GoRouter, Dio | MVVM app — login, org/citizen picker, week view, activity CRUD |
-| `backend/` | .NET 10 Minimal API, EF Core, PostgreSQL | Activity CRUD with giraf-core JWT validation |
+| `backend/` | .NET 10 Minimal API, EF Core, PostgreSQL | Hexagonal architecture — see [backend/docs/architecture.md](backend/docs/architecture.md) |
 
 ## Testing
 
@@ -81,7 +81,7 @@ Log in with `test@giraf.dk` / `GirafUgeplan2025`.
 # Frontend (62 tests)
 cd frontend && flutter test
 
-# Backend (21 integration tests)
+# Backend (33 integration tests)
 cd backend && dotnet test
 ```
 
