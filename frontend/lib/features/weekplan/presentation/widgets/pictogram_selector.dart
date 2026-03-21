@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/config/theme.dart';
@@ -22,7 +20,6 @@ class _PictogramSelectorState extends State<PictogramSelector> {
   final _searchController = TextEditingController();
   final _nameController = TextEditingController();
   final _promptController = TextEditingController();
-  Timer? _debounce;
 
   ActivityFormViewModel get vm => widget.viewModel;
 
@@ -31,15 +28,7 @@ class _PictogramSelectorState extends State<PictogramSelector> {
     _searchController.dispose();
     _nameController.dispose();
     _promptController.dispose();
-    _debounce?.cancel();
     super.dispose();
-  }
-
-  void _onSearchChanged(String query) {
-    _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 400), () {
-      vm.searchPictograms(query);
-    });
   }
 
   @override
@@ -75,7 +64,7 @@ class _PictogramSelectorState extends State<PictogramSelector> {
         if (vm.pictogramMode == PictogramMode.search)
           _SearchTab(
             controller: _searchController,
-            onSearchChanged: _onSearchChanged,
+            onSearchChanged: vm.onSearchQueryChanged,
             pictograms: vm.searchResults,
             isLoading: vm.isSearching,
             selectedId: vm.selectedPictogramId,

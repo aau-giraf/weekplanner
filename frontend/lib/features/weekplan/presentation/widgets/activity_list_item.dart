@@ -31,13 +31,13 @@ class ActivityListItem extends StatefulWidget {
 class _ActivityListItemState extends State<ActivityListItem> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   late final StreamSubscription _onCompleteSubscription;
-  bool _isPlaying = false;
+  final ValueNotifier<bool> _isPlaying = ValueNotifier(false);
 
   @override
   void initState() {
     super.initState();
     _onCompleteSubscription = _audioPlayer.onPlayerComplete.listen((_) {
-      if (mounted) setState(() => _isPlaying = false);
+      _isPlaying.value = false;
     });
   }
 
@@ -45,18 +45,19 @@ class _ActivityListItemState extends State<ActivityListItem> {
   void dispose() {
     _onCompleteSubscription.cancel();
     _audioPlayer.dispose();
+    _isPlaying.dispose();
     super.dispose();
   }
 
   Future<void> _togglePlayback() async {
-    if (_isPlaying) {
+    if (_isPlaying.value) {
       await _audioPlayer.stop();
-      setState(() => _isPlaying = false);
+      _isPlaying.value = false;
     } else {
       final url = widget.soundUrl;
       if (url != null && url.isNotEmpty) {
         await _audioPlayer.play(UrlSource(url));
-        setState(() => _isPlaying = true);
+        _isPlaying.value = true;
       }
     }
   }
@@ -152,13 +153,16 @@ class _ActivityListItemState extends State<ActivityListItem> {
                   ),
                   // Sound playback button
                   if (hasSound)
-                    IconButton(
-                      onPressed: _togglePlayback,
-                      icon: Icon(
-                        _isPlaying ? Icons.stop_circle : Icons.volume_up,
-                        color: GirafColors.blue,
+                    ValueListenableBuilder<bool>(
+                      valueListenable: _isPlaying,
+                      builder: (_, isPlaying, _) => IconButton(
+                        onPressed: _togglePlayback,
+                        icon: Icon(
+                          isPlaying ? Icons.stop_circle : Icons.volume_up,
+                          color: GirafColors.blue,
+                        ),
+                        tooltip: isPlaying ? 'Stop' : 'Afspil lyd',
                       ),
-                      tooltip: _isPlaying ? 'Stop' : 'Afspil lyd',
                     ),
                   // Status indicator
                   Icon(

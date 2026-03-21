@@ -1,5 +1,7 @@
+import 'dart:async';
+
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/activity_repository.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart';
@@ -10,6 +12,9 @@ import 'package:weekplanner/shared/utils/date_utils.dart';
 final _log = Logger('ActivityFormViewModel');
 
 enum PictogramMode { search, upload, generate }
+
+/// Platform-agnostic time-of-day so ViewModels avoid importing Flutter.
+typedef TimeValue = ({int hour, int minute});
 
 class ActivityFormViewModel extends ChangeNotifier {
   final ActivityRepository _activityRepository;
@@ -27,9 +32,9 @@ class ActivityFormViewModel extends ChangeNotifier {
         _pictogramRepository = pictogramRepository {
     if (existingActivity != null) {
       _startTime = _parseTime(existingActivity!.startTime) ??
-          const TimeOfDay(hour: 8, minute: 0);
+          (hour: 8, minute: 0);
       _endTime = _parseTime(existingActivity!.endTime) ??
-          const TimeOfDay(hour: 9, minute: 0);
+          (hour: 9, minute: 0);
       _selectedPictogramId = existingActivity!.pictogramId;
       _date = DateTime.tryParse(existingActivity!.date) ?? initialDate;
     } else {
@@ -37,13 +42,13 @@ class ActivityFormViewModel extends ChangeNotifier {
     }
   }
 
-  static TimeOfDay? _parseTime(String time) {
+  static TimeValue? _parseTime(String time) {
     final parts = time.split(':');
     if (parts.length < 2) return null;
     final hour = int.tryParse(parts[0]);
     final minute = int.tryParse(parts[1]);
     if (hour == null || minute == null) return null;
-    return TimeOfDay(hour: hour, minute: minute);
+    return (hour: hour, minute: minute);
   }
 
   final Activity? existingActivity;
@@ -51,8 +56,8 @@ class ActivityFormViewModel extends ChangeNotifier {
   final bool isCitizen;
   final int? organizationId;
 
-  TimeOfDay _startTime = const TimeOfDay(hour: 8, minute: 0);
-  TimeOfDay _endTime = const TimeOfDay(hour: 9, minute: 0);
+  TimeValue _startTime = (hour: 8, minute: 0);
+  TimeValue _endTime = (hour: 9, minute: 0);
   int? _selectedPictogramId;
   Pictogram? _selectedPictogram;
   late DateTime _date;
@@ -67,9 +72,10 @@ class ActivityFormViewModel extends ChangeNotifier {
   PlatformFile? _selectedSoundFile;
   bool _generateSound = true;
   bool _isCreatingPictogram = false;
+  Timer? _searchDebounce;
 
-  TimeOfDay get startTime => _startTime;
-  TimeOfDay get endTime => _endTime;
+  TimeValue get startTime => _startTime;
+  TimeValue get endTime => _endTime;
   int? get selectedPictogramId => _selectedPictogramId;
   Pictogram? get selectedPictogram => _selectedPictogram;
   DateTime get date => _date;
@@ -116,12 +122,12 @@ class ActivityFormViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setStartTime(TimeOfDay time) {
+  void setStartTime(TimeValue time) {
     _startTime = time;
     notifyListeners();
   }
 
-  void setEndTime(TimeOfDay time) {
+  void setEndTime(TimeValue time) {
     _endTime = time;
     notifyListeners();
   }
@@ -134,6 +140,13 @@ class ActivityFormViewModel extends ChangeNotifier {
 
   Future<void> searchPictograms(String query) =>
       _pictogramRepository.searchPictograms(query);
+
+  void onSearchQueryChanged(String query) {
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 400), () {
+      searchPictograms(query);
+    });
+  }
 
   /// Upload a local image as a new pictogram and select it.
   Future<bool> uploadPictogramFromFile() async {
@@ -258,5 +271,11 @@ class ActivityFormViewModel extends ChangeNotifier {
 
     notifyListeners();
     return true;
+  }
+
+  @override
+  void dispose() {
+    _searchDebounce?.cancel();
+    super.dispose();
   }
 }

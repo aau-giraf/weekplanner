@@ -37,9 +37,16 @@ class ActivityFormView extends StatelessWidget {
                         onTap: () async {
                           final picked = await showTimePicker(
                             context: context,
-                            initialTime: vm.startTime,
+                            initialTime: TimeOfDay(
+                              hour: vm.startTime.hour,
+                              minute: vm.startTime.minute,
+                            ),
                           );
-                          if (picked != null) vm.setStartTime(picked);
+                          if (picked != null) {
+                            vm.setStartTime(
+                              (hour: picked.hour, minute: picked.minute),
+                            );
+                          }
                         },
                       ),
                     ),
@@ -51,9 +58,16 @@ class ActivityFormView extends StatelessWidget {
                         onTap: () async {
                           final picked = await showTimePicker(
                             context: context,
-                            initialTime: vm.endTime,
+                            initialTime: TimeOfDay(
+                              hour: vm.endTime.hour,
+                              minute: vm.endTime.minute,
+                            ),
                           );
-                          if (picked != null) vm.setEndTime(picked);
+                          if (picked != null) {
+                            vm.setEndTime(
+                              (hour: picked.hour, minute: picked.minute),
+                            );
+                          }
                         },
                       ),
                     ),
@@ -110,7 +124,7 @@ class _TimePicker extends StatelessWidget {
   });
 
   final String label;
-  final TimeOfDay time;
+  final TimeValue time;
   final VoidCallback onTap;
 
   @override

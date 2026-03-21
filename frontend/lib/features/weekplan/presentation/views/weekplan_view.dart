@@ -7,7 +7,7 @@ import 'package:weekplanner/features/weekplan/presentation/widgets/activity_list
 import 'package:weekplanner/features/weekplan/presentation/widgets/week_selector.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';
 
-class WeekplanView extends StatefulWidget {
+class WeekplanView extends StatelessWidget {
   final int citizenId;
   final bool isCitizen;
   final int? orgId;
@@ -20,19 +20,6 @@ class WeekplanView extends StatefulWidget {
   });
 
   @override
-  State<WeekplanView> createState() => _WeekplanViewState();
-}
-
-class _WeekplanViewState extends State<WeekplanView> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<WeekplanViewModel>().loadActivities();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -40,7 +27,7 @@ class _WeekplanViewState extends State<WeekplanView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.go('/weekplan/${widget.citizenId}/add?type=${widget.isCitizen ? 'citizen' : 'grade'}&orgId=${widget.orgId}');
+          context.go('/weekplan/$citizenId/add?type=${isCitizen ? 'citizen' : 'grade'}&orgId=$orgId');
         },
         backgroundColor: GirafColors.orange,
         child: const Icon(Icons.add, color: GirafColors.white),
@@ -123,8 +110,8 @@ class _WeekplanViewState extends State<WeekplanView> {
                 : null,
             onEdit: () {
               context.go(
-                '/weekplan/${widget.citizenId}/edit/${activity.activityId}'
-                '?type=${widget.isCitizen ? 'citizen' : 'grade'}&orgId=${widget.orgId}',
+                '/weekplan/$citizenId/edit/${activity.activityId}'
+                '?type=${isCitizen ? 'citizen' : 'grade'}&orgId=$orgId',
               );
             },
             onDelete: () => vm.deleteActivity(activity.activityId),

@@ -77,5 +77,43 @@ void main() {
       when(mockRepo.error).thenReturn('Some error');
       expect(vm.error, 'Some error');
     });
+
+    test('loadOrganisations skips if already loading', () async {
+      when(mockRepo.isLoading).thenReturn(true);
+      when(mockRepo.fetchOrganisations()).thenAnswer((_) async {});
+
+      await vm.loadOrganisations();
+      verifyNever(mockRepo.fetchOrganisations());
+    });
+
+    test('selectOrganisationById loads orgs first if empty', () async {
+      when(mockRepo.organisations).thenReturn([]);
+      when(mockRepo.fetchOrganisations()).thenAnswer((_) async {
+        when(mockRepo.organisations).thenReturn(testOrgs);
+      });
+      when(mockRepo.fetchCitizensAndGrades(1)).thenAnswer((_) async {});
+
+      await vm.selectOrganisationById(1);
+      verify(mockRepo.fetchOrganisations()).called(1);
+      verify(mockRepo.fetchCitizensAndGrades(1)).called(1);
+      expect(vm.selectedOrganisation, testOrgs[0]);
+    });
+
+    test('selectOrganisationById skips load if orgs present', () async {
+      when(mockRepo.organisations).thenReturn(testOrgs);
+      when(mockRepo.fetchCitizensAndGrades(2)).thenAnswer((_) async {});
+
+      await vm.selectOrganisationById(2);
+      verifyNever(mockRepo.fetchOrganisations());
+      verify(mockRepo.fetchCitizensAndGrades(2)).called(1);
+      expect(vm.selectedOrganisation, testOrgs[1]);
+    });
+
+    test('selectOrganisationById does nothing for unknown id', () async {
+      when(mockRepo.organisations).thenReturn(testOrgs);
+
+      await vm.selectOrganisationById(999);
+      verifyNever(mockRepo.fetchCitizensAndGrades(any));
+    });
   });
 }

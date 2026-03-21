@@ -4,35 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/organisation_picker/presentation/view_models/organisation_picker_view_model.dart';
 
-class CitizenPickerView extends StatefulWidget {
+class CitizenPickerView extends StatelessWidget {
   final int orgId;
 
   const CitizenPickerView({super.key, required this.orgId});
-
-  @override
-  State<CitizenPickerView> createState() => _CitizenPickerViewState();
-}
-
-class _CitizenPickerViewState extends State<CitizenPickerView> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadData();
-    });
-  }
-
-  Future<void> _loadData() async {
-    final vm = context.read<OrganisationPickerViewModel>();
-    // Ensure orgs are loaded before looking up by ID
-    if (vm.organisations.isEmpty) {
-      await vm.loadOrganisations();
-    }
-    final org = vm.organisations.where((o) => o.id == widget.orgId).firstOrNull;
-    if (org != null) {
-      vm.selectOrganisation(org);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +65,7 @@ class _CitizenPickerViewState extends State<CitizenPickerView> {
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () {
                     final type = item.isCitizen ? 'citizen' : 'grade';
-                    context.go('/weekplan/${item.id}?type=$type&orgId=${widget.orgId}');
+                    context.go('/weekplan/${item.id}?type=$type&orgId=$orgId');
                   },
                 ),
               );

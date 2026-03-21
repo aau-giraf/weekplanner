@@ -6,21 +6,8 @@ import 'package:weekplanner/features/auth/data/repositories/auth_repository.dart
 import 'package:weekplanner/features/organisation_picker/presentation/view_models/organisation_picker_view_model.dart';
 import 'package:weekplanner/shared/models/organisation.dart';
 
-class OrganisationPickerView extends StatefulWidget {
+class OrganisationPickerView extends StatelessWidget {
   const OrganisationPickerView({super.key});
-
-  @override
-  State<OrganisationPickerView> createState() => _OrganisationPickerViewState();
-}
-
-class _OrganisationPickerViewState extends State<OrganisationPickerView> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<OrganisationPickerViewModel>().loadOrganisations();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

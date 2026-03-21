@@ -40,6 +40,18 @@ void main() async {
   // Try to restore session
   authRepository.tryRestoreSession();
 
+  // ViewModels needed by the router
+  final organisationPickerVm = OrganisationPickerViewModel(
+    repository: organisationRepository,
+  );
+
+  final router = createRouter(
+    authRepo: authRepository,
+    orgPickerVm: organisationPickerVm,
+    activityRepo: activityRepository,
+    pictogramRepo: pictogramRepository,
+  );
+
   runApp(
     MultiProvider(
       providers: [
@@ -58,13 +70,9 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => LoginViewModel(authRepository: authRepository),
         ),
-        ChangeNotifierProvider(
-          create: (_) => OrganisationPickerViewModel(
-            repository: organisationRepository,
-          ),
-        ),
+        ChangeNotifierProvider.value(value: organisationPickerVm),
       ],
-      child: const WeekplannerApp(),
+      child: WeekplannerApp(router: router),
     ),
   );
 }
