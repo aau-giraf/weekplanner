@@ -114,6 +114,17 @@ cd backend && dotnet test
 
 MVVM with Provider + ChangeNotifier, following [Flutter's official app architecture guide](https://docs.flutter.dev/app-architecture/guide).
 
+### High-Level Flutter Principles
+
+At a high level, we keep frontend architecture intentionally simple and consistent:
+
+1. Keep a clear flow: View -> ViewModel -> Repository -> Service
+2. Keep business logic out of widgets; widgets render state and forward user intent
+3. Keep services stateless and focused on HTTP/API translation only
+4. Keep repositories as the data boundary and source of truth for feature data
+5. Keep ViewModel state explicit (`loading`, `error`, `data`) with predictable async handling
+6. Keep models immutable (`freezed`) and constructor-injected through Provider
+
 ### Flutter Architecture Standards
 
 This frontend follows the architecture recommended by the Flutter team. **All contributors must read these before making structural changes:**
@@ -124,7 +135,6 @@ This frontend follows the architecture recommended by the Flutter team. **All co
 | UI layer | [docs.flutter.dev/.../ui-layer](https://docs.flutter.dev/app-architecture/case-study/ui-layer) | Views display state, ViewModels hold logic. 1:1 relationship. Use `ChangeNotifier` + `ListenableBuilder` |
 | Data layer | [docs.flutter.dev/.../data-layer](https://docs.flutter.dev/app-architecture/case-study/data-layer) | Repositories = source of truth. Services = stateless API wrappers |
 | Dependency injection | [docs.flutter.dev/.../dependency-injection](https://docs.flutter.dev/app-architecture/case-study/dependency-injection) | Use `package:provider`. Services → Repositories → ViewModels via constructors |
-| Result pattern | [docs.flutter.dev/.../result](https://docs.flutter.dev/app-architecture/design-patterns/result) | Sealed `Result<T>` class forces callers to handle errors; avoids uncaught exceptions |
 | Case study (Compass) | [docs.flutter.dev/app-architecture/case-study](https://docs.flutter.dev/app-architecture/case-study) | Full reference app demonstrating all patterns |
 | Dart best practices | [dart.dev/effective-dart](https://dart.dev/effective-dart) | Naming, style, documentation, and design conventions |
 
@@ -163,3 +173,11 @@ Each feature is organized by layer: `data/repositories/`, `presentation/view_mod
 - **JWT claim**: user ID is in the `user_id` claim (ninja-jwt default), not `sub`
 - **Optimistic updates**: activity delete and toggle update the UI immediately, rolling back on API failure
 - **Pagination**: giraf-core uses `{items: T[], count: number}` with `limit`/`offset`; weekplanner returns plain arrays
+
+## Plan Status (March 2026)
+
+Current status of the architecture hardening plan:
+
+- Completed: backend service extraction and cleanup, typed DTOs (`DateOnly`/`TimeOnly`), cancellation propagation, health endpoint, typed endpoint results, frontend async-state consistency, and expanded frontend test coverage
+- Completed: command-style async execution introduced via shared `AsyncCommand`
+- Dropped by design: frontend `Result<T>` migration (not a good fit for our current ChangeNotifier/Provider MVVM style)
