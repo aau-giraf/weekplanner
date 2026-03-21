@@ -92,7 +92,11 @@ class LoginView extends StatelessWidget {
 
                     // Login button
                     ElevatedButton(
-                      onPressed: vm.isLoading ? null : vm.login,
+                      onPressed: vm.isLoading
+                          ? null
+                          : () async {
+                              await vm.login();
+                            },
                       child: vm.isLoading
                           ? const SizedBox(
                               height: 20,

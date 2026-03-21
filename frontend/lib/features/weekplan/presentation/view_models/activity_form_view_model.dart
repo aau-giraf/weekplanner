@@ -30,6 +30,7 @@ class ActivityFormViewModel extends ChangeNotifier {
     required DateTime initialDate,
   })  : _activityRepository = activityRepository,
         _pictogramRepository = pictogramRepository {
+    _pictogramRepository.addListener(notifyListeners);
     if (existingActivity != null) {
       _startTime = _parseTime(existingActivity!.startTime) ??
           (hour: 8, minute: 0);
@@ -281,6 +282,7 @@ class ActivityFormViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _searchDebounce?.cancel();
+    _pictogramRepository.removeListener(notifyListeners);
     super.dispose();
   }
 }
