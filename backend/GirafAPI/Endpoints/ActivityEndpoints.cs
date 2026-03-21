@@ -1,3 +1,4 @@
+using GirafAPI.Entities.Activities;
 using GirafAPI.Entities.Activities.DTOs;
 using GirafAPI.Services;
 
@@ -58,7 +59,8 @@ public static class ActivityEndpoints
         // GET activities for one day for a citizen
         group.MapGet("/{citizenId:int}", async (int citizenId, string date, IActivityService service) =>
             {
-                var result = await service.GetActivitiesByCitizenAsync(citizenId, date);
+                var result = await service.GetActivitiesByOwnerAsync(
+                    new ActivityOwner.Citizen(citizenId), date);
                 return ToHttpResult(result);
             })
             .WithName("GetActivitiesForCitizenOnDate")
@@ -71,7 +73,8 @@ public static class ActivityEndpoints
         // GET activities for one day for a grade
         group.MapGet("/grade/{gradeId:int}", async (int gradeId, string date, IActivityService service) =>
             {
-                var result = await service.GetActivitiesByGradeAsync(gradeId, date);
+                var result = await service.GetActivitiesByOwnerAsync(
+                    new ActivityOwner.Grade(gradeId), date);
                 return ToHttpResult(result);
             })
             .WithName("GetActivitiesForGradeOnDate")
@@ -107,7 +110,8 @@ public static class ActivityEndpoints
                     if (token is null)
                         return Results.Unauthorized();
 
-                    var result = await service.CreateActivityForCitizenAsync(citizenId, dto, token);
+                    var result = await service.CreateActivityAsync(
+                        new ActivityOwner.Citizen(citizenId), dto, token);
                     return ToHttpResult(result,
                         v => Results.Created($"/activity/{v.ActivityId}", v));
                 })
@@ -129,7 +133,8 @@ public static class ActivityEndpoints
                     if (token is null)
                         return Results.Unauthorized();
 
-                    var result = await service.CreateActivityForGradeAsync(gradeId, dto, token);
+                    var result = await service.CreateActivityAsync(
+                        new ActivityOwner.Grade(gradeId), dto, token);
                     return ToHttpResult(result,
                         v => Results.Created($"/activity/{v.ActivityId}", v));
                 })
@@ -147,8 +152,8 @@ public static class ActivityEndpoints
                 async (int citizenId, string dateStr, string newDateStr, List<int> toCopyIds,
                     IActivityService service) =>
                 {
-                    var result = await service.CopyActivitiesForCitizenAsync(
-                        citizenId, dateStr, newDateStr, toCopyIds);
+                    var result = await service.CopyActivitiesAsync(
+                        new ActivityOwner.Citizen(citizenId), dateStr, newDateStr, toCopyIds);
                     return result.IsSuccess
                         ? Results.Ok("Activities successfully copied.")
                         : ToHttpResult(result);
@@ -164,8 +169,8 @@ public static class ActivityEndpoints
                 async (int gradeId, string dateStr, string newDateStr, List<int> toCopyIds,
                     IActivityService service) =>
                 {
-                    var result = await service.CopyActivitiesForGradeAsync(
-                        gradeId, dateStr, newDateStr, toCopyIds);
+                    var result = await service.CopyActivitiesAsync(
+                        new ActivityOwner.Grade(gradeId), dateStr, newDateStr, toCopyIds);
                     return result.IsSuccess
                         ? Results.Ok("Activities successfully copied.")
                         : ToHttpResult(result);

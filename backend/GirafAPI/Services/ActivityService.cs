@@ -28,34 +28,20 @@ public class ActivityService : IActivityService
         return ServiceResult<List<ActivityDTO>>.Success(activities);
     }
 
-    public async Task<ServiceResult<List<ActivityDTO>>> GetActivitiesByCitizenAsync(int citizenId, string date)
+    public async Task<ServiceResult<List<ActivityDTO>>> GetActivitiesByOwnerAsync(ActivityOwner owner, string date)
     {
         if (!DateOnly.TryParse(date, out var parsedDate))
             return ServiceResult<List<ActivityDTO>>.Fail(
                 new ServiceError(ServiceErrorKind.Validation, "Invalid date format."));
 
         var activities = await _db.Activities
-            .Where(a => a.CitizenId == citizenId && a.Date == parsedDate)
+            .Where(owner.ToFilter())
+            .Where(a => a.Date == parsedDate)
             .Select(a => a.ToDTO())
             .AsNoTracking()
             .ToListAsync();
 
-        return ServiceResult<List<ActivityDTO>>.Success(activities);
-    }
-
-    public async Task<ServiceResult<List<ActivityDTO>>> GetActivitiesByGradeAsync(int gradeId, string date)
-    {
-        if (!DateOnly.TryParse(date, out var parsedDate))
-            return ServiceResult<List<ActivityDTO>>.Fail(
-                new ServiceError(ServiceErrorKind.Validation, "Invalid date format."));
-
-        var activities = await _db.Activities
-            .Where(a => a.GradeId == gradeId && a.Date == parsedDate)
-            .Select(a => a.ToDTO())
-            .AsNoTracking()
-            .ToListAsync();
-
-        return activities.Count == 0
+        return owner is ActivityOwner.Grade && activities.Count == 0
             ? ServiceResult<List<ActivityDTO>>.Fail(
                 new ServiceError(ServiceErrorKind.NotFound, "No activities found for the given date."))
             : ServiceResult<List<ActivityDTO>>.Success(activities);
@@ -73,17 +59,17 @@ public class ActivityService : IActivityService
             : ServiceResult<ActivityDTO>.Success(activity.ToDTO());
     }
 
-    public async Task<ServiceResult<ActivityDTO>> CreateActivityForCitizenAsync(
-        int citizenId, CreateActivityDTO dto, string accessToken)
+    public async Task<ServiceResult<ActivityDTO>> CreateActivityAsync(
+        ActivityOwner owner, CreateActivityDTO dto, string accessToken)
     {
         var validationError = ValidateActivityTimes(dto.Date, dto.StartTime, dto.EndTime);
         if (validationError is not null)
             return ServiceResult<ActivityDTO>.Fail(
                 new ServiceError(ServiceErrorKind.Validation, validationError));
 
-        if (!await _coreClient.ValidateCitizenAsync(citizenId, accessToken))
+        if (!await ValidateOwnerAsync(owner, accessToken))
             return ServiceResult<ActivityDTO>.Fail(
-                new ServiceError(ServiceErrorKind.NotFound, "Citizen not found."));
+                new ServiceError(ServiceErrorKind.NotFound, OwnerNotFoundMessage(owner)));
 
         if (dto.PictogramId is not null &&
             !await _coreClient.ValidatePictogramAsync(dto.PictogramId.Value, accessToken))
@@ -91,33 +77,7 @@ public class ActivityService : IActivityService
                 new ServiceError(ServiceErrorKind.NotFound, "Pictogram not found."));
 
         var activity = dto.ToEntity();
-        activity.CitizenId = citizenId;
-
-        _db.Activities.Add(activity);
-        await _db.SaveChangesAsync();
-
-        return ServiceResult<ActivityDTO>.Success(activity.ToDTO());
-    }
-
-    public async Task<ServiceResult<ActivityDTO>> CreateActivityForGradeAsync(
-        int gradeId, CreateActivityDTO dto, string accessToken)
-    {
-        var validationError = ValidateActivityTimes(dto.Date, dto.StartTime, dto.EndTime);
-        if (validationError is not null)
-            return ServiceResult<ActivityDTO>.Fail(
-                new ServiceError(ServiceErrorKind.Validation, validationError));
-
-        if (!await _coreClient.ValidateGradeAsync(gradeId, accessToken))
-            return ServiceResult<ActivityDTO>.Fail(
-                new ServiceError(ServiceErrorKind.NotFound, "Grade not found."));
-
-        if (dto.PictogramId is not null &&
-            !await _coreClient.ValidatePictogramAsync(dto.PictogramId.Value, accessToken))
-            return ServiceResult<ActivityDTO>.Fail(
-                new ServiceError(ServiceErrorKind.NotFound, "Pictogram not found."));
-
-        var activity = dto.ToEntity();
-        activity.GradeId = gradeId;
+        owner.ApplyTo(activity);
 
         _db.Activities.Add(activity);
         await _db.SaveChangesAsync();
@@ -189,8 +149,8 @@ public class ActivityService : IActivityService
         return ServiceResult<ActivityDTO>.Success(activity.ToDTO());
     }
 
-    public async Task<ServiceResult> CopyActivitiesForCitizenAsync(
-        int citizenId, string sourceDate, string targetDate, List<int> activityIds)
+    public async Task<ServiceResult> CopyActivitiesAsync(
+        ActivityOwner owner, string sourceDate, string targetDate, List<int> activityIds)
     {
         if (!DateOnly.TryParse(sourceDate, out var source))
             return ServiceResult.Fail(new ServiceError(ServiceErrorKind.Validation, "Invalid source date format."));
@@ -198,8 +158,8 @@ public class ActivityService : IActivityService
             return ServiceResult.Fail(new ServiceError(ServiceErrorKind.Validation, "Invalid target date format."));
 
         var activities = await _db.Activities
-            .Where(a => a.CitizenId == citizenId &&
-                (a.Date == source || activityIds.Contains(a.Id)))
+            .Where(owner.ToFilter())
+            .Where(a => a.Date == source || activityIds.Contains(a.Id))
             .AsNoTracking()
             .ToListAsync();
 
@@ -209,55 +169,37 @@ public class ActivityService : IActivityService
 
         foreach (var a in activities)
         {
-            _db.Activities.Add(new Activity
+            var copy = new Activity
             {
                 Date = target,
                 StartTime = a.StartTime,
                 EndTime = a.EndTime,
                 IsCompleted = false,
-                CitizenId = citizenId,
                 PictogramId = a.PictogramId
-            });
+            };
+            owner.ApplyTo(copy);
+            _db.Activities.Add(copy);
         }
 
         await _db.SaveChangesAsync();
         return ServiceResult.Success();
     }
 
-    public async Task<ServiceResult> CopyActivitiesForGradeAsync(
-        int gradeId, string sourceDate, string targetDate, List<int> activityIds)
-    {
-        if (!DateOnly.TryParse(sourceDate, out var source))
-            return ServiceResult.Fail(new ServiceError(ServiceErrorKind.Validation, "Invalid source date format."));
-        if (!DateOnly.TryParse(targetDate, out var target))
-            return ServiceResult.Fail(new ServiceError(ServiceErrorKind.Validation, "Invalid target date format."));
-
-        var activities = await _db.Activities
-            .Where(a => a.GradeId == gradeId &&
-                (a.Date == source || activityIds.Contains(a.Id)))
-            .AsNoTracking()
-            .ToListAsync();
-
-        if (activities.Count is 0)
-            return ServiceResult.Fail(
-                new ServiceError(ServiceErrorKind.NotFound, "No activities found for the given date."));
-
-        foreach (var a in activities)
+    private async Task<bool> ValidateOwnerAsync(ActivityOwner owner, string accessToken) =>
+        owner switch
         {
-            _db.Activities.Add(new Activity
-            {
-                Date = target,
-                StartTime = a.StartTime,
-                EndTime = a.EndTime,
-                IsCompleted = false,
-                GradeId = gradeId,
-                PictogramId = a.PictogramId
-            });
-        }
+            ActivityOwner.Citizen c => await _coreClient.ValidateCitizenAsync(c.Id, accessToken),
+            ActivityOwner.Grade g => await _coreClient.ValidateGradeAsync(g.Id, accessToken),
+            _ => false
+        };
 
-        await _db.SaveChangesAsync();
-        return ServiceResult.Success();
-    }
+    private static string OwnerNotFoundMessage(ActivityOwner owner) =>
+        owner switch
+        {
+            ActivityOwner.Citizen => "Citizen not found.",
+            ActivityOwner.Grade => "Grade not found.",
+            _ => "Owner not found."
+        };
 
     private static string? ValidateActivityTimes(string date, string startTime, string endTime)
     {
