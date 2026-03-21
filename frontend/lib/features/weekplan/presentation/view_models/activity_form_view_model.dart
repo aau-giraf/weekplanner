@@ -169,15 +169,14 @@ class ActivityFormViewModel extends ChangeNotifier {
         generateSound: _generateSound,
       );
       selectPictogram(pictogram);
-      _isCreatingPictogram = false;
-      notifyListeners();
       return true;
     } catch (e, stackTrace) {
       _log.severe('Failed to upload pictogram', e, stackTrace);
-      _isCreatingPictogram = false;
       _error = 'Kunne ikke uploade piktogram';
-      notifyListeners();
       return false;
+    } finally {
+      _isCreatingPictogram = false;
+      notifyListeners();
     }
   }
 
@@ -207,15 +206,14 @@ class ActivityFormViewModel extends ChangeNotifier {
         generateSound: _generateSound,
       );
       selectPictogram(pictogram);
-      _isCreatingPictogram = false;
-      notifyListeners();
       return true;
     } catch (e, stackTrace) {
       _log.severe('Failed to generate pictogram', e, stackTrace);
-      _isCreatingPictogram = false;
       _error = 'Kunne ikke generere piktogram';
-      notifyListeners();
       return false;
+    } finally {
+      _isCreatingPictogram = false;
+      notifyListeners();
     }
   }
 
@@ -249,28 +247,35 @@ class ActivityFormViewModel extends ChangeNotifier {
       if (_selectedPictogramId != null) 'pictogramId': _selectedPictogramId,
     };
 
-    if (isEditing) {
-      await _activityRepository.updateActivity(existingActivity!.activityId, data);
-    } else {
-      await _activityRepository.createActivity(
-        id: subjectId,
-        isCitizen: isCitizen,
-        data: data,
-      );
-    }
+    try {
+      if (isEditing) {
+        await _activityRepository.updateActivity(existingActivity!.activityId, data);
+      } else {
+        await _activityRepository.createActivity(
+          id: subjectId,
+          isCitizen: isCitizen,
+          data: data,
+        );
+      }
 
-    _isLoading = false;
+      if (_activityRepository.error != null) {
+        _error = isEditing
+            ? 'Kunne ikke opdatere aktivitet'
+            : 'Kunne ikke oprette aktivitet';
+        return false;
+      }
 
-    if (_activityRepository.error != null) {
+      return true;
+    } catch (e, stackTrace) {
+      _log.severe('Failed to save activity', e, stackTrace);
       _error = isEditing
           ? 'Kunne ikke opdatere aktivitet'
           : 'Kunne ikke oprette aktivitet';
-      notifyListeners();
       return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    notifyListeners();
-    return true;
   }
 
   @override

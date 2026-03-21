@@ -32,10 +32,10 @@ class PictogramRepository extends ChangeNotifier {
     } catch (e, stackTrace) {
       _log.severe('Failed to search pictograms', e, stackTrace);
       _error = 'Kunne ikke søge piktogrammer';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 
   Future<Pictogram?> fetchPictogram(int id) async {

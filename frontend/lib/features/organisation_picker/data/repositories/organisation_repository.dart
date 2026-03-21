@@ -36,10 +36,10 @@ class OrganisationRepository extends ChangeNotifier {
     } catch (e, stackTrace) {
       _log.severe('Failed to fetch organisations', e, stackTrace);
       _error = 'Kunne ikke hente organisationer';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 
   Future<void> fetchCitizensAndGrades(int orgId) async {
@@ -55,9 +55,9 @@ class OrganisationRepository extends ChangeNotifier {
     } catch (e, stackTrace) {
       _log.severe('Failed to fetch citizens and grades', e, stackTrace);
       _error = 'Kunne ikke hente borgere';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 }

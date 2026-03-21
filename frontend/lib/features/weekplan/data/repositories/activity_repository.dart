@@ -38,10 +38,10 @@ class ActivityRepository extends ChangeNotifier {
     } catch (e, stackTrace) {
       _log.severe('Failed to fetch activities', e, stackTrace);
       _error = 'Kunne ikke hente aktiviteter';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 
   Future<void> createActivity({
@@ -49,6 +49,7 @@ class ActivityRepository extends ChangeNotifier {
     required bool isCitizen,
     required Map<String, dynamic> data,
   }) async {
+    _error = null;
     try {
       final activity = isCitizen
           ? await _apiService.createActivityForCitizen(id, data)
@@ -63,6 +64,7 @@ class ActivityRepository extends ChangeNotifier {
   }
 
   Future<void> updateActivity(int activityId, Map<String, dynamic> data) async {
+    _error = null;
     try {
       final updated = await _apiService.updateActivity(activityId, data);
       _activities = _activities.map((a) {
@@ -77,6 +79,7 @@ class ActivityRepository extends ChangeNotifier {
   }
 
   Future<void> deleteActivity(int activityId) async {
+    _error = null;
     final backup = List<Activity>.from(_activities);
     // Optimistic delete
     _activities = _activities.where((a) => a.activityId != activityId).toList();
@@ -93,6 +96,7 @@ class ActivityRepository extends ChangeNotifier {
   }
 
   Future<void> toggleActivityStatus(int activityId) async {
+    _error = null;
     try {
       final index = _activities.indexWhere((a) => a.activityId == activityId);
       if (index == -1) {
