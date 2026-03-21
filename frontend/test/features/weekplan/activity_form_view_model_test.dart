@@ -114,7 +114,7 @@ void main() {
     });
 
     test('save returns true when create succeeds', () async {
-      fakeActivityApi.onCreateCitizen = (_, __) async => createdActivity;
+      fakeActivityApi.onCreateCitizen = (_, _) async => createdActivity;
 
       final result = await vm.save();
 
@@ -124,7 +124,7 @@ void main() {
     });
 
     test('save returns false and sets error when create fails', () async {
-      fakeActivityApi.onCreateCitizen = (_, __) async => throw Exception('fail');
+      fakeActivityApi.onCreateCitizen = (_, _) async => throw Exception('fail');
 
       final result = await vm.save();
 
