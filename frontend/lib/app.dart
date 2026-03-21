@@ -10,8 +10,7 @@ import 'package:weekplanner/features/weekplan/data/repositories/activity_reposit
 import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart';
 import 'package:weekplanner/features/weekplan/presentation/view_models/activity_form_view_model.dart';
 import 'package:weekplanner/features/weekplan/presentation/view_models/weekplan_view_model.dart';
-import 'package:weekplanner/features/weekplan/presentation/views/add_activity_view.dart';
-import 'package:weekplanner/features/weekplan/presentation/views/edit_activity_view.dart';
+import 'package:weekplanner/features/weekplan/presentation/views/activity_form_view.dart';
 import 'package:weekplanner/features/weekplan/presentation/views/weekplan_view.dart';
 
 class WeekplannerApp extends StatefulWidget {
@@ -47,6 +46,11 @@ class _WeekplannerAppState extends State<WeekplannerApp> {
         ),
         GoRoute(
           path: '/organisations/:orgId/citizens',
+          redirect: (context, state) {
+            final orgId = int.tryParse(state.pathParameters['orgId'] ?? '');
+            if (orgId == null) return '/organisations';
+            return null;
+          },
           builder: (context, state) {
             final orgId = int.parse(state.pathParameters['orgId']!);
             return CitizenPickerView(orgId: orgId);
@@ -54,6 +58,11 @@ class _WeekplannerAppState extends State<WeekplannerApp> {
         ),
         GoRoute(
           path: '/weekplan/:citizenId',
+          redirect: (context, state) {
+            final citizenId = int.tryParse(state.pathParameters['citizenId'] ?? '');
+            if (citizenId == null) return '/organisations';
+            return null;
+          },
           builder: (context, state) {
             final citizenId = int.parse(state.pathParameters['citizenId']!);
             final type = state.uri.queryParameters['type'] ?? 'citizen';
@@ -86,12 +95,20 @@ class _WeekplannerAppState extends State<WeekplannerApp> {
                     organizationId: orgId,
                     initialDate: DateTime.now(),
                   ),
-                  child: const AddActivityView(),
+                  child: const ActivityFormView(
+                    title: 'Tilføj aktivitet',
+                    submitLabel: 'Tilføj',
+                  ),
                 );
               },
             ),
             GoRoute(
               path: 'edit/:actId',
+              redirect: (context, state) {
+                final actId = int.tryParse(state.pathParameters['actId'] ?? '');
+                if (actId == null) return '/organisations';
+                return null;
+              },
               builder: (context, state) {
                 final citizenId = int.parse(state.pathParameters['citizenId']!);
                 final type = state.uri.queryParameters['type'] ?? 'citizen';
@@ -112,7 +129,10 @@ class _WeekplannerAppState extends State<WeekplannerApp> {
                     organizationId: orgId,
                     initialDate: DateTime.now(),
                   ),
-                  child: const EditActivityView(),
+                  child: const ActivityFormView(
+                    title: 'Rediger aktivitet',
+                    submitLabel: 'Gem ændringer',
+                  ),
                 );
               },
             ),

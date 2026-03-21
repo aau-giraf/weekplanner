@@ -48,12 +48,10 @@ class OrganisationRepository extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final results = await Future.wait([
-        _coreApiService.fetchCitizens(orgId),
-        _coreApiService.fetchGrades(orgId),
-      ]);
-      _citizens = results[0].items as List<Citizen>;
-      _grades = results[1].items as List<Grade>;
+      final citizenResponse = await _coreApiService.fetchCitizens(orgId);
+      final gradeResponse = await _coreApiService.fetchGrades(orgId);
+      _citizens = citizenResponse.items;
+      _grades = gradeResponse.items;
     } catch (e, stackTrace) {
       _log.severe('Failed to fetch citizens and grades', e, stackTrace);
       _error = 'Kunne ikke hente borgere';

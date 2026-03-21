@@ -29,8 +29,12 @@ class ActivityApiService {
       '/weekplan/$citizenId',
       queryParameters: {'date': date},
     );
-    final list = response.data as List;
-    return list.map((e) => Activity.fromJson(e as Map<String, dynamic>)).toList();
+    final data = response.data;
+    if (data is! List) return [];
+    return data
+        .whereType<Map<String, dynamic>>()
+        .map(Activity.fromJson)
+        .toList();
   }
 
   // Fetch activities for a grade on a specific date
@@ -42,17 +46,20 @@ class ActivityApiService {
       '/weekplan/grade/$gradeId',
       queryParameters: {'date': date},
     );
-    final list = response.data as List;
-    return list.map((e) => Activity.fromJson(e as Map<String, dynamic>)).toList();
+    final data = response.data;
+    if (data is! List) return [];
+    return data
+        .whereType<Map<String, dynamic>>()
+        .map(Activity.fromJson)
+        .toList();
   }
 
   // Get a single activity
   Future<Activity> fetchActivity(int activityId) async {
     final response = await _dio.get('/weekplan/activity/$activityId');
-    return Activity.fromJson(response.data as Map<String, dynamic>);
+    return Activity.fromJson(response.data! as Map<String, dynamic>);
   }
 
-  // Create activity for a citizen
   Future<Activity> createActivityForCitizen(
     int citizenId,
     Map<String, dynamic> data,
@@ -61,10 +68,9 @@ class ActivityApiService {
       '/weekplan/to-citizen/$citizenId',
       data: data,
     );
-    return Activity.fromJson(response.data as Map<String, dynamic>);
+    return Activity.fromJson(response.data! as Map<String, dynamic>);
   }
 
-  // Create activity for a grade
   Future<Activity> createActivityForGrade(
     int gradeId,
     Map<String, dynamic> data,
@@ -73,16 +79,15 @@ class ActivityApiService {
       '/weekplan/to-grade/$gradeId',
       data: data,
     );
-    return Activity.fromJson(response.data as Map<String, dynamic>);
+    return Activity.fromJson(response.data! as Map<String, dynamic>);
   }
 
-  // Update activity
   Future<Activity> updateActivity(
     int activityId,
     Map<String, dynamic> data,
   ) async {
     final response = await _dio.put('/weekplan/activity/$activityId', data: data);
-    return Activity.fromJson(response.data as Map<String, dynamic>);
+    return Activity.fromJson(response.data! as Map<String, dynamic>);
   }
 
   // Delete activity

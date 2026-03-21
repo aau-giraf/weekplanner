@@ -59,7 +59,6 @@ class ActivityRepository extends ChangeNotifier {
       _log.severe('Failed to create activity', e, stackTrace);
       _error = 'Kunne ikke oprette aktivitet';
       notifyListeners();
-      rethrow;
     }
   }
 
@@ -74,7 +73,6 @@ class ActivityRepository extends ChangeNotifier {
       _log.severe('Failed to update activity', e, stackTrace);
       _error = 'Kunne ikke opdatere aktivitet';
       notifyListeners();
-      rethrow;
     }
   }
 
@@ -88,11 +86,9 @@ class ActivityRepository extends ChangeNotifier {
       await _apiService.deleteActivity(activityId);
     } catch (e, stackTrace) {
       _log.severe('Failed to delete activity', e, stackTrace);
-      // Rollback
       _activities = backup;
       _error = 'Kunne ikke slette aktivitet';
       notifyListeners();
-      rethrow;
     }
   }
 

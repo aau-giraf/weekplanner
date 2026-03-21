@@ -5,14 +5,21 @@ import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/weekplan/presentation/view_models/activity_form_view_model.dart';
 import 'package:weekplanner/features/weekplan/presentation/widgets/pictogram_selector.dart';
 
-class AddActivityView extends StatelessWidget {
-  const AddActivityView({super.key});
+class ActivityFormView extends StatelessWidget {
+  const ActivityFormView({
+    super.key,
+    required this.title,
+    required this.submitLabel,
+  });
+
+  final String title;
+  final String submitLabel;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tilføj aktivitet'),
+        title: Text(title),
       ),
       body: Consumer<ActivityFormViewModel>(
         builder: (context, vm, _) {
@@ -21,7 +28,6 @@ class AddActivityView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Time pickers
                 Row(
                   children: [
                     Expanded(
@@ -54,8 +60,6 @@ class AddActivityView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 24),
-
-                // Pictogram selector
                 Text(
                   'Piktogram',
                   style: Theme.of(context).textTheme.titleMedium,
@@ -63,8 +67,6 @@ class AddActivityView extends StatelessWidget {
                 const SizedBox(height: 8),
                 PictogramSelector(viewModel: vm),
                 const SizedBox(height: 24),
-
-                // Error
                 if (vm.error != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16),
@@ -74,8 +76,6 @@ class AddActivityView extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-
-                // Submit
                 ElevatedButton(
                   onPressed: vm.isLoading
                       ? null
@@ -91,7 +91,7 @@ class AddActivityView extends StatelessWidget {
                           width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Text('Tilføj'),
+                      : Text(submitLabel),
                 ),
               ],
             ),
@@ -103,15 +103,15 @@ class AddActivityView extends StatelessWidget {
 }
 
 class _TimePicker extends StatelessWidget {
-  final String label;
-  final TimeOfDay time;
-  final VoidCallback onTap;
-
   const _TimePicker({
     required this.label,
     required this.time,
     required this.onTap,
   });
+
+  final String label;
+  final TimeOfDay time;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {

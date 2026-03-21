@@ -112,7 +112,33 @@ cd backend && dotnet test
 
 ## Frontend Architecture
 
-MVVM with Provider + ChangeNotifier, following [Flutter's app architecture guide](https://docs.flutter.dev/app-architecture/guide).
+MVVM with Provider + ChangeNotifier, following [Flutter's official app architecture guide](https://docs.flutter.dev/app-architecture/guide).
+
+### Flutter Architecture Standards
+
+This frontend follows the architecture recommended by the Flutter team. **All contributors must read these before making structural changes:**
+
+| Topic | Link | Key takeaway |
+|-------|------|--------------|
+| Architecture guide | [docs.flutter.dev/app-architecture/guide](https://docs.flutter.dev/app-architecture/guide) | MVVM with View → ViewModel → Repository → Service layers |
+| UI layer | [docs.flutter.dev/.../ui-layer](https://docs.flutter.dev/app-architecture/case-study/ui-layer) | Views display state, ViewModels hold logic. 1:1 relationship. Use `ChangeNotifier` + `ListenableBuilder` |
+| Data layer | [docs.flutter.dev/.../data-layer](https://docs.flutter.dev/app-architecture/case-study/data-layer) | Repositories = source of truth. Services = stateless API wrappers |
+| Dependency injection | [docs.flutter.dev/.../dependency-injection](https://docs.flutter.dev/app-architecture/case-study/dependency-injection) | Use `package:provider`. Services → Repositories → ViewModels via constructors |
+| Result pattern | [docs.flutter.dev/.../result](https://docs.flutter.dev/app-architecture/design-patterns/result) | Sealed `Result<T>` class forces callers to handle errors; avoids uncaught exceptions |
+| Case study (Compass) | [docs.flutter.dev/app-architecture/case-study](https://docs.flutter.dev/app-architecture/case-study) | Full reference app demonstrating all patterns |
+| Dart best practices | [dart.dev/effective-dart](https://dart.dev/effective-dart) | Naming, style, documentation, and design conventions |
+
+**Rules we follow from the guide:**
+
+1. **Views contain no business logic** — only layout, animation, and simple conditionals on ViewModel state
+2. **ViewModels manage UI state** — expose data + command callbacks; never import Flutter widgets
+3. **Repositories are the source of truth** — handle caching, retry, error mapping, and expose domain models
+4. **Services are stateless** — one service per external API, return raw data only
+5. **Dependencies flow one way** — View → ViewModel → Repository → Service (never backwards)
+6. **Immutable models** — all data classes use `package:freezed` for deep immutability + `copyWith` + JSON
+7. **Provider for DI** — `MultiProvider` at the root, `context.read()` to inject into constructors
+
+### Package Structure
 
 ```
 frontend/lib/
@@ -128,6 +154,8 @@ frontend/lib/
     ├── organisation_picker/   # Org list → citizen/grade selection
     └── weekplan/              # Week view, activity CRUD, pictogram selector
 ```
+
+Each feature is organized by layer: `data/repositories/`, `presentation/view_models/`, `presentation/views/`, `presentation/widgets/`.
 
 ## Key Design Decisions
 

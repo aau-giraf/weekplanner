@@ -26,19 +26,24 @@ class ActivityFormViewModel extends ChangeNotifier {
   })  : _activityRepository = activityRepository,
         _pictogramRepository = pictogramRepository {
     if (existingActivity != null) {
-      _startTime = TimeOfDay(
-        hour: int.parse(existingActivity!.startTime.split(':')[0]),
-        minute: int.parse(existingActivity!.startTime.split(':')[1]),
-      );
-      _endTime = TimeOfDay(
-        hour: int.parse(existingActivity!.endTime.split(':')[0]),
-        minute: int.parse(existingActivity!.endTime.split(':')[1]),
-      );
+      _startTime = _parseTime(existingActivity!.startTime) ??
+          const TimeOfDay(hour: 8, minute: 0);
+      _endTime = _parseTime(existingActivity!.endTime) ??
+          const TimeOfDay(hour: 9, minute: 0);
       _selectedPictogramId = existingActivity!.pictogramId;
-      _date = DateTime.parse(existingActivity!.date);
+      _date = DateTime.tryParse(existingActivity!.date) ?? initialDate;
     } else {
       _date = initialDate;
     }
+  }
+
+  static TimeOfDay? _parseTime(String time) {
+    final parts = time.split(':');
+    if (parts.length < 2) return null;
+    final hour = int.tryParse(parts[0]);
+    final minute = int.tryParse(parts[1]);
+    if (hour == null || minute == null) return null;
+    return TimeOfDay(hour: hour, minute: minute);
   }
 
   final Activity? existingActivity;
@@ -222,37 +227,36 @@ class ActivityFormViewModel extends ChangeNotifier {
     _error = null;
     notifyListeners();
 
-    try {
-      final data = {
-        'date': GirafDateUtils.formatQueryDate(_date),
-        'startTime':
-            '${_startTime.hour.toString().padLeft(2, '0')}:${_startTime.minute.toString().padLeft(2, '0')}:00',
-        'endTime':
-            '${_endTime.hour.toString().padLeft(2, '0')}:${_endTime.minute.toString().padLeft(2, '0')}:00',
-        if (_selectedPictogramId != null) 'pictogramId': _selectedPictogramId,
-      };
+    final data = {
+      'date': GirafDateUtils.formatQueryDate(_date),
+      'startTime':
+          '${_startTime.hour.toString().padLeft(2, '0')}:${_startTime.minute.toString().padLeft(2, '0')}:00',
+      'endTime':
+          '${_endTime.hour.toString().padLeft(2, '0')}:${_endTime.minute.toString().padLeft(2, '0')}:00',
+      if (_selectedPictogramId != null) 'pictogramId': _selectedPictogramId,
+    };
 
-      if (isEditing) {
-        await _activityRepository.updateActivity(existingActivity!.activityId, data);
-      } else {
-        await _activityRepository.createActivity(
-          id: subjectId,
-          isCitizen: isCitizen,
-          data: data,
-        );
-      }
+    if (isEditing) {
+      await _activityRepository.updateActivity(existingActivity!.activityId, data);
+    } else {
+      await _activityRepository.createActivity(
+        id: subjectId,
+        isCitizen: isCitizen,
+        data: data,
+      );
+    }
 
-      _isLoading = false;
-      notifyListeners();
-      return true;
-    } catch (e, stackTrace) {
-      _log.severe('Failed to save activity', e, stackTrace);
-      _isLoading = false;
+    _isLoading = false;
+
+    if (_activityRepository.error != null) {
       _error = isEditing
           ? 'Kunne ikke opdatere aktivitet'
           : 'Kunne ikke oprette aktivitet';
       notifyListeners();
       return false;
     }
+
+    notifyListeners();
+    return true;
   }
 }

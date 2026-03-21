@@ -56,12 +56,20 @@ class WeekplanViewModel extends ChangeNotifier {
         .where((id) => !_pictogramImageUrls.containsKey(id))
         .toSet();
 
-    for (final id in ids) {
-      final pictogram = await _pictogramRepository.fetchPictogram(id);
+    if (ids.isEmpty) return;
+
+    final results = await Future.wait(
+      ids.map((id) async {
+        final pictogram = await _pictogramRepository.fetchPictogram(id);
+        return (id, pictogram);
+      }),
+    );
+
+    for (final (id, pictogram) in results) {
       _pictogramSoundUrls[id] = pictogram?.soundUrl;
       _pictogramImageUrls[id] = pictogram?.imageUrl;
     }
-    if (ids.isNotEmpty) notifyListeners();
+    notifyListeners();
   }
 
   void selectDate(DateTime date) {
