@@ -2,6 +2,7 @@ using GirafAPI.Authorization;
 using GirafAPI.Clients;
 using GirafAPI.Configuration;
 using GirafAPI.Data;
+using GirafAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -99,6 +100,12 @@ namespace GirafAPI.Extensions
                 client.BaseAddress = new Uri(baseUrl);
             });
 
+            return services;
+        }
+
+        public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services)
+        {
+            services.AddScoped<IActivityService, ActivityService>();
             return services;
         }
 

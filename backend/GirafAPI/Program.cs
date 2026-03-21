@@ -10,6 +10,7 @@ builder.Services.ConfigureDatabase(builder.Configuration, builder.Environment)
     .ConfigureJwt(builder.Configuration, builder.Environment)
     .ConfigureAuthorizationPolicies()
     .ConfigureCoreClient(builder.Configuration)
+    .ConfigureApplicationServices()
     .ConfigureOpenApi();
 
 builder.Services.AddAntiforgery(options =>

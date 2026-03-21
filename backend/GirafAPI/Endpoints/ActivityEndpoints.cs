@@ -1,9 +1,5 @@
-using GirafAPI.Clients;
-using GirafAPI.Data;
-using GirafAPI.Entities.Activities;
 using GirafAPI.Entities.Activities.DTOs;
-using GirafAPI.Mapping;
-using Microsoft.EntityFrameworkCore;
+using GirafAPI.Services;
 
 namespace GirafAPI.Endpoints;
 
@@ -17,40 +13,39 @@ public static class ActivityEndpoints
         return null;
     }
 
-    /// Validate date/time fields and return an error message, or null if valid.
-    private static string? ValidateActivityTimes(string date, string startTime, string endTime)
-    {
-        if (!DateOnly.TryParse(date, out _))
-            return "Invalid date format.";
-        if (!TimeOnly.TryParse(startTime, out var start))
-            return "Invalid start time format.";
-        if (!TimeOnly.TryParse(endTime, out var end))
-            return "Invalid end time format.";
-        if (end <= start)
-            return "End time must be after start time.";
-        return null;
-    }
+    private static IResult ToHttpResult(ServiceResult result) =>
+        result.IsSuccess
+            ? Results.Ok()
+            : result.Error!.Kind switch
+            {
+                ServiceErrorKind.NotFound => Results.NotFound(result.Error.Message),
+                ServiceErrorKind.Validation => Results.BadRequest(result.Error.Message),
+                ServiceErrorKind.Unauthorized => Results.Unauthorized(),
+                _ => Results.Problem(result.Error.Message,
+                    statusCode: StatusCodes.Status500InternalServerError)
+            };
+
+    private static IResult ToHttpResult<T>(ServiceResult<T> result, Func<T, IResult>? onSuccess = null) =>
+        result.IsSuccess
+            ? (onSuccess ?? (v => Results.Ok(v)))(result.Value!)
+            : result.Error!.Kind switch
+            {
+                ServiceErrorKind.NotFound => Results.NotFound(result.Error.Message),
+                ServiceErrorKind.Validation => Results.BadRequest(result.Error.Message),
+                ServiceErrorKind.Unauthorized => Results.Unauthorized(),
+                _ => Results.Problem(result.Error.Message,
+                    statusCode: StatusCodes.Status500InternalServerError)
+            };
 
     public static RouteGroupBuilder MapActivityEndpoints(this WebApplication app)
     {
         var group = app.MapGroup("weekplan");
 
         // GET all activities (mainly for debugging)
-        group.MapGet("/", async (GirafDbContext dbContext) =>
+        group.MapGet("/", async (IActivityService service) =>
             {
-                try
-                {
-                    var activities = await dbContext.Activities
-                        .Select(a => a.ToDTO())
-                        .AsNoTracking()
-                        .ToListAsync();
-
-                    return Results.Ok(activities);
-                }
-                catch (Exception ex)
-                {
-                    return Results.Problem(ex.Message, statusCode: StatusCodes.Status500InternalServerError);
-                }
+                var result = await service.GetAllActivitiesAsync();
+                return ToHttpResult(result);
             })
             .WithName("GetAllActivities")
             .WithDescription("Gets all activities.")
@@ -61,26 +56,10 @@ public static class ActivityEndpoints
 
 
         // GET activities for one day for a citizen
-        group.MapGet("/{citizenId:int}", async (int citizenId, string date, GirafDbContext dbContext) =>
+        group.MapGet("/{citizenId:int}", async (int citizenId, string date, IActivityService service) =>
             {
-                try
-                {
-                    if (!DateOnly.TryParse(date, out var parsedDate))
-                        return Results.BadRequest("Invalid date format.");
-
-                    var activities = await dbContext.Activities
-                        .Where(a => a.CitizenId == citizenId && a.Date == parsedDate)
-                        .Select(a => a.ToDTO())
-                        .AsNoTracking()
-                        .ToListAsync();
-
-                    return Results.Ok(activities);
-                }
-                catch (Exception)
-                {
-                    return Results.Problem("An error occurred while retrieving activities.",
-                        statusCode: StatusCodes.Status500InternalServerError);
-                }
+                var result = await service.GetActivitiesByCitizenAsync(citizenId, date);
+                return ToHttpResult(result);
             })
             .WithName("GetActivitiesForCitizenOnDate")
             .WithDescription("Gets activities for a specific citizen on a given date.")
@@ -90,26 +69,10 @@ public static class ActivityEndpoints
             .Produces(StatusCodes.Status500InternalServerError);
 
         // GET activities for one day for a grade
-        group.MapGet("/grade/{gradeId:int}", async (int gradeId, string date, GirafDbContext dbContext) =>
+        group.MapGet("/grade/{gradeId:int}", async (int gradeId, string date, IActivityService service) =>
             {
-                try
-                {
-                    if (!DateOnly.TryParse(date, out var parsedDate))
-                        return Results.BadRequest("Invalid date format.");
-
-                    var activities = await dbContext.Activities
-                        .Where(a => a.GradeId == gradeId && a.Date == parsedDate)
-                        .Select(a => a.ToDTO())
-                        .AsNoTracking()
-                        .ToListAsync();
-
-                    return activities.Count == 0 ? Results.NotFound() : Results.Ok(activities);
-                }
-                catch (Exception)
-                {
-                    return Results.Problem("An error occurred while retrieving activities.",
-                        statusCode: StatusCodes.Status500InternalServerError);
-                }
+                var result = await service.GetActivitiesByGradeAsync(gradeId, date);
+                return ToHttpResult(result);
             })
             .WithName("GetActivitiesForGradeOnDate")
             .WithDescription("Gets activities for a specific grade on a given date.")
@@ -121,21 +84,10 @@ public static class ActivityEndpoints
 
 
         // GET single activity by ID
-        group.MapGet("/activity/{id:int}", async (int id, GirafDbContext dbContext) =>
+        group.MapGet("/activity/{id:int}", async (int id, IActivityService service) =>
             {
-                try
-                {
-                    var activity = await dbContext.Activities
-                        .AsNoTracking()
-                        .FirstOrDefaultAsync(a => a.Id == id);
-
-                    return activity is null ? Results.NotFound("Activity not found.") : Results.Ok(activity.ToDTO());
-                }
-                catch (Exception)
-                {
-                    return Results.Problem("An error occurred while retrieving the activity.",
-                        statusCode: StatusCodes.Status500InternalServerError);
-                }
+                var result = await service.GetActivityByIdAsync(id);
+                return ToHttpResult(result);
             })
             .WithName("GetActivityById")
             .WithDescription("Gets a specific activity by ID.")
@@ -148,39 +100,16 @@ public static class ActivityEndpoints
 
         // POST new activity for citizen
         group.MapPost("/to-citizen/{citizenId:int}",
-                async (int citizenId, CreateActivityDTO newActivityDto, GirafDbContext dbContext,
-                    ICoreClient coreClient, HttpContext httpContext) =>
+                async (int citizenId, CreateActivityDTO dto, IActivityService service,
+                    HttpContext httpContext) =>
                 {
-                    try
-                    {
-                        var validationError = ValidateActivityTimes(
-                            newActivityDto.Date, newActivityDto.StartTime, newActivityDto.EndTime);
-                        if (validationError is not null)
-                            return Results.BadRequest(validationError);
+                    var token = GetAccessToken(httpContext);
+                    if (token is null)
+                        return Results.Unauthorized();
 
-                        var token = GetAccessToken(httpContext);
-                        if (token is null)
-                            return Results.Unauthorized();
-
-                        if (!await coreClient.ValidateCitizenAsync(citizenId, token))
-                            return Results.NotFound("Citizen not found.");
-
-                        if (newActivityDto.PictogramId is not null &&
-                            !await coreClient.ValidatePictogramAsync(newActivityDto.PictogramId.Value, token))
-                            return Results.NotFound("Pictogram not found.");
-
-                        var activity = newActivityDto.ToEntity();
-                        activity.CitizenId = citizenId;
-
-                        dbContext.Activities.Add(activity);
-                        await dbContext.SaveChangesAsync();
-                        return Results.Created($"/activity/{activity.Id}", activity.ToDTO());
-                    }
-                    catch (Exception)
-                    {
-                        return Results.Problem("An error occurred while creating the activity.",
-                            statusCode: StatusCodes.Status500InternalServerError);
-                    }
+                    var result = await service.CreateActivityForCitizenAsync(citizenId, dto, token);
+                    return ToHttpResult(result,
+                        v => Results.Created($"/activity/{v.ActivityId}", v));
                 })
             .WithName("CreateActivityForCitizen")
             .WithDescription("Creates a new activity for a citizen.")
@@ -193,39 +122,16 @@ public static class ActivityEndpoints
 
         // POST new activity for grade
         group.MapPost("/to-grade/{gradeId:int}",
-                async (int gradeId, CreateActivityDTO newActivityDto, GirafDbContext dbContext,
-                    ICoreClient coreClient, HttpContext httpContext) =>
+                async (int gradeId, CreateActivityDTO dto, IActivityService service,
+                    HttpContext httpContext) =>
                 {
-                    try
-                    {
-                        var validationError = ValidateActivityTimes(
-                            newActivityDto.Date, newActivityDto.StartTime, newActivityDto.EndTime);
-                        if (validationError is not null)
-                            return Results.BadRequest(validationError);
+                    var token = GetAccessToken(httpContext);
+                    if (token is null)
+                        return Results.Unauthorized();
 
-                        var token = GetAccessToken(httpContext);
-                        if (token is null)
-                            return Results.Unauthorized();
-
-                        if (!await coreClient.ValidateGradeAsync(gradeId, token))
-                            return Results.NotFound("Grade not found.");
-
-                        if (newActivityDto.PictogramId is not null &&
-                            !await coreClient.ValidatePictogramAsync(newActivityDto.PictogramId.Value, token))
-                            return Results.NotFound("Pictogram not found.");
-
-                        var activity = newActivityDto.ToEntity();
-                        activity.GradeId = gradeId;
-
-                        dbContext.Activities.Add(activity);
-                        await dbContext.SaveChangesAsync();
-                        return Results.Created($"/activity/{activity.Id}", activity.ToDTO());
-                    }
-                    catch (Exception)
-                    {
-                        return Results.Problem("An error occurred while creating the activity.",
-                            statusCode: StatusCodes.Status500InternalServerError);
-                    }
+                    var result = await service.CreateActivityForGradeAsync(gradeId, dto, token);
+                    return ToHttpResult(result,
+                        v => Results.Created($"/activity/{v.ActivityId}", v));
                 })
             .WithName("CreateActivityForGrade")
             .WithDescription("Creates a new activity for a grade.")
@@ -239,49 +145,13 @@ public static class ActivityEndpoints
 
         group.MapPost("/activity/copy-citizen/{citizenId:int}",
                 async (int citizenId, string dateStr, string newDateStr, List<int> toCopyIds,
-                    GirafDbContext dbContext) =>
+                    IActivityService service) =>
                 {
-                    try
-                    {
-                        if (!DateOnly.TryParse(dateStr, out var sourceDate))
-                            return Results.BadRequest("Invalid source date format.");
-                        if (!DateOnly.TryParse(newDateStr, out var targetDate))
-                            return Results.BadRequest("Invalid target date format.");
-
-                        var activities = await dbContext.Activities
-                            .Where(a => a.CitizenId == citizenId &&
-                                (a.Date == sourceDate || toCopyIds.Contains(a.Id)))
-                            .AsNoTracking()
-                            .ToListAsync();
-
-                        if (activities.Count is 0)
-                        {
-                            return Results.NotFound("No activities found for the given date.");
-                        }
-
-                        foreach (var a in activities)
-                        {
-                            var newActivity = new Activity
-                            {
-                                Date = targetDate,
-                                StartTime = a.StartTime,
-                                EndTime = a.EndTime,
-                                IsCompleted = false,
-                                CitizenId = citizenId,
-                                PictogramId = a.PictogramId
-                            };
-
-                            dbContext.Activities.Add(newActivity);
-                        }
-
-                        await dbContext.SaveChangesAsync();
-                        return Results.Ok("Activities successfully copied.");
-                    }
-                    catch (Exception)
-                    {
-                        return Results.Problem("An error occurred while copying the activities.",
-                            statusCode: StatusCodes.Status500InternalServerError);
-                    }
+                    var result = await service.CopyActivitiesForCitizenAsync(
+                        citizenId, dateStr, newDateStr, toCopyIds);
+                    return result.IsSuccess
+                        ? Results.Ok("Activities successfully copied.")
+                        : ToHttpResult(result);
                 })
             .WithName("CopyActivityForCitizen")
             .WithDescription("Copies activities between days for a citizen")
@@ -291,49 +161,14 @@ public static class ActivityEndpoints
             .Produces(StatusCodes.Status200OK);
 
         group.MapPost("/activity/copy-grade/{gradeId:int}",
-                async (int gradeId, string dateStr, string newDateStr, List<int> toCopyIds, GirafDbContext dbContext) =>
+                async (int gradeId, string dateStr, string newDateStr, List<int> toCopyIds,
+                    IActivityService service) =>
                 {
-                    try
-                    {
-                        if (!DateOnly.TryParse(dateStr, out var sourceDate))
-                            return Results.BadRequest("Invalid source date format.");
-                        if (!DateOnly.TryParse(newDateStr, out var targetDate))
-                            return Results.BadRequest("Invalid target date format.");
-
-                        var activities = await dbContext.Activities
-                            .Where(a => a.GradeId == gradeId &&
-                                (a.Date == sourceDate || toCopyIds.Contains(a.Id)))
-                            .AsNoTracking()
-                            .ToListAsync();
-
-                        if (activities.Count is 0)
-                        {
-                            return Results.NotFound("No activities found for the given date.");
-                        }
-
-                        foreach (var a in activities)
-                        {
-                            var newActivity = new Activity
-                            {
-                                Date = targetDate,
-                                StartTime = a.StartTime,
-                                EndTime = a.EndTime,
-                                IsCompleted = false,
-                                GradeId = gradeId,
-                                PictogramId = a.PictogramId
-                            };
-
-                            dbContext.Activities.Add(newActivity);
-                        }
-
-                        await dbContext.SaveChangesAsync();
-                        return Results.Ok("Activities successfully copied.");
-                    }
-                    catch (Exception)
-                    {
-                        return Results.Problem("An error occurred while copying the activities.",
-                            statusCode: StatusCodes.Status500InternalServerError);
-                    }
+                    var result = await service.CopyActivitiesForGradeAsync(
+                        gradeId, dateStr, newDateStr, toCopyIds);
+                    return result.IsSuccess
+                        ? Results.Ok("Activities successfully copied.")
+                        : ToHttpResult(result);
                 })
             .WithName("CopyActivityForGrade")
             .WithDescription("Copies activities between days for a grade")
@@ -344,47 +179,15 @@ public static class ActivityEndpoints
 
         // PUT updated activity
         group.MapPut("/activity/{id:int}",
-                async (int id, UpdateActivityDTO updatedActivity, GirafDbContext dbContext,
-                    ICoreClient coreClient, HttpContext httpContext) =>
+                async (int id, UpdateActivityDTO dto, IActivityService service,
+                    HttpContext httpContext) =>
                 {
-                    try
-                    {
-                        var validationError = ValidateActivityTimes(
-                            updatedActivity.Date, updatedActivity.StartTime, updatedActivity.EndTime);
-                        if (validationError is not null)
-                            return Results.BadRequest(validationError);
+                    var token = GetAccessToken(httpContext);
+                    if (token is null)
+                        return Results.Unauthorized();
 
-                        var activity = await dbContext.Activities.FindAsync(id);
-
-                        if (activity is null)
-                        {
-                            return Results.NotFound("Activity not found.");
-                        }
-
-                        if (updatedActivity.PictogramId is not null)
-                        {
-                            var token = GetAccessToken(httpContext);
-                            if (token is null)
-                                return Results.Unauthorized();
-
-                            if (!await coreClient.ValidatePictogramAsync(updatedActivity.PictogramId.Value, token))
-                                return Results.BadRequest($"Pictogram with ID {updatedActivity.PictogramId} not found.");
-                        }
-
-                        dbContext.Entry(activity).CurrentValues.SetValues(updatedActivity.ToEntity(id));
-                        await dbContext.SaveChangesAsync();
-
-                        return Results.Ok();
-                    }
-                    catch (DbUpdateException)
-                    {
-                        return Results.BadRequest("Failed to update activity. Ensure the provided data is correct.");
-                    }
-                    catch (Exception)
-                    {
-                        return Results.Problem("An error occurred while updating the activity.",
-                            statusCode: StatusCodes.Status500InternalServerError);
-                    }
+                    var result = await service.UpdateActivityAsync(id, dto, token);
+                    return ToHttpResult(result);
                 })
             .WithName("UpdateActivity")
             .WithDescription("Updates an existing activity using ID.")
@@ -398,32 +201,12 @@ public static class ActivityEndpoints
 
 
         // PUT IsComplete activity
-        group.MapPut("/activity/{id:int}/iscomplete", async (int id, bool IsComplete, GirafDbContext dbContext) =>
-            {
-                try
+        group.MapPut("/activity/{id:int}/iscomplete",
+                async (int id, bool IsComplete, IActivityService service) =>
                 {
-                    var activity = await dbContext.Activities.FindAsync(id);
-
-                    if (activity is null)
-                    {
-                        return Results.NotFound("Activity not found.");
-                    }
-
-                    activity.IsCompleted = IsComplete;
-                    await dbContext.SaveChangesAsync();
-
-                    return Results.Ok();
-                }
-                catch (DbUpdateException)
-                {
-                    return Results.BadRequest("Failed to update activity status.");
-                }
-                catch (Exception)
-                {
-                    return Results.Problem("An error occurred while updating the activity status.",
-                        statusCode: StatusCodes.Status500InternalServerError);
-                }
-            })
+                    var result = await service.ToggleActivityStatusAsync(id, IsComplete);
+                    return ToHttpResult(result);
+                })
             .WithName("CompleteActivity")
             .WithDescription("Completes an existing activity using ID.")
             .WithTags("Activities")
@@ -434,28 +217,10 @@ public static class ActivityEndpoints
 
 
         // DELETE activity
-        group.MapDelete("/activity/{id:int}", async (int id, GirafDbContext dbContext) =>
+        group.MapDelete("/activity/{id:int}", async (int id, IActivityService service) =>
             {
-                try
-                {
-                    var rowsAffected = await dbContext.Activities.Where(a => a.Id == id).ExecuteDeleteAsync();
-
-                    if (rowsAffected == 0)
-                    {
-                        return Results.NotFound("Activity not found.");
-                    }
-
-                    return Results.NoContent();
-                }
-                catch (DbUpdateException)
-                {
-                    return Results.BadRequest("Failed to delete activity. Ensure the ID is correct.");
-                }
-                catch (Exception)
-                {
-                    return Results.Problem("An error occurred while deleting the activity.",
-                        statusCode: StatusCodes.Status500InternalServerError);
-                }
+                var result = await service.DeleteActivityAsync(id);
+                return result.IsSuccess ? Results.NoContent() : ToHttpResult(result);
             })
             .WithName("DeleteActivity")
             .WithDescription("Deletes an activity by ID.")
@@ -467,36 +232,15 @@ public static class ActivityEndpoints
             .Produces(StatusCodes.Status500InternalServerError);
 
         group.MapPost("/activity/assign-pictogram/{activityId:int}/{pictogramId:int}",
-                async (int activityId, int pictogramId, GirafDbContext dbContext,
-                    ICoreClient coreClient, HttpContext httpContext) =>
+                async (int activityId, int pictogramId, IActivityService service,
+                    HttpContext httpContext) =>
                 {
-                    try
-                    {
-                        var activity = await dbContext.Activities.FindAsync(activityId);
+                    var token = GetAccessToken(httpContext);
+                    if (token is null)
+                        return Results.Unauthorized();
 
-                        if (activity is null)
-                        {
-                            return Results.NotFound("Activity not found.");
-                        }
-
-                        var token = GetAccessToken(httpContext);
-                        if (token is null)
-                            return Results.Unauthorized();
-
-                        if (!await coreClient.ValidatePictogramAsync(pictogramId, token))
-                        {
-                            return Results.NotFound("Pictogram not found.");
-                        }
-
-                        activity.PictogramId = pictogramId;
-                        await dbContext.SaveChangesAsync();
-
-                        return Results.Ok(activity.ToDTO());
-                    }
-                    catch (Exception ex)
-                    {
-                        return Results.Problem(ex.Message, statusCode: StatusCodes.Status500InternalServerError);
-                    }
+                    var result = await service.AssignPictogramAsync(activityId, pictogramId, token);
+                    return ToHttpResult(result);
                 })
             .WithName("AssignPictogram")
             .WithDescription("Assigns a pictogram by ID.")
