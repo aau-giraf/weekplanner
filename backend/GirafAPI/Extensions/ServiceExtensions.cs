@@ -1,10 +1,8 @@
-using GirafAPI.Authorization;
 using GirafAPI.Clients;
 using GirafAPI.Configuration;
 using GirafAPI.Data;
 using GirafAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
@@ -70,23 +68,9 @@ namespace GirafAPI.Extensions
             return services;
         }
 
-        public static IServiceCollection ConfigureAuthorizationPolicies(this IServiceCollection services)
+        public static IServiceCollection ConfigureAuthorization(this IServiceCollection services)
         {
-            services.AddHttpContextAccessor();
-            services.AddScoped<IAuthorizationHandler, JwtOrgRoleHandler>();
-
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("OrganizationMember", policy =>
-                    policy.Requirements.Add(new OrgMemberRequirement()));
-                options.AddPolicy("OrganizationAdmin", policy =>
-                    policy.Requirements.Add(new OrgAdminRequirement()));
-                options.AddPolicy("OrganizationOwner", policy =>
-                    policy.Requirements.Add(new OrgOwnerRequirement()));
-                options.AddPolicy("OwnData", policy =>
-                    policy.Requirements.Add(new OwnDataRequirement()));
-            });
-
+            services.AddAuthorization();
             return services;
         }
 

@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Configure services
 builder.Services.ConfigureDatabase(builder.Configuration, builder.Environment)
     .ConfigureJwt(builder.Configuration, builder.Environment)
-    .ConfigureAuthorizationPolicies()
+    .ConfigureAuthorization()
     .ConfigureCoreClient(builder.Configuration)
     .ConfigureApplicationServices()
     .ConfigureOpenApi();
