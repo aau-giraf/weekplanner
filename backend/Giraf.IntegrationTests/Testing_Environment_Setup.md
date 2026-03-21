@@ -2,14 +2,6 @@
 
 This guide explains how the testing environment is set up for the Giraf Weekplanner API.
 
-## Table of Contents
-- [Overview](#overview)
-- [GirafWebApplicationFactory](#girafwebapplicationfactory)
-- [DbSeeder System](#dbseeder-system)
-- [Available Seeders](#available-seeders)
-- [TestJwtToken & Authentication](#testjwttoken--authentication)
-- [Writing a New Integration Test](#writing-a-new-integration-test)
-
 ## Overview
 
 Integration tests use:
@@ -27,7 +19,8 @@ The factory creates a test server with:
 2. SQLite database with a unique filename per test (`GirafTestDb_{Guid}.db`)
 3. JWT authentication configured with test credentials
 4. Authorization policies re-registered for the test container
-5. Automatic cleanup of DB files on dispose
+5. Optional `StubCoreClient` injection (pass `stubCoreClient: true`)
+6. Automatic cleanup of DB files on dispose
 
 ```csharp
 // Typical test setup pattern:
@@ -36,9 +29,7 @@ var seeder = new BaseCaseDb();
 var scope = factory.Services.CreateScope();
 factory.SeedDb(scope, seeder);
 var client = factory.CreateClient();
-
-// Authenticate as a specific user
-client.AttachClaimsToken(scope, seeder.Users["admin"]);
+client.AttachClaimsToken(role: "member");
 ```
 
 ## DbSeeder System
@@ -47,30 +38,19 @@ client.AttachClaimsToken(scope, seeder.Users["admin"]);
 
 | Method | What it seeds |
 |--------|--------------|
-| `SeedUsers(userManager)` | Creates `owner`, `admin`, `member` users with claims |
-| `SeedSingleUser(userManager)` | Creates a single `user` |
-| `SeedOrganization(dbContext, userManager, owner, admins, members)` | Creates an org with role claims |
-| `SeedCitizens(dbContext, org)` | Creates 3 test citizens |
-| `SeedPictogram(dbContext, org)` | Creates a test pictogram |
-| `SeedCitizenActivity(dbContext, citizenId, pictogram)` | Creates an activity for a citizen |
-| `SeedGradeActivity(dbContext, gradeId, pictogram)` | Creates an activity for a grade |
-| `SeedGrade(dbContext, org)` | Creates a grade in an org |
-| `AddCitizensToGrade(dbContext, gradeId, citizens)` | Assigns citizens to a grade |
-| `SeedInvitation(dbContext, orgId, senderId, receiverId)` | Creates an invitation |
+| `SeedCitizenActivity(dbContext, citizenId, pictogramId?)` | Creates an activity for a citizen |
+| `SeedGradeActivity(dbContext, gradeId, pictogramId?)` | Creates an activity for a grade |
 
-After seeding, access created entities via the seeder's public properties:
-- `seeder.Users["owner"]`, `seeder.Users["admin"]`, `seeder.Users["member"]`
-- `seeder.Organizations`, `seeder.Citizens`, `seeder.Pictograms`, `seeder.Activities`, `seeder.Grades`, `seeder.Invitations`
+After seeding, access created entities via `seeder.Activities` (list of all seeded activities).
 
 ## Available Seeders
 
 | Seeder | Description |
 |--------|-------------|
-| `EmptyDb` | No data — tests "empty" scenarios |
-| `OnlyUsersAndOrgDb` | Users + 1 organization (no citizens/activities) |
-| `BaseCaseDb` | Full scenario: users, org, 3 citizens, pictogram, activities, grade |
+| `EmptyDb` | No data — tests "empty" and "not found" scenarios |
+| `BaseCaseDb` | Seeds 1 citizen activity (citizenId=1) and 1 grade activity (gradeId=1), both with pictogramId=1 |
 
-To add a new seeder, create a class extending `DbSeeder` and override `SeedData(dbContext, userManager)`.
+To add a new seeder, create a class extending `DbSeeder` and override `SeedData(dbContext)`.
 
 ## TestJwtToken & Authentication
 
@@ -80,7 +60,20 @@ To add a new seeder, create a class extending `DbSeeder` and override `SeedData(
 - Key: `ThisIsASecretKeyForTestingPurposes!`
 - Expires in 1 hour
 
-Use `HttpClientExtensions.AttachClaimsToken(client, scope, user)` to authenticate an `HttpClient` as any seeded user. This reads the user's claims from the `UserManager` and builds a test JWT.
+Use `client.AttachClaimsToken(role: "member")` to authenticate an `HttpClient`. Parameters:
+- `userId` (default: `"test-user-id"`)
+- `role` (default: `"member"`) — sets the `org_roles` claim
+- `orgId` (default: `1`)
+
+The token includes `user_id`, `sub`, `ClaimTypes.NameIdentifier`, and `org_roles` claims.
+
+## StubCoreClient
+
+When `GirafWebApplicationFactory(stubCoreClient: true)` is used, the real `GirafCoreClient` HTTP calls are replaced with `StubCoreClient`:
+- IDs 1–100 → validation returns `true`
+- IDs > 100 → validation returns `false`
+
+Use this for any test that creates activities or assigns pictograms (which validate against giraf-core).
 
 ## Writing a New Integration Test
 
@@ -88,15 +81,15 @@ Use `HttpClientExtensions.AttachClaimsToken(client, scope, user)` to authenticat
 [Fact]
 public async Task MyEndpoint_ReturnsExpected()
 {
-    // 1. Create factory and seed
-    var factory = new GirafWebApplicationFactory();
+    // 1. Create factory (use stubCoreClient: true if endpoint validates with giraf-core)
+    var factory = new GirafWebApplicationFactory(stubCoreClient: true);
     var seeder = new BaseCaseDb();
     var scope = factory.Services.CreateScope();
     factory.SeedDb(scope, seeder);
     var client = factory.CreateClient();
 
-    // 2. Authenticate as needed
-    client.AttachClaimsToken(scope, seeder.Users["admin"]);
+    // 2. Authenticate
+    client.AttachClaimsToken(role: "admin");
 
     // 3. Act
     var response = await client.GetAsync("/your/endpoint");
@@ -111,6 +104,5 @@ public async Task MyEndpoint_ReturnsExpected()
 **Key points:**
 - Each test gets its own factory/DB — no shared state between tests
 - Use `EmptyDb` for "not found" / empty scenarios
-- Use `OnlyUsersAndOrgDb` when you need auth but no citizens/activities
-- Use `BaseCaseDb` for the full happy-path scenario
+- Use `BaseCaseDb` for happy-path scenarios with existing data
 - Factory disposes DB files automatically, but if tests fail mid-run, leftover `GirafTestDb_*.db` files may accumulate — they are gitignored

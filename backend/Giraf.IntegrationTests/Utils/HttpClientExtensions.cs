@@ -20,6 +20,7 @@ public static class HttpClientExtensions
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, userId),
+            new Claim("user_id", userId),
             new Claim("sub", userId),
             new Claim("org_roles", JsonSerializer.Serialize(orgRoles))
         };

@@ -22,17 +22,7 @@ class WeekplannerApp extends StatefulWidget {
 }
 
 class _WeekplannerAppState extends State<WeekplannerApp> {
-  late final GoRouter _router;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  GoRouter? _router;
 
   GoRouter _createRouter(AuthRepository authRepo) {
     return GoRouter(
@@ -135,11 +125,11 @@ class _WeekplannerAppState extends State<WeekplannerApp> {
   @override
   Widget build(BuildContext context) {
     final authRepo = context.read<AuthRepository>();
-    _router = _createRouter(authRepo);
+    _router ??= _createRouter(authRepo);
     return MaterialApp.router(
       title: 'GIRAF Ugeplan',
       theme: girafTheme,
-      routerConfig: _router,
+      routerConfig: _router!,
       debugShowCheckedModeBanner: false,
     );
   }

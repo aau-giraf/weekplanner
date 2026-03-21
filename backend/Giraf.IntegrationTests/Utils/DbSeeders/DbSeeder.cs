@@ -13,9 +13,9 @@ public abstract class DbSeeder
     {
         var activity = new Activity
         {
-            Date = DateOnly.FromDateTime(DateTime.Now),
-            StartTime = TimeOnly.FromDateTime(DateTime.Now),
-            EndTime = TimeOnly.FromDateTime(DateTime.Now.AddHours(1)),
+            Date = DateOnly.FromDateTime(DateTime.UtcNow),
+            StartTime = TimeOnly.FromDateTime(DateTime.UtcNow),
+            EndTime = TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
             IsCompleted = false,
             CitizenId = citizenId,
             PictogramId = pictogramId
@@ -30,9 +30,9 @@ public abstract class DbSeeder
     {
         var activity = new Activity
         {
-            Date = DateOnly.FromDateTime(DateTime.Now),
-            StartTime = TimeOnly.FromDateTime(DateTime.Now),
-            EndTime = TimeOnly.FromDateTime(DateTime.Now.AddHours(1)),
+            Date = DateOnly.FromDateTime(DateTime.UtcNow),
+            StartTime = TimeOnly.FromDateTime(DateTime.UtcNow),
+            EndTime = TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
             IsCompleted = false,
             GradeId = gradeId,
             PictogramId = pictogramId
