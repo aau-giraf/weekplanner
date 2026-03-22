@@ -4,7 +4,6 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:weekplanner/core/errors/activity_failure.dart';
-import 'package:weekplanner/core/errors/pictogram_failure.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/activity_repository.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart';
 import 'package:weekplanner/features/weekplan/domain/weekplan_state.dart';
