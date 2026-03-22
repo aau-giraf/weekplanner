@@ -89,7 +89,9 @@ sealed class ActivityFormState extends Equatable {
         pictogramMode,
         pictogramName,
         generatePrompt,
-        // PlatformFile excluded — identity comparison is acceptable
+        // PlatformFile uses identity (reference) comparison — acceptable
+        selectedImageFile,
+        selectedSoundFile,
         generateSound,
         isCreatingPictogram,
         searchResults,
