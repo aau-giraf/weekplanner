@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+
 import 'package:weekplanner/app.dart';
+import 'package:weekplanner/core/routing/go_router_refresh_stream.dart';
 import 'package:weekplanner/features/auth/data/repositories/auth_repository.dart';
-import 'package:weekplanner/features/auth/presentation/view_models/login_view_model.dart';
+import 'package:weekplanner/features/auth/presentation/auth_cubit.dart';
+import 'package:weekplanner/features/auth/presentation/login_cubit.dart';
 import 'package:weekplanner/features/organisation_picker/data/repositories/organisation_repository.dart';
 import 'package:weekplanner/features/organisation_picker/presentation/view_models/organisation_picker_view_model.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/activity_repository.dart';
@@ -22,11 +26,7 @@ void main() async {
   final activityApiService = ActivityApiService();
 
   // Repositories
-  final authRepository = AuthRepository(
-    authService: authService,
-    coreApiService: coreApiService,
-    activityApiService: activityApiService,
-  );
+  final authRepository = AuthRepository(authService: authService);
   final organisationRepository = OrganisationRepository(
     coreApiService: coreApiService,
   );
@@ -37,16 +37,25 @@ void main() async {
     coreApiService: coreApiService,
   );
 
-  // Try to restore session
-  authRepository.tryRestoreSession();
+  // Auth cubit + router refresh adapter
+  final authCubit = AuthCubit(
+    repository: authRepository,
+    coreApiService: coreApiService,
+    activityApiService: activityApiService,
+  );
+  final refreshListenable = GoRouterRefreshStream(authCubit.stream);
 
-  // ViewModels needed by the router
+  // Try to restore session
+  authCubit.tryRestoreSession();
+
+  // ViewModels needed by the router (will be migrated in later branches)
   final organisationPickerVm = OrganisationPickerViewModel(
     repository: organisationRepository,
   );
 
   final router = createRouter(
-    authRepo: authRepository,
+    authCubit: authCubit,
+    refreshListenable: refreshListenable,
     orgPickerVm: organisationPickerVm,
     activityRepo: activityRepository,
     pictogramRepo: pictogramRepository,
@@ -55,21 +64,26 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        // Services (available for DI)
+        // Services
         Provider.value(value: authService),
         Provider.value(value: coreApiService),
         Provider.value(value: activityApiService),
 
-        // Repositories
-        ChangeNotifierProvider.value(value: authRepository),
+        // Auth (BLoC)
+        BlocProvider.value(value: authCubit),
+        BlocProvider(
+          create: (_) => LoginCubit(
+            authRepository: authRepository,
+            authCubit: authCubit,
+          ),
+        ),
+
+        // Repositories (still ChangeNotifier — migrated in later branches)
         ChangeNotifierProvider.value(value: organisationRepository),
         ChangeNotifierProvider.value(value: activityRepository),
         ChangeNotifierProvider.value(value: pictogramRepository),
 
-        // ViewModels
-        ChangeNotifierProvider(
-          create: (_) => LoginViewModel(authRepository: authRepository),
-        ),
+        // ViewModels (still ChangeNotifier — migrated in later branches)
         ChangeNotifierProvider.value(value: organisationPickerVm),
       ],
       child: WeekplannerApp(router: router),

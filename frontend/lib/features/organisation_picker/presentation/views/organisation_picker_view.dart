@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:weekplanner/config/theme.dart';
-import 'package:weekplanner/features/auth/data/repositories/auth_repository.dart';
+import 'package:weekplanner/features/auth/presentation/auth_cubit.dart';
 import 'package:weekplanner/features/organisation_picker/presentation/view_models/organisation_picker_view_model.dart';
 import 'package:weekplanner/shared/models/organisation.dart';
 
@@ -18,7 +18,7 @@ class OrganisationPickerView extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
-              await context.read<AuthRepository>().logout();
+              await context.read<AuthCubit>().logout();
             },
           ),
         ],

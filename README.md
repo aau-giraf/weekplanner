@@ -72,18 +72,65 @@ Log in with `test@giraf.dk` / `GirafUgeplan2025`.
 
 | Directory | Stack | Description |
 |-----------|-------|-------------|
-| `frontend/` | Flutter, Provider, GoRouter, Dio | MVVM app — login, org/citizen picker, week view, activity CRUD |
-| `backend/` | .NET 10 Minimal API, EF Core, PostgreSQL | Hexagonal architecture — see [backend/docs/architecture.md](backend/docs/architecture.md) |
+| `frontend/` | Flutter, BLoC/Cubit, GoRouter, Dio, fpdart | Login, org/citizen picker, week view, activity CRUD |
+| `backend/` | .NET 10 Minimal API, EF Core, PostgreSQL | Activity CRUD — see [backend/docs/architecture.md](backend/docs/architecture.md) |
+
+## Coding Standards
+
+**We strictly follow official Dart and Flutter conventions.** Before contributing, read:
+
+- [Effective Dart](https://dart.dev/effective-dart) — naming, style, usage, design, documentation
+- [Flutter Architecture Guide](https://docs.flutter.dev/app-architecture/guide) — layered architecture with BLoC
+- [BLoC Library](https://bloclibrary.dev) — state management patterns
+
+All code must pass `dart analyze` with zero warnings.
+
+## Frontend Architecture
+
+BLoC/Cubit with feature-first structure. Dependencies flow one way: **View → Cubit → Repository → Service**.
+
+- **Views** render state and forward user intent. No business logic.
+- **Cubits** manage feature state. Emit sealed state classes. Pure Dart — no Flutter imports.
+- **Repositories** are the data boundary. Return `Either<Failure, T>` (fpdart). Never throw.
+- **Services** are stateless Dio wrappers. One per external API.
+- **Models** are immutable (`freezed` + `json_serializable`).
+
+### Package Structure
+
+```
+frontend/lib/
+├── main.dart                  # Entry point, BlocProvider/Provider setup
+├── app.dart                   # MaterialApp + GoRouter
+├── config/                    # API URLs, theme
+├── core/
+│   ├── errors/                # Typed failure hierarchies
+│   └── routing/               # GoRouter helpers
+├── shared/
+│   ├── models/                # Freezed data classes (Activity, Citizen, etc.)
+│   ├── services/              # Dio API clients (core + weekplanner)
+│   └── utils/                 # JWT decode, date helpers
+└── features/
+    ├── auth/                  # Login, JWT storage, auth redirect
+    ├── organisation_picker/   # Org list → citizen/grade selection
+    └── weekplan/              # Week view, activity CRUD, pictogram selector
+```
+
+Each feature is organized by layer: `domain/` (states, entities), `data/repositories/`, `presentation/` (cubits, views, widgets).
 
 ## Testing
 
 ```bash
-# Frontend (62 tests)
+# Frontend
 cd frontend && flutter test
 
-# Backend (33 integration tests)
+# Backend (integration tests)
 cd backend && dotnet test
 ```
+
+- **mocktail** for mocking (no codegen)
+- **bloc_test** for cubit tests
+- Widget tests for all views
+- Arrange → Act → Assert pattern
 
 ## API Endpoints
 
@@ -109,63 +156,6 @@ cd backend && dotnet test
 | PUT | `/weekplan/activity/:id` | Update activity |
 | DELETE | `/weekplan/activity/:id` | Delete activity |
 | PUT | `/weekplan/activity/:id/iscomplete` | Toggle completion |
-
-## Frontend Architecture
-
-MVVM with Provider + ChangeNotifier, following [Flutter's official app architecture guide](https://docs.flutter.dev/app-architecture/guide).
-
-### High-Level Flutter Principles
-
-At a high level, we keep frontend architecture intentionally simple and consistent:
-
-1. Keep a clear flow: View -> ViewModel -> Repository -> Service
-2. Keep business logic out of widgets; widgets render state and forward user intent
-3. Keep services stateless and focused on HTTP/API translation only
-4. Keep repositories as the data boundary and source of truth for feature data
-5. Keep ViewModel state explicit (`loading`, `error`, `data`) with predictable async handling
-6. Keep models immutable (`freezed`) and constructor-injected through Provider
-
-### Flutter Architecture Standards
-
-This frontend follows the architecture recommended by the Flutter team. **All contributors must read these before making structural changes:**
-
-| Topic | Link | Key takeaway |
-|-------|------|--------------|
-| Architecture guide | [docs.flutter.dev/app-architecture/guide](https://docs.flutter.dev/app-architecture/guide) | MVVM with View → ViewModel → Repository → Service layers |
-| UI layer | [docs.flutter.dev/.../ui-layer](https://docs.flutter.dev/app-architecture/case-study/ui-layer) | Views display state, ViewModels hold logic. 1:1 relationship. Use `ChangeNotifier` + `ListenableBuilder` |
-| Data layer | [docs.flutter.dev/.../data-layer](https://docs.flutter.dev/app-architecture/case-study/data-layer) | Repositories = source of truth. Services = stateless API wrappers |
-| Dependency injection | [docs.flutter.dev/.../dependency-injection](https://docs.flutter.dev/app-architecture/case-study/dependency-injection) | Use `package:provider`. Services → Repositories → ViewModels via constructors |
-| Case study (Compass) | [docs.flutter.dev/app-architecture/case-study](https://docs.flutter.dev/app-architecture/case-study) | Full reference app demonstrating all patterns |
-| Dart best practices | [dart.dev/effective-dart](https://dart.dev/effective-dart) | Naming, style, documentation, and design conventions |
-
-**Rules we follow from the guide:**
-
-1. **Views contain no business logic** — only layout, animation, and simple conditionals on ViewModel state
-2. **ViewModels manage UI state** — expose data + command callbacks; never import Flutter widgets
-3. **Repositories are the source of truth** — handle caching, retry, error mapping, and expose domain models
-4. **Services are stateless** — one service per external API, return raw data only
-5. **Dependencies flow one way** — View → ViewModel → Repository → Service (never backwards)
-6. **Immutable models** — all data classes use `package:freezed` for deep immutability + `copyWith` + JSON
-7. **Provider for DI** — `MultiProvider` at the root, `context.read()` to inject into constructors
-
-### Package Structure
-
-```
-frontend/lib/
-├── main.dart                  # Entry point, Provider setup
-├── app.dart                   # MaterialApp + GoRouter
-├── config/                    # API URLs, theme
-├── shared/
-│   ├── models/                # Freezed data classes (Activity, Citizen, etc.)
-│   ├── services/              # Dio API clients (core + weekplanner)
-│   └── utils/                 # JWT decode, date helpers
-└── features/
-    ├── auth/                  # Login, JWT storage, auth redirect
-    ├── organisation_picker/   # Org list → citizen/grade selection
-    └── weekplan/              # Week view, activity CRUD, pictogram selector
-```
-
-Each feature is organized by layer: `data/repositories/`, `presentation/view_models/`, `presentation/views/`, `presentation/widgets/`.
 
 ## Key Design Decisions
 

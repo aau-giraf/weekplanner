@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
 import 'package:weekplanner/config/theme.dart';
-import 'package:weekplanner/features/auth/data/repositories/auth_repository.dart';
+import 'package:weekplanner/features/auth/presentation/auth_cubit.dart';
 import 'package:weekplanner/features/auth/presentation/views/login_view.dart';
 import 'package:weekplanner/features/organisation_picker/presentation/view_models/organisation_picker_view_model.dart';
 import 'package:weekplanner/features/organisation_picker/presentation/views/citizen_picker_view.dart';
@@ -19,16 +20,17 @@ import 'package:weekplanner/features/weekplan/presentation/views/weekplan_view.d
 /// Dependencies are passed in rather than read from context so the router
 /// can be built once in [main] and handed to the stateless [WeekplannerApp].
 GoRouter createRouter({
-  required AuthRepository authRepo,
+  required AuthCubit authCubit,
+  required Listenable refreshListenable,
   required OrganisationPickerViewModel orgPickerVm,
   required ActivityRepository activityRepo,
   required PictogramRepository pictogramRepo,
 }) {
   return GoRouter(
     initialLocation: '/login',
-    refreshListenable: authRepo,
+    refreshListenable: refreshListenable,
     redirect: (context, state) {
-      final isAuthenticated = authRepo.isAuthenticated;
+      final isAuthenticated = authCubit.isAuthenticated;
       final isLoginRoute = state.matchedLocation == '/login';
 
       if (!isAuthenticated && !isLoginRoute) return '/login';
@@ -157,6 +159,7 @@ GoRouter createRouter({
   );
 }
 
+/// Root widget of the Weekplanner app.
 class WeekplannerApp extends StatelessWidget {
   const WeekplannerApp({super.key, required this.router});
 
