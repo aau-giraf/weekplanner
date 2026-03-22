@@ -117,6 +117,137 @@ frontend/lib/
 
 Each feature is organized by layer: `domain/` (states, entities), `data/repositories/`, `presentation/` (cubits, views, widgets).
 
+## Adding a New Feature
+
+Follow the existing structure. Here's how to add a feature called `settings`:
+
+### 1. Create the directory skeleton
+
+```
+frontend/lib/features/settings/
+├── domain/
+│   └── settings_state.dart          # Sealed state hierarchy
+├── data/
+│   └── repositories/
+│       └── settings_repository.dart  # Pure data, returns Either<Failure, T>
+└── presentation/
+    ├── settings_cubit.dart           # State management (pure Dart, no Flutter)
+    ├── views/
+    │   └── settings_view.dart        # Top-level screen
+    └── widgets/
+        └── settings_card.dart        # Extracted sub-widgets
+```
+
+### 2. Define failures and state
+
+Create a sealed failure type in `lib/core/errors/settings_failure.dart`:
+
+```dart
+sealed class SettingsFailure {
+  final String message;
+  const SettingsFailure(this.message);
+}
+final class FetchSettingsFailure extends SettingsFailure {
+  const FetchSettingsFailure() : super('Kunne ikke hente indstillinger');
+}
+```
+
+Create a sealed state hierarchy in `domain/settings_state.dart` — extend `Equatable`:
+
+```dart
+sealed class SettingsState extends Equatable { ... }
+final class SettingsLoading extends SettingsState { ... }
+final class SettingsLoaded extends SettingsState { ... }
+final class SettingsError extends SettingsState { ... }
+```
+
+### 3. Write the repository
+
+Repositories are the data boundary. They call services and return `Either<Failure, T>` — never throw:
+
+```dart
+class SettingsRepository {
+  Future<Either<SettingsFailure, Settings>> fetchSettings() async {
+    try {
+      final data = await _apiService.getSettings();
+      return Right(data);
+    } catch (e, stackTrace) {
+      _log.severe('Failed to fetch settings', e, stackTrace);
+      return Left(const FetchSettingsFailure());
+    }
+  }
+}
+```
+
+### 4. Write the cubit
+
+Cubits are pure Dart — no Flutter imports. Use `switch` on `Either`, never `fold` with async:
+
+```dart
+class SettingsCubit extends Cubit<SettingsState> {
+  SettingsCubit({required SettingsRepository repository})
+      : _repository = repository, super(const SettingsLoading());
+
+  Future<void> load() async {
+    emit(const SettingsLoading());
+    final result = await _repository.fetchSettings();
+    switch (result) {
+      case Left(:final value):
+        emit(SettingsError(message: value.message));
+      case Right(:final value):
+        emit(SettingsLoaded(settings: value));
+    }
+  }
+}
+```
+
+### 5. Write the view
+
+Views use `BlocBuilder` for UI and `BlocListener` for side effects. Read colors from the theme, not `GirafColors`:
+
+```dart
+class SettingsView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SettingsCubit, SettingsState>(
+      builder: (context, state) => switch (state) {
+        SettingsLoading() => const Center(child: CircularProgressIndicator()),
+        SettingsLoaded(:final settings) => _SettingsContent(settings: settings),
+        SettingsError(:final message) => Center(child: Text(message)),
+      },
+    );
+  }
+}
+```
+
+Extract sub-trees into separate `StatelessWidget` classes, not private `_build` methods.
+
+### 6. Add the route
+
+In `lib/app.dart`, add a `GoRoute` and provide the cubit via `BlocProvider`:
+
+```dart
+GoRoute(
+  path: '/settings',
+  builder: (context, state) => BlocProvider(
+    create: (_) => SettingsCubit(repository: settingsRepo)..load(),
+    child: const SettingsView(),
+  ),
+),
+```
+
+### 7. Write tests
+
+Every feature needs three levels of tests:
+
+| Test | What to test | Tools |
+|------|-------------|-------|
+| `settings_repository_test.dart` | Right/Left for each method | mocktail |
+| `settings_cubit_test.dart` | State transitions for each action | bloc_test, mocktail |
+| `settings_view_test.dart` | All visual states (loading, loaded, error) | MockCubit, pumpWidget |
+
+Follow existing tests in `test/features/weekplan/` for patterns.
+
 ## Testing
 
 ```bash
