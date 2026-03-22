@@ -65,6 +65,7 @@ class _ActivityListItemState extends State<ActivityListItem> {
   @override
   Widget build(BuildContext context) {
     final activity = widget.activity;
+    // Null-check on left of && guarantees non-null on right.
     final hasSound = widget.soundUrl != null && widget.soundUrl!.isNotEmpty;
 
     return Padding(
@@ -112,7 +113,7 @@ class _ActivityListItemState extends State<ActivityListItem> {
                       clipBehavior: Clip.antiAlias,
                       child: widget.imageUrl != null
                           ? Image.network(
-                              widget.imageUrl!,
+                              widget.imageUrl!, // Guarded by != null check above.
                               fit: BoxFit.cover,
                               errorBuilder: (_, _, _) => Icon(
                                 Icons.image,

@@ -61,49 +61,82 @@ class _PictogramSelectorState extends State<PictogramSelector> {
             const SizedBox(height: 12),
 
             // Content per mode
-            if (state.pictogramMode == PictogramMode.search)
-              _SearchTab(
-                controller: _searchController,
-                onSearchChanged: cubit.onSearchQueryChanged,
-                pictograms: state.searchResults,
-                isLoading: state.isSearching,
-                selectedId: state.selectedPictogramId,
-                onSelect: cubit.selectPictogram,
-              )
-            else if (state.pictogramMode == PictogramMode.upload)
-              _UploadTab(
-                nameController: _nameController,
-                selectedImageFile: state.selectedImageFile,
-                selectedSoundFile: state.selectedSoundFile,
-                generateSound: state.generateSound,
-                isCreatingPictogram: state.isCreatingPictogram,
-                onNameChanged: cubit.setPictogramName,
-                onImageFilePicked: cubit.setSelectedImageFile,
-                onSoundFilePicked: cubit.setSelectedSoundFile,
-                onGenerateSoundChanged: cubit.setGenerateSound,
-                onUpload: cubit.uploadPictogramFromFile,
-              )
-            else
-              _GenerateTab(
-                nameController: _nameController,
-                promptController: _promptController,
-                generateSound: state.generateSound,
-                isCreatingPictogram: state.isCreatingPictogram,
-                onNameChanged: cubit.setPictogramName,
-                onPromptChanged: cubit.setGeneratePrompt,
-                onGenerateSoundChanged: cubit.setGenerateSound,
-                onGenerate: cubit.generatePictogram,
-              ),
+            _PictogramModeContent(
+              mode: state.pictogramMode,
+              state: state,
+              cubit: cubit,
+              searchController: _searchController,
+              nameController: _nameController,
+              promptController: _promptController,
+            ),
 
             // Selected pictogram preview
             if (state.selectedPictogram != null) ...[
               const SizedBox(height: 12),
+              // Guarded by != null check above.
               _SelectedPictogramPreview(pictogram: state.selectedPictogram!),
             ],
           ],
         );
       },
     );
+  }
+}
+
+// ── Search tab (existing behavior) ──────────────────────────
+
+/// Renders the appropriate tab content based on the selected [PictogramMode].
+class _PictogramModeContent extends StatelessWidget {
+  const _PictogramModeContent({
+    required this.mode,
+    required this.state,
+    required this.cubit,
+    required this.searchController,
+    required this.nameController,
+    required this.promptController,
+  });
+
+  final PictogramMode mode;
+  final ActivityFormState state;
+  final ActivityFormCubit cubit;
+  final TextEditingController searchController;
+  final TextEditingController nameController;
+  final TextEditingController promptController;
+
+  @override
+  Widget build(BuildContext context) {
+    return switch (mode) {
+      PictogramMode.search => _SearchTab(
+          controller: searchController,
+          onSearchChanged: cubit.onSearchQueryChanged,
+          pictograms: state.searchResults,
+          isLoading: state.isSearching,
+          selectedId: state.selectedPictogramId,
+          onSelect: cubit.selectPictogram,
+        ),
+      PictogramMode.upload => _UploadTab(
+          nameController: nameController,
+          selectedImageFile: state.selectedImageFile,
+          selectedSoundFile: state.selectedSoundFile,
+          generateSound: state.generateSound,
+          isCreatingPictogram: state.isCreatingPictogram,
+          onNameChanged: cubit.setPictogramName,
+          onImageFilePicked: cubit.setSelectedImageFile,
+          onSoundFilePicked: cubit.setSelectedSoundFile,
+          onGenerateSoundChanged: cubit.setGenerateSound,
+          onUpload: cubit.uploadPictogramFromFile,
+        ),
+      PictogramMode.generate => _GenerateTab(
+          nameController: nameController,
+          promptController: promptController,
+          generateSound: state.generateSound,
+          isCreatingPictogram: state.isCreatingPictogram,
+          onNameChanged: cubit.setPictogramName,
+          onPromptChanged: cubit.setGeneratePrompt,
+          onGenerateSoundChanged: cubit.setGenerateSound,
+          onGenerate: cubit.generatePictogram,
+        ),
+    };
   }
 }
 
