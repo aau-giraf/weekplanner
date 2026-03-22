@@ -282,6 +282,13 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
 
   /// Emit an [ActivityFormReady] state, carrying forward all fields
   /// from the current state unless explicitly overridden.
+  ///
+  /// Note: nullable fields (selectedPictogramId, selectedPictogram,
+  /// selectedImageFile, selectedSoundFile) cannot be cleared back to null
+  /// through this helper — the `??` pattern preserves the old value when
+  /// null is passed. This is acceptable because the current UI does not
+  /// support deselecting these fields. If deselection is needed in the
+  /// future, use a sentinel wrapper or a dedicated clear method.
   void _emitReady({
     String? error,
     TimeValue? startTime,

@@ -67,21 +67,19 @@ class WeekplanCubit extends Cubit<WeekplanState> {
   }
 
   /// Select a new date and reload activities.
-  void selectDate(DateTime date) {
+  Future<void> selectDate(DateTime date) async {
     final weekDates = GirafDateUtils.getWeekDates(date);
     emit(WeekplanLoading(selectedDate: date, weekDates: weekDates));
-    loadActivities();
+    await loadActivities();
   }
 
   /// Navigate to the next week.
-  void goToNextWeek() {
-    selectDate(state.selectedDate.add(const Duration(days: 7)));
-  }
+  Future<void> goToNextWeek() =>
+      selectDate(state.selectedDate.add(const Duration(days: 7)));
 
   /// Navigate to the previous week.
-  void goToPreviousWeek() {
-    selectDate(state.selectedDate.subtract(const Duration(days: 7)));
-  }
+  Future<void> goToPreviousWeek() =>
+      selectDate(state.selectedDate.subtract(const Duration(days: 7)));
 
   /// Optimistically delete an activity.
   Future<void> deleteActivity(int activityId) async {
