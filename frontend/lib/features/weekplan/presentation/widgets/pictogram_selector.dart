@@ -1,16 +1,14 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:weekplanner/config/theme.dart';
-import 'package:weekplanner/features/weekplan/presentation/view_models/activity_form_view_model.dart';
+import 'package:weekplanner/features/weekplan/domain/activity_form_state.dart';
+import 'package:weekplanner/features/weekplan/presentation/activity_form_cubit.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 
 class PictogramSelector extends StatefulWidget {
-  final ActivityFormViewModel viewModel;
-
-  const PictogramSelector({
-    super.key,
-    required this.viewModel,
-  });
+  const PictogramSelector({super.key});
 
   @override
   State<PictogramSelector> createState() => _PictogramSelectorState();
@@ -20,8 +18,6 @@ class _PictogramSelectorState extends State<PictogramSelector> {
   final _searchController = TextEditingController();
   final _nameController = TextEditingController();
   final _promptController = TextEditingController();
-
-  ActivityFormViewModel get vm => widget.viewModel;
 
   @override
   void dispose() {
@@ -33,58 +29,80 @@ class _PictogramSelectorState extends State<PictogramSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Mode tabs
-        SegmentedButton<PictogramMode>(
-          segments: const [
-            ButtonSegment(
-              value: PictogramMode.search,
-              label: Text('Søg'),
-              icon: Icon(Icons.search),
+    return BlocBuilder<ActivityFormCubit, ActivityFormState>(
+      builder: (context, state) {
+        final cubit = context.read<ActivityFormCubit>();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Mode tabs
+            SegmentedButton<PictogramMode>(
+              segments: const [
+                ButtonSegment(
+                  value: PictogramMode.search,
+                  label: Text('Søg'),
+                  icon: Icon(Icons.search),
+                ),
+                ButtonSegment(
+                  value: PictogramMode.upload,
+                  label: Text('Upload'),
+                  icon: Icon(Icons.upload_file),
+                ),
+                ButtonSegment(
+                  value: PictogramMode.generate,
+                  label: Text('Generer'),
+                  icon: Icon(Icons.auto_awesome),
+                ),
+              ],
+              selected: {state.pictogramMode},
+              onSelectionChanged: (modes) =>
+                  cubit.setPictogramMode(modes.first),
             ),
-            ButtonSegment(
-              value: PictogramMode.upload,
-              label: Text('Upload'),
-              icon: Icon(Icons.upload_file),
-            ),
-            ButtonSegment(
-              value: PictogramMode.generate,
-              label: Text('Generer'),
-              icon: Icon(Icons.auto_awesome),
-            ),
+            const SizedBox(height: 12),
+
+            // Content per mode
+            if (state.pictogramMode == PictogramMode.search)
+              _SearchTab(
+                controller: _searchController,
+                onSearchChanged: cubit.onSearchQueryChanged,
+                pictograms: state.searchResults,
+                isLoading: state.isSearching,
+                selectedId: state.selectedPictogramId,
+                onSelect: cubit.selectPictogram,
+              )
+            else if (state.pictogramMode == PictogramMode.upload)
+              _UploadTab(
+                nameController: _nameController,
+                selectedImageFile: state.selectedImageFile,
+                selectedSoundFile: state.selectedSoundFile,
+                generateSound: state.generateSound,
+                isCreatingPictogram: state.isCreatingPictogram,
+                onNameChanged: cubit.setPictogramName,
+                onImageFilePicked: cubit.setSelectedImageFile,
+                onSoundFilePicked: cubit.setSelectedSoundFile,
+                onGenerateSoundChanged: cubit.setGenerateSound,
+                onUpload: cubit.uploadPictogramFromFile,
+              )
+            else
+              _GenerateTab(
+                nameController: _nameController,
+                promptController: _promptController,
+                generateSound: state.generateSound,
+                isCreatingPictogram: state.isCreatingPictogram,
+                onNameChanged: cubit.setPictogramName,
+                onPromptChanged: cubit.setGeneratePrompt,
+                onGenerateSoundChanged: cubit.setGenerateSound,
+                onGenerate: cubit.generatePictogram,
+              ),
+
+            // Selected pictogram preview
+            if (state.selectedPictogram != null) ...[
+              const SizedBox(height: 12),
+              _SelectedPictogramPreview(pictogram: state.selectedPictogram!),
+            ],
           ],
-          selected: {vm.pictogramMode},
-          onSelectionChanged: (modes) => vm.setPictogramMode(modes.first),
-        ),
-        const SizedBox(height: 12),
-
-        // Content per mode
-        if (vm.pictogramMode == PictogramMode.search)
-          _SearchTab(
-            controller: _searchController,
-            onSearchChanged: vm.onSearchQueryChanged,
-            pictograms: vm.searchResults,
-            isLoading: vm.isSearching,
-            selectedId: vm.selectedPictogramId,
-            onSelect: vm.selectPictogram,
-          )
-        else if (vm.pictogramMode == PictogramMode.upload)
-          _UploadTab(viewModel: vm, nameController: _nameController)
-        else
-          _GenerateTab(
-            viewModel: vm,
-            nameController: _nameController,
-            promptController: _promptController,
-          ),
-
-        // Selected pictogram preview
-        if (vm.selectedPictogram != null) ...[
-          const SizedBox(height: 12),
-          _SelectedPictogramPreview(pictogram: vm.selectedPictogram!),
-        ],
-      ],
+        );
+      },
     );
   }
 }
@@ -143,7 +161,9 @@ class _SearchTab extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: isSelected ? GirafColors.orange : Colors.transparent,
+                        color: isSelected
+                            ? GirafColors.orange
+                            : Colors.transparent,
                         width: 3,
                       ),
                       borderRadius: BorderRadius.circular(8),
@@ -159,10 +179,15 @@ class _SearchTab extends StatelessWidget {
                                 ? Image.network(
                                     pictogram.imageUrl!,
                                     fit: BoxFit.contain,
-                                    errorBuilder: (_, _, _) =>
-                                        const Icon(Icons.image, color: GirafColors.gray),
+                                    errorBuilder: (_, _, _) => const Icon(
+                                      Icons.image,
+                                      color: GirafColors.gray,
+                                    ),
                                   )
-                                : const Icon(Icons.image, color: GirafColors.gray),
+                                : const Icon(
+                                    Icons.image,
+                                    color: GirafColors.gray,
+                                  ),
                           ),
                         ),
                         Padding(
@@ -189,12 +214,28 @@ class _SearchTab extends StatelessWidget {
 // ── Upload tab ──────────────────────────────────────────────
 
 class _UploadTab extends StatelessWidget {
-  final ActivityFormViewModel viewModel;
   final TextEditingController nameController;
+  final PlatformFile? selectedImageFile;
+  final PlatformFile? selectedSoundFile;
+  final bool generateSound;
+  final bool isCreatingPictogram;
+  final ValueChanged<String> onNameChanged;
+  final ValueChanged<PlatformFile?> onImageFilePicked;
+  final ValueChanged<PlatformFile?> onSoundFilePicked;
+  final ValueChanged<bool> onGenerateSoundChanged;
+  final Future<bool> Function() onUpload;
 
   const _UploadTab({
-    required this.viewModel,
     required this.nameController,
+    required this.selectedImageFile,
+    required this.selectedSoundFile,
+    required this.generateSound,
+    required this.isCreatingPictogram,
+    required this.onNameChanged,
+    required this.onImageFilePicked,
+    required this.onSoundFilePicked,
+    required this.onGenerateSoundChanged,
+    required this.onUpload,
   });
 
   @override
@@ -204,7 +245,7 @@ class _UploadTab extends StatelessWidget {
       children: [
         TextField(
           controller: nameController,
-          onChanged: viewModel.setPictogramName,
+          onChanged: onNameChanged,
           decoration: const InputDecoration(
             labelText: 'Navn',
             hintText: 'Giv piktogrammet et navn...',
@@ -214,38 +255,40 @@ class _UploadTab extends StatelessWidget {
         OutlinedButton.icon(
           onPressed: () async {
             final file = await _pickFile(['jpg', 'jpeg', 'png', 'webp']);
-            if (file != null) viewModel.setSelectedImageFile(file);
+            if (file != null) onImageFilePicked(file);
           },
           icon: const Icon(Icons.image),
-          label: Text(viewModel.selectedImageFile != null
-              ? viewModel.selectedImageFile!.name
-              : 'Vælg billede'),
+          label: Text(
+            selectedImageFile != null
+                ? selectedImageFile!.name
+                : 'Vælg billede',
+          ),
         ),
         const SizedBox(height: 8),
         OutlinedButton.icon(
           onPressed: () async {
             final file = await _pickFile(['mp3']);
-            if (file != null) viewModel.setSelectedSoundFile(file);
+            if (file != null) onSoundFilePicked(file);
           },
           icon: const Icon(Icons.audiotrack),
-          label: Text(viewModel.selectedSoundFile != null
-              ? viewModel.selectedSoundFile!.name
-              : 'Vælg lydfil (valgfrit)'),
+          label: Text(
+            selectedSoundFile != null
+                ? selectedSoundFile!.name
+                : 'Vælg lydfil (valgfrit)',
+          ),
         ),
         const SizedBox(height: 8),
         SwitchListTile(
           title: const Text('Generer lyd automatisk'),
           subtitle: const Text('AI-genereret udtale af navnet'),
-          value: viewModel.generateSound,
-          onChanged: viewModel.setGenerateSound,
+          value: generateSound,
+          onChanged: onGenerateSoundChanged,
           contentPadding: EdgeInsets.zero,
         ),
         const SizedBox(height: 12),
         ElevatedButton(
-          onPressed: viewModel.isCreatingPictogram
-              ? null
-              : () => viewModel.uploadPictogramFromFile(),
-          child: viewModel.isCreatingPictogram
+          onPressed: isCreatingPictogram ? null : onUpload,
+          child: isCreatingPictogram
               ? const SizedBox(
                   height: 20,
                   width: 20,
@@ -270,14 +313,24 @@ class _UploadTab extends StatelessWidget {
 // ── Generate tab ────────────────────────────────────────────
 
 class _GenerateTab extends StatelessWidget {
-  final ActivityFormViewModel viewModel;
   final TextEditingController nameController;
   final TextEditingController promptController;
+  final bool generateSound;
+  final bool isCreatingPictogram;
+  final ValueChanged<String> onNameChanged;
+  final ValueChanged<String> onPromptChanged;
+  final ValueChanged<bool> onGenerateSoundChanged;
+  final Future<bool> Function() onGenerate;
 
   const _GenerateTab({
-    required this.viewModel,
     required this.nameController,
     required this.promptController,
+    required this.generateSound,
+    required this.isCreatingPictogram,
+    required this.onNameChanged,
+    required this.onPromptChanged,
+    required this.onGenerateSoundChanged,
+    required this.onGenerate,
   });
 
   @override
@@ -287,7 +340,7 @@ class _GenerateTab extends StatelessWidget {
       children: [
         TextField(
           controller: nameController,
-          onChanged: viewModel.setPictogramName,
+          onChanged: onNameChanged,
           decoration: const InputDecoration(
             labelText: 'Navn',
             hintText: 'Giv piktogrammet et navn...',
@@ -296,28 +349,27 @@ class _GenerateTab extends StatelessWidget {
         const SizedBox(height: 12),
         TextField(
           controller: promptController,
-          onChanged: viewModel.setGeneratePrompt,
+          onChanged: onPromptChanged,
           maxLines: 2,
           decoration: const InputDecoration(
             labelText: 'Beskrivelse til AI (valgfrit)',
             hintText: 'Beskriv hvad billedet skal vise...',
-            helperText: 'Lad feltet stå tomt for at bruge navnet som beskrivelse',
+            helperText:
+                'Lad feltet stå tomt for at bruge navnet som beskrivelse',
           ),
         ),
         const SizedBox(height: 8),
         SwitchListTile(
           title: const Text('Generer lyd'),
           subtitle: const Text('AI-genereret udtale af navnet'),
-          value: viewModel.generateSound,
-          onChanged: viewModel.setGenerateSound,
+          value: generateSound,
+          onChanged: onGenerateSoundChanged,
           contentPadding: EdgeInsets.zero,
         ),
         const SizedBox(height: 12),
         ElevatedButton.icon(
-          onPressed: viewModel.isCreatingPictogram
-              ? null
-              : () => viewModel.generatePictogram(),
-          icon: viewModel.isCreatingPictogram
+          onPressed: isCreatingPictogram ? null : onGenerate,
+          icon: isCreatingPictogram
               ? const SizedBox(
                   height: 20,
                   width: 20,
@@ -357,8 +409,11 @@ class _SelectedPictogramPreview extends StatelessWidget {
                     width: 48,
                     height: 48,
                     fit: BoxFit.contain,
-                    errorBuilder: (_, _, _) =>
-                        const Icon(Icons.image, size: 48, color: GirafColors.gray),
+                    errorBuilder: (_, _, _) => const Icon(
+                      Icons.image,
+                      size: 48,
+                      color: GirafColors.gray,
+                    ),
                   )
                 : const Icon(Icons.image, size: 48, color: GirafColors.gray),
           ),
@@ -371,7 +426,8 @@ class _SelectedPictogramPreview extends StatelessWidget {
                   pictogram.name,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                if (pictogram.soundUrl != null && pictogram.soundUrl!.isNotEmpty)
+                if (pictogram.soundUrl != null &&
+                    pictogram.soundUrl!.isNotEmpty)
                   const Text(
                     'Med lyd',
                     style: TextStyle(fontSize: 12, color: GirafColors.gray),
