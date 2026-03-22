@@ -8,7 +8,7 @@ import 'package:weekplanner/features/auth/data/repositories/auth_repository.dart
 import 'package:weekplanner/features/auth/presentation/auth_cubit.dart';
 import 'package:weekplanner/features/auth/presentation/login_cubit.dart';
 import 'package:weekplanner/features/organisation_picker/data/repositories/organisation_repository.dart';
-import 'package:weekplanner/features/organisation_picker/presentation/view_models/organisation_picker_view_model.dart';
+import 'package:weekplanner/features/organisation_picker/presentation/organisation_picker_cubit.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/activity_repository.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart';
 import 'package:weekplanner/shared/services/activity_api_service.dart';
@@ -48,15 +48,15 @@ void main() async {
   // Try to restore session
   authCubit.tryRestoreSession();
 
-  // ViewModels needed by the router (will be migrated in later branches)
-  final organisationPickerVm = OrganisationPickerViewModel(
+  // Organisation picker cubit
+  final orgPickerCubit = OrganisationPickerCubit(
     repository: organisationRepository,
   );
 
   final router = createRouter(
     authCubit: authCubit,
     refreshListenable: refreshListenable,
-    orgPickerVm: organisationPickerVm,
+    orgPickerCubit: orgPickerCubit,
     activityRepo: activityRepository,
     pictogramRepo: pictogramRepository,
   );
@@ -78,13 +78,12 @@ void main() async {
           ),
         ),
 
+        // Organisation picker (BLoC)
+        BlocProvider.value(value: orgPickerCubit),
+
         // Repositories (still ChangeNotifier — migrated in later branches)
-        ChangeNotifierProvider.value(value: organisationRepository),
         ChangeNotifierProvider.value(value: activityRepository),
         ChangeNotifierProvider.value(value: pictogramRepository),
-
-        // ViewModels (still ChangeNotifier — migrated in later branches)
-        ChangeNotifierProvider.value(value: organisationPickerVm),
       ],
       child: WeekplannerApp(router: router),
     ),
