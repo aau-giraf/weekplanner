@@ -1,4 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:weekplanner/core/errors/organisation_failure.dart';
 import 'package:weekplanner/features/organisation_picker/data/repositories/organisation_repository.dart';
 import 'package:weekplanner/shared/models/citizen.dart';
 import 'package:weekplanner/shared/models/grade.dart';
@@ -6,38 +9,10 @@ import 'package:weekplanner/shared/models/organisation.dart';
 import 'package:weekplanner/shared/models/paginated_response.dart';
 import 'package:weekplanner/shared/services/core_api_service.dart';
 
-class FakeCoreApiService extends CoreApiService {
-  Future<PaginatedResponse<Organisation>> Function()? onFetchOrganisations;
-  Future<PaginatedResponse<Citizen>> Function(int orgId)? onFetchCitizens;
-  Future<PaginatedResponse<Grade>> Function(int orgId)? onFetchGrades;
-
-  @override
-  Future<PaginatedResponse<Organisation>> fetchOrganisations() async {
-    if (onFetchOrganisations == null) {
-      throw UnimplementedError('onFetchOrganisations not configured');
-    }
-    return onFetchOrganisations!();
-  }
-
-  @override
-  Future<PaginatedResponse<Citizen>> fetchCitizens(int orgId) async {
-    if (onFetchCitizens == null) {
-      throw UnimplementedError('onFetchCitizens not configured');
-    }
-    return onFetchCitizens!(orgId);
-  }
-
-  @override
-  Future<PaginatedResponse<Grade>> fetchGrades(int orgId) async {
-    if (onFetchGrades == null) {
-      throw UnimplementedError('onFetchGrades not configured');
-    }
-    return onFetchGrades!(orgId);
-  }
-}
+class MockCoreApiService extends Mock implements CoreApiService {}
 
 void main() {
-  late FakeCoreApiService fakeCore;
+  late MockCoreApiService mockCore;
   late OrganisationRepository repo;
 
   const org = Organisation(id: 1, name: 'Org A');
@@ -45,49 +20,72 @@ void main() {
   const grade = Grade(id: 20, name: 'Gruppe 1');
 
   setUp(() {
-    fakeCore = FakeCoreApiService();
-    repo = OrganisationRepository(coreApiService: fakeCore);
+    mockCore = MockCoreApiService();
+    repo = OrganisationRepository(coreApiService: mockCore);
   });
 
-  group('OrganisationRepository', () {
-    test('fetchOrganisations stores list on success', () async {
-      fakeCore.onFetchOrganisations = () async => const PaginatedResponse(
-            items: [org],
-            count: 1,
-          );
+  group('fetchOrganisations', () {
+    test('returns Right with organisation list on success', () async {
+      when(() => mockCore.fetchOrganisations()).thenAnswer(
+        (_) async => const PaginatedResponse(items: [org], count: 1),
+      );
 
-      await repo.fetchOrganisations();
+      final result = await repo.fetchOrganisations();
 
-      expect(repo.organisations, [org]);
-      expect(repo.error, isNull);
-      expect(repo.isLoading, isFalse);
+      expect(result, isA<Right<OrganisationFailure, List<Organisation>>>());
+      expect(result.getOrElse((_) => []), [org]);
+      verify(() => mockCore.fetchOrganisations()).called(1);
     });
 
-    test('fetchOrganisations sets error on failure', () async {
-      fakeCore.onFetchOrganisations = () async => throw Exception('boom');
+    test('returns Left(FetchOrganisationsFailure) on exception', () async {
+      when(() => mockCore.fetchOrganisations())
+          .thenThrow(Exception('network error'));
 
-      await repo.fetchOrganisations();
+      final result = await repo.fetchOrganisations();
 
-      expect(repo.error, isNotNull);
-      expect(repo.isLoading, isFalse);
+      expect(result, isA<Left<OrganisationFailure, List<Organisation>>>());
+      result.fold(
+        (failure) => expect(failure, isA<FetchOrganisationsFailure>()),
+        (_) => fail('Expected Left'),
+      );
+    });
+  });
+
+  group('fetchCitizensAndGrades', () {
+    test('returns Right with citizens and grades record on success', () async {
+      when(() => mockCore.fetchCitizens(1)).thenAnswer(
+        (_) async => const PaginatedResponse(items: [citizen], count: 1),
+      );
+      when(() => mockCore.fetchGrades(1)).thenAnswer(
+        (_) async => const PaginatedResponse(items: [grade], count: 1),
+      );
+
+      final result = await repo.fetchCitizensAndGrades(1);
+
+      result.fold(
+        (_) => fail('Expected Right'),
+        (data) {
+          expect(data.citizens, [citizen]);
+          expect(data.grades, [grade]);
+        },
+      );
+      verify(() => mockCore.fetchCitizens(1)).called(1);
+      verify(() => mockCore.fetchGrades(1)).called(1);
     });
 
-    test('fetchCitizensAndGrades stores both lists', () async {
-      fakeCore.onFetchCitizens = (_) async => const PaginatedResponse(
-            items: [citizen],
-            count: 1,
-          );
-      fakeCore.onFetchGrades = (_) async => const PaginatedResponse(
-            items: [grade],
-            count: 1,
-          );
+    test('returns Left(FetchCitizensFailure) on exception', () async {
+      when(() => mockCore.fetchCitizens(1))
+          .thenThrow(Exception('network error'));
+      when(() => mockCore.fetchGrades(1)).thenAnswer(
+        (_) async => const PaginatedResponse(items: [grade], count: 1),
+      );
 
-      await repo.fetchCitizensAndGrades(1);
+      final result = await repo.fetchCitizensAndGrades(1);
 
-      expect(repo.citizens, [citizen]);
-      expect(repo.grades, [grade]);
-      expect(repo.error, isNull);
-      expect(repo.isLoading, isFalse);
+      result.fold(
+        (failure) => expect(failure, isA<FetchCitizensFailure>()),
+        (_) => fail('Expected Left'),
+      );
     });
   });
 }
