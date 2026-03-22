@@ -93,7 +93,9 @@ class _DayButton extends StatelessWidget {
       child: Container(
         width: 48,
         decoration: BoxDecoration(
-          color: isSelected ? GirafColors.orange : GirafColors.lightGray,
+          color: isSelected
+              ? context.colorScheme.primary
+              : context.colorScheme.surfaceContainerLow,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -104,7 +106,9 @@ class _DayButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
-                color: isSelected ? GirafColors.white : GirafColors.gray,
+                color: isSelected
+                    ? context.colorScheme.onPrimary
+                    : context.colorScheme.outline,
               ),
             ),
             const SizedBox(height: 2),
@@ -113,7 +117,9 @@ class _DayButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: isSelected ? GirafColors.white : GirafColors.black,
+                color: isSelected
+                    ? context.colorScheme.onPrimary
+                    : context.colorScheme.onSurface,
               ),
             ),
           ],

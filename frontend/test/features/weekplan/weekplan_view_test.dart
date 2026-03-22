@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/weekplan/domain/weekplan_state.dart';
 import 'package:weekplanner/features/weekplan/presentation/views/weekplan_view.dart';
 import 'package:weekplanner/features/weekplan/presentation/weekplan_cubit.dart';
@@ -25,6 +26,7 @@ void main() {
 
   Widget buildSubject() {
     return MaterialApp(
+      theme: girafTheme,
       home: BlocProvider<WeekplanCubit>.value(
         value: mockCubit,
         child: const WeekplanView(

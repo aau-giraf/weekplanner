@@ -56,7 +56,10 @@ class _ErrorWithRetry extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(message, style: const TextStyle(color: GirafColors.red)),
+          Text(
+            message,
+            style: TextStyle(color: context.colorScheme.error),
+          ),
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () =>
@@ -98,11 +101,11 @@ class _OrgCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: GirafColors.orange,
+          backgroundColor: context.colorScheme.primary,
           child: Text(
             org.name.isNotEmpty ? org.name[0].toUpperCase() : '?',
-            style: const TextStyle(
-              color: GirafColors.white,
+            style: TextStyle(
+              color: context.colorScheme.onPrimary,
               fontWeight: FontWeight.bold,
             ),
           ),

@@ -162,12 +162,12 @@ class _SearchTab extends StatelessWidget {
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: isSelected
-                            ? GirafColors.orange
+                            ? context.colorScheme.primary
                             : Colors.transparent,
                         width: 3,
                       ),
                       borderRadius: BorderRadius.circular(8),
-                      color: GirafColors.lightGray,
+                      color: context.colorScheme.surfaceContainerLow,
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -179,14 +179,14 @@ class _SearchTab extends StatelessWidget {
                                 ? Image.network(
                                     pictogram.imageUrl!,
                                     fit: BoxFit.contain,
-                                    errorBuilder: (_, _, _) => const Icon(
+                                    errorBuilder: (_, _, _) => Icon(
                                       Icons.image,
-                                      color: GirafColors.gray,
+                                      color: context.colorScheme.outline,
                                     ),
                                   )
-                                : const Icon(
+                                : Icon(
                                     Icons.image,
-                                    color: GirafColors.gray,
+                                    color: context.colorScheme.outline,
                                   ),
                           ),
                         ),
@@ -395,9 +395,9 @@ class _SelectedPictogramPreview extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: GirafColors.lightGray,
+        color: context.colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: GirafColors.orange, width: 2),
+        border: Border.all(color: context.colorScheme.primary, width: 2),
       ),
       child: Row(
         children: [
@@ -409,13 +409,17 @@ class _SelectedPictogramPreview extends StatelessWidget {
                     width: 48,
                     height: 48,
                     fit: BoxFit.contain,
-                    errorBuilder: (_, _, _) => const Icon(
+                    errorBuilder: (_, _, _) => Icon(
                       Icons.image,
                       size: 48,
-                      color: GirafColors.gray,
+                      color: context.colorScheme.outline,
                     ),
                   )
-                : const Icon(Icons.image, size: 48, color: GirafColors.gray),
+                : Icon(
+                    Icons.image,
+                    size: 48,
+                    color: context.colorScheme.outline,
+                  ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -428,14 +432,17 @@ class _SelectedPictogramPreview extends StatelessWidget {
                 ),
                 if (pictogram.soundUrl != null &&
                     pictogram.soundUrl!.isNotEmpty)
-                  const Text(
+                  Text(
                     'Med lyd',
-                    style: TextStyle(fontSize: 12, color: GirafColors.gray),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: context.colorScheme.outline,
+                    ),
                   ),
               ],
             ),
           ),
-          const Icon(Icons.check_circle, color: GirafColors.orange),
+          Icon(Icons.check_circle, color: context.colorScheme.primary),
         ],
       ),
     );

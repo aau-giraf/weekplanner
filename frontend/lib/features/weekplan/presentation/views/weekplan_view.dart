@@ -34,8 +34,8 @@ class WeekplanView extends StatelessWidget {
             '/weekplan/$citizenId/add?type=${isCitizen ? 'citizen' : 'grade'}&orgId=$orgId',
           );
         },
-        backgroundColor: GirafColors.orange,
-        child: const Icon(Icons.add, color: GirafColors.white),
+        backgroundColor: context.colorScheme.primary,
+        child: Icon(Icons.add, color: context.colorScheme.onPrimary),
       ),
       body: BlocBuilder<WeekplanCubit, WeekplanState>(
         builder: (context, state) {
@@ -109,7 +109,10 @@ class _ErrorWithRetry extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(message, style: const TextStyle(color: GirafColors.red)),
+          Text(
+            message,
+            style: TextStyle(color: context.colorScheme.error),
+          ),
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () => context.read<WeekplanCubit>().loadActivities(),
@@ -132,11 +135,11 @@ class _EmptyDay extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.event_busy, size: 64, color: GirafColors.gray),
+          Icon(Icons.event_busy, size: 64, color: context.colorScheme.outline),
           const SizedBox(height: 16),
           Text(
             'Ingen aktiviteter for ${GirafDateUtils.dayName(selectedDate.weekday)}',
-            style: TextStyle(color: GirafColors.gray, fontSize: 16),
+            style: TextStyle(color: context.colorScheme.outline, fontSize: 16),
           ),
         ],
       ),
