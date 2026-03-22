@@ -35,7 +35,7 @@ class CitizenPickerView extends StatelessWidget {
             Center(
               child: Text(
                 message,
-                style: const TextStyle(color: GirafColors.red),
+                style: TextStyle(color: context.colorScheme.error),
               ),
             ),
           _ => const Center(child: CircularProgressIndicator()),
@@ -84,11 +84,12 @@ class _CitizenGradeList extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 12),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor:
-                  item.isCitizen ? GirafColors.blue : GirafColors.green,
+              backgroundColor: item.isCitizen
+                  ? context.girafColors.actionBlue
+                  : context.girafColors.completedIndicator,
               child: Icon(
                 item.isCitizen ? Icons.person : Icons.group,
-                color: GirafColors.white,
+                color: context.colorScheme.onPrimary,
               ),
             ),
             title: Text(item.name),

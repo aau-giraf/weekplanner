@@ -31,7 +31,7 @@ class LoginView extends StatelessWidget {
                       Icon(
                         Icons.calendar_month,
                         size: 80,
-                        color: GirafColors.orange,
+                        color: context.colorScheme.primary,
                       ),
                       const SizedBox(height: 16),
                       Text(
@@ -42,7 +42,7 @@ class LoginView extends StatelessWidget {
                             .headlineMedium
                             ?.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: GirafColors.orange,
+                              color: context.colorScheme.primary,
                             ),
                       ),
                       const SizedBox(height: 48),
@@ -74,7 +74,7 @@ class LoginView extends StatelessWidget {
                             onChanged: (v) => context
                                 .read<LoginCubit>()
                                 .rememberMeChanged(v ?? false),
-                            activeColor: GirafColors.orange,
+                            activeColor: context.colorScheme.primary,
                           ),
                           const Text('Husk mig'),
                         ],
@@ -84,12 +84,14 @@ class LoginView extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: GirafColors.lightRed,
+                            color: context.girafColors.errorBackground,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             errorMessage,
-                            style: const TextStyle(color: GirafColors.red),
+                            style: TextStyle(
+                              color: context.colorScheme.error,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         ),

@@ -95,7 +95,7 @@ class ActivityFormView extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 16),
                     child: Text(
                       error,
-                      style: const TextStyle(color: GirafColors.red),
+                      style: TextStyle(color: context.colorScheme.error),
                       textAlign: TextAlign.center,
                     ),
                   ),

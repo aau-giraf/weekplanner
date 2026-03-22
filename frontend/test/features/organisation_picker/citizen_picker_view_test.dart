@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/organisation_picker/domain/organisation_picker_state.dart';
 import 'package:weekplanner/features/organisation_picker/presentation/organisation_picker_cubit.dart';
 import 'package:weekplanner/features/organisation_picker/presentation/views/citizen_picker_view.dart';
@@ -25,6 +26,7 @@ void main() {
 
   Widget buildSubject() {
     return MaterialApp(
+      theme: girafTheme,
       home: BlocProvider<OrganisationPickerCubit>.value(
         value: mockCubit,
         child: const CitizenPickerView(orgId: 1),

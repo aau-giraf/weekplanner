@@ -75,22 +75,24 @@ class _ActivityListItemState extends State<ActivityListItem> {
           children: [
             SlidableAction(
               onPressed: (_) => widget.onEdit(),
-              backgroundColor: GirafColors.blue,
-              foregroundColor: GirafColors.white,
+              backgroundColor: context.girafColors.actionBlue,
+              foregroundColor: context.colorScheme.onPrimary,
               icon: Icons.edit,
               label: 'Rediger',
             ),
             SlidableAction(
               onPressed: (_) => widget.onDelete(),
-              backgroundColor: GirafColors.red,
-              foregroundColor: GirafColors.white,
+              backgroundColor: context.colorScheme.error,
+              foregroundColor: context.colorScheme.onPrimary,
               icon: Icons.delete,
               label: 'Slet',
             ),
           ],
         ),
         child: Card(
-          color: activity.isCompleted ? GirafColors.lightGreen : GirafColors.lightBlue,
+          color: activity.isCompleted
+              ? context.girafColors.completedBackground
+              : context.girafColors.pendingBackground,
           child: InkWell(
             onTap: widget.onToggleStatus,
             borderRadius: BorderRadius.circular(12),
@@ -104,7 +106,7 @@ class _ActivityListItemState extends State<ActivityListItem> {
                       width: 56,
                       height: 56,
                       decoration: BoxDecoration(
-                        color: GirafColors.orange,
+                        color: context.colorScheme.primary,
                         borderRadius: BorderRadius.circular(28),
                       ),
                       clipBehavior: Clip.antiAlias,
@@ -112,14 +114,14 @@ class _ActivityListItemState extends State<ActivityListItem> {
                           ? Image.network(
                               widget.imageUrl!,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, _, _) => const Icon(
+                              errorBuilder: (_, _, _) => Icon(
                                 Icons.image,
-                                color: GirafColors.white,
+                                color: context.colorScheme.onPrimary,
                               ),
                             )
-                          : const Icon(
+                          : Icon(
                               Icons.image,
-                              color: GirafColors.white,
+                              color: context.colorScheme.onPrimary,
                             ),
                     )
                   else
@@ -127,12 +129,12 @@ class _ActivityListItemState extends State<ActivityListItem> {
                       width: 56,
                       height: 56,
                       decoration: BoxDecoration(
-                        color: GirafColors.orange,
+                        color: context.colorScheme.primary,
                         borderRadius: BorderRadius.circular(28),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.event,
-                        color: GirafColors.white,
+                        color: context.colorScheme.onPrimary,
                       ),
                     ),
                   const SizedBox(width: 12),
@@ -145,7 +147,7 @@ class _ActivityListItemState extends State<ActivityListItem> {
                           '${_formatTime(activity.startTime)} - ${_formatTime(activity.endTime)}',
                           style: TextStyle(
                             fontSize: 14,
-                            color: GirafColors.gray,
+                            color: context.colorScheme.outline,
                           ),
                         ),
                       ],
@@ -159,7 +161,7 @@ class _ActivityListItemState extends State<ActivityListItem> {
                         onPressed: _togglePlayback,
                         icon: Icon(
                           isPlaying ? Icons.stop_circle : Icons.volume_up,
-                          color: GirafColors.blue,
+                          color: context.girafColors.actionBlue,
                         ),
                         tooltip: isPlaying ? 'Stop' : 'Afspil lyd',
                       ),
@@ -170,8 +172,8 @@ class _ActivityListItemState extends State<ActivityListItem> {
                         ? Icons.check_circle
                         : Icons.circle_outlined,
                     color: activity.isCompleted
-                        ? GirafColors.green
-                        : GirafColors.gray,
+                        ? context.girafColors.completedIndicator
+                        : context.colorScheme.outline,
                     size: 28,
                   ),
                 ],

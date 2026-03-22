@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/weekplan/domain/activity_form_state.dart';
 import 'package:weekplanner/features/weekplan/presentation/activity_form_cubit.dart';
 import 'package:weekplanner/features/weekplan/presentation/views/activity_form_view.dart';
@@ -22,6 +23,7 @@ void main() {
 
   Widget buildSubject() {
     return MaterialApp(
+      theme: girafTheme,
       home: BlocProvider<ActivityFormCubit>.value(
         value: mockCubit,
         child: const ActivityFormView(

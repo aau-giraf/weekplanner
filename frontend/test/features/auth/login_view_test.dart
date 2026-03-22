@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/auth/presentation/login_cubit.dart';
 import 'package:weekplanner/features/auth/presentation/login_state.dart';
 import 'package:weekplanner/features/auth/presentation/views/login_view.dart';
@@ -18,6 +19,7 @@ void main() {
 
   Widget buildSubject() {
     return MaterialApp(
+      theme: girafTheme,
       home: BlocProvider<LoginCubit>.value(
         value: mockCubit,
         child: const LoginView(),

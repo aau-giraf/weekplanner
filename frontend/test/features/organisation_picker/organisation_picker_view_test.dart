@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/auth/domain/auth_state.dart';
 import 'package:weekplanner/features/auth/presentation/auth_cubit.dart';
 import 'package:weekplanner/features/organisation_picker/domain/organisation_picker_state.dart';
@@ -27,6 +28,7 @@ void main() {
 
   Widget buildSubject() {
     return MaterialApp(
+      theme: girafTheme,
       home: MultiBlocProvider(
         providers: [
           BlocProvider<OrganisationPickerCubit>.value(value: mockPickerCubit),
