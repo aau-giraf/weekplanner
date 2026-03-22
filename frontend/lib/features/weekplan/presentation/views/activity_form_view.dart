@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
+
 import 'package:weekplanner/config/theme.dart';
-import 'package:weekplanner/features/weekplan/presentation/view_models/activity_form_view_model.dart';
+import 'package:weekplanner/features/weekplan/domain/activity_form_state.dart';
+import 'package:weekplanner/features/weekplan/presentation/activity_form_cubit.dart';
 import 'package:weekplanner/features/weekplan/presentation/widgets/pictogram_selector.dart';
 
 class ActivityFormView extends StatelessWidget {
@@ -21,8 +23,15 @@ class ActivityFormView extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: Consumer<ActivityFormViewModel>(
-        builder: (context, vm, _) {
+      body: BlocConsumer<ActivityFormCubit, ActivityFormState>(
+        listener: (context, state) {
+          if (state is ActivityFormSaved) {
+            context.pop();
+          }
+        },
+        builder: (context, state) {
+          final isSaving = state is ActivityFormSaving;
+          final error = state is ActivityFormReady ? state.error : null;
           return SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -33,19 +42,19 @@ class ActivityFormView extends StatelessWidget {
                     Expanded(
                       child: _TimePicker(
                         label: 'Starttid',
-                        time: vm.startTime,
+                        time: state.startTime,
                         onTap: () async {
                           final picked = await showTimePicker(
                             context: context,
                             initialTime: TimeOfDay(
-                              hour: vm.startTime.hour,
-                              minute: vm.startTime.minute,
+                              hour: state.startTime.hour,
+                              minute: state.startTime.minute,
                             ),
                           );
-                          if (picked != null) {
-                            vm.setStartTime(
-                              (hour: picked.hour, minute: picked.minute),
-                            );
+                          if (picked != null && context.mounted) {
+                            context.read<ActivityFormCubit>().setStartTime(
+                                  (hour: picked.hour, minute: picked.minute),
+                                );
                           }
                         },
                       ),
@@ -54,19 +63,19 @@ class ActivityFormView extends StatelessWidget {
                     Expanded(
                       child: _TimePicker(
                         label: 'Sluttid',
-                        time: vm.endTime,
+                        time: state.endTime,
                         onTap: () async {
                           final picked = await showTimePicker(
                             context: context,
                             initialTime: TimeOfDay(
-                              hour: vm.endTime.hour,
-                              minute: vm.endTime.minute,
+                              hour: state.endTime.hour,
+                              minute: state.endTime.minute,
                             ),
                           );
-                          if (picked != null) {
-                            vm.setEndTime(
-                              (hour: picked.hour, minute: picked.minute),
-                            );
+                          if (picked != null && context.mounted) {
+                            context.read<ActivityFormCubit>().setEndTime(
+                                  (hour: picked.hour, minute: picked.minute),
+                                );
                           }
                         },
                       ),
@@ -79,27 +88,22 @@ class ActivityFormView extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 8),
-                PictogramSelector(viewModel: vm),
+                const PictogramSelector(),
                 const SizedBox(height: 24),
-                if (vm.error != null)
+                if (error != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: Text(
-                      vm.error!,
+                      error,
                       style: const TextStyle(color: GirafColors.red),
                       textAlign: TextAlign.center,
                     ),
                   ),
                 ElevatedButton(
-                  onPressed: vm.isLoading
+                  onPressed: isSaving
                       ? null
-                      : () async {
-                          final success = await vm.save();
-                          if (success && context.mounted) {
-                            context.pop();
-                          }
-                        },
-                  child: vm.isLoading
+                      : () => context.read<ActivityFormCubit>().save(),
+                  child: isSaving
                       ? const SizedBox(
                           height: 20,
                           width: 20,

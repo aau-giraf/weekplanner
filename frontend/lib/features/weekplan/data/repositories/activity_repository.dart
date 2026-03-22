@@ -1,131 +1,95 @@
-import 'package:flutter/foundation.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:logging/logging.dart';
+
+import 'package:weekplanner/core/errors/activity_failure.dart';
 import 'package:weekplanner/shared/models/activity.dart';
 import 'package:weekplanner/shared/services/activity_api_service.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';
 
 final _log = Logger('ActivityRepository');
 
-class ActivityRepository extends ChangeNotifier {
+/// Pure data layer for activity operations.
+///
+/// All methods return [Either] to communicate success or typed failure.
+/// No state management — that responsibility belongs to [WeekplanCubit].
+class ActivityRepository {
   final ActivityApiService _apiService;
 
   ActivityRepository({required ActivityApiService apiService})
       : _apiService = apiService;
 
-  List<Activity> _activities = [];
-  bool _isLoading = false;
-  String? _error;
-
-  List<Activity> get activities => _activities;
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-
-  Future<void> fetchActivities({
+  /// Fetch activities for a citizen or grade on a given date.
+  Future<Either<ActivityFailure, List<Activity>>> fetchActivities({
     required int id,
     required bool isCitizen,
     required DateTime date,
   }) async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-
     try {
       final dateStr = GirafDateUtils.formatQueryDate(date);
-      final response = isCitizen
+      final activities = isCitizen
           ? await _apiService.fetchActivitiesByCitizen(id, dateStr)
           : await _apiService.fetchActivitiesByGrade(id, dateStr);
-      _activities = response;
+      return Right(activities);
     } catch (e, stackTrace) {
       _log.severe('Failed to fetch activities', e, stackTrace);
-      _error = 'Kunne ikke hente aktiviteter';
-    } finally {
-      _isLoading = false;
-      notifyListeners();
+      return Left(const FetchActivitiesFailure());
     }
   }
 
-  Future<void> createActivity({
+  /// Create an activity for a citizen or grade.
+  Future<Either<ActivityFailure, Activity>> createActivity({
     required int id,
     required bool isCitizen,
     required Map<String, dynamic> data,
   }) async {
-    _error = null;
     try {
       final activity = isCitizen
           ? await _apiService.createActivityForCitizen(id, data)
           : await _apiService.createActivityForGrade(id, data);
-      _activities = [..._activities, activity];
-      notifyListeners();
+      return Right(activity);
     } catch (e, stackTrace) {
       _log.severe('Failed to create activity', e, stackTrace);
-      _error = 'Kunne ikke oprette aktivitet';
-      notifyListeners();
+      return Left(const CreateActivityFailure());
     }
   }
 
-  Future<void> updateActivity(int activityId, Map<String, dynamic> data) async {
-    _error = null;
+  /// Update an existing activity.
+  Future<Either<ActivityFailure, Activity>> updateActivity(
+    int activityId,
+    Map<String, dynamic> data,
+  ) async {
     try {
       final updated = await _apiService.updateActivity(activityId, data);
-      _activities = _activities.map((a) {
-        return a.activityId == activityId ? updated : a;
-      }).toList();
-      notifyListeners();
+      return Right(updated);
     } catch (e, stackTrace) {
       _log.severe('Failed to update activity', e, stackTrace);
-      _error = 'Kunne ikke opdatere aktivitet';
-      notifyListeners();
+      return Left(const UpdateActivityFailure());
     }
   }
 
-  Future<void> deleteActivity(int activityId) async {
-    _error = null;
-    final backup = List<Activity>.from(_activities);
-    // Optimistic delete
-    _activities = _activities.where((a) => a.activityId != activityId).toList();
-    notifyListeners();
-
+  /// Delete an activity.
+  Future<Either<ActivityFailure, Unit>> deleteActivity(int activityId) async {
     try {
       await _apiService.deleteActivity(activityId);
+      return const Right(unit);
     } catch (e, stackTrace) {
       _log.severe('Failed to delete activity', e, stackTrace);
-      _activities = backup;
-      _error = 'Kunne ikke slette aktivitet';
-      notifyListeners();
+      return Left(const DeleteActivityFailure());
     }
   }
 
-  Future<void> toggleActivityStatus(int activityId) async {
-    _error = null;
+  /// Toggle an activity's completion status.
+  Future<Either<ActivityFailure, Unit>> toggleActivityStatus(
+    int activityId, {
+    required bool isComplete,
+  }) async {
     try {
-      final index = _activities.indexWhere((a) => a.activityId == activityId);
-      if (index == -1) {
-        _log.warning('toggleActivityStatus called for unknown activity $activityId');
-        return;
-      }
-      final newValue = !_activities[index].isCompleted;
-
-      // Optimistic toggle
-      _activities = _activities.map((a) {
-        if (a.activityId == activityId) {
-          return a.copyWith(isCompleted: newValue);
-        }
-        return a;
-      }).toList();
-      notifyListeners();
-
-      await _apiService.toggleActivityStatus(activityId, isComplete: newValue);
+      await _apiService.toggleActivityStatus(activityId,
+          isComplete: isComplete);
+      return const Right(unit);
     } catch (e, stackTrace) {
       _log.severe('Failed to toggle activity status', e, stackTrace);
-      // Rollback
-      _activities = _activities.map((a) {
-        if (a.activityId == activityId) {
-          return a.copyWith(isCompleted: !a.isCompleted);
-        }
-        return a;
-      }).toList();
-      _error = 'Kunne ikke ændre status';
-      notifyListeners();
+      return Left(const ToggleStatusFailure());
     }
   }
 }

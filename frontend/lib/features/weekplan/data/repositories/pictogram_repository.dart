@@ -1,92 +1,92 @@
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:logging/logging.dart';
+
+import 'package:weekplanner/core/errors/pictogram_failure.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 import 'package:weekplanner/shared/services/core_api_service.dart';
 
 final _log = Logger('PictogramRepository');
 
-class PictogramRepository extends ChangeNotifier {
+/// Pure data layer for pictogram operations.
+///
+/// All methods return [Either] to communicate success or typed failure.
+/// No state management — that responsibility belongs to the cubit.
+class PictogramRepository {
   final CoreApiService _coreApiService;
 
   PictogramRepository({required CoreApiService coreApiService})
       : _coreApiService = coreApiService;
 
-  List<Pictogram> _pictograms = [];
-  bool _isLoading = false;
-  String? _error;
-
-  List<Pictogram> get pictograms => _pictograms;
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-
-  Future<void> searchPictograms(String query) async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-
+  /// Search pictograms by query string.
+  Future<Either<PictogramFailure, List<Pictogram>>> searchPictograms(
+    String query,
+  ) async {
     try {
       final response = await _coreApiService.searchPictograms(query: query);
-      _pictograms = response.items;
+      return Right(response.items);
     } catch (e, stackTrace) {
       _log.severe('Failed to search pictograms', e, stackTrace);
-      _error = 'Kunne ikke søge piktogrammer';
-    } finally {
-      _isLoading = false;
-      notifyListeners();
+      return Left(const SearchPictogramsFailure());
     }
   }
 
-  Future<Pictogram?> fetchPictogram(int id) async {
+  /// Fetch a single pictogram by ID.
+  Future<Either<PictogramFailure, Pictogram>> fetchPictogram(int id) async {
     try {
-      return await _coreApiService.fetchPictogram(id);
+      final pictogram = await _coreApiService.fetchPictogram(id);
+      return Right(pictogram);
     } catch (e, stackTrace) {
       _log.severe('Failed to fetch pictogram $id', e, stackTrace);
-      return null;
+      return Left(const FetchPictogramFailure());
     }
   }
 
-  Future<Pictogram> createPictogram({
+  /// Create a pictogram (optionally AI-generated).
+  Future<Either<PictogramFailure, Pictogram>> createPictogram({
     required String name,
     String? imageUrl,
     int? organizationId,
     bool generateImage = false,
     bool generateSound = true,
   }) async {
-    return await _coreApiService.createPictogram(
-      name: name,
-      imageUrl: imageUrl,
-      organizationId: organizationId,
-      generateImage: generateImage,
-      generateSound: generateSound,
-    );
+    try {
+      final pictogram = await _coreApiService.createPictogram(
+        name: name,
+        imageUrl: imageUrl,
+        organizationId: organizationId,
+        generateImage: generateImage,
+        generateSound: generateSound,
+      );
+      return Right(pictogram);
+    } catch (e, stackTrace) {
+      _log.severe('Failed to create pictogram', e, stackTrace);
+      return Left(const CreatePictogramFailure());
+    }
   }
 
-  Future<Pictogram> uploadPictogram({
+  /// Upload a pictogram with a local image file.
+  Future<Either<PictogramFailure, Pictogram>> uploadPictogram({
     required String name,
     required PlatformFile imageFile,
     PlatformFile? soundFile,
     int? organizationId,
     bool generateSound = true,
   }) async {
-    return await _coreApiService.uploadPictogram(
-      name: name,
-      imageFile: _toMultipartFile(imageFile),
-      soundFile: soundFile != null ? _toMultipartFile(soundFile) : null,
-      organizationId: organizationId,
-      generateSound: generateSound,
-    );
-  }
-
-  Future<Pictogram> uploadSound({
-    required int pictogramId,
-    required PlatformFile soundFile,
-  }) async {
-    return await _coreApiService.uploadPictogramSound(
-      pictogramId: pictogramId,
-      soundFile: _toMultipartFile(soundFile),
-    );
+    try {
+      final pictogram = await _coreApiService.uploadPictogram(
+        name: name,
+        imageFile: _toMultipartFile(imageFile),
+        soundFile: soundFile != null ? _toMultipartFile(soundFile) : null,
+        organizationId: organizationId,
+        generateSound: generateSound,
+      );
+      return Right(pictogram);
+    } catch (e, stackTrace) {
+      _log.severe('Failed to upload pictogram', e, stackTrace);
+      return Left(const CreatePictogramFailure());
+    }
   }
 
   /// Convert a [PlatformFile] to a Dio [MultipartFile].

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/auth/presentation/auth_cubit.dart';
@@ -10,10 +10,11 @@ import 'package:weekplanner/features/organisation_picker/presentation/views/citi
 import 'package:weekplanner/features/organisation_picker/presentation/views/organisation_picker_view.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/activity_repository.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart';
-import 'package:weekplanner/features/weekplan/presentation/view_models/activity_form_view_model.dart';
-import 'package:weekplanner/features/weekplan/presentation/view_models/weekplan_view_model.dart';
+import 'package:weekplanner/features/weekplan/presentation/activity_form_cubit.dart';
 import 'package:weekplanner/features/weekplan/presentation/views/activity_form_view.dart';
 import 'package:weekplanner/features/weekplan/presentation/views/weekplan_view.dart';
+import 'package:weekplanner/features/weekplan/presentation/weekplan_cubit.dart';
+import 'package:weekplanner/shared/models/activity.dart';
 
 /// Creates the app router with all dependencies injected explicitly.
 ///
@@ -23,8 +24,6 @@ GoRouter createRouter({
   required AuthCubit authCubit,
   required Listenable refreshListenable,
   required OrganisationPickerCubit orgPickerCubit,
-  required ActivityRepository activityRepo,
-  required PictogramRepository pictogramRepo,
 }) {
   return GoRouter(
     initialLocation: '/login',
@@ -76,15 +75,20 @@ GoRouter createRouter({
           final isCitizen = type == 'citizen';
           final orgId =
               int.tryParse(state.uri.queryParameters['orgId'] ?? '');
-          return ChangeNotifierProvider(
-            create: (_) => WeekplanViewModel(
+          final activityRepo = context.read<ActivityRepository>();
+          final pictogramRepo = context.read<PictogramRepository>();
+          return BlocProvider(
+            create: (_) => WeekplanCubit(
               activityRepository: activityRepo,
               pictogramRepository: pictogramRepo,
               subjectId: citizenId,
               isCitizen: isCitizen,
             )..loadActivities(),
             child: WeekplanView(
-                citizenId: citizenId, isCitizen: isCitizen, orgId: orgId),
+              citizenId: citizenId,
+              isCitizen: isCitizen,
+              orgId: orgId,
+            ),
           );
         },
         routes: [
@@ -97,8 +101,10 @@ GoRouter createRouter({
               final isCitizen = type == 'citizen';
               final orgId =
                   int.tryParse(state.uri.queryParameters['orgId'] ?? '');
-              return ChangeNotifierProvider(
-                create: (_) => ActivityFormViewModel(
+              final activityRepo = context.read<ActivityRepository>();
+              final pictogramRepo = context.read<PictogramRepository>();
+              return BlocProvider(
+                create: (_) => ActivityFormCubit(
                   activityRepository: activityRepo,
                   pictogramRepository: pictogramRepo,
                   subjectId: citizenId,
@@ -128,12 +134,15 @@ GoRouter createRouter({
               final isCitizen = type == 'citizen';
               final orgId =
                   int.tryParse(state.uri.queryParameters['orgId'] ?? '');
-              final actId = int.parse(state.pathParameters['actId']!);
-              final existing = activityRepo.activities
-                  .where((a) => a.activityId == actId)
-                  .firstOrNull;
-              return ChangeNotifierProvider(
-                create: (_) => ActivityFormViewModel(
+              final existing = state.extra as Activity?;
+              if (existing == null) {
+                // Fallback: no activity in route extras — redirect to organisations
+                return const _RedirectWidget(target: '/organisations');
+              }
+              final activityRepo = context.read<ActivityRepository>();
+              final pictogramRepo = context.read<PictogramRepository>();
+              return BlocProvider(
+                create: (_) => ActivityFormCubit(
                   activityRepository: activityRepo,
                   pictogramRepository: pictogramRepo,
                   existingActivity: existing,
@@ -153,6 +162,36 @@ GoRouter createRouter({
       ),
     ],
   );
+}
+
+/// Minimal widget that triggers an immediate navigation redirect.
+///
+/// Used as a fallback when a required route extra is missing.
+class _RedirectWidget extends StatefulWidget {
+  final String target;
+
+  const _RedirectWidget({required this.target});
+
+  @override
+  State<_RedirectWidget> createState() => _RedirectWidgetState();
+}
+
+class _RedirectWidgetState extends State<_RedirectWidget> {
+  @override
+  void initState() {
+    super.initState();
+    // Schedule after the current frame to avoid calling go() during build.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) context.go(widget.target);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(child: CircularProgressIndicator()),
+    );
+  }
 }
 
 /// Root widget of the Weekplanner app.

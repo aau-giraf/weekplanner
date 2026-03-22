@@ -57,8 +57,6 @@ void main() async {
     authCubit: authCubit,
     refreshListenable: refreshListenable,
     orgPickerCubit: orgPickerCubit,
-    activityRepo: activityRepository,
-    pictogramRepo: pictogramRepository,
   );
 
   runApp(
@@ -81,9 +79,9 @@ void main() async {
         // Organisation picker (BLoC)
         BlocProvider.value(value: orgPickerCubit),
 
-        // Repositories (still ChangeNotifier — migrated in later branches)
-        ChangeNotifierProvider.value(value: activityRepository),
-        ChangeNotifierProvider.value(value: pictogramRepository),
+        // Repositories (plain providers — cubits are created in route builders)
+        Provider.value(value: activityRepository),
+        Provider.value(value: pictogramRepository),
       ],
       child: WeekplannerApp(router: router),
     ),
