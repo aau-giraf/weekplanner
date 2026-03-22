@@ -1,119 +1,176 @@
-import 'dart:convert';
-
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:weekplanner/core/errors/auth_failure.dart';
 import 'package:weekplanner/features/auth/data/repositories/auth_repository.dart';
-import 'package:weekplanner/shared/services/activity_api_service.dart';
 import 'package:weekplanner/shared/services/auth_service.dart';
-import 'package:weekplanner/shared/services/core_api_service.dart';
 
-@GenerateNiceMocks([
-  MockSpec<AuthService>(),
-  MockSpec<CoreApiService>(),
-  MockSpec<ActivityApiService>(),
-])
-import 'auth_repository_test.mocks.dart';
+import '../../helpers/jwt_test_helper.dart';
 
-String _createValidJwt() {
-  final header = base64Url.encode(utf8.encode('{"alg":"HS256","typ":"JWT"}'));
-  final payload = base64Url.encode(utf8.encode(json.encode({
-    'user_id': '42',
-    'org_roles': {'1': 'admin'},
-    'exp': DateTime.now().add(const Duration(hours: 1)).millisecondsSinceEpoch ~/ 1000,
-  })));
-  return '$header.$payload.sig';
-}
+class MockAuthService extends Mock implements AuthService {}
 
 void main() {
   late MockAuthService mockAuthService;
-  late MockCoreApiService mockCoreApi;
-  late MockActivityApiService mockActivityApi;
   late AuthRepository repo;
 
   setUp(() {
     mockAuthService = MockAuthService();
-    mockCoreApi = MockCoreApiService();
-    mockActivityApi = MockActivityApiService();
-    repo = AuthRepository(
-      authService: mockAuthService,
-      coreApiService: mockCoreApi,
-      activityApiService: mockActivityApi,
-    );
+    repo = AuthRepository(authService: mockAuthService);
   });
 
-  group('AuthRepository', () {
-    test('initial state is unknown', () {
-      expect(repo.state, AuthState.unknown);
-      expect(repo.isAuthenticated, false);
-    });
-
-    test('login sets state to authenticated', () async {
-      final token = _createValidJwt();
-      when(mockAuthService.login(any, any)).thenAnswer(
-        (_) async => AuthTokens(access: token, refresh: 'refresh', orgRoles: {'1': 'admin'}),
+  group('login', () {
+    test('returns Right with tokens on success', () async {
+      final token = createValidJwt();
+      when(() => mockAuthService.login(any(), any())).thenAnswer(
+        (_) async =>
+            AuthTokens(access: token, refresh: 'refresh', orgRoles: {}),
       );
 
-      await repo.login('test@test.com', 'pass');
+      final result = await repo.login('test@test.com', 'pass');
 
-      expect(repo.state, AuthState.authenticated);
-      expect(repo.isAuthenticated, true);
-      expect(repo.userId, '42');
-      expect(repo.orgRoles, {'1': 'admin'});
-      verify(mockCoreApi.setAuthToken(token)).called(1);
-      verify(mockActivityApi.setAuthToken(token)).called(1);
-    });
-
-    test('logout clears state', () async {
-      // First login
-      final token = _createValidJwt();
-      when(mockAuthService.login(any, any)).thenAnswer(
-        (_) async => AuthTokens(access: token, refresh: 'refresh', orgRoles: {}),
+      expect(result.isRight(), true);
+      result.fold(
+        (_) => fail('Expected Right'),
+        (tokens) => expect(tokens.access, token),
       );
-      await repo.login('test@test.com', 'pass');
-
-      // Then logout
-      when(mockAuthService.logout()).thenAnswer((_) async {});
-      await repo.logout();
-
-      expect(repo.state, AuthState.unauthenticated);
-      expect(repo.isAuthenticated, false);
-      expect(repo.userId, null);
-      verify(mockCoreApi.clearAuthToken()).called(1);
-      verify(mockActivityApi.clearAuthToken()).called(1);
     });
 
-    test('tryRestoreSession restores from valid stored token', () async {
-      final token = _createValidJwt();
-      when(mockAuthService.getStoredAccessToken()).thenAnswer((_) async => token);
+    test('returns InvalidCredentialsFailure on 401', () async {
+      when(() => mockAuthService.login(any(), any())).thenThrow(
+        DioException(
+          requestOptions: RequestOptions(),
+          response: Response(requestOptions: RequestOptions(), statusCode: 401),
+        ),
+      );
 
-      await repo.tryRestoreSession();
+      final result = await repo.login('test@test.com', 'wrong');
 
-      expect(repo.state, AuthState.authenticated);
-      expect(repo.userId, '42');
+      expect(result.isLeft(), true);
+      result.fold(
+        (failure) => expect(failure, isA<InvalidCredentialsFailure>()),
+        (_) => fail('Expected Left'),
+      );
     });
 
-    test('tryRestoreSession falls back to unauthenticated with no credentials', () async {
-      when(mockAuthService.getStoredAccessToken()).thenAnswer((_) async => null);
-      when(mockAuthService.getSavedCredentials())
+    test('returns ServerFailure on other DioException', () async {
+      when(() => mockAuthService.login(any(), any())).thenThrow(
+        DioException(requestOptions: RequestOptions()),
+      );
+
+      final result = await repo.login('test@test.com', 'pass');
+
+      expect(result.isLeft(), true);
+      result.fold(
+        (failure) => expect(failure, isA<ServerFailure>()),
+        (_) => fail('Expected Left'),
+      );
+    });
+
+    test('returns UnexpectedFailure on non-Dio exception', () async {
+      when(() => mockAuthService.login(any(), any()))
+          .thenThrow(Exception('boom'));
+
+      final result = await repo.login('test@test.com', 'pass');
+
+      expect(result.isLeft(), true);
+      result.fold(
+        (failure) => expect(failure, isA<UnexpectedFailure>()),
+        (_) => fail('Expected Left'),
+      );
+    });
+  });
+
+  group('tryGetStoredToken', () {
+    test('returns Right with valid stored token', () async {
+      final token = createValidJwt();
+      when(() => mockAuthService.getStoredAccessToken())
+          .thenAnswer((_) async => token);
+
+      final result = await repo.tryGetStoredToken();
+
+      expect(result.isRight(), true);
+      result.fold(
+        (_) => fail('Expected Right'),
+        (t) => expect(t, token),
+      );
+    });
+
+    test('returns Left when no stored token', () async {
+      when(() => mockAuthService.getStoredAccessToken())
+          .thenAnswer((_) async => null);
+
+      final result = await repo.tryGetStoredToken();
+
+      expect(result.isLeft(), true);
+    });
+
+    test('returns Left when stored token is expired', () async {
+      final expired = createExpiredJwt();
+      when(() => mockAuthService.getStoredAccessToken())
+          .thenAnswer((_) async => expired);
+
+      final result = await repo.tryGetStoredToken();
+
+      expect(result.isLeft(), true);
+    });
+  });
+
+  group('tryAutoLogin', () {
+    test('returns Right when saved credentials are valid', () async {
+      final token = createValidJwt();
+      when(() => mockAuthService.getSavedCredentials())
+          .thenAnswer((_) async => (email: 'a@b.com', password: 'pass'));
+      when(() => mockAuthService.login(any(), any())).thenAnswer(
+        (_) async =>
+            AuthTokens(access: token, refresh: 'refresh', orgRoles: {}),
+      );
+
+      final result = await repo.tryAutoLogin();
+
+      expect(result.isRight(), true);
+    });
+
+    test('returns Left when no saved credentials', () async {
+      when(() => mockAuthService.getSavedCredentials())
           .thenAnswer((_) async => (email: null, password: null));
 
-      await repo.tryRestoreSession();
+      final result = await repo.tryAutoLogin();
 
-      expect(repo.state, AuthState.unauthenticated);
+      expect(result.isLeft(), true);
     });
+  });
 
-    test('notifies listeners on state change', () async {
-      int notifyCount = 0;
-      repo.addListener(() => notifyCount++);
+  group('logout', () {
+    test('returns Right on success', () async {
+      when(() => mockAuthService.logout()).thenAnswer((_) async {});
 
-      final token = _createValidJwt();
-      when(mockAuthService.login(any, any)).thenAnswer(
-        (_) async => AuthTokens(access: token, refresh: 'refresh', orgRoles: {}),
-      );
-      await repo.login('test@test.com', 'pass');
+      final result = await repo.logout();
 
-      expect(notifyCount, greaterThan(0));
+      expect(result, const Right<AuthFailure, Unit>(unit));
+      verify(() => mockAuthService.logout()).called(1);
+    });
+  });
+
+  group('saveCredentials', () {
+    test('returns Right on success', () async {
+      when(() => mockAuthService.saveCredentials(any(), any()))
+          .thenAnswer((_) async {});
+
+      final result = await repo.saveCredentials('a@b.com', 'pass');
+
+      expect(result, const Right<AuthFailure, Unit>(unit));
+    });
+  });
+
+  group('clearSavedCredentials', () {
+    test('returns Right on success', () async {
+      when(() => mockAuthService.clearSavedCredentials())
+          .thenAnswer((_) async {});
+
+      final result = await repo.clearSavedCredentials();
+
+      expect(result, const Right<AuthFailure, Unit>(unit));
     });
   });
 }

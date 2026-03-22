@@ -1,89 +1,109 @@
-import 'dart:async';
-
-import 'package:flutter/foundation.dart';
+import 'package:dio/dio.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:logging/logging.dart';
+
+import 'package:weekplanner/core/errors/auth_failure.dart';
 import 'package:weekplanner/shared/services/auth_service.dart';
-import 'package:weekplanner/shared/services/activity_api_service.dart';
-import 'package:weekplanner/shared/services/core_api_service.dart';
 import 'package:weekplanner/shared/utils/jwt_decode.dart';
 
 final _log = Logger('AuthRepository');
 
-enum AuthState { unknown, authenticated, unauthenticated }
-
-class AuthRepository extends ChangeNotifier {
+/// Pure data layer for authentication operations.
+///
+/// All methods return [Either] to communicate success or typed failure.
+/// No state management — that responsibility belongs to [AuthCubit].
+class AuthRepository {
   final AuthService _authService;
-  final CoreApiService _coreApiService;
-  final ActivityApiService _activityApiService;
 
-  AuthState _state = AuthState.unknown;
-  String? _accessToken;
-  String? _userId;
-  Map<String, String> _orgRoles = {};
+  AuthRepository({required AuthService authService})
+      : _authService = authService;
 
-  AuthRepository({
-    required AuthService authService,
-    required CoreApiService coreApiService,
-    required ActivityApiService activityApiService,
-  })  : _authService = authService,
-        _coreApiService = coreApiService,
-        _activityApiService = activityApiService;
-
-  AuthState get state => _state;
-  String? get accessToken => _accessToken;
-  String? get userId => _userId;
-  Map<String, String> get orgRoles => _orgRoles;
-  bool get isAuthenticated => _state == AuthState.authenticated;
-
-  /// Try to restore session from stored token.
-  Future<void> tryRestoreSession() async {
-    final token = await _authService.getStoredAccessToken();
-    if (token != null && !JwtDecode.isExpired(token)) {
-      _setAuthenticated(token);
-    } else {
-      // Try auto-login with saved credentials
-      final creds = await _authService.getSavedCredentials();
-      if (creds.email != null && creds.password != null) {
-        try {
-          await login(creds.email!, creds.password!);
-          return;
-        } catch (e, stackTrace) {
-          _log.warning('Auto-login failed', e, stackTrace);
-        }
-      }
-      _state = AuthState.unauthenticated;
-      notifyListeners();
+  /// Authenticate with email and password.
+  Future<Either<AuthFailure, AuthTokens>> login(
+    String email,
+    String password,
+  ) async {
+    try {
+      final tokens = await _authService.login(email, password);
+      return Right(tokens);
+    } on DioException catch (e, stackTrace) {
+      return Left(_mapDioError(e, stackTrace));
+    } catch (e, stackTrace) {
+      _log.severe('Unexpected login error', e, stackTrace);
+      return Left(const UnexpectedFailure());
     }
   }
 
-  Future<void> login(String email, String password) async {
-    final tokens = await _authService.login(email, password);
-    _setAuthenticated(tokens.access);
+  /// Try to retrieve a stored, non-expired access token.
+  Future<Either<AuthFailure, String>> tryGetStoredToken() async {
+    try {
+      final token = await _authService.getStoredAccessToken();
+      if (token != null && !JwtDecode.isExpired(token)) {
+        return Right(token);
+      }
+      return Left(UnexpectedFailure('No valid stored token'));
+    } catch (e, stackTrace) {
+      _log.warning('Failed to retrieve stored token', e, stackTrace);
+      return Left(const UnexpectedFailure());
+    }
   }
 
-  Future<void> logout() async {
-    await _authService.logout();
-    _coreApiService.clearAuthToken();
-    _activityApiService.clearAuthToken();
-    _accessToken = null;
-    _userId = null;
-    _orgRoles = {};
-    _state = AuthState.unauthenticated;
-    notifyListeners();
+  /// Try to auto-login using saved credentials.
+  Future<Either<AuthFailure, AuthTokens>> tryAutoLogin() async {
+    try {
+      final creds = await _authService.getSavedCredentials();
+      if (creds.email == null || creds.password == null) {
+        return Left(UnexpectedFailure('No saved credentials'));
+      }
+      return login(creds.email!, creds.password!);
+    } catch (e, stackTrace) {
+      _log.warning('Auto-login failed', e, stackTrace);
+      return Left(const UnexpectedFailure());
+    }
   }
 
-  Future<void> saveCredentials(String email, String password) =>
-      _authService.saveCredentials(email, password);
+  /// Clear stored tokens.
+  Future<Either<AuthFailure, Unit>> logout() async {
+    try {
+      await _authService.logout();
+      return const Right(unit);
+    } catch (e, stackTrace) {
+      _log.severe('Logout failed', e, stackTrace);
+      return Left(const UnexpectedFailure());
+    }
+  }
 
-  Future<void> clearSavedCredentials() => _authService.clearSavedCredentials();
+  /// Persist credentials for auto-login.
+  Future<Either<AuthFailure, Unit>> saveCredentials(
+    String email,
+    String password,
+  ) async {
+    try {
+      await _authService.saveCredentials(email, password);
+      return const Right(unit);
+    } catch (e, stackTrace) {
+      _log.warning('Failed to save credentials', e, stackTrace);
+      return Left(const UnexpectedFailure());
+    }
+  }
 
-  void _setAuthenticated(String token) {
-    _accessToken = token;
-    _userId = JwtDecode.getUserId(token);
-    _orgRoles = JwtDecode.getOrgRoles(token);
-    _coreApiService.setAuthToken(token);
-    _activityApiService.setAuthToken(token);
-    _state = AuthState.authenticated;
-    notifyListeners();
+  /// Remove persisted credentials.
+  Future<Either<AuthFailure, Unit>> clearSavedCredentials() async {
+    try {
+      await _authService.clearSavedCredentials();
+      return const Right(unit);
+    } catch (e, stackTrace) {
+      _log.warning('Failed to clear credentials', e, stackTrace);
+      return Left(const UnexpectedFailure());
+    }
+  }
+
+  AuthFailure _mapDioError(DioException e, StackTrace stackTrace) {
+    if (e.response?.statusCode == 401) {
+      _log.warning('Login failed: invalid credentials', e, stackTrace);
+      return const InvalidCredentialsFailure();
+    }
+    _log.severe('Login failed: server error', e, stackTrace);
+    return const ServerFailure();
   }
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:weekplanner/config/theme.dart';
-import 'package:weekplanner/features/auth/presentation/view_models/login_view_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:weekplanner/config/theme.dart';
+import 'package:weekplanner/features/auth/presentation/login_cubit.dart';
+import 'package:weekplanner/features/auth/presentation/login_state.dart';
+
+/// Login screen with email/password form.
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
 
@@ -15,101 +18,103 @@ class LoginView extends StatelessWidget {
             padding: const EdgeInsets.all(24),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 400),
-              child: Consumer<LoginViewModel>(
-                builder: (context, vm, _) => Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Logo / Title
-                    Icon(
-                      Icons.calendar_month,
-                      size: 80,
-                      color: GirafColors.orange,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'GIRAF Ugeplan',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: GirafColors.orange,
+              child: BlocBuilder<LoginCubit, LoginState>(
+                builder: (context, state) {
+                  final isLoading = state is LoginLoading;
+                  final errorMessage =
+                      state is LoginFailure ? state.message : null;
+
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Icon(
+                        Icons.calendar_month,
+                        size: 80,
+                        color: GirafColors.orange,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'GIRAF Ugeplan',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: GirafColors.orange,
+                            ),
+                      ),
+                      const SizedBox(height: 48),
+                      TextField(
+                        onChanged: context.read<LoginCubit>().emailChanged,
+                        textInputAction: TextInputAction.next,
+                        decoration: const InputDecoration(
+                          labelText: 'Brugernavn',
+                          prefixIcon: Icon(Icons.person_outlined),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextField(
+                        onChanged: context.read<LoginCubit>().passwordChanged,
+                        obscureText: true,
+                        textInputAction: TextInputAction.done,
+                        onSubmitted: (_) =>
+                            context.read<LoginCubit>().loginSubmitted(),
+                        decoration: const InputDecoration(
+                          labelText: 'Adgangskode',
+                          prefixIcon: Icon(Icons.lock_outline),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: state.rememberMe,
+                            onChanged: (v) => context
+                                .read<LoginCubit>()
+                                .rememberMeChanged(v ?? false),
+                            activeColor: GirafColors.orange,
                           ),
-                    ),
-                    const SizedBox(height: 48),
-
-                    // Username field
-                    TextField(
-                      onChanged: vm.setEmail,
-                      textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        labelText: 'Brugernavn',
-                        prefixIcon: Icon(Icons.person_outlined),
+                          const Text('Husk mig'),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Password field
-                    TextField(
-                      onChanged: vm.setPassword,
-                      obscureText: true,
-                      textInputAction: TextInputAction.done,
-                      onSubmitted: (_) => vm.login(),
-                      decoration: const InputDecoration(
-                        labelText: 'Adgangskode',
-                        prefixIcon: Icon(Icons.lock_outline),
+                      const SizedBox(height: 8),
+                      if (errorMessage != null)
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: GirafColors.lightRed,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            errorMessage,
+                            style: const TextStyle(color: GirafColors.red),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: isLoading
+                            ? null
+                            : () =>
+                                context.read<LoginCubit>().loginSubmitted(),
+                        child: isLoading
+                            ? SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimary,
+                                ),
+                              )
+                            : const Text('Log ind'),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-
-                    // Remember me
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: vm.rememberMe,
-                          onChanged: (v) => vm.setRememberMe(v ?? false),
-                          activeColor: GirafColors.orange,
-                        ),
-                        const Text('Husk mig'),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-
-                    // Error message
-                    if (vm.error != null)
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: GirafColors.lightRed,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          vm.error!,
-                          style: const TextStyle(color: GirafColors.red),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    const SizedBox(height: 16),
-
-                    // Login button
-                    ElevatedButton(
-                      onPressed: vm.isLoading
-                          ? null
-                          : () async {
-                              await vm.login();
-                            },
-                      child: vm.isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : const Text('Log ind'),
-                    ),
-                  ],
-                ),
+                    ],
+                  );
+                },
               ),
             ),
           ),
