@@ -1,80 +1,197 @@
+import 'dart:typed_data';
+
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:weekplanner/core/errors/pictogram_failure.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart';
 import 'package:weekplanner/shared/models/paginated_response.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 import 'package:weekplanner/shared/services/core_api_service.dart';
 
-class FakeCoreApiService extends CoreApiService {
-  Future<PaginatedResponse<Pictogram>> Function(String? query)? onSearch;
-  Future<Pictogram> Function(int id)? onFetchPictogram;
+class MockCoreApiService extends Mock implements CoreApiService {}
 
-  @override
-  Future<PaginatedResponse<Pictogram>> searchPictograms({
-    String? query,
-    int limit = 20,
-    int offset = 0,
-  }) async {
-    if (onSearch == null) {
-      throw UnimplementedError('onSearch not configured');
-    }
-    return onSearch!(query);
-  }
+class MockPlatformFile extends Mock implements PlatformFile {}
 
-  @override
-  Future<Pictogram> fetchPictogram(int id) async {
-    if (onFetchPictogram == null) {
-      throw UnimplementedError('onFetchPictogram not configured');
-    }
-    return onFetchPictogram!(id);
-  }
-}
+class FakeMultipartFile extends Fake implements MultipartFile {}
 
 void main() {
-  late FakeCoreApiService fakeCore;
+  late MockCoreApiService mockCore;
   late PictogramRepository repo;
 
-  const testPictogram = Pictogram(
-    id: 7,
-    name: 'Bade',
-    imageUrl: '/media/bade.png',
-    soundUrl: '/media/bade.mp3',
-  );
+  const testPictogram = Pictogram(id: 7, name: 'Bade');
 
-  setUp(() {
-    fakeCore = FakeCoreApiService();
-    repo = PictogramRepository(coreApiService: fakeCore);
+  setUpAll(() {
+    registerFallbackValue(FakeMultipartFile());
   });
 
-  group('PictogramRepository', () {
-    test('searchPictograms stores results on success', () async {
-      fakeCore.onSearch = (_) async => const PaginatedResponse(
-            items: [testPictogram],
-            count: 1,
-          );
+  setUp(() {
+    mockCore = MockCoreApiService();
+    repo = PictogramRepository(coreApiService: mockCore);
+  });
 
-      await repo.searchPictograms('bad');
+  group('searchPictograms', () {
+    test('returns Right with list on success', () async {
+      when(
+        () => mockCore.searchPictograms(
+          query: any(named: 'query'),
+          limit: any(named: 'limit'),
+          offset: any(named: 'offset'),
+        ),
+      ).thenAnswer(
+        (_) async => const PaginatedResponse(items: [testPictogram], count: 1),
+      );
 
-      expect(repo.error, isNull);
-      expect(repo.isLoading, isFalse);
-      expect(repo.pictograms.length, 1);
-      expect(repo.pictograms.first.id, 7);
+      final result = await repo.searchPictograms('bad');
+
+      expect(result, isA<Right<PictogramFailure, List<Pictogram>>>());
+      expect(result.getOrElse((_) => []), [testPictogram]);
+      verify(
+        () => mockCore.searchPictograms(
+          query: 'bad',
+          limit: any(named: 'limit'),
+          offset: any(named: 'offset'),
+        ),
+      ).called(1);
     });
 
-    test('searchPictograms sets error on failure', () async {
-      fakeCore.onSearch = (_) async => throw Exception('network fail');
+    test('returns Left(SearchPictogramsFailure) on exception', () async {
+      when(
+        () => mockCore.searchPictograms(
+          query: any(named: 'query'),
+          limit: any(named: 'limit'),
+          offset: any(named: 'offset'),
+        ),
+      ).thenThrow(Exception('network error'));
 
-      await repo.searchPictograms('bad');
+      final result = await repo.searchPictograms('bad');
 
-      expect(repo.isLoading, isFalse);
-      expect(repo.error, isNotNull);
+      expect(result, isA<Left<PictogramFailure, List<Pictogram>>>());
+      result.fold(
+        (failure) => expect(failure, isA<SearchPictogramsFailure>()),
+        (_) => fail('Expected Left'),
+      );
+    });
+  });
+
+  group('fetchPictogram', () {
+    test('returns Right with pictogram on success', () async {
+      when(() => mockCore.fetchPictogram(7)).thenAnswer(
+        (_) async => testPictogram,
+      );
+
+      final result = await repo.fetchPictogram(7);
+
+      expect(result, isA<Right<PictogramFailure, Pictogram>>());
+      expect(result.getOrElse((_) => const Pictogram(id: -1, name: '')), testPictogram);
+      verify(() => mockCore.fetchPictogram(7)).called(1);
     });
 
-    test('fetchPictogram returns null on failure', () async {
-      fakeCore.onFetchPictogram = (_) async => throw Exception('not found');
+    test('returns Left(FetchPictogramFailure) on exception', () async {
+      when(() => mockCore.fetchPictogram(7))
+          .thenThrow(Exception('not found'));
 
-      final result = await repo.fetchPictogram(123);
+      final result = await repo.fetchPictogram(7);
 
-      expect(result, isNull);
+      expect(result, isA<Left<PictogramFailure, Pictogram>>());
+      result.fold(
+        (failure) => expect(failure, isA<FetchPictogramFailure>()),
+        (_) => fail('Expected Left'),
+      );
+    });
+  });
+
+  group('createPictogram', () {
+    test('returns Right with pictogram on success', () async {
+      when(
+        () => mockCore.createPictogram(
+          name: any(named: 'name'),
+          imageUrl: any(named: 'imageUrl'),
+          organizationId: any(named: 'organizationId'),
+          generateImage: any(named: 'generateImage'),
+          generateSound: any(named: 'generateSound'),
+        ),
+      ).thenAnswer((_) async => testPictogram);
+
+      final result = await repo.createPictogram(name: 'Bade');
+
+      expect(result, isA<Right<PictogramFailure, Pictogram>>());
+      expect(result.getOrElse((_) => const Pictogram(id: -1, name: '')), testPictogram);
+    });
+
+    test('returns Left(CreatePictogramFailure) on exception', () async {
+      when(
+        () => mockCore.createPictogram(
+          name: any(named: 'name'),
+          imageUrl: any(named: 'imageUrl'),
+          organizationId: any(named: 'organizationId'),
+          generateImage: any(named: 'generateImage'),
+          generateSound: any(named: 'generateSound'),
+        ),
+      ).thenThrow(Exception('server error'));
+
+      final result = await repo.createPictogram(name: 'Bade');
+
+      expect(result, isA<Left<PictogramFailure, Pictogram>>());
+      result.fold(
+        (failure) => expect(failure, isA<CreatePictogramFailure>()),
+        (_) => fail('Expected Left'),
+      );
+    });
+  });
+
+  group('uploadPictogram', () {
+    test('returns Right with pictogram on success', () async {
+      final mockFile = MockPlatformFile();
+      when(() => mockFile.bytes).thenReturn(Uint8List.fromList([1, 2, 3]));
+      when(() => mockFile.name).thenReturn('image.png');
+
+      when(
+        () => mockCore.uploadPictogram(
+          name: any(named: 'name'),
+          imageFile: any(named: 'imageFile'),
+          soundFile: any(named: 'soundFile'),
+          organizationId: any(named: 'organizationId'),
+          generateSound: any(named: 'generateSound'),
+        ),
+      ).thenAnswer((_) async => testPictogram);
+
+      final result = await repo.uploadPictogram(
+        name: 'Bade',
+        imageFile: mockFile,
+      );
+
+      expect(result, isA<Right<PictogramFailure, Pictogram>>());
+      expect(result.getOrElse((_) => const Pictogram(id: -1, name: '')), testPictogram);
+    });
+
+    test('returns Left(CreatePictogramFailure) on exception', () async {
+      final mockFile = MockPlatformFile();
+      when(() => mockFile.bytes).thenReturn(Uint8List.fromList([1, 2, 3]));
+      when(() => mockFile.name).thenReturn('image.png');
+
+      when(
+        () => mockCore.uploadPictogram(
+          name: any(named: 'name'),
+          imageFile: any(named: 'imageFile'),
+          soundFile: any(named: 'soundFile'),
+          organizationId: any(named: 'organizationId'),
+          generateSound: any(named: 'generateSound'),
+        ),
+      ).thenThrow(Exception('upload failed'));
+
+      final result = await repo.uploadPictogram(
+        name: 'Bade',
+        imageFile: mockFile,
+      );
+
+      expect(result, isA<Left<PictogramFailure, Pictogram>>());
+      result.fold(
+        (failure) => expect(failure, isA<CreatePictogramFailure>()),
+        (_) => fail('Expected Left'),
+      );
     });
   });
 }
