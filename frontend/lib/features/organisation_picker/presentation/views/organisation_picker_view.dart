@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
+
 import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/auth/presentation/auth_cubit.dart';
-import 'package:weekplanner/features/organisation_picker/presentation/view_models/organisation_picker_view_model.dart';
+import 'package:weekplanner/features/organisation_picker/domain/organisation_picker_state.dart';
+import 'package:weekplanner/features/organisation_picker/presentation/organisation_picker_cubit.dart';
 import 'package:weekplanner/shared/models/organisation.dart';
 
+/// Screen that lists the user's organisations.
 class OrganisationPickerView extends StatelessWidget {
   const OrganisationPickerView({super.key});
 
@@ -23,44 +26,63 @@ class OrganisationPickerView extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<OrganisationPickerViewModel>(
-        builder: (context, vm, _) {
-          if (vm.isLoading && vm.organisations.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (vm.error != null && vm.organisations.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(vm.error!, style: const TextStyle(color: GirafColors.red)),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: vm.loadOrganisations,
-                    child: const Text('Prøv igen'),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          if (vm.organisations.isEmpty) {
-            return const Center(
-              child: Text('Ingen organisationer fundet'),
-            );
-          }
-
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: vm.organisations.length,
-            itemBuilder: (context, index) {
-              final org = vm.organisations[index];
-              return _OrgCard(org: org);
-            },
-          );
+      body: BlocBuilder<OrganisationPickerCubit, OrganisationPickerState>(
+        builder: (context, state) => switch (state) {
+          OrganisationPickerInitial() ||
+          OrganisationsLoading() =>
+            const Center(child: CircularProgressIndicator()),
+          OrganisationPickerError(:final message, :final organisations)
+              when organisations.isEmpty =>
+            _ErrorWithRetry(message: message),
+          OrganisationsLoaded(organisations: final orgs) when orgs.isEmpty =>
+            const Center(child: Text('Ingen organisationer fundet')),
+          OrganisationsLoaded(:final organisations) =>
+            _OrganisationList(organisations: organisations),
+          _ => const Center(child: CircularProgressIndicator()),
         },
       ),
+    );
+  }
+}
+
+class _ErrorWithRetry extends StatelessWidget {
+  final String message;
+
+  const _ErrorWithRetry({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(message, style: const TextStyle(color: GirafColors.red)),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () =>
+                context.read<OrganisationPickerCubit>().loadOrganisations(),
+            child: const Text('Prøv igen'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _OrganisationList extends StatelessWidget {
+  final List<Organisation> organisations;
+
+  const _OrganisationList({required this.organisations});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: organisations.length,
+      itemBuilder: (context, index) {
+        final org = organisations[index];
+        return _OrgCard(org: org);
+      },
     );
   }
 }
