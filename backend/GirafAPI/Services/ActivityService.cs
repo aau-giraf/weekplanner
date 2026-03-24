@@ -18,19 +18,13 @@ public class ActivityService : IActivityService
         _coreClient = coreClient;
     }
 
-    public async Task<ServiceResult<List<ActivityDTO>>> GetAllActivitiesAsync(CancellationToken ct = default)
-    {
-        var activities = await _db.Activities
-            .Select(a => a.ToDTO())
-            .AsNoTracking()
-            .ToListAsync(ct);
-
-        return ServiceResult<List<ActivityDTO>>.Success(activities);
-    }
-
     public async Task<ServiceResult<List<ActivityDTO>>> GetActivitiesByOwnerAsync(
-        ActivityOwner owner, DateOnly date, CancellationToken ct = default)
+        ActivityOwner owner, DateOnly date, string accessToken, CancellationToken ct = default)
     {
+        var ownerResult = await ValidateOwnerAsync(owner, accessToken, ct);
+        if (ownerResult is not null)
+            return ServiceResult<List<ActivityDTO>>.Fail(ownerResult);
+
         var activities = await _db.Activities
             .Where(owner.ToFilter())
             .Where(a => a.Date == date)
@@ -44,16 +38,25 @@ public class ActivityService : IActivityService
             : ServiceResult<List<ActivityDTO>>.Success(activities);
     }
 
-    public async Task<ServiceResult<ActivityDTO>> GetActivityByIdAsync(int id, CancellationToken ct = default)
+    public async Task<ServiceResult<ActivityDTO>> GetActivityByIdAsync(int id, string accessToken, CancellationToken ct = default)
     {
         var activity = await _db.Activities
             .AsNoTracking()
             .FirstOrDefaultAsync(a => a.Id == id, ct);
 
-        return activity is null
-            ? ServiceResult<ActivityDTO>.Fail(
-                new ServiceError(ServiceErrorKind.NotFound, "Activity not found."))
-            : ServiceResult<ActivityDTO>.Success(activity.ToDTO());
+        if (activity is null)
+            return ServiceResult<ActivityDTO>.Fail(
+                new ServiceError(ServiceErrorKind.NotFound, "Activity not found."));
+
+        var owner = ResolveOwner(activity);
+        if (owner is not null)
+        {
+            var ownerResult = await ValidateOwnerAsync(owner, accessToken, ct);
+            if (ownerResult is not null)
+                return ServiceResult<ActivityDTO>.Fail(ownerResult);
+        }
+
+        return ServiceResult<ActivityDTO>.Success(activity.ToDTO());
     }
 
     public async Task<ServiceResult<ActivityDTO>> CreateActivityAsync(
@@ -94,6 +97,14 @@ public class ActivityService : IActivityService
         if (activity is null)
             return ServiceResult.Fail(new ServiceError(ServiceErrorKind.NotFound, "Activity not found."));
 
+        var owner = ResolveOwner(activity);
+        if (owner is not null)
+        {
+            var ownerResult = await ValidateOwnerAsync(owner, accessToken, ct);
+            if (ownerResult is not null)
+                return ServiceResult.Fail(ownerResult);
+        }
+
         if (dto.PictogramId is not null)
         {
             var picResult = await _coreClient.ValidatePictogramAsync(dto.PictogramId.Value, accessToken, ct);
@@ -111,11 +122,19 @@ public class ActivityService : IActivityService
         return ServiceResult.Success();
     }
 
-    public async Task<ServiceResult> ToggleActivityStatusAsync(int id, bool isComplete, CancellationToken ct = default)
+    public async Task<ServiceResult> ToggleActivityStatusAsync(int id, bool isComplete, string accessToken, CancellationToken ct = default)
     {
         var activity = await _db.Activities.FindAsync([id], ct);
         if (activity is null)
             return ServiceResult.Fail(new ServiceError(ServiceErrorKind.NotFound, "Activity not found."));
+
+        var owner = ResolveOwner(activity);
+        if (owner is not null)
+        {
+            var ownerResult = await ValidateOwnerAsync(owner, accessToken, ct);
+            if (ownerResult is not null)
+                return ServiceResult.Fail(ownerResult);
+        }
 
         activity.IsCompleted = isComplete;
         await _db.SaveChangesAsync(ct);
@@ -123,12 +142,23 @@ public class ActivityService : IActivityService
         return ServiceResult.Success();
     }
 
-    public async Task<ServiceResult> DeleteActivityAsync(int id, CancellationToken ct = default)
+    public async Task<ServiceResult> DeleteActivityAsync(int id, string accessToken, CancellationToken ct = default)
     {
-        var rowsAffected = await _db.Activities.Where(a => a.Id == id).ExecuteDeleteAsync(ct);
-        return rowsAffected == 0
-            ? ServiceResult.Fail(new ServiceError(ServiceErrorKind.NotFound, "Activity not found."))
-            : ServiceResult.Success();
+        var activity = await _db.Activities.FindAsync([id], ct);
+        if (activity is null)
+            return ServiceResult.Fail(new ServiceError(ServiceErrorKind.NotFound, "Activity not found."));
+
+        var owner = ResolveOwner(activity);
+        if (owner is not null)
+        {
+            var ownerResult = await ValidateOwnerAsync(owner, accessToken, ct);
+            if (ownerResult is not null)
+                return ServiceResult.Fail(ownerResult);
+        }
+
+        _db.Activities.Remove(activity);
+        await _db.SaveChangesAsync(ct);
+        return ServiceResult.Success();
     }
 
     public async Task<ServiceResult<ActivityDTO>> AssignPictogramAsync(
@@ -138,6 +168,14 @@ public class ActivityService : IActivityService
         if (activity is null)
             return ServiceResult<ActivityDTO>.Fail(
                 new ServiceError(ServiceErrorKind.NotFound, "Activity not found."));
+
+        var owner = ResolveOwner(activity);
+        if (owner is not null)
+        {
+            var ownerResult = await ValidateOwnerAsync(owner, accessToken, ct);
+            if (ownerResult is not null)
+                return ServiceResult<ActivityDTO>.Fail(ownerResult);
+        }
 
         var picResult = await _coreClient.ValidatePictogramAsync(pictogramId, accessToken, ct);
         if (picResult is not CoreValidationResult.Valid)
@@ -150,8 +188,12 @@ public class ActivityService : IActivityService
     }
 
     public async Task<ServiceResult> CopyActivitiesAsync(
-        ActivityOwner owner, DateOnly sourceDate, DateOnly targetDate, List<int> activityIds, CancellationToken ct = default)
+        ActivityOwner owner, DateOnly sourceDate, DateOnly targetDate, List<int> activityIds, string accessToken, CancellationToken ct = default)
     {
+        var ownerResult = await ValidateOwnerAsync(owner, accessToken, ct);
+        if (ownerResult is not null)
+            return ServiceResult.Fail(ownerResult);
+
         var activities = await _db.Activities
             .Where(owner.ToFilter())
             .Where(a => a.Date == sourceDate || activityIds.Contains(a.Id))
@@ -179,6 +221,14 @@ public class ActivityService : IActivityService
         await _db.SaveChangesAsync(ct);
         return ServiceResult.Success();
     }
+
+    private static ActivityOwner? ResolveOwner(Activity activity) =>
+        activity switch
+        {
+            { CitizenId: int citizenId } => new ActivityOwner.Citizen(citizenId),
+            { GradeId: int gradeId } => new ActivityOwner.Grade(gradeId),
+            _ => null
+        };
 
     private async Task<ServiceError?> ValidateOwnerAsync(ActivityOwner owner, string accessToken, CancellationToken ct)
     {
