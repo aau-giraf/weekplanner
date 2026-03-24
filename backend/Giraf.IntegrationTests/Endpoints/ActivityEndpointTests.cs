@@ -12,52 +12,12 @@ namespace Giraf.IntegrationTests.Endpoints
     [Collection("IntegrationTests")]
     public class ActivityEndpointTests
     {
-        #region GET /weekplan/ - Get all activities
-
-        [Fact]
-        public async Task GetAllActivities_ReturnsListOfActivities_WhenActivitiesExist()
-        {
-            var factory = new GirafWebApplicationFactory();
-            var seeder = new BaseCaseDb();
-            var scope = factory.Services.CreateScope();
-            factory.SeedDb(scope, seeder);
-            var client = factory.CreateClient();
-            client.AttachClaimsToken(role: "member");
-
-            var response = await client.GetAsync("/weekplan");
-
-            response.EnsureSuccessStatusCode();
-            var activities = await response.Content.ReadFromJsonAsync<List<ActivityDTO>>();
-            Assert.NotNull(activities);
-            Assert.NotEmpty(activities);
-        }
-
-        [Fact]
-        public async Task GetAllActivities_ReturnsEmptyList_WhenNoActivitiesExist()
-        {
-            var factory = new GirafWebApplicationFactory();
-            var seeder = new EmptyDb();
-            var scope = factory.Services.CreateScope();
-            factory.SeedDb(scope, seeder);
-            var client = factory.CreateClient();
-            client.AttachClaimsToken(role: "admin");
-
-            var response = await client.GetAsync("/weekplan");
-
-            response.EnsureSuccessStatusCode();
-            var activities = await response.Content.ReadFromJsonAsync<List<ActivityDTO>>();
-            Assert.NotNull(activities);
-            Assert.Empty(activities);
-        }
-
-        #endregion
-
         #region GET /weekplan/{citizenId:int} - Get activities for a citizen on a date
 
         [Fact]
         public async Task GetActivitiesForCitizenOnDate_ReturnsActivities_WhenActivitiesExist()
         {
-            var factory = new GirafWebApplicationFactory();
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new BaseCaseDb();
             var scope = factory.Services.CreateScope();
             factory.SeedDb(scope, seeder);
@@ -74,9 +34,9 @@ namespace Giraf.IntegrationTests.Endpoints
         }
 
         [Fact]
-        public async Task GetActivitiesForCitizenOnDate_ReturnsEmptyList_WhenCitizenDoesNotExist()
+        public async Task GetActivitiesForCitizenOnDate_ReturnsNotFound_WhenCitizenDoesNotExist()
         {
-            var factory = new GirafWebApplicationFactory();
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new EmptyDb();
             var scope = factory.Services.CreateScope();
             factory.SeedDb(scope, seeder);
@@ -86,10 +46,7 @@ namespace Giraf.IntegrationTests.Endpoints
             var date = DateTime.UtcNow.Date.ToString("yyyy-MM-dd");
             var response = await client.GetAsync($"/weekplan/999?date={date}");
 
-            response.EnsureSuccessStatusCode();
-            var activities = await response.Content.ReadFromJsonAsync<List<ActivityDTO>>();
-            Assert.NotNull(activities);
-            Assert.Empty(activities);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         #endregion
@@ -99,7 +56,7 @@ namespace Giraf.IntegrationTests.Endpoints
         [Fact]
         public async Task GetActivitiesForGradeOnDate_ReturnsActivities_WhenActivitiesExist()
         {
-            var factory = new GirafWebApplicationFactory();
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new BaseCaseDb();
             var scope = factory.Services.CreateScope();
             factory.SeedDb(scope, seeder);
@@ -118,7 +75,7 @@ namespace Giraf.IntegrationTests.Endpoints
         [Fact]
         public async Task GetActivitiesForGradeOnDate_ReturnsNotFound_WhenNoActivities()
         {
-            var factory = new GirafWebApplicationFactory();
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new EmptyDb();
             var scope = factory.Services.CreateScope();
             factory.SeedDb(scope, seeder);
@@ -138,7 +95,7 @@ namespace Giraf.IntegrationTests.Endpoints
         [Fact]
         public async Task GetActivityById_ReturnsActivity_WhenActivityExists()
         {
-            var factory = new GirafWebApplicationFactory();
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new BaseCaseDb();
             var scope = factory.Services.CreateScope();
             factory.SeedDb(scope, seeder);
@@ -157,7 +114,7 @@ namespace Giraf.IntegrationTests.Endpoints
         [Fact]
         public async Task GetActivityById_ReturnsNotFound_WhenActivityDoesNotExist()
         {
-            var factory = new GirafWebApplicationFactory();
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new EmptyDb();
             var scope = factory.Services.CreateScope();
             factory.SeedDb(scope, seeder);
@@ -218,7 +175,7 @@ namespace Giraf.IntegrationTests.Endpoints
                 PictogramId: null
             );
 
-            // StubCoreClient returns NotFound for id >= 101
+            // StubCoreClient returns NotFound for id >= 201
             var response = await client.PostAsJsonAsync("/weekplan/to-citizen/999", newActivityDto);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -344,7 +301,7 @@ namespace Giraf.IntegrationTests.Endpoints
         [Fact]
         public async Task DeleteActivity_ReturnsNoContent_WhenActivityExists()
         {
-            var factory = new GirafWebApplicationFactory();
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new BaseCaseDb();
             var scope = factory.Services.CreateScope();
             factory.SeedDb(scope, seeder);
@@ -365,7 +322,7 @@ namespace Giraf.IntegrationTests.Endpoints
         [Fact]
         public async Task DeleteActivity_ReturnsNotFound_WhenActivityDoesNotExist()
         {
-            var factory = new GirafWebApplicationFactory();
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new EmptyDb();
             var scope = factory.Services.CreateScope();
             factory.SeedDb(scope, seeder);
@@ -384,7 +341,7 @@ namespace Giraf.IntegrationTests.Endpoints
         [Fact]
         public async Task SetActivityCompletionStatus_ReturnsOk_WhenActivityExists()
         {
-            var factory = new GirafWebApplicationFactory();
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new BaseCaseDb();
             var scope = factory.Services.CreateScope();
             factory.SeedDb(scope, seeder);
@@ -407,7 +364,7 @@ namespace Giraf.IntegrationTests.Endpoints
         [Fact]
         public async Task SetActivityCompletionStatus_ReturnsNotFound_WhenActivityDoesNotExist()
         {
-            var factory = new GirafWebApplicationFactory();
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new EmptyDb();
             var scope = factory.Services.CreateScope();
             factory.SeedDb(scope, seeder);
@@ -470,7 +427,7 @@ namespace Giraf.IntegrationTests.Endpoints
 
             int activityId = seeder.Activities[0].Id;
 
-            // StubCoreClient returns false for id >= 101
+            // StubCoreClient returns NotFound for id >= 201
             var response = await client.PostAsync($"/weekplan/activity/assign-pictogram/{activityId}/999", null);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -548,7 +505,7 @@ namespace Giraf.IntegrationTests.Endpoints
         [Fact]
         public async Task GetActivitiesForCitizenOnDate_ReturnsBadRequest_WhenDateIsInvalid()
         {
-            var factory = new GirafWebApplicationFactory();
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new EmptyDb();
             var scope = factory.Services.CreateScope();
             factory.SeedDb(scope, seeder);
@@ -593,7 +550,7 @@ namespace Giraf.IntegrationTests.Endpoints
         [Fact]
         public async Task CopyActivityForCitizen_ReturnsOk_WhenActivitiesExist()
         {
-            var factory = new GirafWebApplicationFactory();
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new BaseCaseDb();
             var scope = factory.Services.CreateScope();
             factory.SeedDb(scope, seeder);
@@ -621,7 +578,7 @@ namespace Giraf.IntegrationTests.Endpoints
         [Fact]
         public async Task CopyActivityForCitizen_ReturnsNotFound_WhenNoActivitiesExist()
         {
-            var factory = new GirafWebApplicationFactory();
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new EmptyDb();
             var scope = factory.Services.CreateScope();
             factory.SeedDb(scope, seeder);
@@ -646,7 +603,7 @@ namespace Giraf.IntegrationTests.Endpoints
         [Fact]
         public async Task CopyActivityForGrade_ReturnsOk_WhenActivitiesExist()
         {
-            var factory = new GirafWebApplicationFactory();
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new BaseCaseDb();
             var scope = factory.Services.CreateScope();
             factory.SeedDb(scope, seeder);
@@ -674,7 +631,7 @@ namespace Giraf.IntegrationTests.Endpoints
         [Fact]
         public async Task CopyActivityForGrade_ReturnsNotFound_WhenNoActivitiesExist()
         {
-            var factory = new GirafWebApplicationFactory();
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new EmptyDb();
             var scope = factory.Services.CreateScope();
             factory.SeedDb(scope, seeder);
@@ -695,21 +652,6 @@ namespace Giraf.IntegrationTests.Endpoints
         #endregion
 
         #region Authentication - Unauthenticated requests
-
-        [Fact]
-        public async Task GetAllActivities_ReturnsUnauthorized_WhenNoToken()
-        {
-            var factory = new GirafWebApplicationFactory();
-            var seeder = new EmptyDb();
-            var scope = factory.Services.CreateScope();
-            factory.SeedDb(scope, seeder);
-            var client = factory.CreateClient();
-            // No token attached
-
-            var response = await client.GetAsync("/weekplan");
-
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        }
 
         [Fact]
         public async Task CreateActivityForCitizen_ReturnsUnauthorized_WhenNoToken()
@@ -736,7 +678,7 @@ namespace Giraf.IntegrationTests.Endpoints
         [Fact]
         public async Task DeleteActivity_ReturnsUnauthorized_WhenNoToken()
         {
-            var factory = new GirafWebApplicationFactory();
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new BaseCaseDb();
             var scope = factory.Services.CreateScope();
             factory.SeedDb(scope, seeder);
@@ -744,6 +686,173 @@ namespace Giraf.IntegrationTests.Endpoints
 
             int activityId = seeder.Activities[0].Id;
             var response = await client.DeleteAsync($"/weekplan/activity/{activityId}");
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        #endregion
+
+        #region Authorization - Ownership checks (Forbidden owner returns 401)
+
+        [Fact]
+        public async Task GetActivitiesForCitizen_ReturnsUnauthorized_WhenOwnerForbidden()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new EmptyDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            var date = DateTime.UtcNow.Date.ToString("yyyy-MM-dd");
+            var response = await client.GetAsync($"/weekplan/101?date={date}");
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetActivitiesForGrade_ReturnsUnauthorized_WhenOwnerForbidden()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new EmptyDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            var date = DateTime.UtcNow.Date.ToString("yyyy-MM-dd");
+            var response = await client.GetAsync($"/weekplan/grade/101?date={date}");
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetActivityById_ReturnsUnauthorized_WhenOwnerForbidden()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new ForbiddenOwnerDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            int activityId = seeder.Activities[0].Id;
+            var response = await client.GetAsync($"/weekplan/activity/{activityId}");
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task ToggleActivityStatus_ReturnsUnauthorized_WhenOwnerForbidden()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new ForbiddenOwnerDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            int activityId = seeder.Activities[0].Id;
+            var response = await client.PutAsync($"/weekplan/activity/{activityId}/iscomplete?IsComplete=true", null);
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task DeleteActivity_ReturnsUnauthorized_WhenOwnerForbidden()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new ForbiddenOwnerDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            int activityId = seeder.Activities[0].Id;
+            var response = await client.DeleteAsync($"/weekplan/activity/{activityId}");
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateActivity_ReturnsUnauthorized_WhenOwnerForbidden()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new ForbiddenOwnerDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            int activityId = seeder.Activities[0].Id;
+            var updateDto = new UpdateActivityDTO
+            (
+                Date: DateOnly.FromDateTime(DateTime.UtcNow),
+                StartTime: new TimeOnly(9, 0),
+                EndTime: new TimeOnly(10, 0),
+                IsCompleted: false,
+                PictogramId: null
+            );
+
+            var response = await client.PutAsJsonAsync($"/weekplan/activity/{activityId}", updateDto);
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task AssignPictogram_ReturnsUnauthorized_WhenOwnerForbidden()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new ForbiddenOwnerDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            int activityId = seeder.Activities[0].Id;
+            var response = await client.PostAsync($"/weekplan/activity/assign-pictogram/{activityId}/1", null);
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task CopyActivityForCitizen_ReturnsUnauthorized_WhenOwnerForbidden()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new EmptyDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            var sourceDate = DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd");
+            var targetDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).ToString("yyyy-MM-dd");
+            var activityIds = new List<int>();
+
+            var response = await client.PostAsJsonAsync(
+                $"/weekplan/activity/copy-citizen/101?sourceDate={sourceDate}&targetDate={targetDate}",
+                activityIds);
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task CopyActivityForGrade_ReturnsUnauthorized_WhenOwnerForbidden()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new EmptyDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            var sourceDate = DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd");
+            var targetDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).ToString("yyyy-MM-dd");
+            var activityIds = new List<int>();
+
+            var response = await client.PostAsJsonAsync(
+                $"/weekplan/activity/copy-grade/101?sourceDate={sourceDate}&targetDate={targetDate}",
+                activityIds);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
