@@ -36,6 +36,7 @@ public enum ServiceErrorKind
     NotFound,
     Validation,
     Unauthorized,
+    Forbidden,
     Conflict,
     Internal
 }

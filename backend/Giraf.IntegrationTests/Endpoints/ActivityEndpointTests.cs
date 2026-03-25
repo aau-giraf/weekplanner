@@ -692,10 +692,10 @@ namespace Giraf.IntegrationTests.Endpoints
 
         #endregion
 
-        #region Authorization - Ownership checks (Forbidden owner returns 401)
+        #region Authorization - Ownership checks (Forbidden owner returns 403)
 
         [Fact]
-        public async Task GetActivitiesForCitizen_ReturnsUnauthorized_WhenOwnerForbidden()
+        public async Task GetActivitiesForCitizen_ReturnsForbidden_WhenOwnerForbidden()
         {
             var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new EmptyDb();
@@ -707,11 +707,11 @@ namespace Giraf.IntegrationTests.Endpoints
             var date = DateTime.UtcNow.Date.ToString("yyyy-MM-dd");
             var response = await client.GetAsync($"/weekplan/101?date={date}");
 
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         }
 
         [Fact]
-        public async Task GetActivitiesForGrade_ReturnsUnauthorized_WhenOwnerForbidden()
+        public async Task GetActivitiesForGrade_ReturnsForbidden_WhenOwnerForbidden()
         {
             var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new EmptyDb();
@@ -723,11 +723,11 @@ namespace Giraf.IntegrationTests.Endpoints
             var date = DateTime.UtcNow.Date.ToString("yyyy-MM-dd");
             var response = await client.GetAsync($"/weekplan/grade/101?date={date}");
 
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         }
 
         [Fact]
-        public async Task GetActivityById_ReturnsUnauthorized_WhenOwnerForbidden()
+        public async Task GetActivityById_ReturnsForbidden_WhenOwnerForbidden()
         {
             var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new ForbiddenOwnerDb();
@@ -739,11 +739,11 @@ namespace Giraf.IntegrationTests.Endpoints
             int activityId = seeder.Activities[0].Id;
             var response = await client.GetAsync($"/weekplan/activity/{activityId}");
 
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         }
 
         [Fact]
-        public async Task ToggleActivityStatus_ReturnsUnauthorized_WhenOwnerForbidden()
+        public async Task ToggleActivityStatus_ReturnsForbidden_WhenOwnerForbidden()
         {
             var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new ForbiddenOwnerDb();
@@ -755,11 +755,11 @@ namespace Giraf.IntegrationTests.Endpoints
             int activityId = seeder.Activities[0].Id;
             var response = await client.PutAsync($"/weekplan/activity/{activityId}/iscomplete?IsComplete=true", null);
 
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         }
 
         [Fact]
-        public async Task DeleteActivity_ReturnsUnauthorized_WhenOwnerForbidden()
+        public async Task DeleteActivity_ReturnsForbidden_WhenOwnerForbidden()
         {
             var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new ForbiddenOwnerDb();
@@ -771,11 +771,11 @@ namespace Giraf.IntegrationTests.Endpoints
             int activityId = seeder.Activities[0].Id;
             var response = await client.DeleteAsync($"/weekplan/activity/{activityId}");
 
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         }
 
         [Fact]
-        public async Task UpdateActivity_ReturnsUnauthorized_WhenOwnerForbidden()
+        public async Task UpdateActivity_ReturnsForbidden_WhenOwnerForbidden()
         {
             var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new ForbiddenOwnerDb();
@@ -796,11 +796,11 @@ namespace Giraf.IntegrationTests.Endpoints
 
             var response = await client.PutAsJsonAsync($"/weekplan/activity/{activityId}", updateDto);
 
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         }
 
         [Fact]
-        public async Task AssignPictogram_ReturnsUnauthorized_WhenOwnerForbidden()
+        public async Task AssignPictogram_ReturnsForbidden_WhenOwnerForbidden()
         {
             var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new ForbiddenOwnerDb();
@@ -812,11 +812,11 @@ namespace Giraf.IntegrationTests.Endpoints
             int activityId = seeder.Activities[0].Id;
             var response = await client.PostAsync($"/weekplan/activity/assign-pictogram/{activityId}/1", null);
 
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         }
 
         [Fact]
-        public async Task CopyActivityForCitizen_ReturnsUnauthorized_WhenOwnerForbidden()
+        public async Task CopyActivityForCitizen_ReturnsForbidden_WhenOwnerForbidden()
         {
             var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new EmptyDb();
@@ -833,11 +833,11 @@ namespace Giraf.IntegrationTests.Endpoints
                 $"/weekplan/activity/copy-citizen/101?sourceDate={sourceDate}&targetDate={targetDate}",
                 activityIds);
 
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         }
 
         [Fact]
-        public async Task CopyActivityForGrade_ReturnsUnauthorized_WhenOwnerForbidden()
+        public async Task CopyActivityForGrade_ReturnsForbidden_WhenOwnerForbidden()
         {
             var factory = new GirafWebApplicationFactory(stubCoreClient: true);
             var seeder = new EmptyDb();
@@ -854,7 +854,7 @@ namespace Giraf.IntegrationTests.Endpoints
                 $"/weekplan/activity/copy-grade/101?sourceDate={sourceDate}&targetDate={targetDate}",
                 activityIds);
 
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         }
 
         #endregion

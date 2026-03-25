@@ -48,13 +48,9 @@ public class ActivityService : IActivityService
             return ServiceResult<ActivityDTO>.Fail(
                 new ServiceError(ServiceErrorKind.NotFound, "Activity not found."));
 
-        var owner = ResolveOwner(activity);
-        if (owner is not null)
-        {
-            var ownerResult = await ValidateOwnerAsync(owner, accessToken, ct);
-            if (ownerResult is not null)
-                return ServiceResult<ActivityDTO>.Fail(ownerResult);
-        }
+        var ownerError = await ValidateActivityOwnerAsync(activity, accessToken, ct);
+        if (ownerError is not null)
+            return ServiceResult<ActivityDTO>.Fail(ownerError);
 
         return ServiceResult<ActivityDTO>.Success(activity.ToDTO());
     }
@@ -97,13 +93,9 @@ public class ActivityService : IActivityService
         if (activity is null)
             return ServiceResult.Fail(new ServiceError(ServiceErrorKind.NotFound, "Activity not found."));
 
-        var owner = ResolveOwner(activity);
-        if (owner is not null)
-        {
-            var ownerResult = await ValidateOwnerAsync(owner, accessToken, ct);
-            if (ownerResult is not null)
-                return ServiceResult.Fail(ownerResult);
-        }
+        var ownerError = await ValidateActivityOwnerAsync(activity, accessToken, ct);
+        if (ownerError is not null)
+            return ServiceResult.Fail(ownerError);
 
         if (dto.PictogramId is not null)
         {
@@ -128,13 +120,9 @@ public class ActivityService : IActivityService
         if (activity is null)
             return ServiceResult.Fail(new ServiceError(ServiceErrorKind.NotFound, "Activity not found."));
 
-        var owner = ResolveOwner(activity);
-        if (owner is not null)
-        {
-            var ownerResult = await ValidateOwnerAsync(owner, accessToken, ct);
-            if (ownerResult is not null)
-                return ServiceResult.Fail(ownerResult);
-        }
+        var ownerError = await ValidateActivityOwnerAsync(activity, accessToken, ct);
+        if (ownerError is not null)
+            return ServiceResult.Fail(ownerError);
 
         activity.IsCompleted = isComplete;
         await _db.SaveChangesAsync(ct);
@@ -148,13 +136,9 @@ public class ActivityService : IActivityService
         if (activity is null)
             return ServiceResult.Fail(new ServiceError(ServiceErrorKind.NotFound, "Activity not found."));
 
-        var owner = ResolveOwner(activity);
-        if (owner is not null)
-        {
-            var ownerResult = await ValidateOwnerAsync(owner, accessToken, ct);
-            if (ownerResult is not null)
-                return ServiceResult.Fail(ownerResult);
-        }
+        var ownerError = await ValidateActivityOwnerAsync(activity, accessToken, ct);
+        if (ownerError is not null)
+            return ServiceResult.Fail(ownerError);
 
         _db.Activities.Remove(activity);
         await _db.SaveChangesAsync(ct);
@@ -169,13 +153,9 @@ public class ActivityService : IActivityService
             return ServiceResult<ActivityDTO>.Fail(
                 new ServiceError(ServiceErrorKind.NotFound, "Activity not found."));
 
-        var owner = ResolveOwner(activity);
-        if (owner is not null)
-        {
-            var ownerResult = await ValidateOwnerAsync(owner, accessToken, ct);
-            if (ownerResult is not null)
-                return ServiceResult<ActivityDTO>.Fail(ownerResult);
-        }
+        var ownerError = await ValidateActivityOwnerAsync(activity, accessToken, ct);
+        if (ownerError is not null)
+            return ServiceResult<ActivityDTO>.Fail(ownerError);
 
         var picResult = await _coreClient.ValidatePictogramAsync(pictogramId, accessToken, ct);
         if (picResult is not CoreValidationResult.Valid)
@@ -222,6 +202,19 @@ public class ActivityService : IActivityService
         return ServiceResult.Success();
     }
 
+    /// <summary>
+    /// Resolves the owner from an activity entity and validates access via giraf-core.
+    /// Fails closed: activities with no resolvable owner are rejected.
+    /// </summary>
+    private async Task<ServiceError?> ValidateActivityOwnerAsync(Activity activity, string accessToken, CancellationToken ct)
+    {
+        var owner = ResolveOwner(activity);
+        if (owner is null)
+            return new ServiceError(ServiceErrorKind.Internal, "Activity has no resolvable owner.");
+
+        return await ValidateOwnerAsync(owner, accessToken, ct);
+    }
+
     private static ActivityOwner? ResolveOwner(Activity activity) =>
         activity switch
         {
@@ -252,7 +245,7 @@ public class ActivityService : IActivityService
     private static ServiceError ToCoreError(CoreValidationResult result, string entity) =>
         result switch
         {
-            CoreValidationResult.Forbidden => new ServiceError(ServiceErrorKind.Unauthorized, $"Not authorized to access {entity.ToLowerInvariant()}."),
+            CoreValidationResult.Forbidden => new ServiceError(ServiceErrorKind.Forbidden, $"Not authorized to access {entity.ToLowerInvariant()}."),
             _ => new ServiceError(ServiceErrorKind.NotFound, $"{entity} not found.")
         };
 }
