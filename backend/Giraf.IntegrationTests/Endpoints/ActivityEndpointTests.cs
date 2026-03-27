@@ -654,6 +654,36 @@ namespace Giraf.IntegrationTests.Endpoints
         #region Authentication - Unauthenticated requests
 
         [Fact]
+        public async Task GetActivitiesForCitizen_ReturnsUnauthorized_WhenNoToken()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new EmptyDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+
+            var date = DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd");
+            var response = await client.GetAsync($"/weekplan/1?date={date}");
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetActivityById_ReturnsUnauthorized_WhenNoToken()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new BaseCaseDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+
+            int activityId = seeder.Activities[0].Id;
+            var response = await client.GetAsync($"/weekplan/activity/{activityId}");
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
         public async Task CreateActivityForCitizen_ReturnsUnauthorized_WhenNoToken()
         {
             var factory = new GirafWebApplicationFactory(stubCoreClient: true);
@@ -671,6 +701,48 @@ namespace Giraf.IntegrationTests.Endpoints
             );
 
             var response = await client.PostAsJsonAsync("/weekplan/to-citizen/1", newActivityDto);
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateActivity_ReturnsUnauthorized_WhenNoToken()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new BaseCaseDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+
+            int activityId = seeder.Activities[0].Id;
+            var updateDto = new UpdateActivityDTO(
+                Date: DateOnly.FromDateTime(DateTime.UtcNow),
+                StartTime: new TimeOnly(10, 0),
+                EndTime: new TimeOnly(11, 0),
+                IsCompleted: false,
+                PictogramId: null
+            );
+
+            var response = await client.PutAsJsonAsync($"/weekplan/activity/{activityId}", updateDto);
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task CopyActivityForCitizen_ReturnsUnauthorized_WhenNoToken()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new EmptyDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+
+            var sourceDate = DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd");
+            var targetDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).ToString("yyyy-MM-dd");
+
+            var response = await client.PostAsJsonAsync(
+                $"/weekplan/activity/copy-citizen/1?sourceDate={sourceDate}&targetDate={targetDate}",
+                new List<int> { 1 });
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
