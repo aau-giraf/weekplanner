@@ -11,7 +11,7 @@ public interface IActivityService
     Task<ServiceResult<ActivityDTO>> CreateActivityAsync(
         ActivityOwner owner, CreateActivityDTO dto, string accessToken, CancellationToken ct = default);
 
-    Task<ServiceResult> UpdateActivityAsync(
+    Task<ServiceResult<ActivityDTO>> UpdateActivityAsync(
         int id, UpdateActivityDTO dto, string accessToken, CancellationToken ct = default);
 
     Task<ServiceResult> ToggleActivityStatusAsync(int id, bool isComplete, string accessToken, CancellationToken ct = default);
