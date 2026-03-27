@@ -1,3 +1,4 @@
+using GirafAPI.Configuration;
 using GirafAPI.Data;
 using GirafAPI.Endpoints;
 using GirafAPI.Extensions;
@@ -12,6 +13,9 @@ builder.Services.ConfigureDatabase(builder.Configuration, builder.Environment)
     .ConfigureCoreClient(builder.Configuration)
     .ConfigureApplicationServices()
     .ConfigureOpenApi();
+
+builder.Services.AddExceptionHandler<BadRequestExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddCors(options =>
 {
@@ -36,6 +40,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure middleware
+app.UseExceptionHandler();
 app.UseCors();
 app.MapOpenApi();
 app.MapScalarApiReference();
