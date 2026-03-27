@@ -270,6 +270,7 @@ namespace Giraf.IntegrationTests.Endpoints
             Assert.Equal(updateActivityDto.Date, returnedActivity.Date);
             Assert.Equal(updateActivityDto.StartTime, returnedActivity.StartTime);
             Assert.Equal(updateActivityDto.EndTime, returnedActivity.EndTime);
+            Assert.Equal(updateActivityDto.PictogramId, returnedActivity.PictogramId);
         }
 
         [Fact]
