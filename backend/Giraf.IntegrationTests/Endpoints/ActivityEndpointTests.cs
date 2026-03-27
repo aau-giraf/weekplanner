@@ -858,5 +858,66 @@ namespace Giraf.IntegrationTests.Endpoints
         }
 
         #endregion
+
+        #region Authorization - Orphaned activities (fail closed)
+
+        [Fact]
+        public async Task GetActivityById_ReturnsForbidden_WhenActivityHasNoOwner()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new OrphanedActivityDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "admin");
+
+            int activityId = seeder.Activities[0].Id;
+            var response = await client.GetAsync($"/weekplan/activity/{activityId}");
+
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateActivity_ReturnsForbidden_WhenActivityHasNoOwner()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new OrphanedActivityDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "admin");
+
+            int activityId = seeder.Activities[0].Id;
+            var updateDto = new UpdateActivityDTO
+            (
+                Date: DateOnly.FromDateTime(DateTime.UtcNow),
+                StartTime: new TimeOnly(9, 0),
+                EndTime: new TimeOnly(10, 0),
+                IsCompleted: false,
+                PictogramId: null
+            );
+
+            var response = await client.PutAsJsonAsync($"/weekplan/activity/{activityId}", updateDto);
+
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task DeleteActivity_ReturnsForbidden_WhenActivityHasNoOwner()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new OrphanedActivityDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "admin");
+
+            int activityId = seeder.Activities[0].Id;
+            var response = await client.DeleteAsync($"/weekplan/activity/{activityId}");
+
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        }
+
+        #endregion
     }
 }

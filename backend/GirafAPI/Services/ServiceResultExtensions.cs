@@ -19,7 +19,7 @@ public static class ServiceResultExtensions
             ServiceErrorKind.NotFound => TypedResults.NotFound(error.Message),
             ServiceErrorKind.Validation => TypedResults.BadRequest(error.Message),
             ServiceErrorKind.Unauthorized => TypedResults.Unauthorized(),
-            ServiceErrorKind.Forbidden => TypedResults.Json(error.Message, statusCode: StatusCodes.Status403Forbidden),
+            ServiceErrorKind.Forbidden => TypedResults.Problem(error.Message, statusCode: StatusCodes.Status403Forbidden),
             _ => TypedResults.Problem(error.Message,
                 statusCode: StatusCodes.Status500InternalServerError)
         };

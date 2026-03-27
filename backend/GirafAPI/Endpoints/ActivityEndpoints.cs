@@ -36,6 +36,7 @@ public static class ActivityEndpoints
             .RequireAuthorization()
             .Produces<List<ActivityDTO>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status500InternalServerError);
 
         // GET activities for one day for a grade
@@ -56,6 +57,7 @@ public static class ActivityEndpoints
             .RequireAuthorization()
             .Produces<List<ActivityDTO>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);
 
@@ -77,6 +79,7 @@ public static class ActivityEndpoints
             .RequireAuthorization()
             .Produces<ActivityDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);
 
@@ -101,6 +104,7 @@ public static class ActivityEndpoints
             .Accepts<CreateActivityDTO>("application/json")
             .Produces<ActivityDTO>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);
 
@@ -124,6 +128,7 @@ public static class ActivityEndpoints
             .Accepts<CreateActivityDTO>("application/json")
             .Produces<ActivityDTO>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);
 
@@ -145,6 +150,7 @@ public static class ActivityEndpoints
             .WithTags("Activities")
             .RequireAuthorization()
             .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status200OK);
 
@@ -165,6 +171,7 @@ public static class ActivityEndpoints
             .WithTags("Activities")
             .RequireAuthorization()
             .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status200OK);
 
@@ -187,6 +194,7 @@ public static class ActivityEndpoints
             .Accepts<UpdateActivityDTO>("application/json")
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError);
@@ -210,6 +218,7 @@ public static class ActivityEndpoints
             .RequireAuthorization()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError);
 
@@ -231,6 +240,7 @@ public static class ActivityEndpoints
             .RequireAuthorization()
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError);
@@ -252,6 +262,7 @@ public static class ActivityEndpoints
             .RequireAuthorization()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);
 

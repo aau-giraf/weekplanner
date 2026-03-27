@@ -210,7 +210,7 @@ public class ActivityService : IActivityService
     {
         var owner = ResolveOwner(activity);
         if (owner is null)
-            return new ServiceError(ServiceErrorKind.Internal, "Activity has no resolvable owner.");
+            return new ServiceError(ServiceErrorKind.Forbidden, "Access denied.");
 
         return await ValidateOwnerAsync(owner, accessToken, ct);
     }
