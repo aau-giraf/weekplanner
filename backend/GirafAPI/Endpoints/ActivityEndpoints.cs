@@ -185,14 +185,14 @@ public static class ActivityEndpoints
                         return TypedResults.Unauthorized();
 
                     var result = await service.UpdateActivityAsync(id, dto, token, ct);
-                    return result.ToHttpResult(() => TypedResults.Ok());
+                    return result.ToHttpResult(v => TypedResults.Ok(v));
                 })
             .WithName("UpdateActivity")
             .WithDescription("Updates an existing activity using ID.")
             .WithTags("Activities")
             .RequireAuthorization()
             .Accepts<UpdateActivityDTO>("application/json")
-            .Produces(StatusCodes.Status200OK)
+            .Produces<ActivityDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)

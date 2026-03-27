@@ -82,26 +82,26 @@ public class ActivityService : IActivityService
         return ServiceResult<ActivityDTO>.Success(activity.ToDTO());
     }
 
-    public async Task<ServiceResult> UpdateActivityAsync(
+    public async Task<ServiceResult<ActivityDTO>> UpdateActivityAsync(
         int id, UpdateActivityDTO dto, string accessToken, CancellationToken ct = default)
     {
         if (dto.EndTime <= dto.StartTime)
-            return ServiceResult.Fail(
+            return ServiceResult<ActivityDTO>.Fail(
                 new ServiceError(ServiceErrorKind.Validation, "End time must be after start time."));
 
         var activity = await _db.Activities.FindAsync([id], ct);
         if (activity is null)
-            return ServiceResult.Fail(new ServiceError(ServiceErrorKind.NotFound, "Activity not found."));
+            return ServiceResult<ActivityDTO>.Fail(new ServiceError(ServiceErrorKind.NotFound, "Activity not found."));
 
         var ownerError = await ValidateActivityOwnerAsync(activity, accessToken, ct);
         if (ownerError is not null)
-            return ServiceResult.Fail(ownerError);
+            return ServiceResult<ActivityDTO>.Fail(ownerError);
 
         if (dto.PictogramId is not null)
         {
             var picResult = await _coreClient.ValidatePictogramAsync(dto.PictogramId.Value, accessToken, ct);
             if (picResult is not CoreValidationResult.Valid)
-                return ServiceResult.Fail(ToCoreError(picResult, "Pictogram"));
+                return ServiceResult<ActivityDTO>.Fail(ToCoreError(picResult, "Pictogram"));
         }
 
         activity.Date = dto.Date;
@@ -111,7 +111,7 @@ public class ActivityService : IActivityService
         activity.PictogramId = dto.PictogramId;
         await _db.SaveChangesAsync(ct);
 
-        return ServiceResult.Success();
+        return ServiceResult<ActivityDTO>.Success(activity.ToDTO());
     }
 
     public async Task<ServiceResult> ToggleActivityStatusAsync(int id, bool isComplete, string accessToken, CancellationToken ct = default)

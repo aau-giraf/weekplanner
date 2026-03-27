@@ -263,11 +263,13 @@ namespace Giraf.IntegrationTests.Endpoints
 
             response.EnsureSuccessStatusCode();
 
-            using var verificationScope = factory.Services.CreateScope();
-            var dbContext = verificationScope.ServiceProvider.GetRequiredService<GirafDbContext>();
-            var updatedActivity = await dbContext.Activities.FindAsync(activityId);
-            Assert.NotNull(updatedActivity);
-            Assert.True(updatedActivity.IsCompleted);
+            var returnedActivity = await response.Content.ReadFromJsonAsync<ActivityDTO>();
+            Assert.NotNull(returnedActivity);
+            Assert.Equal(activityId, returnedActivity.ActivityId);
+            Assert.True(returnedActivity.IsCompleted);
+            Assert.Equal(updateActivityDto.Date, returnedActivity.Date);
+            Assert.Equal(updateActivityDto.StartTime, returnedActivity.StartTime);
+            Assert.Equal(updateActivityDto.EndTime, returnedActivity.EndTime);
         }
 
         [Fact]
