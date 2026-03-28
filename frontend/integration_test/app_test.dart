@@ -23,14 +23,18 @@ import 'package:weekplanner/shared/models/organisation.dart';
 import 'package:weekplanner/shared/models/paginated_response.dart';
 import 'package:weekplanner/shared/services/activity_api_service.dart';
 import 'package:weekplanner/shared/services/auth_service.dart';
-import 'package:weekplanner/shared/services/core_api_service.dart';
+import 'package:weekplanner/shared/services/organisation_api_service.dart';
+import 'package:weekplanner/shared/services/pictogram_api_service.dart';
 import 'package:weekplanner/shared/services/token_manager.dart';
 
 import '../test/helpers/jwt_test_helper.dart';
 
 class _MockAuthService extends Mock implements AuthService {}
 
-class _MockCoreApiService extends Mock implements CoreApiService {}
+class _MockOrganisationApiService extends Mock
+    implements OrganisationApiService {}
+
+class _MockPictogramApiService extends Mock implements PictogramApiService {}
 
 class _MockActivityApiService extends Mock implements ActivityApiService {}
 
@@ -40,13 +44,15 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   late _MockAuthService mockAuthService;
-  late _MockCoreApiService mockCoreApiService;
+  late _MockOrganisationApiService mockOrgApiService;
+  late _MockPictogramApiService mockPictogramApiService;
   late _MockActivityApiService mockActivityApiService;
   late _MockTokenManager mockTokenManager;
 
   setUp(() {
     mockAuthService = _MockAuthService();
-    mockCoreApiService = _MockCoreApiService();
+    mockOrgApiService = _MockOrganisationApiService();
+    mockPictogramApiService = _MockPictogramApiService();
     mockActivityApiService = _MockActivityApiService();
     mockTokenManager = _MockTokenManager();
 
@@ -61,11 +67,11 @@ void main() {
   Widget buildApp() {
     final authRepository = AuthRepositoryImpl(authService: mockAuthService);
     final organisationRepository =
-        OrganisationRepositoryImpl(coreApiService: mockCoreApiService);
+        OrganisationRepositoryImpl(apiService: mockOrgApiService);
     final activityRepository =
         ActivityRepositoryImpl(apiService: mockActivityApiService);
     final pictogramRepository =
-        PictogramRepositoryImpl(coreApiService: mockCoreApiService);
+        PictogramRepositoryImpl(apiService: mockPictogramApiService);
 
     final authCubit = AuthCubit(
       repository: authRepository,
@@ -86,7 +92,8 @@ void main() {
     return MultiProvider(
       providers: [
         Provider<AuthService>.value(value: mockAuthService),
-        Provider<CoreApiService>.value(value: mockCoreApiService),
+        Provider<OrganisationApiService>.value(value: mockOrgApiService),
+        Provider<PictogramApiService>.value(value: mockPictogramApiService),
         Provider<ActivityApiService>.value(value: mockActivityApiService),
         BlocProvider<AuthCubit>.value(value: authCubit),
         BlocProvider<LoginCubit>(
@@ -119,7 +126,7 @@ void main() {
     when(() => mockAuthService.logout()).thenAnswer((_) async {});
 
     // Stub organisations
-    when(() => mockCoreApiService.fetchOrganisations()).thenAnswer(
+    when(() => mockOrgApiService.fetchOrganisations()).thenAnswer(
       (_) async => PaginatedResponse(
         items: [const Organisation(id: 1, name: 'Test Org')],
         count: 1,
@@ -127,7 +134,7 @@ void main() {
     );
 
     // Stub citizens + grades for org 1
-    when(() => mockCoreApiService.fetchCitizens(1)).thenAnswer(
+    when(() => mockOrgApiService.fetchCitizens(1)).thenAnswer(
       (_) async => PaginatedResponse(
         items: [
           const Citizen(id: 10, firstName: 'Anders', lastName: 'Hansen'),
@@ -135,7 +142,7 @@ void main() {
         count: 1,
       ),
     );
-    when(() => mockCoreApiService.fetchGrades(1)).thenAnswer(
+    when(() => mockOrgApiService.fetchGrades(1)).thenAnswer(
       (_) async => PaginatedResponse<Grade>(items: [], count: 0),
     );
 

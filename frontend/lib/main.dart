@@ -19,8 +19,9 @@ import 'package:weekplanner/features/weekplan/domain/repositories/pictogram_repo
 import 'package:weekplanner/shared/interceptors/token_refresh_interceptor.dart';
 import 'package:weekplanner/shared/services/activity_api_service.dart';
 import 'package:weekplanner/shared/services/auth_service.dart';
-import 'package:weekplanner/shared/services/core_api_service.dart';
 import 'package:weekplanner/shared/services/log_service.dart';
+import 'package:weekplanner/shared/services/organisation_api_service.dart';
+import 'package:weekplanner/shared/services/pictogram_api_service.dart';
 import 'package:weekplanner/shared/services/token_manager.dart';
 
 Dio _createDio(String baseUrl) => Dio(BaseOptions(
@@ -41,26 +42,28 @@ void main() async {
   final authDio = _createDio(ApiConfig.coreBaseUrl);
   const storage = FlutterSecureStorage();
 
-  // Services
+  // Services — each focused on one giraf-core domain.
+  // OrganisationApiService and PictogramApiService share coreDio.
   final authService = AuthService(dio: authDio, storage: storage);
-  final coreApiService = CoreApiService(dio: coreDio);
+  final organisationApiService = OrganisationApiService(dio: coreDio);
+  final pictogramApiService = PictogramApiService(dio: coreDio);
   final activityApiService = ActivityApiService(dio: activityDio);
 
   // Repositories
   final authRepository = AuthRepositoryImpl(authService: authService);
   final organisationRepository = OrganisationRepositoryImpl(
-    coreApiService: coreApiService,
+    apiService: organisationApiService,
   );
   final activityRepository = ActivityRepositoryImpl(
     apiService: activityApiService,
   );
   final pictogramRepository = PictogramRepositoryImpl(
-    coreApiService: coreApiService,
+    apiService: pictogramApiService,
   );
 
   // Token distribution
   final tokenManager = TokenManager(
-    consumers: [coreApiService, activityApiService],
+    consumers: [organisationApiService, pictogramApiService, activityApiService],
   );
 
   // Auth cubit + router refresh adapter
@@ -102,7 +105,8 @@ void main() async {
       providers: [
         // Services
         Provider.value(value: authService),
-        Provider.value(value: coreApiService),
+        Provider.value(value: organisationApiService),
+        Provider.value(value: pictogramApiService),
         Provider.value(value: activityApiService),
 
         // Auth (BLoC)

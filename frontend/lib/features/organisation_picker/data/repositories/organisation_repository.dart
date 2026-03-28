@@ -6,7 +6,7 @@ import 'package:weekplanner/features/organisation_picker/domain/repositories/org
 import 'package:weekplanner/shared/models/citizen.dart';
 import 'package:weekplanner/shared/models/grade.dart';
 import 'package:weekplanner/shared/models/organisation.dart';
-import 'package:weekplanner/shared/services/core_api_service.dart';
+import 'package:weekplanner/shared/services/organisation_api_service.dart';
 
 final _log = Logger('OrganisationRepository');
 
@@ -15,16 +15,16 @@ final _log = Logger('OrganisationRepository');
 /// All methods return [Either] to communicate success or typed failure.
 /// No state management — that responsibility belongs to the ViewModel/Cubit.
 class OrganisationRepositoryImpl implements OrganisationRepository {
-  final CoreApiService _coreApiService;
+  final OrganisationApiService _apiService;
 
-  OrganisationRepositoryImpl({required CoreApiService coreApiService})
-      : _coreApiService = coreApiService;
+  OrganisationRepositoryImpl({required OrganisationApiService apiService})
+      : _apiService = apiService;
 
   @override
   Future<Either<OrganisationFailure, List<Organisation>>>
       fetchOrganisations() async {
     try {
-      final response = await _coreApiService.fetchOrganisations();
+      final response = await _apiService.fetchOrganisations();
       return Right(response.items);
     } catch (e, stackTrace) {
       _log.severe('Failed to fetch organisations', e, stackTrace);
@@ -38,8 +38,8 @@ class OrganisationRepositoryImpl implements OrganisationRepository {
           ({List<Citizen> citizens, List<Grade> grades})>>
       fetchCitizensAndGrades(int orgId) async {
     try {
-      final citizenResponse = await _coreApiService.fetchCitizens(orgId);
-      final gradeResponse = await _coreApiService.fetchGrades(orgId);
+      final citizenResponse = await _apiService.fetchCitizens(orgId);
+      final gradeResponse = await _apiService.fetchGrades(orgId);
       return Right(
         (citizens: citizenResponse.items, grades: gradeResponse.items),
       );

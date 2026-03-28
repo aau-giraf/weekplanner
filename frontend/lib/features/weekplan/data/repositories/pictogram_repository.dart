@@ -6,7 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:weekplanner/core/errors/pictogram_failure.dart';
 import 'package:weekplanner/features/weekplan/domain/repositories/pictogram_repository.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
-import 'package:weekplanner/shared/services/core_api_service.dart';
+import 'package:weekplanner/shared/services/pictogram_api_service.dart';
 
 final _log = Logger('PictogramRepository');
 
@@ -15,17 +15,17 @@ final _log = Logger('PictogramRepository');
 /// All methods return [Either] to communicate success or typed failure.
 /// No state management — that responsibility belongs to the cubit.
 class PictogramRepositoryImpl implements PictogramRepository {
-  final CoreApiService _coreApiService;
+  final PictogramApiService _apiService;
 
-  PictogramRepositoryImpl({required CoreApiService coreApiService})
-      : _coreApiService = coreApiService;
+  PictogramRepositoryImpl({required PictogramApiService apiService})
+      : _apiService = apiService;
 
   @override
   Future<Either<PictogramFailure, List<Pictogram>>> searchPictograms(
     String query,
   ) async {
     try {
-      final response = await _coreApiService.searchPictograms(query: query);
+      final response = await _apiService.searchPictograms(query: query);
       return Right(response.items);
     } catch (e, stackTrace) {
       _log.severe('Failed to search pictograms', e, stackTrace);
@@ -36,7 +36,7 @@ class PictogramRepositoryImpl implements PictogramRepository {
   @override
   Future<Either<PictogramFailure, Pictogram>> fetchPictogram(int id) async {
     try {
-      final pictogram = await _coreApiService.fetchPictogram(id);
+      final pictogram = await _apiService.fetchPictogram(id);
       return Right(pictogram);
     } catch (e, stackTrace) {
       _log.severe('Failed to fetch pictogram $id', e, stackTrace);
@@ -53,7 +53,7 @@ class PictogramRepositoryImpl implements PictogramRepository {
     bool generateSound = true,
   }) async {
     try {
-      final pictogram = await _coreApiService.createPictogram(
+      final pictogram = await _apiService.createPictogram(
         name: name,
         imageUrl: imageUrl,
         organizationId: organizationId,
@@ -76,7 +76,7 @@ class PictogramRepositoryImpl implements PictogramRepository {
     bool generateSound = true,
   }) async {
     try {
-      final pictogram = await _coreApiService.uploadPictogram(
+      final pictogram = await _apiService.uploadPictogram(
         name: name,
         imageFile: _toMultipartFile(imageFile),
         soundFile: soundFile != null ? _toMultipartFile(soundFile) : null,
