@@ -141,6 +141,70 @@ void main() {
     });
   });
 
+  group('tryRefreshToken', () {
+    test('returns Right with new token on success', () async {
+      final newToken = createValidJwt();
+      when(() => mockAuthService.getStoredRefreshToken())
+          .thenAnswer((_) async => 'valid-refresh');
+      when(() => mockAuthService.refreshAccessToken('valid-refresh'))
+          .thenAnswer((_) async => newToken);
+
+      final result = await repo.tryRefreshToken();
+
+      expect(result.isRight(), true);
+      result.fold(
+        (_) => fail('Expected Right'),
+        (token) => expect(token, newToken),
+      );
+    });
+
+    test('returns Left when no refresh token in storage', () async {
+      when(() => mockAuthService.getStoredRefreshToken())
+          .thenAnswer((_) async => null);
+
+      final result = await repo.tryRefreshToken();
+
+      expect(result.isLeft(), true);
+      result.fold(
+        (failure) => expect(failure, isA<UnexpectedFailure>()),
+        (_) => fail('Expected Left'),
+      );
+    });
+
+    test('returns InvalidCredentialsFailure on 401 from refresh', () async {
+      when(() => mockAuthService.getStoredRefreshToken())
+          .thenAnswer((_) async => 'expired-refresh');
+      when(() => mockAuthService.refreshAccessToken('expired-refresh'))
+          .thenThrow(DioException(
+        requestOptions: RequestOptions(),
+        response: Response(requestOptions: RequestOptions(), statusCode: 401),
+      ));
+
+      final result = await repo.tryRefreshToken();
+
+      expect(result.isLeft(), true);
+      result.fold(
+        (failure) => expect(failure, isA<InvalidCredentialsFailure>()),
+        (_) => fail('Expected Left'),
+      );
+    });
+
+    test('returns UnexpectedFailure on non-Dio exception', () async {
+      when(() => mockAuthService.getStoredRefreshToken())
+          .thenAnswer((_) async => 'some-refresh');
+      when(() => mockAuthService.refreshAccessToken('some-refresh'))
+          .thenThrow(Exception('boom'));
+
+      final result = await repo.tryRefreshToken();
+
+      expect(result.isLeft(), true);
+      result.fold(
+        (failure) => expect(failure, isA<UnexpectedFailure>()),
+        (_) => fail('Expected Left'),
+      );
+    });
+  });
+
   group('logout', () {
     test('returns Right on success', () async {
       when(() => mockAuthService.logout()).thenAnswer((_) async {});

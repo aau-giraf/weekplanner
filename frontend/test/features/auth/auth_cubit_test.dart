@@ -56,10 +56,31 @@ void main() {
     );
 
     blocTest<AuthCubit, AuthState>(
-      'falls back to auto-login when no stored token',
+      'uses refresh token when stored access token is expired',
       setUp: () {
         final token = createValidJwt();
         when(() => mockRepo.tryGetStoredToken())
+            .thenAnswer((_) async => Left(UnexpectedFailure()));
+        when(() => mockRepo.tryRefreshToken())
+            .thenAnswer((_) async => Right(token));
+        when(() => mockCoreApi.setAuthToken(any())).thenReturn(null);
+        when(() => mockActivityApi.setAuthToken(any())).thenReturn(null);
+      },
+      build: buildCubit,
+      act: (cubit) => cubit.tryRestoreSession(),
+      expect: () => [isA<AuthAuthenticated>()],
+      verify: (_) {
+        verifyNever(() => mockRepo.tryAutoLogin());
+      },
+    );
+
+    blocTest<AuthCubit, AuthState>(
+      'falls back to auto-login when stored token and refresh both fail',
+      setUp: () {
+        final token = createValidJwt();
+        when(() => mockRepo.tryGetStoredToken())
+            .thenAnswer((_) async => Left(UnexpectedFailure()));
+        when(() => mockRepo.tryRefreshToken())
             .thenAnswer((_) async => Left(UnexpectedFailure()));
         when(() => mockRepo.tryAutoLogin()).thenAnswer(
           (_) async => Right(
@@ -73,9 +94,11 @@ void main() {
     );
 
     blocTest<AuthCubit, AuthState>(
-      'emits AuthUnauthenticated when both restore paths fail',
+      'emits AuthUnauthenticated when all three restore paths fail',
       setUp: () {
         when(() => mockRepo.tryGetStoredToken())
+            .thenAnswer((_) async => Left(UnexpectedFailure()));
+        when(() => mockRepo.tryRefreshToken())
             .thenAnswer((_) async => Left(UnexpectedFailure()));
         when(() => mockRepo.tryAutoLogin())
             .thenAnswer((_) async => Left(UnexpectedFailure()));

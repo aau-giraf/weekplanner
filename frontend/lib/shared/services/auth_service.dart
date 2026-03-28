@@ -18,8 +18,12 @@ class AuthService {
   final Dio _dio;
   final FlutterSecureStorage _storage;
 
-  static const _accessKey = 'access_token';
-  static const _refreshKey = 'refresh_token';
+  /// Storage key for the access token. Shared with [TokenRefreshInterceptor].
+  static const accessTokenKey = 'access_token';
+
+  /// Storage key for the refresh token. Shared with [TokenRefreshInterceptor].
+  static const refreshTokenKey = 'refresh_token';
+
   static const _emailKey = 'saved_email';
   static const _passwordKey = 'saved_password';
 
@@ -40,18 +44,18 @@ class AuthService {
               ?.map((k, v) => MapEntry(k, v.toString())) ??
           {},
     );
-    await _storage.write(key: _accessKey, value: tokens.access);
-    await _storage.write(key: _refreshKey, value: tokens.refresh);
+    await _storage.write(key: accessTokenKey, value: tokens.access);
+    await _storage.write(key: refreshTokenKey, value: tokens.refresh);
     return tokens;
   }
 
   Future<void> logout() async {
-    await _storage.delete(key: _accessKey);
-    await _storage.delete(key: _refreshKey);
+    await _storage.delete(key: accessTokenKey);
+    await _storage.delete(key: refreshTokenKey);
   }
 
-  Future<String?> getStoredAccessToken() => _storage.read(key: _accessKey);
-  Future<String?> getStoredRefreshToken() => _storage.read(key: _refreshKey);
+  Future<String?> getStoredAccessToken() => _storage.read(key: accessTokenKey);
+  Future<String?> getStoredRefreshToken() => _storage.read(key: refreshTokenKey);
 
   Future<void> saveCredentials(String email, String password) async {
     await _storage.write(key: _emailKey, value: email);
@@ -67,5 +71,20 @@ class AuthService {
   Future<void> clearSavedCredentials() async {
     await _storage.delete(key: _emailKey);
     await _storage.delete(key: _passwordKey);
+  }
+
+  /// Exchange a refresh token for a new access token.
+  ///
+  /// Calls giraf-core's `/api/v1/token/refresh` endpoint and persists the
+  /// new access token in secure storage.
+  Future<String> refreshAccessToken(String refreshToken) async {
+    final response = await _dio.post(
+      '/api/v1/token/refresh',
+      data: {'refresh': refreshToken},
+    );
+    final newAccess =
+        (response.data as Map<String, dynamic>)['access'] as String;
+    await _storage.write(key: accessTokenKey, value: newAccess);
+    return newAccess;
   }
 }

@@ -62,6 +62,24 @@ class AuthRepository {
     }
   }
 
+  /// Try to refresh the access token using the stored refresh token.
+  Future<Either<AuthFailure, String>> tryRefreshToken() async {
+    try {
+      final refreshToken = await _authService.getStoredRefreshToken();
+      if (refreshToken == null) {
+        return Left(UnexpectedFailure('No refresh token'));
+      }
+      final newAccess =
+          await _authService.refreshAccessToken(refreshToken);
+      return Right(newAccess);
+    } on DioException catch (e, stackTrace) {
+      return Left(_mapDioError(e, stackTrace));
+    } catch (e, stackTrace) {
+      _log.warning('Token refresh failed', e, stackTrace);
+      return Left(const UnexpectedFailure());
+    }
+  }
+
   /// Clear stored tokens.
   Future<Either<AuthFailure, Unit>> logout() async {
     try {
