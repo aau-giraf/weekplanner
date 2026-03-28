@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace GirafAPI.Configuration;
 
@@ -8,13 +9,16 @@ namespace GirafAPI.Configuration;
 /// Catches BadHttpRequestException (model binding failures) and returns a clean 400
 /// instead of leaking stack traces or internal type names.
 /// </summary>
-public sealed class BadRequestExceptionHandler : IExceptionHandler
+public sealed class BadRequestExceptionHandler(
+    ILogger<BadRequestExceptionHandler> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
         if (exception is not BadHttpRequestException badRequest)
             return false;
+
+        logger.LogWarning(badRequest, "Bad request on {Path}", httpContext.Request.Path);
 
         httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
         await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
