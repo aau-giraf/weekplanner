@@ -26,7 +26,7 @@ class ActivityFormView extends StatelessWidget {
       body: BlocConsumer<ActivityFormCubit, ActivityFormState>(
         listener: (context, state) {
           if (state is ActivityFormSaved) {
-            context.pop();
+            context.pop(true);
           }
         },
         builder: (context, state) {
