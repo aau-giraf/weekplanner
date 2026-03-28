@@ -1,5 +1,5 @@
 /// Contract for any service that needs an auth token.
-abstract class TokenConsumer {
+abstract interface class TokenConsumer {
   /// Apply the given JWT [token] for authenticated requests.
   void setAuthToken(String token);
 
