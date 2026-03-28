@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:file_picker/file_picker.dart';
 
 import 'package:weekplanner/shared/models/activity.dart';
+import 'package:weekplanner/shared/models/file_data.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';
 
@@ -97,10 +97,10 @@ final class PictogramCreation with EquatableMixin {
   final String generatePrompt;
 
   /// Selected image file for upload mode.
-  final PlatformFile? imageFile;
+  final FileData? imageFile;
 
   /// Selected sound file for upload mode.
-  final PlatformFile? soundFile;
+  final FileData? soundFile;
 
   /// Whether to auto-generate sound for new pictograms.
   final bool generateSound;
@@ -122,8 +122,8 @@ final class PictogramCreation with EquatableMixin {
     PictogramMode? mode,
     String? name,
     String? generatePrompt,
-    PlatformFile? imageFile,
-    PlatformFile? soundFile,
+    FileData? imageFile,
+    FileData? soundFile,
     bool? generateSound,
     bool? isCreating,
     bool clearImageFile = false,
@@ -145,9 +145,8 @@ final class PictogramCreation with EquatableMixin {
         mode,
         name,
         generatePrompt,
-        // PlatformFile lacks value equality; identity comparison means
-        // Equatable treats a new copyWith as changed even with the same
-        // underlying file data — this is the desired conservative behavior.
+        // FileData is a record — Dart records have structural equality,
+        // but the Uint8List bytes field uses identity comparison.
         imageFile,
         soundFile,
         generateSound,

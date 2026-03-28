@@ -1,20 +1,18 @@
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/core/errors/pictogram_failure.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart';
 import 'package:weekplanner/features/weekplan/domain/repositories/pictogram_repository.dart';
+import 'package:weekplanner/shared/models/file_data.dart';
 import 'package:weekplanner/shared/models/paginated_response.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 import 'package:weekplanner/shared/services/pictogram_api_service.dart';
 
 class MockPictogramApiService extends Mock implements PictogramApiService {}
-
-class MockPlatformFile extends Mock implements PlatformFile {}
 
 class FakeMultipartFile extends Fake implements MultipartFile {}
 
@@ -145,9 +143,12 @@ void main() {
 
   group('uploadPictogram', () {
     test('returns Right with pictogram on success', () async {
-      final mockFile = MockPlatformFile();
-      when(() => mockFile.bytes).thenReturn(Uint8List.fromList([1, 2, 3]));
-      when(() => mockFile.name).thenReturn('image.png');
+      final FileData testFile = (
+        name: 'image.png',
+        size: 3,
+        bytes: Uint8List.fromList([1, 2, 3]),
+        path: null,
+      );
 
       when(
         () => mockCore.uploadPictogram(
@@ -161,7 +162,7 @@ void main() {
 
       final result = await repo.uploadPictogram(
         name: 'Bade',
-        imageFile: mockFile,
+        imageFile: testFile,
       );
 
       expect(result, isA<Right<PictogramFailure, Pictogram>>());
@@ -169,9 +170,12 @@ void main() {
     });
 
     test('returns Left(CreatePictogramFailure) on exception', () async {
-      final mockFile = MockPlatformFile();
-      when(() => mockFile.bytes).thenReturn(Uint8List.fromList([1, 2, 3]));
-      when(() => mockFile.name).thenReturn('image.png');
+      final FileData testFile = (
+        name: 'image.png',
+        size: 3,
+        bytes: Uint8List.fromList([1, 2, 3]),
+        path: null,
+      );
 
       when(
         () => mockCore.uploadPictogram(
@@ -185,7 +189,7 @@ void main() {
 
       final result = await repo.uploadPictogram(
         name: 'Bade',
-        imageFile: mockFile,
+        imageFile: testFile,
       );
 
       expect(result, isA<Left<PictogramFailure, Pictogram>>());
@@ -196,14 +200,16 @@ void main() {
     });
 
     test('returns Left when file has neither bytes nor path', () async {
-      final mockFile = MockPlatformFile();
-      when(() => mockFile.bytes).thenReturn(null);
-      when(() => mockFile.path).thenReturn(null);
-      when(() => mockFile.name).thenReturn('broken.png');
+      const FileData brokenFile = (
+        name: 'broken.png',
+        size: 0,
+        bytes: null,
+        path: null,
+      );
 
       final result = await repo.uploadPictogram(
         name: 'Bade',
-        imageFile: mockFile,
+        imageFile: brokenFile,
       );
 
       expect(result, isA<Left<PictogramFailure, Pictogram>>());

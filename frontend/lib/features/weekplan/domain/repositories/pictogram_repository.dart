@@ -1,7 +1,7 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:fpdart/fpdart.dart';
 
 import 'package:weekplanner/core/errors/pictogram_failure.dart';
+import 'package:weekplanner/shared/models/file_data.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 
 /// Contract for pictogram data operations.
@@ -26,8 +26,8 @@ abstract interface class PictogramRepository {
   /// Upload a pictogram with a local image file.
   Future<Either<PictogramFailure, Pictogram>> uploadPictogram({
     required String name,
-    required PlatformFile imageFile,
-    PlatformFile? soundFile,
+    required FileData imageFile,
+    FileData? soundFile,
     int? organizationId,
     bool generateSound = true,
   });

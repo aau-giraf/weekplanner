@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:logging/logging.dart';
 
 import 'package:weekplanner/core/errors/activity_failure.dart';
+import 'package:weekplanner/shared/models/file_data.dart';
 import 'package:weekplanner/features/weekplan/domain/repositories/activity_repository.dart';
 import 'package:weekplanner/features/weekplan/domain/repositories/pictogram_repository.dart';
 import 'package:weekplanner/features/weekplan/domain/activity_form_state.dart';
@@ -73,7 +73,7 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
     _emitReady(creation: state.creation.copyWith(generatePrompt: prompt));
   }
 
-  void setSelectedImageFile(PlatformFile? file) {
+  void setSelectedImageFile(FileData? file) {
     if (file == null) {
       _emitReady(creation: state.creation.copyWith(clearImageFile: true));
     } else {
@@ -81,7 +81,7 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
     }
   }
 
-  void setSelectedSoundFile(PlatformFile? file) {
+  void setSelectedSoundFile(FileData? file) {
     if (file == null) {
       _emitReady(creation: state.creation.copyWith(clearSoundFile: true));
     } else {

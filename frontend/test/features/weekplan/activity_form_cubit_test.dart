@@ -1,13 +1,13 @@
 import 'dart:typed_data';
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:weekplanner/core/errors/activity_failure.dart';
 import 'package:weekplanner/core/errors/pictogram_failure.dart';
+import 'package:weekplanner/shared/models/file_data.dart';
 import 'package:weekplanner/features/weekplan/domain/repositories/activity_repository.dart';
 import 'package:weekplanner/features/weekplan/domain/repositories/pictogram_repository.dart';
 import 'package:weekplanner/features/weekplan/domain/activity_form_state.dart';
@@ -19,11 +19,11 @@ class MockActivityRepository extends Mock implements ActivityRepository {}
 
 class MockPictogramRepository extends Mock implements PictogramRepository {}
 
-class FakePlatformFile extends Fake implements PlatformFile {}
-
 void main() {
   setUpAll(() {
-    registerFallbackValue(FakePlatformFile());
+    registerFallbackValue(
+      (name: '', size: 0, bytes: null, path: null) as FileData,
+    );
   });
   late MockActivityRepository mockActivityRepo;
   late MockPictogramRepository mockPictogramRepo;
@@ -220,7 +220,7 @@ void main() {
       final cubit = buildCubit();
       // Seed state with name and image file
       cubit.setPictogramName('test');
-      final fakeFile = PlatformFile(name: 'image.png', size: 0, bytes: Uint8List(0));
+      final FileData fakeFile = (name: 'image.png', size: 0, bytes: Uint8List(0), path: null);
       cubit.setSelectedImageFile(fakeFile);
 
       final result = await cubit.uploadPictogramFromFile();
@@ -244,7 +244,7 @@ void main() {
 
       final cubit = buildCubit();
       cubit.setPictogramName('test');
-      final fakeFile = PlatformFile(name: 'image.png', size: 0, bytes: Uint8List(0));
+      final FileData fakeFile = (name: 'image.png', size: 0, bytes: Uint8List(0), path: null);
       cubit.setSelectedImageFile(fakeFile);
 
       final result = await cubit.uploadPictogramFromFile();
