@@ -83,7 +83,7 @@ class _PictogramSelectorState extends State<PictogramSelector> {
   }
 }
 
-// ── Search tab (existing behavior) ──────────────────────────
+// ── Mode content router ───────────────────────────────────────
 
 /// Renders the appropriate tab content based on the selected [PictogramMode].
 class _PictogramModeContent extends StatelessWidget {
