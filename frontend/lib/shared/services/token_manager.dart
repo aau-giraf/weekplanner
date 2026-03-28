@@ -2,7 +2,7 @@ import 'package:weekplanner/shared/services/token_consumer.dart';
 
 /// Distributes auth tokens to all registered [TokenConsumer]s.
 ///
-/// Decouples [AuthCubit] from knowing which services need tokens.
+/// Decouples the auth layer from knowing which services need tokens.
 /// New services only need to be added to the consumer list, satisfying OCP.
 class TokenManager {
   final List<TokenConsumer> _consumers;
