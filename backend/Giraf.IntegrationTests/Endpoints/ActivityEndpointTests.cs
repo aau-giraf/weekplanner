@@ -654,6 +654,39 @@ namespace Giraf.IntegrationTests.Endpoints
 
         #endregion
 
+        #region Model binding errors - Sanitized responses
+
+        [Fact]
+        public async Task CopyActivityForCitizen_ReturnsBadRequest_WithoutStackTrace_WhenBodyIsWrongType()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new EmptyDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            var sourceDate = DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd");
+            var targetDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).ToString("yyyy-MM-dd");
+
+            // Send a JSON object instead of the expected List<int>
+            var badBody = new StringContent(
+                """{"sourceDate":"2025-03-19","targetDate":"2025-03-20"}""",
+                System.Text.Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync(
+                $"/weekplan/activity/copy-citizen/1?sourceDate={sourceDate}&targetDate={targetDate}",
+                badBody);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain("StackTrace", body, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("BadHttpRequestException", body, StringComparison.OrdinalIgnoreCase);
+        }
+
+        #endregion
+
         #region Authentication - Unauthenticated requests
 
         [Fact]
