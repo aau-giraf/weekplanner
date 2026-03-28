@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:logging/logging.dart';
 
 import 'package:weekplanner/core/errors/pictogram_failure.dart';
 import 'package:weekplanner/features/weekplan/domain/repositories/pictogram_repository.dart';
+import 'package:weekplanner/shared/models/file_data.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 import 'package:weekplanner/shared/services/pictogram_api_service.dart';
 
@@ -70,8 +70,8 @@ class PictogramRepositoryImpl implements PictogramRepository {
   @override
   Future<Either<PictogramFailure, Pictogram>> uploadPictogram({
     required String name,
-    required PlatformFile imageFile,
-    PlatformFile? soundFile,
+    required FileData imageFile,
+    FileData? soundFile,
     int? organizationId,
     bool generateSound = true,
   }) async {
@@ -90,19 +90,20 @@ class PictogramRepositoryImpl implements PictogramRepository {
     }
   }
 
-  /// Convert a [PlatformFile] to a Dio [MultipartFile].
+  /// Convert a [FileData] record to a Dio [MultipartFile].
   ///
   /// Uses bytes on web (where path is unavailable) and path on native.
   /// Throws [StateError] if neither bytes nor path is available.
-  MultipartFile _toMultipartFile(PlatformFile file) {
-    if (file.bytes != null) {
-      return MultipartFile.fromBytes(file.bytes!, filename: file.name);
+  MultipartFile _toMultipartFile(FileData file) {
+    final (name: name, bytes: bytes, path: path, size: _) = file;
+    if (bytes != null) {
+      return MultipartFile.fromBytes(bytes, filename: name);
     }
-    if (file.path != null) {
-      return MultipartFile.fromFileSync(file.path!, filename: file.name);
+    if (path != null) {
+      return MultipartFile.fromFileSync(path, filename: name);
     }
     throw StateError(
-      'PlatformFile "${file.name}" has neither bytes nor path — '
+      'FileData "$name" has neither bytes nor path — '
       'cannot convert to MultipartFile',
     );
   }

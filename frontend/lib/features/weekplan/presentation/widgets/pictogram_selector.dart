@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/weekplan/domain/activity_form_state.dart';
 import 'package:weekplanner/features/weekplan/presentation/activity_form_cubit.dart';
+import 'package:weekplanner/shared/models/file_data.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 
 class PictogramSelector extends StatefulWidget {
@@ -248,13 +249,13 @@ class _SearchTab extends StatelessWidget {
 
 class _UploadTab extends StatelessWidget {
   final TextEditingController nameController;
-  final PlatformFile? selectedImageFile;
-  final PlatformFile? selectedSoundFile;
+  final FileData? selectedImageFile;
+  final FileData? selectedSoundFile;
   final bool generateSound;
   final bool isCreatingPictogram;
   final ValueChanged<String> onNameChanged;
-  final ValueChanged<PlatformFile?> onImageFilePicked;
-  final ValueChanged<PlatformFile?> onSoundFilePicked;
+  final ValueChanged<FileData?> onImageFilePicked;
+  final ValueChanged<FileData?> onSoundFilePicked;
   final ValueChanged<bool> onGenerateSoundChanged;
   final Future<bool> Function() onUpload;
 
@@ -333,13 +334,21 @@ class _UploadTab extends StatelessWidget {
     );
   }
 
-  Future<PlatformFile?> _pickFile(List<String> extensions) async {
+  /// Pick a file and convert to domain-safe [FileData].
+  Future<FileData?> _pickFile(List<String> extensions) async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: extensions,
       withData: true,
     );
-    return result?.files.single;
+    final file = result?.files.single;
+    if (file == null) return null;
+    return (
+      name: file.name,
+      size: file.size,
+      bytes: file.bytes,
+      path: file.path,
+    );
   }
 }
 
