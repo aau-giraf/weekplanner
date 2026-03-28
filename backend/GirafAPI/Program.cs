@@ -3,6 +3,7 @@ using GirafAPI.Configuration;
 using GirafAPI.Data;
 using GirafAPI.Endpoints;
 using GirafAPI.Extensions;
+using Microsoft.AspNetCore.HttpOverrides;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -58,6 +59,10 @@ builder.Services.AddRateLimiter(options =>
 var app = builder.Build();
 
 // Configure middleware
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor,
+});
 app.UseExceptionHandler();
 app.UseCors();
 app.UseRateLimiter();
@@ -72,7 +77,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Map endpoints
-app.MapGet("/health", () => Results.Ok()).ExcludeFromDescription();
+app.MapGet("/health", () => Results.Ok()).ExcludeFromDescription().DisableRateLimiting();
 app.MapActivityEndpoints();
 
 // Apply migrations
