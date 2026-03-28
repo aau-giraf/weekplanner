@@ -32,6 +32,7 @@ Dio _createDio(String baseUrl) => Dio(BaseOptions(
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupLogging();
+  await ApiConfig.load();
 
   // Dio instances — created here so the refresh interceptor can be shared.
   final coreDio = _createDio(ApiConfig.coreBaseUrl);

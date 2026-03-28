@@ -30,8 +30,10 @@ class WeekplanView extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          final selectedDate = context.read<WeekplanCubit>().state.selectedDate;
+          final dateStr = selectedDate.toIso8601String().split('T').first;
           final saved = await context.push<bool>(
-            '/weekplan/$citizenId/add?type=${isCitizen ? 'citizen' : 'grade'}&orgId=$orgId',
+            '/weekplan/$citizenId/add?type=${isCitizen ? 'citizen' : 'grade'}&orgId=$orgId&date=$dateStr',
           );
           if (saved == true && context.mounted) {
             context.read<WeekplanCubit>().loadActivities();
