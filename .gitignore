@@ -39,6 +39,9 @@ frontend/.env*.local
 /weekplannerbackend/
 /weekplan-frontend/
 
+# --- Worktrees ---
+.worktrees/
+
 # --- General ---
 .DS_Store
 *.pem
