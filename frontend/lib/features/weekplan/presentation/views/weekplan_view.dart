@@ -29,10 +29,13 @@ class WeekplanView extends StatelessWidget {
         title: const Text('Ugeplan'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.go(
+        onPressed: () async {
+          final saved = await context.push<bool>(
             '/weekplan/$citizenId/add?type=${isCitizen ? 'citizen' : 'grade'}&orgId=$orgId',
           );
+          if (saved == true && context.mounted) {
+            context.read<WeekplanCubit>().loadActivities();
+          }
         },
         backgroundColor: context.colorScheme.primary,
         child: Icon(Icons.add, color: context.colorScheme.onPrimary),
@@ -179,12 +182,15 @@ class _ActivityList extends StatelessWidget {
             activity: activity,
             imageUrl: media?.imageUrl,
             soundUrl: media?.soundUrl,
-            onEdit: () {
-              context.go(
+            onEdit: () async {
+              final saved = await context.push<bool>(
                 '/weekplan/$citizenId/edit/${activity.activityId}'
                 '?type=${isCitizen ? 'citizen' : 'grade'}&orgId=$orgId',
                 extra: activity,
               );
+              if (saved == true && context.mounted) {
+                context.read<WeekplanCubit>().loadActivities();
+              }
             },
             onDelete: () => cubit.deleteActivity(activity.activityId),
             onToggleStatus: () =>
