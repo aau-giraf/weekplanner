@@ -1,8 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 import 'package:weekplanner/app.dart';
+import 'package:weekplanner/config/api_config.dart';
 import 'package:weekplanner/core/routing/go_router_refresh_stream.dart';
 import 'package:weekplanner/features/auth/data/repositories/auth_repository.dart';
 import 'package:weekplanner/features/auth/presentation/auth_cubit.dart';
@@ -11,6 +14,7 @@ import 'package:weekplanner/features/organisation_picker/data/repositories/organ
 import 'package:weekplanner/features/organisation_picker/presentation/organisation_picker_cubit.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/activity_repository.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart';
+import 'package:weekplanner/shared/interceptors/token_refresh_interceptor.dart';
 import 'package:weekplanner/shared/services/activity_api_service.dart';
 import 'package:weekplanner/shared/services/auth_service.dart';
 import 'package:weekplanner/shared/services/core_api_service.dart';
@@ -20,10 +24,21 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupLogging();
 
+  // Dio instances — created here so the refresh interceptor can be shared.
+  // AuthService keeps its own Dio (login 401s should NOT trigger refresh).
+  final coreDio = Dio(BaseOptions(
+    baseUrl: ApiConfig.coreBaseUrl,
+    headers: {'Content-Type': 'application/json'},
+  ));
+  final activityDio = Dio(BaseOptions(
+    baseUrl: ApiConfig.weekplannerBaseUrl,
+    headers: {'Content-Type': 'application/json'},
+  ));
+
   // Services
   final authService = AuthService();
-  final coreApiService = CoreApiService();
-  final activityApiService = ActivityApiService();
+  final coreApiService = CoreApiService(dio: coreDio);
+  final activityApiService = ActivityApiService(dio: activityDio);
 
   // Repositories
   final authRepository = AuthRepository(authService: authService);
@@ -44,6 +59,19 @@ void main() async {
     activityApiService: activityApiService,
   );
   final refreshListenable = GoRouterRefreshStream(authCubit.stream);
+
+  // Token refresh interceptor — handles 401s by refreshing the access token
+  // and retrying the failed request. Shared across core and activity Dio.
+  final refreshDio = Dio(BaseOptions(baseUrl: ApiConfig.coreBaseUrl));
+  final tokenInterceptor = TokenRefreshInterceptor(
+    refreshDio: refreshDio,
+    storage: const FlutterSecureStorage(),
+    protectedDios: [coreDio, activityDio],
+    onTokenRefreshed: (token) => authCubit.authenticated(token),
+    onRefreshFailed: () => authCubit.logout(),
+  );
+  coreDio.interceptors.add(tokenInterceptor);
+  activityDio.interceptors.add(tokenInterceptor);
 
   // Try to restore session
   authCubit.tryRestoreSession();

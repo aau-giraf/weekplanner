@@ -68,4 +68,19 @@ class AuthService {
     await _storage.delete(key: _emailKey);
     await _storage.delete(key: _passwordKey);
   }
+
+  /// Exchange a refresh token for a new access token.
+  ///
+  /// Calls giraf-core's `/api/v1/token/refresh` endpoint and persists the
+  /// new access token in secure storage.
+  Future<String> refreshAccessToken(String refreshToken) async {
+    final response = await _dio.post(
+      '/api/v1/token/refresh',
+      data: {'refresh': refreshToken},
+    );
+    final newAccess =
+        (response.data as Map<String, dynamic>)['access'] as String;
+    await _storage.write(key: _accessKey, value: newAccess);
+    return newAccess;
+  }
 }

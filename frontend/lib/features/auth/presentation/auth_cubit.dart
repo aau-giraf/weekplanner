@@ -29,8 +29,14 @@ class AuthCubit extends Cubit<AuthState> {
   /// Whether the current state is [AuthAuthenticated].
   bool get isAuthenticated => state is AuthAuthenticated;
 
-  /// Attempt to restore a previous session from stored tokens or credentials.
+  /// Attempt to restore a previous session.
+  ///
+  /// Tries three strategies in order:
+  /// 1. Non-expired stored access token
+  /// 2. Refresh token exchange (access expired but refresh still valid)
+  /// 3. Auto-login with saved credentials
   Future<void> tryRestoreSession() async {
+    // 1. Try non-expired stored access token.
     final tokenResult = await _repository.tryGetStoredToken();
     final restored = tokenResult.fold(
       (_) => false,
@@ -39,9 +45,20 @@ class AuthCubit extends Cubit<AuthState> {
         return true;
       },
     );
-
     if (restored) return;
 
+    // 2. Try refreshing with stored refresh token.
+    final refreshResult = await _repository.tryRefreshToken();
+    final refreshed = refreshResult.fold(
+      (_) => false,
+      (token) {
+        authenticated(token);
+        return true;
+      },
+    );
+    if (refreshed) return;
+
+    // 3. Fall back to saved credentials.
     final autoLoginResult = await _repository.tryAutoLogin();
     autoLoginResult.fold(
       (_) => emit(const AuthUnauthenticated()),
