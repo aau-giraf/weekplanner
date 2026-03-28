@@ -3,6 +3,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/core/errors/organisation_failure.dart';
 import 'package:weekplanner/features/organisation_picker/data/repositories/organisation_repository.dart';
+import 'package:weekplanner/features/organisation_picker/domain/repositories/organisation_repository.dart';
 import 'package:weekplanner/shared/models/citizen.dart';
 import 'package:weekplanner/shared/models/grade.dart';
 import 'package:weekplanner/shared/models/organisation.dart';
@@ -21,7 +22,7 @@ void main() {
 
   setUp(() {
     mockCore = MockCoreApiService();
-    repo = OrganisationRepository(coreApiService: mockCore);
+    repo = OrganisationRepositoryImpl(coreApiService: mockCore);
   });
 
   group('fetchOrganisations', () {

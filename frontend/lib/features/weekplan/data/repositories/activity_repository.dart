@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:logging/logging.dart';
 
 import 'package:weekplanner/core/errors/activity_failure.dart';
+import 'package:weekplanner/features/weekplan/domain/repositories/activity_repository.dart';
 import 'package:weekplanner/shared/models/activity.dart';
 import 'package:weekplanner/shared/services/activity_api_service.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';
@@ -12,13 +13,13 @@ final _log = Logger('ActivityRepository');
 ///
 /// All methods return [Either] to communicate success or typed failure.
 /// No state management — that responsibility belongs to [WeekplanCubit].
-class ActivityRepository {
+class ActivityRepositoryImpl implements ActivityRepository {
   final ActivityApiService _apiService;
 
-  ActivityRepository({required ActivityApiService apiService})
+  ActivityRepositoryImpl({required ActivityApiService apiService})
       : _apiService = apiService;
 
-  /// Fetch activities for a citizen or grade on a given date.
+  @override
   Future<Either<ActivityFailure, List<Activity>>> fetchActivities({
     required int id,
     required bool isCitizen,
@@ -36,7 +37,7 @@ class ActivityRepository {
     }
   }
 
-  /// Create an activity for a citizen or grade.
+  @override
   Future<Either<ActivityFailure, Activity>> createActivity({
     required int id,
     required bool isCitizen,
@@ -53,7 +54,7 @@ class ActivityRepository {
     }
   }
 
-  /// Update an existing activity.
+  @override
   Future<Either<ActivityFailure, Activity>> updateActivity(
     int activityId,
     Map<String, dynamic> data,
@@ -67,7 +68,7 @@ class ActivityRepository {
     }
   }
 
-  /// Delete an activity.
+  @override
   Future<Either<ActivityFailure, Unit>> deleteActivity(int activityId) async {
     try {
       await _apiService.deleteActivity(activityId);
@@ -78,7 +79,7 @@ class ActivityRepository {
     }
   }
 
-  /// Toggle an activity's completion status.
+  @override
   Future<Either<ActivityFailure, Unit>> toggleActivityStatus(
     int activityId, {
     required bool isComplete,

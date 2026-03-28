@@ -2,8 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:logging/logging.dart';
 
-import 'package:weekplanner/features/weekplan/data/repositories/activity_repository.dart';
-import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart';
+import 'package:weekplanner/features/weekplan/domain/repositories/activity_repository.dart';
+import 'package:weekplanner/features/weekplan/domain/repositories/pictogram_repository.dart';
 import 'package:weekplanner/features/weekplan/domain/weekplan_state.dart';
 import 'package:weekplanner/shared/models/activity.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';

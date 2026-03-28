@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:logging/logging.dart';
 
-import 'package:weekplanner/features/auth/data/repositories/auth_repository.dart';
+import 'package:weekplanner/features/auth/domain/repositories/auth_repository.dart';
 import 'package:weekplanner/features/auth/presentation/auth_cubit.dart';
 import 'package:weekplanner/features/auth/presentation/login_state.dart';
 

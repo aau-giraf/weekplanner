@@ -1,17 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class AuthTokens {
-  final String access;
-  final String refresh;
-  final Map<String, String> orgRoles;
-
-  const AuthTokens({
-    required this.access,
-    required this.refresh,
-    required this.orgRoles,
-  });
-}
+import 'package:weekplanner/shared/models/auth_tokens.dart';
 
 class AuthService {
   final Dio _dio;

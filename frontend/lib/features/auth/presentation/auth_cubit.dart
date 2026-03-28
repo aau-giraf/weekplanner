@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 
-import 'package:weekplanner/features/auth/data/repositories/auth_repository.dart';
+import 'package:weekplanner/features/auth/domain/repositories/auth_repository.dart';
 import 'package:weekplanner/features/auth/domain/auth_state.dart';
 import 'package:weekplanner/shared/services/token_manager.dart';
 import 'package:weekplanner/shared/utils/jwt_decode.dart';

@@ -14,6 +14,9 @@ import 'package:weekplanner/features/organisation_picker/data/repositories/organ
 import 'package:weekplanner/features/organisation_picker/presentation/organisation_picker_cubit.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/activity_repository.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart';
+import 'package:weekplanner/features/weekplan/domain/repositories/activity_repository.dart';
+import 'package:weekplanner/features/weekplan/domain/repositories/pictogram_repository.dart';
+import 'package:weekplanner/shared/models/auth_tokens.dart';
 import 'package:weekplanner/shared/models/citizen.dart';
 import 'package:weekplanner/shared/models/grade.dart';
 import 'package:weekplanner/shared/models/organisation.dart';
@@ -56,13 +59,13 @@ void main() {
 
   /// Builds the full app with mocked services, mirroring [main.dart].
   Widget buildApp() {
-    final authRepository = AuthRepository(authService: mockAuthService);
+    final authRepository = AuthRepositoryImpl(authService: mockAuthService);
     final organisationRepository =
-        OrganisationRepository(coreApiService: mockCoreApiService);
+        OrganisationRepositoryImpl(coreApiService: mockCoreApiService);
     final activityRepository =
-        ActivityRepository(apiService: mockActivityApiService);
+        ActivityRepositoryImpl(apiService: mockActivityApiService);
     final pictogramRepository =
-        PictogramRepository(coreApiService: mockCoreApiService);
+        PictogramRepositoryImpl(coreApiService: mockCoreApiService);
 
     final authCubit = AuthCubit(
       repository: authRepository,

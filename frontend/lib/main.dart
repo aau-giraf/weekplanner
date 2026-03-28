@@ -14,6 +14,8 @@ import 'package:weekplanner/features/organisation_picker/data/repositories/organ
 import 'package:weekplanner/features/organisation_picker/presentation/organisation_picker_cubit.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/activity_repository.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart';
+import 'package:weekplanner/features/weekplan/domain/repositories/activity_repository.dart';
+import 'package:weekplanner/features/weekplan/domain/repositories/pictogram_repository.dart';
 import 'package:weekplanner/shared/interceptors/token_refresh_interceptor.dart';
 import 'package:weekplanner/shared/services/activity_api_service.dart';
 import 'package:weekplanner/shared/services/auth_service.dart';
@@ -45,14 +47,14 @@ void main() async {
   final activityApiService = ActivityApiService(dio: activityDio);
 
   // Repositories
-  final authRepository = AuthRepository(authService: authService);
-  final organisationRepository = OrganisationRepository(
+  final authRepository = AuthRepositoryImpl(authService: authService);
+  final organisationRepository = OrganisationRepositoryImpl(
     coreApiService: coreApiService,
   );
-  final activityRepository = ActivityRepository(
+  final activityRepository = ActivityRepositoryImpl(
     apiService: activityApiService,
   );
-  final pictogramRepository = PictogramRepository(
+  final pictogramRepository = PictogramRepositoryImpl(
     coreApiService: coreApiService,
   );
 
@@ -116,8 +118,8 @@ void main() async {
         BlocProvider.value(value: orgPickerCubit),
 
         // Repositories (plain providers — cubits are created in route builders)
-        Provider.value(value: activityRepository),
-        Provider.value(value: pictogramRepository),
+        Provider<ActivityRepository>.value(value: activityRepository),
+        Provider<PictogramRepository>.value(value: pictogramRepository),
       ],
       child: WeekplannerApp(router: router),
     ),

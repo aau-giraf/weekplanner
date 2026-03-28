@@ -4,6 +4,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:logging/logging.dart';
 
 import 'package:weekplanner/core/errors/pictogram_failure.dart';
+import 'package:weekplanner/features/weekplan/domain/repositories/pictogram_repository.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 import 'package:weekplanner/shared/services/core_api_service.dart';
 
@@ -13,13 +14,13 @@ final _log = Logger('PictogramRepository');
 ///
 /// All methods return [Either] to communicate success or typed failure.
 /// No state management — that responsibility belongs to the cubit.
-class PictogramRepository {
+class PictogramRepositoryImpl implements PictogramRepository {
   final CoreApiService _coreApiService;
 
-  PictogramRepository({required CoreApiService coreApiService})
+  PictogramRepositoryImpl({required CoreApiService coreApiService})
       : _coreApiService = coreApiService;
 
-  /// Search pictograms by query string.
+  @override
   Future<Either<PictogramFailure, List<Pictogram>>> searchPictograms(
     String query,
   ) async {
@@ -32,7 +33,7 @@ class PictogramRepository {
     }
   }
 
-  /// Fetch a single pictogram by ID.
+  @override
   Future<Either<PictogramFailure, Pictogram>> fetchPictogram(int id) async {
     try {
       final pictogram = await _coreApiService.fetchPictogram(id);
@@ -43,7 +44,7 @@ class PictogramRepository {
     }
   }
 
-  /// Create a pictogram (optionally AI-generated).
+  @override
   Future<Either<PictogramFailure, Pictogram>> createPictogram({
     required String name,
     String? imageUrl,
@@ -66,7 +67,7 @@ class PictogramRepository {
     }
   }
 
-  /// Upload a pictogram with a local image file.
+  @override
   Future<Either<PictogramFailure, Pictogram>> uploadPictogram({
     required String name,
     required PlatformFile imageFile,

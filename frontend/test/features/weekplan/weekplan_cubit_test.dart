@@ -4,8 +4,8 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:weekplanner/core/errors/activity_failure.dart';
-import 'package:weekplanner/features/weekplan/data/repositories/activity_repository.dart';
-import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart';
+import 'package:weekplanner/features/weekplan/domain/repositories/activity_repository.dart';
+import 'package:weekplanner/features/weekplan/domain/repositories/pictogram_repository.dart';
 import 'package:weekplanner/features/weekplan/domain/weekplan_state.dart';
 import 'package:weekplanner/features/weekplan/presentation/weekplan_cubit.dart';
 import 'package:weekplanner/shared/models/activity.dart';

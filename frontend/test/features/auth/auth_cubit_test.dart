@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/core/errors/auth_failure.dart';
-import 'package:weekplanner/features/auth/data/repositories/auth_repository.dart';
+import 'package:weekplanner/features/auth/domain/repositories/auth_repository.dart';
 import 'package:weekplanner/features/auth/domain/auth_state.dart';
 import 'package:weekplanner/features/auth/presentation/auth_cubit.dart';
-import 'package:weekplanner/shared/services/auth_service.dart';
+import 'package:weekplanner/shared/models/auth_tokens.dart';
 import 'package:weekplanner/shared/services/token_manager.dart';
 
 import '../../helpers/jwt_test_helper.dart';

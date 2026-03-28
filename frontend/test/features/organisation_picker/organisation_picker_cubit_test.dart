@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/core/errors/organisation_failure.dart';
-import 'package:weekplanner/features/organisation_picker/data/repositories/organisation_repository.dart';
+import 'package:weekplanner/features/organisation_picker/domain/repositories/organisation_repository.dart';
 import 'package:weekplanner/features/organisation_picker/domain/organisation_picker_state.dart';
 import 'package:weekplanner/features/organisation_picker/presentation/organisation_picker_cubit.dart';
 import 'package:weekplanner/shared/models/citizen.dart';
