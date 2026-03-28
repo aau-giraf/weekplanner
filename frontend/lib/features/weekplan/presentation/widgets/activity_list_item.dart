@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/shared/models/activity.dart';
+import 'package:weekplanner/shared/utils/date_utils.dart';
 
 class ActivityListItem extends StatefulWidget {
   final Activity activity;
@@ -145,7 +146,7 @@ class _ActivityListItemState extends State<ActivityListItem> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${_formatTime(activity.startTime)} - ${_formatTime(activity.endTime)}',
+                          '${formatTimeValue(activity.startTime)} - ${formatTimeValue(activity.endTime)}',
                           style: TextStyle(
                             fontSize: 14,
                             color: context.colorScheme.outline,
@@ -186,12 +187,4 @@ class _ActivityListItemState extends State<ActivityListItem> {
     );
   }
 
-  String _formatTime(String time) {
-    // Time comes as "HH:mm:ss" or "HH:mm", return "HH:mm"
-    final parts = time.split(':');
-    if (parts.length >= 2) {
-      return '${parts[0]}:${parts[1]}';
-    }
-    return time;
-  }
 }

@@ -30,18 +30,18 @@ void main() {
 
   final testDate = DateTime(2026, 3, 22);
 
-  const testActivity = Activity(
+  final testActivity = Activity(
     activityId: 1,
-    date: '2026-03-22',
-    startTime: '08:00:00',
-    endTime: '09:00:00',
+    date: DateTime(2026, 3, 22),
+    startTime: const (hour: 8, minute: 0),
+    endTime: const (hour: 9, minute: 0),
   );
 
-  const testActivityWithPictogram = Activity(
+  final testActivityWithPictogram = Activity(
     activityId: 2,
-    date: '2026-03-15',
-    startTime: '10:30:00',
-    endTime: '11:45:00',
+    date: DateTime(2026, 3, 15),
+    startTime: const (hour: 10, minute: 30),
+    endTime: const (hour: 11, minute: 45),
     pictogramId: 42,
   );
 
@@ -342,7 +342,7 @@ void main() {
             isCitizen: any(named: 'isCitizen'),
             data: any(named: 'data'),
           ),
-        ).thenAnswer((_) async => const Right(testActivity));
+        ).thenAnswer((_) async => Right(testActivity));
       },
       build: buildCubit,
       act: (cubit) => cubit.save(),
@@ -392,7 +392,7 @@ void main() {
             any(),
             any(),
           ),
-        ).thenAnswer((_) async => const Right(testActivity));
+        ).thenAnswer((_) async => Right(testActivity));
       },
       build: () => buildCubit(existingActivity: testActivity),
       act: (cubit) => cubit.save(),

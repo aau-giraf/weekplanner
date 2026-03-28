@@ -7,15 +7,15 @@ import 'package:weekplanner/features/weekplan/presentation/widgets/activity_list
 import 'package:weekplanner/shared/models/activity.dart';
 
 void main() {
-  const testActivity = Activity(
+  final testActivity = Activity(
     activityId: 1,
-    date: '2026-03-22',
-    startTime: '08:00:00',
-    endTime: '09:00:00',
+    date: DateTime(2026, 3, 22),
+    startTime: const (hour: 8, minute: 0),
+    endTime: const (hour: 9, minute: 0),
   );
 
   Widget buildSubject({
-    Activity activity = testActivity,
+    Activity? activity,
     VoidCallback? onEdit,
     VoidCallback? onDelete,
     VoidCallback? onToggleStatus,
@@ -26,7 +26,7 @@ void main() {
       theme: girafTheme,
       home: Scaffold(
         body: ActivityListItem(
-          activity: activity,
+          activity: activity ?? testActivity,
           onEdit: onEdit ?? () {},
           onDelete: onDelete ?? () {},
           onToggleStatus: onToggleStatus ?? () {},
@@ -46,11 +46,11 @@ void main() {
 
     testWidgets('shows completed status icon when isCompleted is true',
         (tester) async {
-      const completedActivity = Activity(
+      final completedActivity = Activity(
         activityId: 1,
-        date: '2026-03-22',
-        startTime: '08:00:00',
-        endTime: '09:00:00',
+        date: DateTime(2026, 3, 22),
+        startTime: const (hour: 8, minute: 0),
+        endTime: const (hour: 9, minute: 0),
         isCompleted: true,
       );
 

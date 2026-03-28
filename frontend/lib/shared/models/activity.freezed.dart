@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Activity {
 
- int get activityId; String get date; String get startTime; String get endTime; bool get isCompleted; int? get pictogramId;
+ int get activityId;@JsonKey(fromJson: _dateFromJson, toJson: _dateToJson) DateTime get date;@JsonKey(fromJson: _timeFromJson, toJson: _timeToJson) TimeValue get startTime;@JsonKey(fromJson: _timeFromJson, toJson: _timeToJson) TimeValue get endTime; bool get isCompleted; int? get pictogramId;
 /// Create a copy of Activity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ActivityCopyWith<$Res>  {
   factory $ActivityCopyWith(Activity value, $Res Function(Activity) _then) = _$ActivityCopyWithImpl;
 @useResult
 $Res call({
- int activityId, String date, String startTime, String endTime, bool isCompleted, int? pictogramId
+ int activityId,@JsonKey(fromJson: _dateFromJson, toJson: _dateToJson) DateTime date,@JsonKey(fromJson: _timeFromJson, toJson: _timeToJson) TimeValue startTime,@JsonKey(fromJson: _timeFromJson, toJson: _timeToJson) TimeValue endTime, bool isCompleted, int? pictogramId
 });
 
 
@@ -69,9 +69,9 @@ class _$ActivityCopyWithImpl<$Res>
   return _then(_self.copyWith(
 activityId: null == activityId ? _self.activityId : activityId // ignore: cast_nullable_to_non_nullable
 as int,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as String,startTime: null == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
-as String,endTime: null == endTime ? _self.endTime : endTime // ignore: cast_nullable_to_non_nullable
-as String,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
+as DateTime,startTime: null == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
+as TimeValue,endTime: null == endTime ? _self.endTime : endTime // ignore: cast_nullable_to_non_nullable
+as TimeValue,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
 as bool,pictogramId: freezed == pictogramId ? _self.pictogramId : pictogramId // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int activityId,  String date,  String startTime,  String endTime,  bool isCompleted,  int? pictogramId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int activityId, @JsonKey(fromJson: _dateFromJson, toJson: _dateToJson)  DateTime date, @JsonKey(fromJson: _timeFromJson, toJson: _timeToJson)  TimeValue startTime, @JsonKey(fromJson: _timeFromJson, toJson: _timeToJson)  TimeValue endTime,  bool isCompleted,  int? pictogramId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Activity() when $default != null:
 return $default(_that.activityId,_that.date,_that.startTime,_that.endTime,_that.isCompleted,_that.pictogramId);case _:
@@ -179,7 +179,7 @@ return $default(_that.activityId,_that.date,_that.startTime,_that.endTime,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int activityId,  String date,  String startTime,  String endTime,  bool isCompleted,  int? pictogramId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int activityId, @JsonKey(fromJson: _dateFromJson, toJson: _dateToJson)  DateTime date, @JsonKey(fromJson: _timeFromJson, toJson: _timeToJson)  TimeValue startTime, @JsonKey(fromJson: _timeFromJson, toJson: _timeToJson)  TimeValue endTime,  bool isCompleted,  int? pictogramId)  $default,) {final _that = this;
 switch (_that) {
 case _Activity():
 return $default(_that.activityId,_that.date,_that.startTime,_that.endTime,_that.isCompleted,_that.pictogramId);case _:
@@ -199,7 +199,7 @@ return $default(_that.activityId,_that.date,_that.startTime,_that.endTime,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int activityId,  String date,  String startTime,  String endTime,  bool isCompleted,  int? pictogramId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int activityId, @JsonKey(fromJson: _dateFromJson, toJson: _dateToJson)  DateTime date, @JsonKey(fromJson: _timeFromJson, toJson: _timeToJson)  TimeValue startTime, @JsonKey(fromJson: _timeFromJson, toJson: _timeToJson)  TimeValue endTime,  bool isCompleted,  int? pictogramId)?  $default,) {final _that = this;
 switch (_that) {
 case _Activity() when $default != null:
 return $default(_that.activityId,_that.date,_that.startTime,_that.endTime,_that.isCompleted,_that.pictogramId);case _:
@@ -214,13 +214,13 @@ return $default(_that.activityId,_that.date,_that.startTime,_that.endTime,_that.
 @JsonSerializable()
 
 class _Activity implements Activity {
-  const _Activity({required this.activityId, required this.date, required this.startTime, required this.endTime, this.isCompleted = false, this.pictogramId});
+  const _Activity({required this.activityId, @JsonKey(fromJson: _dateFromJson, toJson: _dateToJson) required this.date, @JsonKey(fromJson: _timeFromJson, toJson: _timeToJson) required this.startTime, @JsonKey(fromJson: _timeFromJson, toJson: _timeToJson) required this.endTime, this.isCompleted = false, this.pictogramId});
   factory _Activity.fromJson(Map<String, dynamic> json) => _$ActivityFromJson(json);
 
 @override final  int activityId;
-@override final  String date;
-@override final  String startTime;
-@override final  String endTime;
+@override@JsonKey(fromJson: _dateFromJson, toJson: _dateToJson) final  DateTime date;
+@override@JsonKey(fromJson: _timeFromJson, toJson: _timeToJson) final  TimeValue startTime;
+@override@JsonKey(fromJson: _timeFromJson, toJson: _timeToJson) final  TimeValue endTime;
 @override@JsonKey() final  bool isCompleted;
 @override final  int? pictogramId;
 
@@ -257,7 +257,7 @@ abstract mixin class _$ActivityCopyWith<$Res> implements $ActivityCopyWith<$Res>
   factory _$ActivityCopyWith(_Activity value, $Res Function(_Activity) _then) = __$ActivityCopyWithImpl;
 @override @useResult
 $Res call({
- int activityId, String date, String startTime, String endTime, bool isCompleted, int? pictogramId
+ int activityId,@JsonKey(fromJson: _dateFromJson, toJson: _dateToJson) DateTime date,@JsonKey(fromJson: _timeFromJson, toJson: _timeToJson) TimeValue startTime,@JsonKey(fromJson: _timeFromJson, toJson: _timeToJson) TimeValue endTime, bool isCompleted, int? pictogramId
 });
 
 
@@ -278,9 +278,9 @@ class __$ActivityCopyWithImpl<$Res>
   return _then(_Activity(
 activityId: null == activityId ? _self.activityId : activityId // ignore: cast_nullable_to_non_nullable
 as int,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as String,startTime: null == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
-as String,endTime: null == endTime ? _self.endTime : endTime // ignore: cast_nullable_to_non_nullable
-as String,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
+as DateTime,startTime: null == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
+as TimeValue,endTime: null == endTime ? _self.endTime : endTime // ignore: cast_nullable_to_non_nullable
+as TimeValue,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
 as bool,pictogramId: freezed == pictogramId ? _self.pictogramId : pictogramId // ignore: cast_nullable_to_non_nullable
 as int?,
   ));

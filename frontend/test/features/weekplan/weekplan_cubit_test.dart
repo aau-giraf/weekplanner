@@ -24,18 +24,18 @@ void main() {
   final testDate = DateTime(2026, 3, 22);
   final testWeekDates = GirafDateUtils.getWeekDates(testDate);
 
-  const testActivity = Activity(
+  final testActivity = Activity(
     activityId: 1,
-    date: '2026-03-22',
-    startTime: '08:00:00',
-    endTime: '09:00:00',
+    date: DateTime(2026, 3, 22),
+    startTime: const (hour: 8, minute: 0),
+    endTime: const (hour: 9, minute: 0),
   );
 
-  const testActivityWithPictogram = Activity(
+  final testActivityWithPictogram = Activity(
     activityId: 2,
-    date: '2026-03-22',
-    startTime: '10:00:00',
-    endTime: '11:00:00',
+    date: DateTime(2026, 3, 22),
+    startTime: const (hour: 10, minute: 0),
+    endTime: const (hour: 11, minute: 0),
     pictogramId: 42,
   );
 
@@ -80,7 +80,7 @@ void main() {
             isCitizen: any(named: 'isCitizen'),
             date: any(named: 'date'),
           ),
-        ).thenAnswer((_) async => const Right([testActivity]));
+        ).thenAnswer((_) async => Right([testActivity]));
       },
       build: buildCubit,
       act: (cubit) => cubit.loadActivities(),
@@ -89,7 +89,7 @@ void main() {
         WeekplanLoaded(
           selectedDate: testDate,
           weekDates: testWeekDates,
-          activities: const [testActivity],
+          activities: [testActivity],
         ),
       ],
     );
@@ -127,7 +127,7 @@ void main() {
             date: any(named: 'date'),
           ),
         ).thenAnswer(
-          (_) async => const Right([testActivityWithPictogram]),
+          (_) async => Right([testActivityWithPictogram]),
         );
         when(() => mockPictogramRepo.fetchPictogram(42))
             .thenAnswer((_) async => const Right(testPictogram));
@@ -139,12 +139,12 @@ void main() {
         WeekplanLoaded(
           selectedDate: testDate,
           weekDates: testWeekDates,
-          activities: const [testActivityWithPictogram],
+          activities: [testActivityWithPictogram],
         ),
         WeekplanLoaded(
           selectedDate: testDate,
           weekDates: testWeekDates,
-          activities: const [testActivityWithPictogram],
+          activities: [testActivityWithPictogram],
           pictogramMedia: const {
             42: (imageUrl: 'http://img', soundUrl: 'http://sound'),
           },
@@ -169,7 +169,7 @@ void main() {
             isCitizen: any(named: 'isCitizen'),
             date: any(named: 'date'),
           ),
-        ).thenAnswer((_) async => const Right([testActivity]));
+        ).thenAnswer((_) async => Right([testActivity]));
       },
       build: buildCubit,
       act: (cubit) => cubit.selectDate(newDate),
@@ -178,7 +178,7 @@ void main() {
         WeekplanLoaded(
           selectedDate: newDate,
           weekDates: newWeekDates,
-          activities: const [testActivity],
+          activities: [testActivity],
         ),
       ],
     );
@@ -241,17 +241,17 @@ void main() {
   });
 
   group('deleteActivity', () {
-    const activityToDelete = Activity(
+    final activityToDelete = Activity(
       activityId: 99,
-      date: '2026-03-22',
-      startTime: '12:00:00',
-      endTime: '13:00:00',
+      date: DateTime(2026, 3, 22),
+      startTime: const (hour: 12, minute: 0),
+      endTime: const (hour: 13, minute: 0),
     );
 
     final loadedState = WeekplanLoaded(
       selectedDate: testDate,
       weekDates: testWeekDates,
-      activities: const [testActivity, activityToDelete],
+      activities: [testActivity, activityToDelete],
     );
 
     blocTest<WeekplanCubit, WeekplanState>(
@@ -267,7 +267,7 @@ void main() {
         WeekplanLoaded(
           selectedDate: testDate,
           weekDates: testWeekDates,
-          activities: const [testActivity],
+          activities: [testActivity],
         ),
       ],
       verify: (_) {
@@ -288,7 +288,7 @@ void main() {
         WeekplanLoaded(
           selectedDate: testDate,
           weekDates: testWeekDates,
-          activities: const [testActivity],
+          activities: [testActivity],
         ),
         loadedState,
       ],
@@ -304,26 +304,26 @@ void main() {
   });
 
   group('toggleActivityStatus', () {
-    const incompleteActivity = Activity(
+    final incompleteActivity = Activity(
       activityId: 5,
-      date: '2026-03-22',
-      startTime: '08:00:00',
-      endTime: '09:00:00',
+      date: DateTime(2026, 3, 22),
+      startTime: const (hour: 8, minute: 0),
+      endTime: const (hour: 9, minute: 0),
       isCompleted: false,
     );
 
-    const completedActivity = Activity(
+    final completedActivity = Activity(
       activityId: 5,
-      date: '2026-03-22',
-      startTime: '08:00:00',
-      endTime: '09:00:00',
+      date: DateTime(2026, 3, 22),
+      startTime: const (hour: 8, minute: 0),
+      endTime: const (hour: 9, minute: 0),
       isCompleted: true,
     );
 
     final loadedState = WeekplanLoaded(
       selectedDate: testDate,
       weekDates: testWeekDates,
-      activities: const [incompleteActivity],
+      activities: [incompleteActivity],
     );
 
     blocTest<WeekplanCubit, WeekplanState>(
@@ -343,7 +343,7 @@ void main() {
         WeekplanLoaded(
           selectedDate: testDate,
           weekDates: testWeekDates,
-          activities: const [completedActivity],
+          activities: [completedActivity],
         ),
       ],
       verify: (_) {
@@ -370,7 +370,7 @@ void main() {
         WeekplanLoaded(
           selectedDate: testDate,
           weekDates: testWeekDates,
-          activities: const [completedActivity],
+          activities: [completedActivity],
         ),
         loadedState,
       ],

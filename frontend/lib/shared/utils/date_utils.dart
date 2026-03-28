@@ -1,5 +1,27 @@
 import 'package:intl/intl.dart';
 
+/// Platform-agnostic time-of-day so domain/data layers avoid importing Flutter.
+typedef TimeValue = ({int hour, int minute});
+
+/// Parse a time string like "HH:mm" or "HH:mm:ss" into a [TimeValue].
+///
+/// Returns `null` if the string cannot be parsed.
+TimeValue? parseTimeValue(String time) {
+  final parts = time.split(':');
+  if (parts.length < 2) return null;
+  final hour = int.tryParse(parts[0]);
+  final minute = int.tryParse(parts[1]);
+  if (hour == null || minute == null) return null;
+  return (hour: hour, minute: minute);
+}
+
+/// Format a [TimeValue] as "HH:mm".
+String formatTimeValue(TimeValue t) =>
+    '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
+
+/// Format a [TimeValue] as "HH:mm:ss" for API serialization.
+String formatTimeValueForApi(TimeValue t) => '${formatTimeValue(t)}:00';
+
 class GirafDateUtils {
   /// Returns the ISO 8601 week number for a given date.
   static int getWeekNumber(DateTime date) {
