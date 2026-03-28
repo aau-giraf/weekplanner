@@ -90,12 +90,19 @@ class PictogramRepository {
   }
 
   /// Convert a [PlatformFile] to a Dio [MultipartFile].
+  ///
   /// Uses bytes on web (where path is unavailable) and path on native.
+  /// Throws [StateError] if neither bytes nor path is available.
   MultipartFile _toMultipartFile(PlatformFile file) {
     if (file.bytes != null) {
       return MultipartFile.fromBytes(file.bytes!, filename: file.name);
     }
-    // file.path is only available on native platforms
-    return MultipartFile.fromFileSync(file.path!, filename: file.name);
+    if (file.path != null) {
+      return MultipartFile.fromFileSync(file.path!, filename: file.name);
+    }
+    throw StateError(
+      'PlatformFile "${file.name}" has neither bytes nor path — '
+      'cannot convert to MultipartFile',
+    );
   }
 }
