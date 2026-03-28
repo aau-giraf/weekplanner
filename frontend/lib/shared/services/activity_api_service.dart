@@ -1,17 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:weekplanner/config/api_config.dart';
 import 'package:weekplanner/shared/models/activity.dart';
 import 'package:weekplanner/shared/services/token_consumer.dart';
 
 class ActivityApiService implements TokenConsumer {
   final Dio _dio;
 
-  ActivityApiService({Dio? dio})
-      : _dio = dio ??
-            Dio(BaseOptions(
-              baseUrl: ApiConfig.weekplannerBaseUrl,
-              headers: {'Content-Type': 'application/json'},
-            ));
+  ActivityApiService({required Dio dio}) : _dio = dio;
 
   @override
   void setAuthToken(String token) {

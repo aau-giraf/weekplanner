@@ -10,12 +10,7 @@ import 'package:weekplanner/shared/services/token_consumer.dart';
 class CoreApiService implements TokenConsumer {
   final Dio _dio;
 
-  CoreApiService({Dio? dio})
-      : _dio = dio ??
-            Dio(BaseOptions(
-              baseUrl: ApiConfig.coreBaseUrl,
-              headers: {'Content-Type': 'application/json'},
-            ));
+  CoreApiService({required Dio dio}) : _dio = dio;
 
   /// Resolve media URLs on a [Pictogram] to absolute URLs.
   ///

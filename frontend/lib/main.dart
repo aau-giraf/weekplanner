@@ -21,23 +21,26 @@ import 'package:weekplanner/shared/services/core_api_service.dart';
 import 'package:weekplanner/shared/services/log_service.dart';
 import 'package:weekplanner/shared/services/token_manager.dart';
 
+Dio _createDio(String baseUrl) => Dio(BaseOptions(
+      baseUrl: baseUrl,
+      headers: {'Content-Type': 'application/json'},
+    ));
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupLogging();
 
   // Dio instances — created here so the refresh interceptor can be shared.
-  // AuthService keeps its own Dio (login 401s should NOT trigger refresh).
-  final coreDio = Dio(BaseOptions(
-    baseUrl: ApiConfig.coreBaseUrl,
-    headers: {'Content-Type': 'application/json'},
-  ));
-  final activityDio = Dio(BaseOptions(
-    baseUrl: ApiConfig.weekplannerBaseUrl,
-    headers: {'Content-Type': 'application/json'},
-  ));
+  final coreDio = _createDio(ApiConfig.coreBaseUrl);
+  final activityDio = _createDio(ApiConfig.weekplannerBaseUrl);
+
+  // AuthService gets its own Dio without the refresh interceptor —
+  // login 401s must NOT trigger a token refresh cycle.
+  final authDio = _createDio(ApiConfig.coreBaseUrl);
+  const storage = FlutterSecureStorage();
 
   // Services
-  final authService = AuthService();
+  final authService = AuthService(dio: authDio, storage: storage);
   final coreApiService = CoreApiService(dio: coreDio);
   final activityApiService = ActivityApiService(dio: activityDio);
 
@@ -67,10 +70,10 @@ void main() async {
 
   // Token refresh interceptor — handles 401s by refreshing the access token
   // and retrying the failed request. Shared across core and activity Dio.
-  final refreshDio = Dio(BaseOptions(baseUrl: ApiConfig.coreBaseUrl));
+  final refreshDio = _createDio(ApiConfig.coreBaseUrl);
   final tokenInterceptor = TokenRefreshInterceptor(
     refreshDio: refreshDio,
-    storage: const FlutterSecureStorage(),
+    storage: storage,
     protectedDios: [coreDio, activityDio],
     onTokenRefreshed: (token) => authCubit.authenticated(token),
     onRefreshFailed: () => authCubit.logout(),
