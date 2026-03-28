@@ -1,3 +1,4 @@
+using System.Threading.RateLimiting;
 using GirafAPI.Configuration;
 using GirafAPI.Data;
 using GirafAPI.Endpoints;
@@ -21,7 +22,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        if (builder.Environment.IsDevelopment())
+        if (builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("Testing"))
         {
             policy.AllowAnyOrigin()
                 .AllowAnyHeader()
@@ -29,7 +30,10 @@ builder.Services.AddCors(options =>
         }
         else
         {
-            var origins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? [];
+            var origins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+            if (origins is null || origins.Length == 0)
+                throw new InvalidOperationException(
+                    "AllowedOrigins must be configured in non-development environments.");
             policy.WithOrigins(origins)
                 .AllowAnyHeader()
                 .AllowAnyMethod();
@@ -37,13 +41,33 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 60,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+            }));
+});
+
 var app = builder.Build();
 
 // Configure middleware
 app.UseExceptionHandler();
 app.UseCors();
-app.MapOpenApi();
-app.MapScalarApiReference();
+app.UseRateLimiter();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+}
+
 app.UseAuthentication();
 app.UseAuthorization();
 
