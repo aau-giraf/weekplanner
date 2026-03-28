@@ -4,6 +4,8 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/core/errors/auth_failure.dart';
 import 'package:weekplanner/features/auth/data/repositories/auth_repository.dart';
+import 'package:weekplanner/features/auth/domain/repositories/auth_repository.dart';
+import 'package:weekplanner/shared/models/auth_tokens.dart';
 import 'package:weekplanner/shared/services/auth_service.dart';
 
 import '../../helpers/jwt_test_helper.dart';
@@ -16,7 +18,7 @@ void main() {
 
   setUp(() {
     mockAuthService = MockAuthService();
-    repo = AuthRepository(authService: mockAuthService);
+    repo = AuthRepositoryImpl(authService: mockAuthService);
   });
 
   group('login', () {

@@ -3,6 +3,8 @@ import 'package:fpdart/fpdart.dart';
 import 'package:logging/logging.dart';
 
 import 'package:weekplanner/core/errors/auth_failure.dart';
+import 'package:weekplanner/features/auth/domain/repositories/auth_repository.dart';
+import 'package:weekplanner/shared/models/auth_tokens.dart';
 import 'package:weekplanner/shared/services/auth_service.dart';
 import 'package:weekplanner/shared/utils/jwt_decode.dart';
 
@@ -12,13 +14,13 @@ final _log = Logger('AuthRepository');
 ///
 /// All methods return [Either] to communicate success or typed failure.
 /// No state management — that responsibility belongs to [AuthCubit].
-class AuthRepository {
+class AuthRepositoryImpl implements AuthRepository {
   final AuthService _authService;
 
-  AuthRepository({required AuthService authService})
+  AuthRepositoryImpl({required AuthService authService})
       : _authService = authService;
 
-  /// Authenticate with email and password.
+  @override
   Future<Either<AuthFailure, AuthTokens>> login(
     String email,
     String password,
@@ -34,7 +36,7 @@ class AuthRepository {
     }
   }
 
-  /// Try to retrieve a stored, non-expired access token.
+  @override
   Future<Either<AuthFailure, String>> tryGetStoredToken() async {
     try {
       final token = await _authService.getStoredAccessToken();
@@ -48,7 +50,7 @@ class AuthRepository {
     }
   }
 
-  /// Try to auto-login using saved credentials.
+  @override
   Future<Either<AuthFailure, AuthTokens>> tryAutoLogin() async {
     try {
       final creds = await _authService.getSavedCredentials();
@@ -62,7 +64,7 @@ class AuthRepository {
     }
   }
 
-  /// Try to refresh the access token using the stored refresh token.
+  @override
   Future<Either<AuthFailure, String>> tryRefreshToken() async {
     try {
       final refreshToken = await _authService.getStoredRefreshToken();
@@ -80,7 +82,7 @@ class AuthRepository {
     }
   }
 
-  /// Clear stored tokens.
+  @override
   Future<Either<AuthFailure, Unit>> logout() async {
     try {
       await _authService.logout();
@@ -91,7 +93,7 @@ class AuthRepository {
     }
   }
 
-  /// Persist credentials for auto-login.
+  @override
   Future<Either<AuthFailure, Unit>> saveCredentials(
     String email,
     String password,
@@ -105,7 +107,7 @@ class AuthRepository {
     }
   }
 
-  /// Remove persisted credentials.
+  @override
   Future<Either<AuthFailure, Unit>> clearSavedCredentials() async {
     try {
       await _authService.clearSavedCredentials();

@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:logging/logging.dart';
 
 import 'package:weekplanner/core/errors/organisation_failure.dart';
+import 'package:weekplanner/features/organisation_picker/domain/repositories/organisation_repository.dart';
 import 'package:weekplanner/shared/models/citizen.dart';
 import 'package:weekplanner/shared/models/grade.dart';
 import 'package:weekplanner/shared/models/organisation.dart';
@@ -13,13 +14,13 @@ final _log = Logger('OrganisationRepository');
 ///
 /// All methods return [Either] to communicate success or typed failure.
 /// No state management — that responsibility belongs to the ViewModel/Cubit.
-class OrganisationRepository {
+class OrganisationRepositoryImpl implements OrganisationRepository {
   final CoreApiService _coreApiService;
 
-  OrganisationRepository({required CoreApiService coreApiService})
+  OrganisationRepositoryImpl({required CoreApiService coreApiService})
       : _coreApiService = coreApiService;
 
-  /// Fetch all organisations the current user belongs to.
+  @override
   Future<Either<OrganisationFailure, List<Organisation>>>
       fetchOrganisations() async {
     try {
@@ -31,7 +32,7 @@ class OrganisationRepository {
     }
   }
 
-  /// Fetch citizens and grades for a given organisation.
+  @override
   Future<
       Either<OrganisationFailure,
           ({List<Citizen> citizens, List<Grade> grades})>>

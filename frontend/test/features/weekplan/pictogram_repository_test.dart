@@ -7,6 +7,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:weekplanner/core/errors/pictogram_failure.dart';
 import 'package:weekplanner/features/weekplan/data/repositories/pictogram_repository.dart';
+import 'package:weekplanner/features/weekplan/domain/repositories/pictogram_repository.dart';
 import 'package:weekplanner/shared/models/paginated_response.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 import 'package:weekplanner/shared/services/core_api_service.dart';
@@ -29,7 +30,7 @@ void main() {
 
   setUp(() {
     mockCore = MockCoreApiService();
-    repo = PictogramRepository(coreApiService: mockCore);
+    repo = PictogramRepositoryImpl(coreApiService: mockCore);
   });
 
   group('searchPictograms', () {
