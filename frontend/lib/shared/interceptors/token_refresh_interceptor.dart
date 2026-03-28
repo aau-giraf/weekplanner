@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logging/logging.dart';
+import 'package:weekplanner/shared/services/auth_service.dart';
 
 final _log = Logger('TokenRefreshInterceptor');
 
@@ -23,8 +24,6 @@ class TokenRefreshInterceptor extends Interceptor {
   final void Function(String token)? onTokenRefreshed;
   final void Function()? onRefreshFailed;
 
-  static const _refreshTokenKey = 'refresh_token';
-  static const _accessTokenKey = 'access_token';
   static const _refreshPath = '/api/v1/token/refresh';
   static const _retryHeader = 'x-token-retry';
 
@@ -62,7 +61,11 @@ class TokenRefreshInterceptor extends Interceptor {
       _log.fine('Refresh already in progress, waiting…');
       final newToken = await _refreshCompleter!.future;
       if (newToken != null) {
-        return handler.resolve(await _retry(err.requestOptions, newToken));
+        try {
+          return handler.resolve(await _retry(err.requestOptions, newToken));
+        } catch (_) {
+          return handler.next(err);
+        }
       }
       return handler.next(err);
     }
@@ -71,7 +74,7 @@ class TokenRefreshInterceptor extends Interceptor {
     _refreshCompleter = Completer<String?>();
 
     try {
-      final refreshToken = await _storage.read(key: _refreshTokenKey);
+      final refreshToken = await _storage.read(key: AuthService.refreshTokenKey);
       if (refreshToken == null) {
         _log.warning('No refresh token in storage');
         _refreshCompleter!.complete(null);
@@ -88,7 +91,7 @@ class TokenRefreshInterceptor extends Interceptor {
           (response.data as Map<String, dynamic>)['access'] as String;
 
       // Persist the new access token.
-      await _storage.write(key: _accessTokenKey, value: newAccessToken);
+      await _storage.write(key: AuthService.accessTokenKey, value: newAccessToken);
 
       // Update all protected Dio instances.
       for (final dio in _protectedDios) {
@@ -128,9 +131,13 @@ class TokenRefreshInterceptor extends Interceptor {
     requestOptions.headers[_retryHeader] = 'true';
 
     // Find the Dio that owns this request based on base URL.
+    final uri = requestOptions.uri.toString();
     final dio = _protectedDios.firstWhere(
-      (d) => requestOptions.uri.toString().startsWith(d.options.baseUrl),
-      orElse: () => _protectedDios.first,
+      (d) => uri.startsWith(d.options.baseUrl),
+      orElse: () {
+        _log.warning('No matching Dio for $uri, using first');
+        return _protectedDios.first;
+      },
     );
     return dio.fetch(requestOptions);
   }
