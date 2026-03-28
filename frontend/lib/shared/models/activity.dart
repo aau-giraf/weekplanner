@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logging/logging.dart';
 
 import 'package:weekplanner/shared/utils/date_utils.dart';
 
@@ -22,7 +23,15 @@ abstract class Activity with _$Activity {
       _$ActivityFromJson(json);
 }
 
-TimeValue _timeFromJson(String s) => parseTimeValue(s) ?? (hour: 0, minute: 0);
+final _log = Logger('Activity');
+
+TimeValue _timeFromJson(String s) {
+  final parsed = parseTimeValue(s);
+  if (parsed == null) {
+    _log.warning('Unparseable time value: "$s", defaulting to 00:00');
+  }
+  return parsed ?? (hour: 0, minute: 0);
+}
 String _timeToJson(TimeValue t) => formatTimeValueForApi(t);
 
 DateTime _dateFromJson(String s) => DateTime.parse(s);

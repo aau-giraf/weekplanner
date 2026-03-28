@@ -186,5 +186,4 @@ class _ActivityListItemState extends State<ActivityListItem> {
       ),
     );
   }
-
 }

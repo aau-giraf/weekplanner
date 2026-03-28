@@ -12,6 +12,7 @@ TimeValue? parseTimeValue(String time) {
   final hour = int.tryParse(parts[0]);
   final minute = int.tryParse(parts[1]);
   if (hour == null || minute == null) return null;
+  if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return null;
   return (hour: hour, minute: minute);
 }
 

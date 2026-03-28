@@ -98,4 +98,59 @@ void main() {
       });
     });
   });
+
+  group('parseTimeValue', () {
+    test('parses HH:mm format', () {
+      expect(parseTimeValue('08:30'), (hour: 8, minute: 30));
+    });
+
+    test('parses HH:mm:ss format (ignores seconds)', () {
+      expect(parseTimeValue('14:05:00'), (hour: 14, minute: 5));
+    });
+
+    test('returns null for empty string', () {
+      expect(parseTimeValue(''), isNull);
+    });
+
+    test('returns null for single segment', () {
+      expect(parseTimeValue('8'), isNull);
+    });
+
+    test('returns null for non-numeric parts', () {
+      expect(parseTimeValue('abc:def'), isNull);
+    });
+
+    test('returns null for out-of-range hour', () {
+      expect(parseTimeValue('25:00'), isNull);
+    });
+
+    test('returns null for out-of-range minute', () {
+      expect(parseTimeValue('12:60'), isNull);
+    });
+
+    test('returns null for negative values', () {
+      expect(parseTimeValue('-1:30'), isNull);
+    });
+
+    test('parses boundary values', () {
+      expect(parseTimeValue('00:00'), (hour: 0, minute: 0));
+      expect(parseTimeValue('23:59'), (hour: 23, minute: 59));
+    });
+  });
+
+  group('formatTimeValue', () {
+    test('formats as HH:mm with zero padding', () {
+      expect(formatTimeValue((hour: 8, minute: 5)), '08:05');
+    });
+
+    test('formats double-digit values', () {
+      expect(formatTimeValue((hour: 14, minute: 30)), '14:30');
+    });
+  });
+
+  group('formatTimeValueForApi', () {
+    test('appends :00 seconds', () {
+      expect(formatTimeValueForApi((hour: 8, minute: 30)), '08:30:00');
+    });
+  });
 }

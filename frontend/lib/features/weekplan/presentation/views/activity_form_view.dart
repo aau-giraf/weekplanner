@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/weekplan/domain/activity_form_state.dart';
 import 'package:weekplanner/features/weekplan/presentation/activity_form_cubit.dart';
-import 'package:weekplanner/shared/utils/date_utils.dart';
 import 'package:weekplanner/features/weekplan/presentation/widgets/pictogram_selector.dart';
+import 'package:weekplanner/shared/utils/date_utils.dart';
 
 class ActivityFormView extends StatelessWidget {
   const ActivityFormView({
