@@ -10,16 +10,16 @@ import 'package:weekplanner/features/weekplan/data/repositories/pictogram_reposi
 import 'package:weekplanner/features/weekplan/domain/repositories/pictogram_repository.dart';
 import 'package:weekplanner/shared/models/paginated_response.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
-import 'package:weekplanner/shared/services/core_api_service.dart';
+import 'package:weekplanner/shared/services/pictogram_api_service.dart';
 
-class MockCoreApiService extends Mock implements CoreApiService {}
+class MockPictogramApiService extends Mock implements PictogramApiService {}
 
 class MockPlatformFile extends Mock implements PlatformFile {}
 
 class FakeMultipartFile extends Fake implements MultipartFile {}
 
 void main() {
-  late MockCoreApiService mockCore;
+  late MockPictogramApiService mockCore;
   late PictogramRepository repo;
 
   const testPictogram = Pictogram(id: 7, name: 'Bade');
@@ -29,8 +29,8 @@ void main() {
   });
 
   setUp(() {
-    mockCore = MockCoreApiService();
-    repo = PictogramRepositoryImpl(coreApiService: mockCore);
+    mockCore = MockPictogramApiService();
+    repo = PictogramRepositoryImpl(apiService: mockCore);
   });
 
   group('searchPictograms', () {

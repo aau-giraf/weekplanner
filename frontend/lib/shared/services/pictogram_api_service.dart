@@ -1,34 +1,14 @@
 import 'package:dio/dio.dart';
+
 import 'package:weekplanner/config/api_config.dart';
-import 'package:weekplanner/shared/models/citizen.dart';
-import 'package:weekplanner/shared/models/grade.dart';
-import 'package:weekplanner/shared/models/organisation.dart';
 import 'package:weekplanner/shared/models/paginated_response.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 import 'package:weekplanner/shared/services/token_consumer.dart';
 
-class CoreApiService implements TokenConsumer {
+class PictogramApiService implements TokenConsumer {
   final Dio _dio;
 
-  CoreApiService({required Dio dio}) : _dio = dio;
-
-  /// Resolve media URLs on a [Pictogram] to absolute URLs.
-  ///
-  /// giraf-core may return:
-  /// - A relative path (`/media/pictograms/...`) for uploaded/generated files.
-  /// - An absolute URL (`https://...`) for externally-provided images.
-  /// - An empty string when no media is present (e.g. no sound).
-  Pictogram _resolvePictogramUrls(Pictogram p) => p.copyWith(
-        imageUrl: _resolveMediaUrl(p.imageUrl),
-        soundUrl: _resolveMediaUrl(p.soundUrl),
-      );
-
-  String? _resolveMediaUrl(String? url) {
-    if (url == null || url.isEmpty) return null;
-    final parsed = Uri.tryParse(url);
-    if (parsed != null && parsed.hasScheme) return url;
-    return '${ApiConfig.coreBaseUrl}$url';
-  }
+  PictogramApiService({required Dio dio}) : _dio = dio;
 
   @override
   void setAuthToken(String token) {
@@ -40,39 +20,6 @@ class CoreApiService implements TokenConsumer {
     _dio.options.headers.remove('Authorization');
   }
 
-  // Organizations
-  Future<PaginatedResponse<Organisation>> fetchOrganisations() async {
-    final response = await _dio.get('/api/v1/organizations');
-    return PaginatedResponse.fromJson(
-      response.data as Map<String, dynamic>,
-      Organisation.fromJson,
-    );
-  }
-
-  Future<Organisation> fetchOrganisation(int orgId) async {
-    final response = await _dio.get('/api/v1/organizations/$orgId');
-    return Organisation.fromJson(response.data as Map<String, dynamic>);
-  }
-
-  // Citizens
-  Future<PaginatedResponse<Citizen>> fetchCitizens(int orgId) async {
-    final response = await _dio.get('/api/v1/organizations/$orgId/citizens');
-    return PaginatedResponse.fromJson(
-      response.data as Map<String, dynamic>,
-      Citizen.fromJson,
-    );
-  }
-
-  // Grades
-  Future<PaginatedResponse<Grade>> fetchGrades(int orgId) async {
-    final response = await _dio.get('/api/v1/organizations/$orgId/grades');
-    return PaginatedResponse.fromJson(
-      response.data as Map<String, dynamic>,
-      Grade.fromJson,
-    );
-  }
-
-  // Pictograms — Read
   Future<PaginatedResponse<Pictogram>> searchPictograms({
     String? query,
     int limit = 20,
@@ -100,7 +47,6 @@ class CoreApiService implements TokenConsumer {
     );
   }
 
-  // Pictograms — Write
   Future<Pictogram> createPictogram({
     required String name,
     String? imageUrl,
@@ -134,7 +80,8 @@ class CoreApiService implements TokenConsumer {
       if (organizationId != null) 'organization_id': organizationId,
       'generate_sound': generateSound,
     });
-    final response = await _dio.post('/api/v1/pictograms/upload', data: formData);
+    final response =
+        await _dio.post('/api/v1/pictograms/upload', data: formData);
     return _resolvePictogramUrls(
       Pictogram.fromJson(response.data as Map<String, dynamic>),
     );
@@ -152,5 +99,23 @@ class CoreApiService implements TokenConsumer {
     return _resolvePictogramUrls(
       Pictogram.fromJson(response.data as Map<String, dynamic>),
     );
+  }
+
+  /// Resolve media URLs on a [Pictogram] to absolute URLs.
+  ///
+  /// giraf-core may return:
+  /// - A relative path (`/media/pictograms/...`) for uploaded/generated files.
+  /// - An absolute URL (`https://...`) for externally-provided images.
+  /// - An empty string when no media is present (e.g. no sound).
+  Pictogram _resolvePictogramUrls(Pictogram p) => p.copyWith(
+        imageUrl: _resolveMediaUrl(p.imageUrl),
+        soundUrl: _resolveMediaUrl(p.soundUrl),
+      );
+
+  String? _resolveMediaUrl(String? url) {
+    if (url == null || url.isEmpty) return null;
+    final parsed = Uri.tryParse(url);
+    if (parsed != null && parsed.hasScheme) return url;
+    return '${ApiConfig.coreBaseUrl}$url';
   }
 }

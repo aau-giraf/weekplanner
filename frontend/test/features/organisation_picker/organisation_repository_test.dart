@@ -8,12 +8,13 @@ import 'package:weekplanner/shared/models/citizen.dart';
 import 'package:weekplanner/shared/models/grade.dart';
 import 'package:weekplanner/shared/models/organisation.dart';
 import 'package:weekplanner/shared/models/paginated_response.dart';
-import 'package:weekplanner/shared/services/core_api_service.dart';
+import 'package:weekplanner/shared/services/organisation_api_service.dart';
 
-class MockCoreApiService extends Mock implements CoreApiService {}
+class MockOrganisationApiService extends Mock
+    implements OrganisationApiService {}
 
 void main() {
-  late MockCoreApiService mockCore;
+  late MockOrganisationApiService mockCore;
   late OrganisationRepository repo;
 
   const org = Organisation(id: 1, name: 'Org A');
@@ -21,8 +22,8 @@ void main() {
   const grade = Grade(id: 20, name: 'Gruppe 1');
 
   setUp(() {
-    mockCore = MockCoreApiService();
-    repo = OrganisationRepositoryImpl(coreApiService: mockCore);
+    mockCore = MockOrganisationApiService();
+    repo = OrganisationRepositoryImpl(apiService: mockCore);
   });
 
   group('fetchOrganisations', () {
