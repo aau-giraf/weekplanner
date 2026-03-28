@@ -5,8 +5,9 @@ import 'package:weekplanner/shared/models/grade.dart';
 import 'package:weekplanner/shared/models/organisation.dart';
 import 'package:weekplanner/shared/models/paginated_response.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
+import 'package:weekplanner/shared/services/token_consumer.dart';
 
-class CoreApiService {
+class CoreApiService implements TokenConsumer {
   final Dio _dio;
 
   CoreApiService({Dio? dio})
@@ -34,10 +35,12 @@ class CoreApiService {
     return '${ApiConfig.coreBaseUrl}$url';
   }
 
+  @override
   void setAuthToken(String token) {
     _dio.options.headers['Authorization'] = 'Bearer $token';
   }
 
+  @override
   void clearAuthToken() {
     _dio.options.headers.remove('Authorization');
   }

@@ -21,6 +21,7 @@ import 'package:weekplanner/shared/models/paginated_response.dart';
 import 'package:weekplanner/shared/services/activity_api_service.dart';
 import 'package:weekplanner/shared/services/auth_service.dart';
 import 'package:weekplanner/shared/services/core_api_service.dart';
+import 'package:weekplanner/shared/services/token_manager.dart';
 
 import '../test/helpers/jwt_test_helper.dart';
 
@@ -30,17 +31,21 @@ class _MockCoreApiService extends Mock implements CoreApiService {}
 
 class _MockActivityApiService extends Mock implements ActivityApiService {}
 
+class _MockTokenManager extends Mock implements TokenManager {}
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   late _MockAuthService mockAuthService;
   late _MockCoreApiService mockCoreApiService;
   late _MockActivityApiService mockActivityApiService;
+  late _MockTokenManager mockTokenManager;
 
   setUp(() {
     mockAuthService = _MockAuthService();
     mockCoreApiService = _MockCoreApiService();
     mockActivityApiService = _MockActivityApiService();
+    mockTokenManager = _MockTokenManager();
 
     // Default stubs: no stored session
     when(() => mockAuthService.getStoredAccessToken())
@@ -61,8 +66,7 @@ void main() {
 
     final authCubit = AuthCubit(
       repository: authRepository,
-      coreApiService: mockCoreApiService,
-      activityApiService: mockActivityApiService,
+      tokenManager: mockTokenManager,
     );
     final refreshListenable = GoRouterRefreshStream(authCubit.stream);
     final orgPickerCubit =
@@ -132,9 +136,8 @@ void main() {
       (_) async => PaginatedResponse<Grade>(items: [], count: 0),
     );
 
-    // Stub token propagation on services (called by AuthCubit.authenticated)
-    when(() => mockCoreApiService.setAuthToken(any())).thenReturn(null);
-    when(() => mockActivityApiService.setAuthToken(any())).thenReturn(null);
+    // Stub token propagation (called by AuthCubit.authenticated via TokenManager)
+    when(() => mockTokenManager.setToken(any())).thenReturn(null);
 
     // Stub activities for citizen 10 (any date string)
     when(() => mockActivityApiService.fetchActivitiesByCitizen(10, any()))
