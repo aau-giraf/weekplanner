@@ -63,8 +63,7 @@ void main() {
             .thenAnswer((_) async => Left(UnexpectedFailure()));
         when(() => mockRepo.tryRefreshToken())
             .thenAnswer((_) async => Right(token));
-        when(() => mockCoreApi.setAuthToken(any())).thenReturn(null);
-        when(() => mockActivityApi.setAuthToken(any())).thenReturn(null);
+        when(() => mockTokenManager.setToken(any())).thenReturn(null);
       },
       build: buildCubit,
       act: (cubit) => cubit.tryRestoreSession(),

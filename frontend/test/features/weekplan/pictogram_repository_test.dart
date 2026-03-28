@@ -193,5 +193,23 @@ void main() {
         (_) => fail('Expected Left'),
       );
     });
+
+    test('returns Left when file has neither bytes nor path', () async {
+      final mockFile = MockPlatformFile();
+      when(() => mockFile.bytes).thenReturn(null);
+      when(() => mockFile.path).thenReturn(null);
+      when(() => mockFile.name).thenReturn('broken.png');
+
+      final result = await repo.uploadPictogram(
+        name: 'Bade',
+        imageFile: mockFile,
+      );
+
+      expect(result, isA<Left<PictogramFailure, Pictogram>>());
+      result.fold(
+        (failure) => expect(failure, isA<CreatePictogramFailure>()),
+        (_) => fail('Expected Left'),
+      );
+    });
   });
 }
