@@ -6,33 +6,27 @@ import 'package:weekplanner/core/errors/auth_failure.dart';
 import 'package:weekplanner/features/auth/data/repositories/auth_repository.dart';
 import 'package:weekplanner/features/auth/domain/auth_state.dart';
 import 'package:weekplanner/features/auth/presentation/auth_cubit.dart';
-import 'package:weekplanner/shared/services/activity_api_service.dart';
 import 'package:weekplanner/shared/services/auth_service.dart';
-import 'package:weekplanner/shared/services/core_api_service.dart';
+import 'package:weekplanner/shared/services/token_manager.dart';
 
 import '../../helpers/jwt_test_helper.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
-class MockCoreApiService extends Mock implements CoreApiService {}
-
-class MockActivityApiService extends Mock implements ActivityApiService {}
+class MockTokenManager extends Mock implements TokenManager {}
 
 void main() {
   late MockAuthRepository mockRepo;
-  late MockCoreApiService mockCoreApi;
-  late MockActivityApiService mockActivityApi;
+  late MockTokenManager mockTokenManager;
 
   setUp(() {
     mockRepo = MockAuthRepository();
-    mockCoreApi = MockCoreApiService();
-    mockActivityApi = MockActivityApiService();
+    mockTokenManager = MockTokenManager();
   });
 
   AuthCubit buildCubit() => AuthCubit(
         repository: mockRepo,
-        coreApiService: mockCoreApi,
-        activityApiService: mockActivityApi,
+        tokenManager: mockTokenManager,
       );
 
   group('initial state', () {
@@ -51,15 +45,13 @@ void main() {
         final token = createValidJwt();
         when(() => mockRepo.tryGetStoredToken())
             .thenAnswer((_) async => Right(token));
-        when(() => mockCoreApi.setAuthToken(any())).thenReturn(null);
-        when(() => mockActivityApi.setAuthToken(any())).thenReturn(null);
+        when(() => mockTokenManager.setToken(any())).thenReturn(null);
       },
       build: buildCubit,
       act: (cubit) => cubit.tryRestoreSession(),
       expect: () => [isA<AuthAuthenticated>()],
       verify: (_) {
-        verify(() => mockCoreApi.setAuthToken(any())).called(1);
-        verify(() => mockActivityApi.setAuthToken(any())).called(1);
+        verify(() => mockTokenManager.setToken(any())).called(1);
       },
     );
 
@@ -73,8 +65,7 @@ void main() {
           (_) async => Right(
               AuthTokens(access: token, refresh: 'refresh', orgRoles: {})),
         );
-        when(() => mockCoreApi.setAuthToken(any())).thenReturn(null);
-        when(() => mockActivityApi.setAuthToken(any())).thenReturn(null);
+        when(() => mockTokenManager.setToken(any())).thenReturn(null);
       },
       build: buildCubit,
       act: (cubit) => cubit.tryRestoreSession(),
@@ -97,10 +88,9 @@ void main() {
 
   group('authenticated', () {
     blocTest<AuthCubit, AuthState>(
-      'emits AuthAuthenticated and distributes token',
+      'emits AuthAuthenticated and distributes token via TokenManager',
       setUp: () {
-        when(() => mockCoreApi.setAuthToken(any())).thenReturn(null);
-        when(() => mockActivityApi.setAuthToken(any())).thenReturn(null);
+        when(() => mockTokenManager.setToken(any())).thenReturn(null);
       },
       build: buildCubit,
       act: (cubit) => cubit.authenticated(createValidJwt()),
@@ -110,22 +100,19 @@ void main() {
             .having((s) => s.orgRoles, 'orgRoles', {'1': 'admin'}),
       ],
       verify: (_) {
-        verify(() => mockCoreApi.setAuthToken(any())).called(1);
-        verify(() => mockActivityApi.setAuthToken(any())).called(1);
+        verify(() => mockTokenManager.setToken(any())).called(1);
       },
     );
   });
 
   group('logout', () {
     blocTest<AuthCubit, AuthState>(
-      'emits AuthUnauthenticated and clears tokens',
+      'emits AuthUnauthenticated and clears tokens via TokenManager',
       setUp: () {
         when(() => mockRepo.logout())
             .thenAnswer((_) async => const Right(unit));
-        when(() => mockCoreApi.setAuthToken(any())).thenReturn(null);
-        when(() => mockActivityApi.setAuthToken(any())).thenReturn(null);
-        when(() => mockCoreApi.clearAuthToken()).thenReturn(null);
-        when(() => mockActivityApi.clearAuthToken()).thenReturn(null);
+        when(() => mockTokenManager.setToken(any())).thenReturn(null);
+        when(() => mockTokenManager.clearToken()).thenReturn(null);
       },
       build: buildCubit,
       seed: () {
@@ -140,8 +127,7 @@ void main() {
       expect: () => [const AuthUnauthenticated()],
       verify: (_) {
         verify(() => mockRepo.logout()).called(1);
-        verify(() => mockCoreApi.clearAuthToken()).called(1);
-        verify(() => mockActivityApi.clearAuthToken()).called(1);
+        verify(() => mockTokenManager.clearToken()).called(1);
       },
     );
   });

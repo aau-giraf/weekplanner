@@ -15,6 +15,7 @@ import 'package:weekplanner/shared/services/activity_api_service.dart';
 import 'package:weekplanner/shared/services/auth_service.dart';
 import 'package:weekplanner/shared/services/core_api_service.dart';
 import 'package:weekplanner/shared/services/log_service.dart';
+import 'package:weekplanner/shared/services/token_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,11 +38,15 @@ void main() async {
     coreApiService: coreApiService,
   );
 
+  // Token distribution
+  final tokenManager = TokenManager(
+    consumers: [coreApiService, activityApiService],
+  );
+
   // Auth cubit + router refresh adapter
   final authCubit = AuthCubit(
     repository: authRepository,
-    coreApiService: coreApiService,
-    activityApiService: activityApiService,
+    tokenManager: tokenManager,
   );
   final refreshListenable = GoRouterRefreshStream(authCubit.stream);
 

@@ -3,27 +3,24 @@ import 'package:logging/logging.dart';
 
 import 'package:weekplanner/features/auth/data/repositories/auth_repository.dart';
 import 'package:weekplanner/features/auth/domain/auth_state.dart';
-import 'package:weekplanner/shared/services/activity_api_service.dart';
-import 'package:weekplanner/shared/services/core_api_service.dart';
+import 'package:weekplanner/shared/services/token_manager.dart';
 import 'package:weekplanner/shared/utils/jwt_decode.dart';
 
 final _log = Logger('AuthCubit');
 
 /// Manages global authentication state.
 ///
-/// Owns all auth transitions and distributes tokens to API services.
+/// Owns all auth transitions and delegates token distribution
+/// to [TokenManager].
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepository _repository;
-  final CoreApiService _coreApiService;
-  final ActivityApiService _activityApiService;
+  final TokenManager _tokenManager;
 
   AuthCubit({
     required AuthRepository repository,
-    required CoreApiService coreApiService,
-    required ActivityApiService activityApiService,
+    required TokenManager tokenManager,
   })  : _repository = repository,
-        _coreApiService = coreApiService,
-        _activityApiService = activityApiService,
+        _tokenManager = tokenManager,
         super(const AuthUnknown());
 
   /// Whether the current state is [AuthAuthenticated].
@@ -52,11 +49,11 @@ class AuthCubit extends Cubit<AuthState> {
   /// Transition to authenticated state with the given [token].
   ///
   /// Parses the JWT to extract user data and distributes the token
-  /// to API services.
+  /// to API services via [TokenManager].
   void authenticated(String token) {
     final userId = JwtDecode.getUserId(token);
     final orgRoles = JwtDecode.getOrgRoles(token);
-    _distributeToken(token);
+    _tokenManager.setToken(token);
     emit(AuthAuthenticated(
       accessToken: token,
       userId: userId,
@@ -71,17 +68,7 @@ class AuthCubit extends Cubit<AuthState> {
       (failure) => _log.warning('Logout failed: ${failure.message}'),
       (_) {},
     );
-    _clearTokens();
+    _tokenManager.clearToken();
     emit(const AuthUnauthenticated());
-  }
-
-  void _distributeToken(String token) {
-    _coreApiService.setAuthToken(token);
-    _activityApiService.setAuthToken(token);
-  }
-
-  void _clearTokens() {
-    _coreApiService.clearAuthToken();
-    _activityApiService.clearAuthToken();
   }
 }
