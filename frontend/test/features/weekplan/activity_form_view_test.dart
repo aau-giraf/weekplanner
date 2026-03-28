@@ -38,7 +38,7 @@ void main() {
     testWidgets('shows time pickers and submit button in ready state',
         (tester) async {
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
-        date: testDate,
+        form: ActivityFormData(date: testDate),
       ));
 
       await tester.pumpWidget(buildSubject());
@@ -50,7 +50,7 @@ void main() {
 
     testWidgets('shows error text in ready state with error', (tester) async {
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
-        date: testDate,
+        form: ActivityFormData(date: testDate),
         error: 'Sluttid skal være efter starttid',
       ));
 
@@ -62,7 +62,7 @@ void main() {
     testWidgets('disables submit button and shows spinner in saving state',
         (tester) async {
       when(() => mockCubit.state).thenReturn(ActivityFormSaving(
-        date: testDate,
+        form: ActivityFormData(date: testDate),
       ));
 
       await tester.pumpWidget(buildSubject());
@@ -78,7 +78,7 @@ void main() {
 
     testWidgets('tapping submit calls save', (tester) async {
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
-        date: testDate,
+        form: ActivityFormData(date: testDate),
       ));
       when(() => mockCubit.save()).thenAnswer((_) async => true);
 

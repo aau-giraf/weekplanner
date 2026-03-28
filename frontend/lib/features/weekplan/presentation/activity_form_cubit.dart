@@ -39,51 +39,63 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
   })  : _activityRepository = activityRepository,
         _pictogramRepository = pictogramRepository,
         super(ActivityFormReady(
-          date: existingActivity?.date ?? initialDate,
-          startTime: existingActivity?.startTime ?? const (hour: 8, minute: 0),
-          endTime: existingActivity?.endTime ?? const (hour: 9, minute: 0),
-          selectedPictogramId: existingActivity?.pictogramId,
-          existingActivity: existingActivity,
+          form: ActivityFormData(
+            date: existingActivity?.date ?? initialDate,
+            startTime:
+                existingActivity?.startTime ?? const (hour: 8, minute: 0),
+            endTime: existingActivity?.endTime ?? const (hour: 9, minute: 0),
+            existingActivity: existingActivity,
+          ),
+          selection: PictogramSelection(
+            id: existingActivity?.pictogramId,
+          ),
         ));
 
   // ── Form field setters ────────────────────────────────────
 
   void setStartTime(TimeValue time) {
-    _emitReady(startTime: time);
+    _emitReady(form: state.form.copyWith(startTime: time));
   }
 
   void setEndTime(TimeValue time) {
-    _emitReady(endTime: time);
+    _emitReady(form: state.form.copyWith(endTime: time));
   }
 
   void setPictogramMode(PictogramMode mode) {
-    _emitReady(pictogramMode: mode);
+    _emitReady(creation: state.creation.copyWith(mode: mode));
   }
 
   void setPictogramName(String name) {
-    _emitReady(pictogramName: name);
+    _emitReady(creation: state.creation.copyWith(name: name));
   }
 
   void setGeneratePrompt(String prompt) {
-    _emitReady(generatePrompt: prompt);
+    _emitReady(creation: state.creation.copyWith(generatePrompt: prompt));
   }
 
   void setSelectedImageFile(PlatformFile? file) {
-    _emitReady(selectedImageFile: file);
+    if (file == null) {
+      _emitReady(creation: state.creation.copyWith(clearImageFile: true));
+    } else {
+      _emitReady(creation: state.creation.copyWith(imageFile: file));
+    }
   }
 
   void setSelectedSoundFile(PlatformFile? file) {
-    _emitReady(selectedSoundFile: file);
+    if (file == null) {
+      _emitReady(creation: state.creation.copyWith(clearSoundFile: true));
+    } else {
+      _emitReady(creation: state.creation.copyWith(soundFile: file));
+    }
   }
 
   void setGenerateSound(bool value) {
-    _emitReady(generateSound: value);
+    _emitReady(creation: state.creation.copyWith(generateSound: value));
   }
 
   void selectPictogram(Pictogram pictogram) {
     _emitReady(
-      selectedPictogramId: pictogram.id,
-      selectedPictogram: pictogram,
+      selection: PictogramSelection(id: pictogram.id, pictogram: pictogram),
     );
   }
 
@@ -99,15 +111,17 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
 
   /// Execute a pictogram search immediately.
   Future<void> searchPictograms(String query) async {
-    _emitReady(isSearching: true);
+    _emitReady(search: state.search.copyWith(isSearching: true));
 
     final result = await _pictogramRepository.searchPictograms(query);
     switch (result) {
       case Left(:final value):
         _log.warning('Pictogram search failed: ${value.message}');
-        _emitReady(isSearching: false);
+        _emitReady(search: state.search.copyWith(isSearching: false));
       case Right(:final value):
-        _emitReady(searchResults: value, isSearching: false);
+        _emitReady(
+          search: PictogramSearch(results: value, isSearching: false),
+        );
     }
   }
 
@@ -115,30 +129,32 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
 
   /// Upload a local image as a new pictogram and select it.
   Future<bool> uploadPictogramFromFile() async {
-    if (state.selectedImageFile == null || state.pictogramName.isEmpty) {
+    if (state.creation.imageFile == null || state.creation.name.isEmpty) {
       _emitReady(error: 'Angiv navn og vælg et billede');
       return false;
     }
 
-    _emitReady(isCreatingPictogram: true, error: null);
+    _emitReady(creation: state.creation.copyWith(isCreating: true));
 
     final result = await _pictogramRepository.uploadPictogram(
-      name: state.pictogramName,
-      imageFile: state.selectedImageFile!,
-      soundFile: state.selectedSoundFile,
+      name: state.creation.name,
+      imageFile: state.creation.imageFile!,
+      soundFile: state.creation.soundFile,
       organizationId: organizationId,
-      generateSound: state.generateSound,
+      generateSound: state.creation.generateSound,
     );
 
     switch (result) {
       case Left(:final value):
-        _emitReady(isCreatingPictogram: false, error: value.message);
+        _emitReady(
+          creation: state.creation.copyWith(isCreating: false),
+          error: value.message,
+        );
         return false;
       case Right(:final value):
         _emitReady(
-          isCreatingPictogram: false,
-          selectedPictogramId: value.id,
-          selectedPictogram: value,
+          creation: state.creation.copyWith(isCreating: false),
+          selection: PictogramSelection(id: value.id, pictogram: value),
         );
         return true;
     }
@@ -146,31 +162,34 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
 
   /// Create a pictogram via AI generation and select it.
   Future<bool> generatePictogram() async {
-    final prompt =
-        state.generatePrompt.isNotEmpty ? state.generatePrompt : state.pictogramName;
+    final prompt = state.creation.generatePrompt.isNotEmpty
+        ? state.creation.generatePrompt
+        : state.creation.name;
     if (prompt.isEmpty) {
       _emitReady(error: 'Angiv et navn eller en beskrivelse');
       return false;
     }
 
-    _emitReady(isCreatingPictogram: true, error: null);
+    _emitReady(creation: state.creation.copyWith(isCreating: true));
 
     final result = await _pictogramRepository.createPictogram(
       name: prompt,
       organizationId: organizationId,
       generateImage: true,
-      generateSound: state.generateSound,
+      generateSound: state.creation.generateSound,
     );
 
     switch (result) {
       case Left(:final value):
-        _emitReady(isCreatingPictogram: false, error: value.message);
+        _emitReady(
+          creation: state.creation.copyWith(isCreating: false),
+          error: value.message,
+        );
         return false;
       case Right(:final value):
         _emitReady(
-          isCreatingPictogram: false,
-          selectedPictogramId: value.id,
-          selectedPictogram: value,
+          creation: state.creation.copyWith(isCreating: false),
+          selection: PictogramSelection(id: value.id, pictogram: value),
         );
         return true;
     }
@@ -180,8 +199,10 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
 
   /// Validate the form and return an error message, or null if valid.
   String? validate() {
-    final startMinutes = state.startTime.hour * 60 + state.startTime.minute;
-    final endMinutes = state.endTime.hour * 60 + state.endTime.minute;
+    final startMinutes =
+        state.form.startTime.hour * 60 + state.form.startTime.minute;
+    final endMinutes =
+        state.form.endTime.hour * 60 + state.form.endTime.minute;
     if (endMinutes <= startMinutes) {
       return 'Sluttid skal være efter starttid';
     }
@@ -198,34 +219,23 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
 
     final s = state;
     emit(ActivityFormSaving(
-      startTime: s.startTime,
-      endTime: s.endTime,
-      date: s.date,
-      selectedPictogramId: s.selectedPictogramId,
-      selectedPictogram: s.selectedPictogram,
-      existingActivity: s.existingActivity,
-      pictogramMode: s.pictogramMode,
-      pictogramName: s.pictogramName,
-      generatePrompt: s.generatePrompt,
-      selectedImageFile: s.selectedImageFile,
-      selectedSoundFile: s.selectedSoundFile,
-      generateSound: s.generateSound,
-      isCreatingPictogram: s.isCreatingPictogram,
-      searchResults: s.searchResults,
-      isSearching: s.isSearching,
+      form: s.form,
+      selection: s.selection,
+      creation: s.creation,
+      search: s.search,
     ));
 
     final data = {
-      'date': GirafDateUtils.formatQueryDate(s.date),
-      'startTime': formatTimeValueForApi(s.startTime),
-      'endTime': formatTimeValueForApi(s.endTime),
-      if (s.selectedPictogramId != null) 'pictogramId': s.selectedPictogramId,
+      'date': GirafDateUtils.formatQueryDate(s.form.date),
+      'startTime': formatTimeValueForApi(s.form.startTime),
+      'endTime': formatTimeValueForApi(s.form.endTime),
+      if (s.selection.id != null) 'pictogramId': s.selection.id,
     };
 
     final Either<ActivityFailure, Activity> result;
-    if (s.isEditing) {
+    if (s.form.isEditing) {
       result = await _activityRepository.updateActivity(
-          s.existingActivity!.activityId, data);
+          s.form.existingActivity!.activityId, data);
     } else {
       result = await _activityRepository.createActivity(
         id: subjectId,
@@ -240,20 +250,10 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
         return false;
       case Right():
         emit(ActivityFormSaved(
-          startTime: s.startTime,
-          endTime: s.endTime,
-          date: s.date,
-          selectedPictogramId: s.selectedPictogramId,
-          selectedPictogram: s.selectedPictogram,
-          existingActivity: s.existingActivity,
-          pictogramMode: s.pictogramMode,
-          pictogramName: s.pictogramName,
-          generatePrompt: s.generatePrompt,
-          selectedImageFile: s.selectedImageFile,
-          selectedSoundFile: s.selectedSoundFile,
-          generateSound: s.generateSound,
-          searchResults: s.searchResults,
-          isSearching: s.isSearching,
+          form: s.form,
+          selection: s.selection,
+          creation: s.creation,
+          search: s.search,
         ));
         return true;
     }
@@ -261,49 +261,21 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
 
   // ── Helpers ──────────────────────────────────────────────
 
-  /// Emit an [ActivityFormReady] state, carrying forward all fields
+  /// Emit an [ActivityFormReady] state, carrying forward all sub-states
   /// from the current state unless explicitly overridden.
-  ///
-  /// Note: nullable fields (selectedPictogramId, selectedPictogram,
-  /// selectedImageFile, selectedSoundFile) cannot be cleared back to null
-  /// through this helper — the `??` pattern preserves the old value when
-  /// null is passed. This is acceptable because the current UI does not
-  /// support deselecting these fields. If deselection is needed in the
-  /// future, use a sentinel wrapper or a dedicated clear method.
   void _emitReady({
     String? error,
-    TimeValue? startTime,
-    TimeValue? endTime,
-    int? selectedPictogramId,
-    Pictogram? selectedPictogram,
-    PictogramMode? pictogramMode,
-    String? pictogramName,
-    String? generatePrompt,
-    PlatformFile? selectedImageFile,
-    PlatformFile? selectedSoundFile,
-    bool? generateSound,
-    bool? isCreatingPictogram,
-    List<Pictogram>? searchResults,
-    bool? isSearching,
+    ActivityFormData? form,
+    PictogramSelection? selection,
+    PictogramCreation? creation,
+    PictogramSearch? search,
   }) {
-    final s = state;
     emit(ActivityFormReady(
       error: error,
-      startTime: startTime ?? s.startTime,
-      endTime: endTime ?? s.endTime,
-      date: s.date,
-      selectedPictogramId: selectedPictogramId ?? s.selectedPictogramId,
-      selectedPictogram: selectedPictogram ?? s.selectedPictogram,
-      existingActivity: s.existingActivity,
-      pictogramMode: pictogramMode ?? s.pictogramMode,
-      pictogramName: pictogramName ?? s.pictogramName,
-      generatePrompt: generatePrompt ?? s.generatePrompt,
-      selectedImageFile: selectedImageFile ?? s.selectedImageFile,
-      selectedSoundFile: selectedSoundFile ?? s.selectedSoundFile,
-      generateSound: generateSound ?? s.generateSound,
-      isCreatingPictogram: isCreatingPictogram ?? s.isCreatingPictogram,
-      searchResults: searchResults ?? s.searchResults,
-      isSearching: isSearching ?? s.isSearching,
+      form: form ?? state.form,
+      selection: selection ?? state.selection,
+      creation: creation ?? state.creation,
+      search: search ?? state.search,
     ));
   }
 

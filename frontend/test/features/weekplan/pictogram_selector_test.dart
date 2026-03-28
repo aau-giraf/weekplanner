@@ -17,6 +17,7 @@ void main() {
   late MockActivityFormCubit mockCubit;
 
   final testDate = DateTime(2026, 3, 22);
+  final defaultForm = ActivityFormData(date: testDate);
 
   setUp(() {
     mockCubit = MockActivityFormCubit();
@@ -37,7 +38,7 @@ void main() {
   group('PictogramSelector', () {
     testWidgets('renders 3 mode segments', (tester) async {
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
-        date: testDate,
+        form: defaultForm,
       ));
 
       await tester.pumpWidget(buildSubject());
@@ -49,8 +50,8 @@ void main() {
 
     testWidgets('search mode shows search field', (tester) async {
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
-        date: testDate,
-        pictogramMode: PictogramMode.search,
+        form: defaultForm,
+        creation: const PictogramCreation(mode: PictogramMode.search),
       ));
 
       await tester.pumpWidget(buildSubject());
@@ -64,9 +65,9 @@ void main() {
     testWidgets('search mode shows loading indicator when searching',
         (tester) async {
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
-        date: testDate,
-        pictogramMode: PictogramMode.search,
-        isSearching: true,
+        form: defaultForm,
+        creation: const PictogramCreation(mode: PictogramMode.search),
+        search: const PictogramSearch(isSearching: true),
       ));
 
       await tester.pumpWidget(buildSubject());
@@ -78,9 +79,9 @@ void main() {
         (tester) async {
       const pictogram = Pictogram(id: 1, name: 'test');
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
-        date: testDate,
-        pictogramMode: PictogramMode.search,
-        searchResults: [pictogram],
+        form: defaultForm,
+        creation: const PictogramCreation(mode: PictogramMode.search),
+        search: const PictogramSearch(results: [pictogram]),
       ));
 
       await tester.pumpWidget(buildSubject());
@@ -91,8 +92,8 @@ void main() {
 
     testWidgets('upload mode shows name field and image button', (tester) async {
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
-        date: testDate,
-        pictogramMode: PictogramMode.upload,
+        form: defaultForm,
+        creation: const PictogramCreation(mode: PictogramMode.upload),
       ));
 
       await tester.pumpWidget(buildSubject());
@@ -104,8 +105,8 @@ void main() {
     testWidgets('generate mode shows name field and prompt field',
         (tester) async {
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
-        date: testDate,
-        pictogramMode: PictogramMode.generate,
+        form: defaultForm,
+        creation: const PictogramCreation(mode: PictogramMode.generate),
       ));
 
       await tester.pumpWidget(buildSubject());
@@ -117,9 +118,8 @@ void main() {
         (tester) async {
       const pictogram = Pictogram(id: 1, name: 'Sol');
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
-        date: testDate,
-        selectedPictogram: pictogram,
-        selectedPictogramId: 1,
+        form: defaultForm,
+        selection: const PictogramSelection(id: 1, pictogram: pictogram),
       ));
 
       await tester.pumpWidget(buildSubject());
@@ -131,7 +131,7 @@ void main() {
     testWidgets('shows no preview when no pictogram is selected',
         (tester) async {
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
-        date: testDate,
+        form: defaultForm,
       ));
 
       await tester.pumpWidget(buildSubject());
