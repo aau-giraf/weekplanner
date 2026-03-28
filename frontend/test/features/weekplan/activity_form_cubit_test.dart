@@ -66,21 +66,21 @@ void main() {
     test('is ActivityFormReady with default times for new activity', () {
       final cubit = buildCubit();
       expect(cubit.state, isA<ActivityFormReady>());
-      expect(cubit.state.startTime, const (hour: 8, minute: 0));
-      expect(cubit.state.endTime, const (hour: 9, minute: 0));
-      expect(cubit.state.date, testDate);
-      expect(cubit.state.existingActivity, isNull);
+      expect(cubit.state.form.startTime, const (hour: 8, minute: 0));
+      expect(cubit.state.form.endTime, const (hour: 9, minute: 0));
+      expect(cubit.state.form.date, testDate);
+      expect(cubit.state.form.existingActivity, isNull);
       cubit.close();
     });
 
     test('parses existing activity times and date in edit mode', () {
       final cubit = buildCubit(existingActivity: testActivityWithPictogram);
       expect(cubit.state, isA<ActivityFormReady>());
-      expect(cubit.state.startTime, const (hour: 10, minute: 30));
-      expect(cubit.state.endTime, const (hour: 11, minute: 45));
-      expect(cubit.state.date, DateTime(2026, 3, 15));
-      expect(cubit.state.selectedPictogramId, 42);
-      expect(cubit.state.existingActivity, testActivityWithPictogram);
+      expect(cubit.state.form.startTime, const (hour: 10, minute: 30));
+      expect(cubit.state.form.endTime, const (hour: 11, minute: 45));
+      expect(cubit.state.form.date, DateTime(2026, 3, 15));
+      expect(cubit.state.selection.id, 42);
+      expect(cubit.state.form.existingActivity, testActivityWithPictogram);
       cubit.close();
     });
   });
@@ -92,7 +92,7 @@ void main() {
       act: (cubit) => cubit.setStartTime(const (hour: 10, minute: 30)),
       expect: () => [
         isA<ActivityFormReady>().having(
-          (s) => s.startTime,
+          (s) => s.form.startTime,
           'startTime',
           const (hour: 10, minute: 30),
         ),
@@ -107,7 +107,7 @@ void main() {
       act: (cubit) => cubit.setEndTime(const (hour: 11, minute: 0)),
       expect: () => [
         isA<ActivityFormReady>().having(
-          (s) => s.endTime,
+          (s) => s.form.endTime,
           'endTime',
           const (hour: 11, minute: 0),
         ),
@@ -122,7 +122,7 @@ void main() {
       act: (cubit) => cubit.setPictogramMode(PictogramMode.upload),
       expect: () => [
         isA<ActivityFormReady>().having(
-          (s) => s.pictogramMode,
+          (s) => s.creation.mode,
           'pictogramMode',
           PictogramMode.upload,
         ),
@@ -137,9 +137,9 @@ void main() {
       act: (cubit) => cubit.selectPictogram(testPictogram),
       expect: () => [
         isA<ActivityFormReady>()
-            .having((s) => s.selectedPictogramId, 'selectedPictogramId', 1)
+            .having((s) => s.selection.id, 'selectedPictogramId', 1)
             .having(
-              (s) => s.selectedPictogram,
+              (s) => s.selection.pictogram,
               'selectedPictogram',
               testPictogram,
             ),
@@ -158,14 +158,14 @@ void main() {
       act: (cubit) => cubit.searchPictograms('test'),
       expect: () => [
         isA<ActivityFormReady>().having(
-          (s) => s.isSearching,
+          (s) => s.search.isSearching,
           'isSearching',
           true,
         ),
         isA<ActivityFormReady>()
-            .having((s) => s.isSearching, 'isSearching', false)
+            .having((s) => s.search.isSearching, 'isSearching', false)
             .having(
-              (s) => s.searchResults,
+              (s) => s.search.results,
               'searchResults',
               const [testPictogram],
             ),
@@ -182,12 +182,12 @@ void main() {
       act: (cubit) => cubit.searchPictograms('test'),
       expect: () => [
         isA<ActivityFormReady>().having(
-          (s) => s.isSearching,
+          (s) => s.search.isSearching,
           'isSearching',
           true,
         ),
         isA<ActivityFormReady>().having(
-          (s) => s.isSearching,
+          (s) => s.search.isSearching,
           'isSearching',
           false,
         ),
@@ -226,8 +226,8 @@ void main() {
       final result = await cubit.uploadPictogramFromFile();
       expect(result, isTrue);
       expect(cubit.state, isA<ActivityFormReady>());
-      expect(cubit.state.selectedPictogramId, 1);
-      expect(cubit.state.selectedPictogram, testPictogram);
+      expect(cubit.state.selection.id, 1);
+      expect(cubit.state.selection.pictogram, testPictogram);
       cubit.close();
     });
 
@@ -280,8 +280,8 @@ void main() {
 
       final result = await cubit.generatePictogram();
       expect(result, isTrue);
-      expect(cubit.state.selectedPictogramId, 1);
-      expect(cubit.state.selectedPictogram, testPictogram);
+      expect(cubit.state.selection.id, 1);
+      expect(cubit.state.selection.pictogram, testPictogram);
       cubit.close();
     });
 
@@ -418,7 +418,7 @@ void main() {
       expect: () => [
         // setStartTime emits
         isA<ActivityFormReady>().having(
-          (s) => s.startTime,
+          (s) => s.form.startTime,
           'startTime',
           const (hour: 10, minute: 0),
         ),

@@ -54,7 +54,7 @@ class _PictogramSelectorState extends State<PictogramSelector> {
                   icon: Icon(Icons.auto_awesome),
                 ),
               ],
-              selected: {state.pictogramMode},
+              selected: {state.creation.mode},
               onSelectionChanged: (modes) =>
                   cubit.setPictogramMode(modes.first),
             ),
@@ -62,7 +62,7 @@ class _PictogramSelectorState extends State<PictogramSelector> {
 
             // Content per mode
             _PictogramModeContent(
-              mode: state.pictogramMode,
+              mode: state.creation.mode,
               state: state,
               cubit: cubit,
               searchController: _searchController,
@@ -71,10 +71,10 @@ class _PictogramSelectorState extends State<PictogramSelector> {
             ),
 
             // Selected pictogram preview
-            if (state.selectedPictogram != null) ...[
+            if (state.selection.pictogram != null) ...[
               const SizedBox(height: 12),
               // Guarded by != null check above.
-              _SelectedPictogramPreview(pictogram: state.selectedPictogram!),
+              _SelectedPictogramPreview(pictogram: state.selection.pictogram!),
             ],
           ],
         );
@@ -109,17 +109,17 @@ class _PictogramModeContent extends StatelessWidget {
       PictogramMode.search => _SearchTab(
           controller: searchController,
           onSearchChanged: cubit.onSearchQueryChanged,
-          pictograms: state.searchResults,
-          isLoading: state.isSearching,
-          selectedId: state.selectedPictogramId,
+          pictograms: state.search.results,
+          isLoading: state.search.isSearching,
+          selectedId: state.selection.id,
           onSelect: cubit.selectPictogram,
         ),
       PictogramMode.upload => _UploadTab(
           nameController: nameController,
-          selectedImageFile: state.selectedImageFile,
-          selectedSoundFile: state.selectedSoundFile,
-          generateSound: state.generateSound,
-          isCreatingPictogram: state.isCreatingPictogram,
+          selectedImageFile: state.creation.imageFile,
+          selectedSoundFile: state.creation.soundFile,
+          generateSound: state.creation.generateSound,
+          isCreatingPictogram: state.creation.isCreating,
           onNameChanged: cubit.setPictogramName,
           onImageFilePicked: cubit.setSelectedImageFile,
           onSoundFilePicked: cubit.setSelectedSoundFile,
@@ -129,8 +129,8 @@ class _PictogramModeContent extends StatelessWidget {
       PictogramMode.generate => _GenerateTab(
           nameController: nameController,
           promptController: promptController,
-          generateSound: state.generateSound,
-          isCreatingPictogram: state.isCreatingPictogram,
+          generateSound: state.creation.generateSound,
+          isCreatingPictogram: state.creation.isCreating,
           onNameChanged: cubit.setPictogramName,
           onPromptChanged: cubit.setGeneratePrompt,
           onGenerateSoundChanged: cubit.setGenerateSound,

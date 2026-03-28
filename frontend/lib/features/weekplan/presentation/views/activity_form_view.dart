@@ -43,13 +43,13 @@ class ActivityFormView extends StatelessWidget {
                     Expanded(
                       child: _TimePicker(
                         label: 'Starttid',
-                        time: state.startTime,
+                        time: state.form.startTime,
                         onTap: () async {
                           final picked = await showTimePicker(
                             context: context,
                             initialTime: TimeOfDay(
-                              hour: state.startTime.hour,
-                              minute: state.startTime.minute,
+                              hour: state.form.startTime.hour,
+                              minute: state.form.startTime.minute,
                             ),
                           );
                           if (picked != null && context.mounted) {
@@ -64,13 +64,13 @@ class ActivityFormView extends StatelessWidget {
                     Expanded(
                       child: _TimePicker(
                         label: 'Sluttid',
-                        time: state.endTime,
+                        time: state.form.endTime,
                         onTap: () async {
                           final picked = await showTimePicker(
                             context: context,
                             initialTime: TimeOfDay(
-                              hour: state.endTime.hour,
-                              minute: state.endTime.minute,
+                              hour: state.form.endTime.hour,
+                              minute: state.form.endTime.minute,
                             ),
                           );
                           if (picked != null && context.mounted) {
