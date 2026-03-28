@@ -54,17 +54,17 @@ void main() {
     testWidgets('shows activity list items when loaded with activities',
         (tester) async {
       final activities = [
-        const Activity(
+        Activity(
           activityId: 1,
-          date: '2026-03-22',
-          startTime: '08:00:00',
-          endTime: '09:00:00',
+          date: DateTime(2026, 3, 22),
+          startTime: const (hour: 8, minute: 0),
+          endTime: const (hour: 9, minute: 0),
         ),
-        const Activity(
+        Activity(
           activityId: 2,
-          date: '2026-03-22',
-          startTime: '10:00:00',
-          endTime: '11:00:00',
+          date: DateTime(2026, 3, 22),
+          startTime: const (hour: 10, minute: 0),
+          endTime: const (hour: 11, minute: 0),
         ),
       ];
       when(() => mockCubit.state).thenReturn(WeekplanLoaded(

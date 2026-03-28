@@ -6,6 +6,7 @@ import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/weekplan/domain/activity_form_state.dart';
 import 'package:weekplanner/features/weekplan/presentation/activity_form_cubit.dart';
 import 'package:weekplanner/features/weekplan/presentation/widgets/pictogram_selector.dart';
+import 'package:weekplanner/shared/utils/date_utils.dart';
 
 class ActivityFormView extends StatelessWidget {
   const ActivityFormView({
@@ -141,7 +142,7 @@ class _TimePicker extends StatelessWidget {
           prefixIcon: const Icon(Icons.access_time),
         ),
         child: Text(
-          '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}',
+          formatTimeValue(time),
           style: Theme.of(context).textTheme.bodyLarge,
         ),
       ),

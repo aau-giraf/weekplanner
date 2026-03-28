@@ -3,9 +3,7 @@ import 'package:file_picker/file_picker.dart';
 
 import 'package:weekplanner/shared/models/activity.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
-
-/// Platform-agnostic time-of-day so cubits avoid importing Flutter.
-typedef TimeValue = ({int hour, int minute});
+import 'package:weekplanner/shared/utils/date_utils.dart';
 
 /// Mode for how the user is adding a pictogram.
 enum PictogramMode { search, upload, generate }

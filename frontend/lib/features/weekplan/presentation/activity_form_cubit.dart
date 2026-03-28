@@ -39,29 +39,12 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
   })  : _activityRepository = activityRepository,
         _pictogramRepository = pictogramRepository,
         super(ActivityFormReady(
-          date: existingActivity != null
-              ? (DateTime.tryParse(existingActivity.date) ?? initialDate)
-              : initialDate,
-          startTime: existingActivity != null
-              ? (_parseTime(existingActivity.startTime) ??
-                  const (hour: 8, minute: 0))
-              : const (hour: 8, minute: 0),
-          endTime: existingActivity != null
-              ? (_parseTime(existingActivity.endTime) ??
-                  const (hour: 9, minute: 0))
-              : const (hour: 9, minute: 0),
+          date: existingActivity?.date ?? initialDate,
+          startTime: existingActivity?.startTime ?? const (hour: 8, minute: 0),
+          endTime: existingActivity?.endTime ?? const (hour: 9, minute: 0),
           selectedPictogramId: existingActivity?.pictogramId,
           existingActivity: existingActivity,
         ));
-
-  static TimeValue? _parseTime(String time) {
-    final parts = time.split(':');
-    if (parts.length < 2) return null;
-    final hour = int.tryParse(parts[0]);
-    final minute = int.tryParse(parts[1]);
-    if (hour == null || minute == null) return null;
-    return (hour: hour, minute: minute);
-  }
 
   // ── Form field setters ────────────────────────────────────
 
@@ -234,10 +217,8 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
 
     final data = {
       'date': GirafDateUtils.formatQueryDate(s.date),
-      'startTime':
-          '${s.startTime.hour.toString().padLeft(2, '0')}:${s.startTime.minute.toString().padLeft(2, '0')}:00',
-      'endTime':
-          '${s.endTime.hour.toString().padLeft(2, '0')}:${s.endTime.minute.toString().padLeft(2, '0')}:00',
+      'startTime': formatTimeValueForApi(s.startTime),
+      'endTime': formatTimeValueForApi(s.endTime),
       if (s.selectedPictogramId != null) 'pictogramId': s.selectedPictogramId,
     };
 

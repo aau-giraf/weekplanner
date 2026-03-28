@@ -13,11 +13,11 @@ void main() {
   late MockActivityApiService mockApiService;
   late ActivityRepository repo;
 
-  const activity = Activity(
+  final activity = Activity(
     activityId: 1,
-    date: '2026-03-22',
-    startTime: '08:00:00',
-    endTime: '09:00:00',
+    date: DateTime(2026, 3, 22),
+    startTime: const (hour: 8, minute: 0),
+    endTime: const (hour: 9, minute: 0),
   );
 
   final date = DateTime(2026, 3, 22);
