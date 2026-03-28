@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:weekplanner/config/api_config.dart';
 
 class AuthTokens {
   final String access;
@@ -27,9 +26,9 @@ class AuthService {
   static const _emailKey = 'saved_email';
   static const _passwordKey = 'saved_password';
 
-  AuthService({Dio? dio, FlutterSecureStorage? storage})
-      : _dio = dio ?? Dio(BaseOptions(baseUrl: ApiConfig.coreBaseUrl)),
-        _storage = storage ?? const FlutterSecureStorage();
+  AuthService({required Dio dio, required FlutterSecureStorage storage})
+      : _dio = dio,
+        _storage = storage;
 
   Future<AuthTokens> login(String email, String password) async {
     final response = await _dio.post(

@@ -36,8 +36,13 @@ void main() async {
     headers: {'Content-Type': 'application/json'},
   ));
 
+  // AuthService gets its own Dio without the refresh interceptor —
+  // login 401s must NOT trigger a token refresh cycle.
+  final authDio = Dio(BaseOptions(baseUrl: ApiConfig.coreBaseUrl));
+  const storage = FlutterSecureStorage();
+
   // Services
-  final authService = AuthService();
+  final authService = AuthService(dio: authDio, storage: storage);
   final coreApiService = CoreApiService(dio: coreDio);
   final activityApiService = ActivityApiService(dio: activityDio);
 
@@ -70,7 +75,7 @@ void main() async {
   final refreshDio = Dio(BaseOptions(baseUrl: ApiConfig.coreBaseUrl));
   final tokenInterceptor = TokenRefreshInterceptor(
     refreshDio: refreshDio,
-    storage: const FlutterSecureStorage(),
+    storage: storage,
     protectedDios: [coreDio, activityDio],
     onTokenRefreshed: (token) => authCubit.authenticated(token),
     onRefreshFailed: () => authCubit.logout(),
