@@ -5,6 +5,10 @@ import 'package:weekplanner/shared/models/paginated_response.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 import 'package:weekplanner/shared/services/token_consumer.dart';
 
+/// HTTP client for giraf-core pictogram endpoints.
+///
+/// Shares a Dio instance with [OrganisationApiService] — both receive the same
+/// `coreDio` from `main.dart`, so auth token updates apply to both.
 class PictogramApiService implements TokenConsumer {
   final Dio _dio;
 
@@ -20,6 +24,7 @@ class PictogramApiService implements TokenConsumer {
     _dio.options.headers.remove('Authorization');
   }
 
+  /// Search pictograms by query string.
   Future<PaginatedResponse<Pictogram>> searchPictograms({
     String? query,
     int limit = 20,
@@ -40,6 +45,7 @@ class PictogramApiService implements TokenConsumer {
     );
   }
 
+  /// Fetch a single pictogram by ID.
   Future<Pictogram> fetchPictogram(int id) async {
     final response = await _dio.get('/api/v1/pictograms/$id');
     return _resolvePictogramUrls(
@@ -47,6 +53,7 @@ class PictogramApiService implements TokenConsumer {
     );
   }
 
+  /// Create a pictogram (optionally AI-generated).
   Future<Pictogram> createPictogram({
     required String name,
     String? imageUrl,
@@ -66,6 +73,7 @@ class PictogramApiService implements TokenConsumer {
     );
   }
 
+  /// Upload a pictogram with a local image file.
   Future<Pictogram> uploadPictogram({
     required String name,
     required MultipartFile imageFile,
@@ -87,6 +95,7 @@ class PictogramApiService implements TokenConsumer {
     );
   }
 
+  /// Upload a sound file for an existing pictogram.
   Future<Pictogram> uploadPictogramSound({
     required int pictogramId,
     required MultipartFile soundFile,
