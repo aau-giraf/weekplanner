@@ -1,4 +1,5 @@
 {
+  "_comment": "Points at the AAU Strato test server. Change these URLs to target a different environment.",
   "coreBaseUrl": "http://130.225.39.225:8000",
   "weekplannerBaseUrl": "http://130.225.39.225:5171"
 }

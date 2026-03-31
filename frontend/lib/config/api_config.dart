@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:logging/logging.dart';
+
+final _log = Logger('ApiConfig');
 
 /// Runtime API configuration.
 ///
@@ -13,8 +16,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 /// Call [ApiConfig.load] once before accessing [coreBaseUrl] or
 /// [weekplannerBaseUrl].
 class ApiConfig {
-  static String _coreBaseUrl = '';
-  static String _weekplannerBaseUrl = '';
+  static late String _coreBaseUrl;
+  static late String _weekplannerBaseUrl;
 
   static String get coreBaseUrl => _coreBaseUrl;
   static String get weekplannerBaseUrl => _weekplannerBaseUrl;
@@ -37,7 +40,8 @@ class ApiConfig {
       _coreBaseUrl = config['coreBaseUrl'] as String? ?? 'http://localhost:8000';
       _weekplannerBaseUrl =
           config['weekplannerBaseUrl'] as String? ?? 'http://localhost:5171';
-    } catch (_) {
+    } catch (e) {
+      _log.warning('Failed to load web config, using defaults: $e');
       _coreBaseUrl = 'http://localhost:8000';
       _weekplannerBaseUrl = 'http://localhost:5171';
     }

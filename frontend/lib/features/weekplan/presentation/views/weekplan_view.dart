@@ -185,9 +185,11 @@ class _ActivityList extends StatelessWidget {
             imageUrl: media?.imageUrl,
             soundUrl: media?.soundUrl,
             onEdit: () async {
+              final dateStr =
+                  activity.date.toIso8601String().split('T').first;
               final saved = await context.push<bool>(
                 '/weekplan/$citizenId/edit/${activity.activityId}'
-                '?type=${isCitizen ? 'citizen' : 'grade'}&orgId=$orgId',
+                '?type=${isCitizen ? 'citizen' : 'grade'}&orgId=$orgId&date=$dateStr',
                 extra: activity,
               );
               if (saved == true && context.mounted) {
