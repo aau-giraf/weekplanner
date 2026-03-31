@@ -101,6 +101,10 @@ GoRouter createRouter({
               final isCitizen = type == 'citizen';
               final orgId =
                   int.tryParse(state.uri.queryParameters['orgId'] ?? '');
+              final dateParam = state.uri.queryParameters['date'];
+              final initialDate = dateParam != null
+                  ? DateTime.tryParse(dateParam) ?? DateTime.now()
+                  : DateTime.now();
               final activityRepo = context.read<ActivityRepository>();
               final pictogramRepo = context.read<PictogramRepository>();
               return BlocProvider(
@@ -110,7 +114,7 @@ GoRouter createRouter({
                   subjectId: citizenId,
                   isCitizen: isCitizen,
                   organizationId: orgId,
-                  initialDate: DateTime.now(),
+                  initialDate: initialDate,
                 ),
                 child: const ActivityFormView(
                   title: 'Tilføj aktivitet',
@@ -139,6 +143,10 @@ GoRouter createRouter({
                 // Fallback: no activity in route extras — redirect to organisations
                 return const _RedirectWidget(target: '/organisations');
               }
+              final dateParam = state.uri.queryParameters['date'];
+              final initialDate = dateParam != null
+                  ? DateTime.tryParse(dateParam) ?? DateTime.now()
+                  : DateTime.now();
               final activityRepo = context.read<ActivityRepository>();
               final pictogramRepo = context.read<PictogramRepository>();
               return BlocProvider(
@@ -149,7 +157,7 @@ GoRouter createRouter({
                   subjectId: citizenId,
                   isCitizen: isCitizen,
                   organizationId: orgId,
-                  initialDate: DateTime.now(),
+                  initialDate: initialDate,
                 ),
                 child: const ActivityFormView(
                   title: 'Rediger aktivitet',
