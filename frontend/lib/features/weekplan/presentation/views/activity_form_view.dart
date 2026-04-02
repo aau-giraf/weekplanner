@@ -8,7 +8,7 @@ import 'package:weekplanner/features/weekplan/presentation/activity_form_cubit.d
 import 'package:weekplanner/features/weekplan/presentation/widgets/pictogram_selector.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';
 
-class ActivityFormView extends StatelessWidget {
+class ActivityFormView extends StatefulWidget {
   const ActivityFormView({
     super.key,
     required this.title,
@@ -19,10 +19,30 @@ class ActivityFormView extends StatelessWidget {
   final String submitLabel;
 
   @override
+  State<ActivityFormView> createState() => _ActivityFormViewState();
+}
+
+class _ActivityFormViewState extends State<ActivityFormView> {
+  late final TextEditingController _titleController;
+
+  @override
+  void initState() {
+    super.initState();
+    final cubit = context.read<ActivityFormCubit>();
+    _titleController = TextEditingController(text: cubit.state.form.title);
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(widget.title),
       ),
       body: BlocConsumer<ActivityFormCubit, ActivityFormState>(
         listener: (context, state) {
@@ -33,86 +53,113 @@ class ActivityFormView extends StatelessWidget {
         builder: (context, state) {
           final isSaving = state is ActivityFormSaving;
           final error = state is ActivityFormReady ? state.error : null;
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: _TimePicker(
-                        label: 'Starttid',
-                        time: state.form.startTime,
-                        onTap: () async {
-                          final picked = await showTimePicker(
-                            context: context,
-                            initialTime: TimeOfDay(
-                              hour: state.form.startTime.hour,
-                              minute: state.form.startTime.minute,
-                            ),
-                          );
-                          if (picked != null && context.mounted) {
-                            context.read<ActivityFormCubit>().setStartTime(
-                                  (hour: picked.hour, minute: picked.minute),
-                                );
-                          }
-                        },
-                      ),
+          final cubit = context.read<ActivityFormCubit>();
+          return IgnorePointer(
+            ignoring: isSaving,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Title field
+                  TextField(
+                    decoration: const InputDecoration(
+                      labelText: 'Titel',
+                      hintText: 'F.eks. Morgenmad, Samling, Frikvarter',
+                      prefixIcon: Icon(Icons.label_outline),
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _TimePicker(
-                        label: 'Sluttid',
-                        time: state.form.endTime,
-                        onTap: () async {
-                          final picked = await showTimePicker(
-                            context: context,
-                            initialTime: TimeOfDay(
-                              hour: state.form.endTime.hour,
-                              minute: state.form.endTime.minute,
-                            ),
-                          );
-                          if (picked != null && context.mounted) {
-                            context.read<ActivityFormCubit>().setEndTime(
+                    controller: _titleController,
+                    onChanged: cubit.setTitle,
+                    textCapitalization: TextCapitalization.sentences,
+                  ),
+                  const SizedBox(height: 16),
+                  // Time toggle
+                  SwitchListTile(
+                    title: const Text('Angiv tidspunkt'),
+                    value: state.form.hasTime,
+                    onChanged: (_) => cubit.toggleHasTime(),
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  // Time pickers (only when enabled)
+                  if (state.form.hasTime) ...[
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _TimePicker(
+                            label: 'Starttid',
+                            time: state.form.startTime,
+                            onTap: () async {
+                              final picked = await showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay(
+                                  hour: state.form.startTime.hour,
+                                  minute: state.form.startTime.minute,
+                                ),
+                              );
+                              if (picked != null && context.mounted) {
+                                cubit.setStartTime(
                                   (hour: picked.hour, minute: picked.minute),
                                 );
-                          }
-                        },
-                      ),
+                              }
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _TimePicker(
+                            label: 'Sluttid',
+                            time: state.form.endTime,
+                            onTap: () async {
+                              final picked = await showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay(
+                                  hour: state.form.endTime.hour,
+                                  minute: state.form.endTime.minute,
+                                ),
+                              );
+                              if (picked != null && context.mounted) {
+                                cubit.setEndTime(
+                                  (hour: picked.hour, minute: picked.minute),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ],
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'Piktogram',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                const PictogramSelector(),
-                const SizedBox(height: 24),
-                if (error != null)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: Text(
-                      error,
-                      style: TextStyle(color: context.colorScheme.error),
-                      textAlign: TextAlign.center,
-                    ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Piktogram',
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
-                ElevatedButton(
-                  onPressed: isSaving
-                      ? null
-                      : () => context.read<ActivityFormCubit>().save(),
-                  child: isSaving
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : Text(submitLabel),
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  const PictogramSelector(),
+                  const SizedBox(height: 24),
+                  if (error != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: Text(
+                        error,
+                        style: TextStyle(color: context.colorScheme.error),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ElevatedButton(
+                    onPressed: isSaving
+                        ? null
+                        : () => cubit.save(),
+                    child: isSaving
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text(widget.submitLabel),
+                  ),
+                ],
+              ),
             ),
           );
         },

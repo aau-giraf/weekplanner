@@ -41,6 +41,8 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
         super(ActivityFormReady(
           form: ActivityFormData(
             date: existingActivity?.date ?? initialDate,
+            title: existingActivity?.title ?? '',
+            hasTime: existingActivity?.startTime != null,
             startTime:
                 existingActivity?.startTime ?? const (hour: 8, minute: 0),
             endTime: existingActivity?.endTime ?? const (hour: 9, minute: 0),
@@ -52,6 +54,14 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
         ));
 
   // ── Form field setters ────────────────────────────────────
+
+  void setTitle(String title) {
+    _emitReady(form: state.form.copyWith(title: title));
+  }
+
+  void toggleHasTime() {
+    _emitReady(form: state.form.copyWith(hasTime: !state.form.hasTime));
+  }
 
   void setStartTime(TimeValue time) {
     _emitReady(form: state.form.copyWith(startTime: time));
@@ -199,12 +209,14 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
 
   /// Validate the form and return an error message, or null if valid.
   String? validate() {
-    final startMinutes =
-        state.form.startTime.hour * 60 + state.form.startTime.minute;
-    final endMinutes =
-        state.form.endTime.hour * 60 + state.form.endTime.minute;
-    if (endMinutes <= startMinutes) {
-      return 'Sluttid skal være efter starttid';
+    if (state.form.hasTime) {
+      final startMinutes =
+          state.form.startTime.hour * 60 + state.form.startTime.minute;
+      final endMinutes =
+          state.form.endTime.hour * 60 + state.form.endTime.minute;
+      if (endMinutes <= startMinutes) {
+        return 'Sluttid skal være efter starttid';
+      }
     }
     return null;
   }
@@ -227,8 +239,11 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
 
     final data = {
       'date': GirafDateUtils.formatQueryDate(s.form.date),
-      'startTime': formatTimeValueForApi(s.form.startTime),
-      'endTime': formatTimeValueForApi(s.form.endTime),
+      if (s.form.hasTime)
+        'startTime': formatTimeValueForApi(s.form.startTime),
+      if (s.form.hasTime)
+        'endTime': formatTimeValueForApi(s.form.endTime),
+      if (s.form.title.isNotEmpty) 'title': s.form.title,
       if (s.selection.id != null) 'pictogramId': s.selection.id,
     };
 
