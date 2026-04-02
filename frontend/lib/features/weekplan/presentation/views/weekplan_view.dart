@@ -170,38 +170,48 @@ class _ActivityList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<WeekplanCubit>();
-    return RefreshIndicator(
-      onRefresh: cubit.loadActivities,
-      child: ListView.builder(
-        padding: const EdgeInsets.only(top: 8, bottom: 80),
-        itemCount: activities.length,
-        itemBuilder: (context, index) {
-          final activity = activities[index];
-          final media = activity.pictogramId != null
-              ? pictogramMedia[activity.pictogramId!]
-              : null;
-          return ActivityListItem(
-            activity: activity,
-            imageUrl: media?.imageUrl,
-            soundUrl: media?.soundUrl,
-            onEdit: () async {
-              final dateStr =
-                  activity.date.toIso8601String().split('T').first;
-              final saved = await context.push<bool>(
-                '/weekplan/$citizenId/edit/${activity.activityId}'
-                '?type=${isCitizen ? 'citizen' : 'grade'}&orgId=$orgId&date=$dateStr',
-                extra: activity,
-              );
-              if (saved == true && context.mounted) {
-                context.read<WeekplanCubit>().loadActivities();
-              }
-            },
-            onDelete: () => cubit.deleteActivity(activity.activityId),
-            onToggleStatus: () =>
-                cubit.toggleActivityStatus(activity.activityId),
-          );
-        },
-      ),
+    return ReorderableListView.builder(
+      padding: const EdgeInsets.only(top: 8, bottom: 80),
+      onReorder: cubit.reorderActivities,
+      proxyDecorator: (child, index, animation) {
+        return AnimatedBuilder(
+          animation: animation,
+          builder: (context, child) => Material(
+            elevation: 4,
+            borderRadius: BorderRadius.circular(12),
+            child: child,
+          ),
+          child: child,
+        );
+      },
+      itemCount: activities.length,
+      itemBuilder: (context, index) {
+        final activity = activities[index];
+        final media = activity.pictogramId != null
+            ? pictogramMedia[activity.pictogramId!]
+            : null;
+        return ActivityListItem(
+          key: ValueKey(activity.activityId),
+          activity: activity,
+          imageUrl: media?.imageUrl,
+          soundUrl: media?.soundUrl,
+          onEdit: () async {
+            final dateStr =
+                activity.date.toIso8601String().split('T').first;
+            final saved = await context.push<bool>(
+              '/weekplan/$citizenId/edit/${activity.activityId}'
+              '?type=${isCitizen ? 'citizen' : 'grade'}&orgId=$orgId&date=$dateStr',
+              extra: activity,
+            );
+            if (saved == true && context.mounted) {
+              context.read<WeekplanCubit>().loadActivities();
+            }
+          },
+          onDelete: () => cubit.deleteActivity(activity.activityId),
+          onToggleStatus: () =>
+              cubit.toggleActivityStatus(activity.activityId),
+        );
+      },
     );
   }
 }
