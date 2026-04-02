@@ -12,20 +12,9 @@ public static class ActivityMapping
             Date = dto.Date,
             StartTime = dto.StartTime,
             EndTime = dto.EndTime,
+            Title = dto.Title,
+            SortOrder = dto.SortOrder ?? 0,
             IsCompleted = false,
-            PictogramId = dto.PictogramId
-        };
-    }
-
-    public static Activity ToEntity(this UpdateActivityDTO dto, int id)
-    {
-        return new Activity
-        {
-            Id = id,
-            Date = dto.Date,
-            StartTime = dto.StartTime,
-            EndTime = dto.EndTime,
-            IsCompleted = dto.IsCompleted,
             PictogramId = dto.PictogramId
         };
     }
@@ -37,6 +26,8 @@ public static class ActivityMapping
             activity.Date,
             activity.StartTime,
             activity.EndTime,
+            activity.Title,
+            activity.SortOrder,
             activity.IsCompleted,
             activity.PictogramId
         );

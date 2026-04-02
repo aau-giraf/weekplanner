@@ -307,19 +307,29 @@ void main() {
   });
 
   group('validate', () {
-    test('returns error when endTime <= startTime', () {
+    test('returns error when endTime <= startTime with time enabled', () {
       final cubit = buildCubit();
+      cubit.toggleHasTime();
       cubit.setStartTime(const (hour: 10, minute: 0));
       cubit.setEndTime(const (hour: 9, minute: 0));
       expect(cubit.validate(), 'Sluttid skal være efter starttid');
       cubit.close();
     });
 
-    test('returns error when endTime == startTime', () {
+    test('returns error when endTime == startTime with time enabled', () {
       final cubit = buildCubit();
+      cubit.toggleHasTime();
       cubit.setStartTime(const (hour: 10, minute: 0));
       cubit.setEndTime(const (hour: 10, minute: 0));
       expect(cubit.validate(), 'Sluttid skal være efter starttid');
+      cubit.close();
+    });
+
+    test('returns null when hasTime is false regardless of times', () {
+      final cubit = buildCubit();
+      cubit.setStartTime(const (hour: 10, minute: 0));
+      cubit.setEndTime(const (hour: 9, minute: 0));
+      expect(cubit.validate(), isNull);
       cubit.close();
     });
 
@@ -411,11 +421,18 @@ void main() {
       'emits ActivityFormReady with error and no Saving when validation fails',
       build: buildCubit,
       act: (cubit) async {
+        cubit.toggleHasTime();
         // Start time moved forward to 10:00, making it after the default end of 9:00
         cubit.setStartTime(const (hour: 10, minute: 0));
         await cubit.save();
       },
       expect: () => [
+        // toggleHasTime emits
+        isA<ActivityFormReady>().having(
+          (s) => s.form.hasTime,
+          'hasTime',
+          true,
+        ),
         // setStartTime emits
         isA<ActivityFormReady>().having(
           (s) => s.form.startTime,

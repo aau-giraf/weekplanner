@@ -22,4 +22,7 @@ public interface IActivityService
 
     Task<ServiceResult> CopyActivitiesAsync(
         ActivityOwner owner, DateOnly sourceDate, DateOnly targetDate, List<int> activityIds, string accessToken, CancellationToken ct = default);
+
+    Task<ServiceResult> ReorderActivitiesAsync(
+        ActivityOwner owner, List<ReorderItemDTO> items, string accessToken, CancellationToken ct = default);
 }

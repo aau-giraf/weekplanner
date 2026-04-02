@@ -26,8 +26,11 @@ jobs:
       - name: Restore
         run: dotnet restore weekplanner-api.sln
 
-      - name: Build
-        run: dotnet build weekplanner-api.sln -c Release --no-restore
+      - name: Check formatting
+        run: dotnet format weekplanner-api.sln --verify-no-changes --verbosity diagnostic
+
+      - name: Build (warnings as errors)
+        run: dotnet build weekplanner-api.sln -c Release --no-restore -warnaserror
 
       - name: Test
         run: dotnet test weekplanner-api.sln -c Release --no-build --verbosity normal

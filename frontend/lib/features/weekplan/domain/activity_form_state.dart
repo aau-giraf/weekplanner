@@ -12,10 +12,16 @@ enum PictogramMode { search, upload, generate }
 
 /// Core activity form fields: when it happens and which activity is edited.
 final class ActivityFormData with EquatableMixin {
-  /// Start time of the activity.
+  /// Title/label for the activity.
+  final String title;
+
+  /// Whether the user wants to specify a time for this activity.
+  final bool hasTime;
+
+  /// Start time of the activity (only relevant when [hasTime] is true).
   final TimeValue startTime;
 
-  /// End time of the activity.
+  /// End time of the activity (only relevant when [hasTime] is true).
   final TimeValue endTime;
 
   /// Date of the activity.
@@ -25,6 +31,8 @@ final class ActivityFormData with EquatableMixin {
   final Activity? existingActivity;
 
   const ActivityFormData({
+    this.title = '',
+    this.hasTime = false,
     this.startTime = const (hour: 8, minute: 0),
     this.endTime = const (hour: 9, minute: 0),
     required this.date,
@@ -35,6 +43,8 @@ final class ActivityFormData with EquatableMixin {
   bool get isEditing => existingActivity != null;
 
   ActivityFormData copyWith({
+    String? title,
+    bool? hasTime,
     TimeValue? startTime,
     TimeValue? endTime,
     DateTime? date,
@@ -42,6 +52,8 @@ final class ActivityFormData with EquatableMixin {
     bool clearExistingActivity = false,
   }) {
     return ActivityFormData(
+      title: title ?? this.title,
+      hasTime: hasTime ?? this.hasTime,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
       date: date ?? this.date,
@@ -52,7 +64,8 @@ final class ActivityFormData with EquatableMixin {
   }
 
   @override
-  List<Object?> get props => [startTime, endTime, date, existingActivity];
+  List<Object?> get props =>
+      [title, hasTime, startTime, endTime, date, existingActivity];
 }
 
 // ── Sub-state: Pictogram selection ─────────────────────────

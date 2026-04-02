@@ -11,10 +11,12 @@ abstract class Activity with _$Activity {
   const factory Activity({
     required int activityId,
     @JsonKey(fromJson: _dateFromJson, toJson: _dateToJson) required DateTime date,
-    @JsonKey(fromJson: _timeFromJson, toJson: _timeToJson)
-    required TimeValue startTime,
-    @JsonKey(fromJson: _timeFromJson, toJson: _timeToJson)
-    required TimeValue endTime,
+    @JsonKey(fromJson: _nullableTimeFromJson, toJson: _nullableTimeToJson)
+    TimeValue? startTime,
+    @JsonKey(fromJson: _nullableTimeFromJson, toJson: _nullableTimeToJson)
+    TimeValue? endTime,
+    String? title,
+    @Default(0) int sortOrder,
     @Default(false) bool isCompleted,
     int? pictogramId,
   }) = _Activity;
@@ -25,14 +27,16 @@ abstract class Activity with _$Activity {
 
 final _log = Logger('Activity');
 
-TimeValue _timeFromJson(String s) {
+TimeValue? _nullableTimeFromJson(String? s) {
+  if (s == null) return null;
   final parsed = parseTimeValue(s);
   if (parsed == null) {
-    _log.warning('Unparseable time value: "$s", defaulting to 00:00');
+    _log.warning('Unparseable time value: "$s"');
   }
-  return parsed ?? (hour: 0, minute: 0);
+  return parsed;
 }
-String _timeToJson(TimeValue t) => formatTimeValueForApi(t);
+String? _nullableTimeToJson(TimeValue? t) =>
+    t != null ? formatTimeValueForApi(t) : null;
 
 DateTime _dateFromJson(String s) => DateTime.parse(s);
 String _dateToJson(DateTime d) => GirafDateUtils.formatQueryDate(d);

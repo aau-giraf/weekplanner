@@ -35,7 +35,7 @@ void main() {
   }
 
   group('ActivityFormView', () {
-    testWidgets('shows time pickers and submit button in ready state',
+    testWidgets('shows title field and submit button in ready state',
         (tester) async {
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
         form: ActivityFormData(date: testDate),
@@ -43,9 +43,31 @@ void main() {
 
       await tester.pumpWidget(buildSubject());
 
+      expect(find.text('Titel'), findsOneWidget);
+      expect(find.text('Angiv tidspunkt'), findsOneWidget);
+      expect(find.text('Tilføj'), findsOneWidget);
+    });
+
+    testWidgets('shows time pickers when hasTime is enabled', (tester) async {
+      when(() => mockCubit.state).thenReturn(ActivityFormReady(
+        form: ActivityFormData(date: testDate, hasTime: true),
+      ));
+
+      await tester.pumpWidget(buildSubject());
+
       expect(find.text('Starttid'), findsOneWidget);
       expect(find.text('Sluttid'), findsOneWidget);
-      expect(find.text('Tilføj'), findsOneWidget);
+    });
+
+    testWidgets('hides time pickers when hasTime is disabled', (tester) async {
+      when(() => mockCubit.state).thenReturn(ActivityFormReady(
+        form: ActivityFormData(date: testDate),
+      ));
+
+      await tester.pumpWidget(buildSubject());
+
+      expect(find.text('Starttid'), findsNothing);
+      expect(find.text('Sluttid'), findsNothing);
     });
 
     testWidgets('shows error text in ready state with error', (tester) async {
@@ -72,7 +94,8 @@ void main() {
       expect(find.text('Tilføj'), findsNothing);
 
       // The ElevatedButton should be disabled
-      final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton).first);
+      final button =
+          tester.widget<ElevatedButton>(find.byType(ElevatedButton).first);
       expect(button.onPressed, isNull);
     });
 
@@ -83,7 +106,10 @@ void main() {
       when(() => mockCubit.save()).thenAnswer((_) async => true);
 
       await tester.pumpWidget(buildSubject());
+      await tester.ensureVisible(find.text('Tilføj'));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Tilføj'));
+      await tester.pump();
 
       verify(() => mockCubit.save()).called(1);
     });

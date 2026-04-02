@@ -145,6 +145,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
                 EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
+                Title: null,
+                SortOrder: null,
                 PictogramId: 1
             );
 
@@ -172,6 +174,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
                 EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
+                Title: null,
+                SortOrder: null,
                 PictogramId: null
             );
 
@@ -200,6 +204,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
                 EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
+                Title: null,
+                SortOrder: null,
                 PictogramId: 1
             );
 
@@ -226,6 +232,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
                 EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
+                Title: null,
+                SortOrder: null,
                 PictogramId: null
             );
 
@@ -255,6 +263,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
                 EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
+                Title: null,
+                SortOrder: null,
                 IsCompleted: true,
                 PictogramId: 1
             );
@@ -288,6 +298,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
                 EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
+                Title: null,
+                SortOrder: null,
                 IsCompleted: false,
                 PictogramId: null
             );
@@ -455,6 +467,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: new TimeOnly(10, 0),
                 EndTime: new TimeOnly(8, 0),
+                Title: null,
+                SortOrder: null,
                 PictogramId: null
             );
 
@@ -478,6 +492,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: new TimeOnly(10, 0),
                 EndTime: new TimeOnly(8, 0),
+                Title: null,
+                SortOrder: null,
                 PictogramId: null
             );
 
@@ -537,6 +553,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: new TimeOnly(14, 0),
                 EndTime: new TimeOnly(12, 0),
+                Title: null,
+                SortOrder: null,
                 IsCompleted: false,
                 PictogramId: null
             );
@@ -733,6 +751,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: new TimeOnly(10, 0),
                 EndTime: new TimeOnly(11, 0),
+                Title: null,
+                SortOrder: null,
                 PictogramId: null
             );
 
@@ -755,6 +775,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: new TimeOnly(10, 0),
                 EndTime: new TimeOnly(11, 0),
+                Title: null,
+                SortOrder: null,
                 IsCompleted: false,
                 PictogramId: null
             );
@@ -898,6 +920,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: new TimeOnly(9, 0),
                 EndTime: new TimeOnly(10, 0),
+                Title: null,
+                SortOrder: null,
                 IsCompleted: false,
                 PictogramId: null
             );
@@ -1001,6 +1025,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: new TimeOnly(9, 0),
                 EndTime: new TimeOnly(10, 0),
+                Title: null,
+                SortOrder: null,
                 IsCompleted: false,
                 PictogramId: null
             );
@@ -1024,6 +1050,221 @@ namespace Giraf.IntegrationTests.Endpoints
             var response = await client.DeleteAsync($"/weekplan/activity/{activityId}");
 
             Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        }
+
+        #endregion
+
+        #region New feature tests — Title, SortOrder, optional time, reorder
+
+        [Fact]
+        public async Task CreateActivity_WithTitle_RoundTripsCorrectly()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new BaseCaseDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            var dto = new CreateActivityDTO(
+                Date: DateOnly.FromDateTime(DateTime.UtcNow),
+                StartTime: new TimeOnly(8, 0),
+                EndTime: new TimeOnly(9, 0),
+                Title: "Morgenmad",
+                SortOrder: null,
+                PictogramId: null
+            );
+
+            var response = await client.PostAsJsonAsync("/weekplan/to-citizen/1", dto);
+
+            response.EnsureSuccessStatusCode();
+            var activity = await response.Content.ReadFromJsonAsync<ActivityDTO>();
+            Assert.NotNull(activity);
+            Assert.Equal("Morgenmad", activity.Title);
+        }
+
+        [Fact]
+        public async Task CreateActivity_WithoutTime_ReturnsCreated()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new BaseCaseDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            var dto = new CreateActivityDTO(
+                Date: DateOnly.FromDateTime(DateTime.UtcNow),
+                StartTime: null,
+                EndTime: null,
+                Title: "Frikvarter",
+                SortOrder: null,
+                PictogramId: null
+            );
+
+            var response = await client.PostAsJsonAsync("/weekplan/to-citizen/1", dto);
+
+            response.EnsureSuccessStatusCode();
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            var activity = await response.Content.ReadFromJsonAsync<ActivityDTO>();
+            Assert.NotNull(activity);
+            Assert.Null(activity.StartTime);
+            Assert.Null(activity.EndTime);
+            Assert.Equal("Frikvarter", activity.Title);
+        }
+
+        [Fact]
+        public async Task CreateActivity_AutoAssignsSortOrder()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new BaseCaseDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            var date = DateOnly.FromDateTime(DateTime.UtcNow);
+
+            var dto1 = new CreateActivityDTO(
+                Date: date,
+                StartTime: null,
+                EndTime: null,
+                Title: "First",
+                SortOrder: null,
+                PictogramId: null
+            );
+            var dto2 = new CreateActivityDTO(
+                Date: date,
+                StartTime: null,
+                EndTime: null,
+                Title: "Second",
+                SortOrder: null,
+                PictogramId: null
+            );
+
+            var r1 = await client.PostAsJsonAsync("/weekplan/to-citizen/1", dto1);
+            var r2 = await client.PostAsJsonAsync("/weekplan/to-citizen/1", dto2);
+
+            r1.EnsureSuccessStatusCode();
+            r2.EnsureSuccessStatusCode();
+            var a1 = await r1.Content.ReadFromJsonAsync<ActivityDTO>();
+            var a2 = await r2.Content.ReadFromJsonAsync<ActivityDTO>();
+            Assert.NotNull(a1);
+            Assert.NotNull(a2);
+            Assert.True(a2.SortOrder > a1.SortOrder);
+        }
+
+        [Fact]
+        public async Task ReorderActivities_UpdatesOrder()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new BaseCaseDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            var date = DateOnly.FromDateTime(DateTime.UtcNow);
+
+            // Create two activities
+            var dto1 = new CreateActivityDTO(Date: date, StartTime: null, EndTime: null,
+                Title: "A", SortOrder: null, PictogramId: null);
+            var dto2 = new CreateActivityDTO(Date: date, StartTime: null, EndTime: null,
+                Title: "B", SortOrder: null, PictogramId: null);
+
+            var r1 = await client.PostAsJsonAsync("/weekplan/to-citizen/1", dto1);
+            var r2 = await client.PostAsJsonAsync("/weekplan/to-citizen/1", dto2);
+            var a1 = await r1.Content.ReadFromJsonAsync<ActivityDTO>();
+            var a2 = await r2.Content.ReadFromJsonAsync<ActivityDTO>();
+            Assert.NotNull(a1);
+            Assert.NotNull(a2);
+
+            // Swap their order
+            var reorderItems = new List<ReorderItemDTO>
+            {
+                new(a1.ActivityId, 1),
+                new(a2.ActivityId, 0)
+            };
+
+            var reorderResponse = await client.PutAsJsonAsync("/weekplan/reorder/1", reorderItems);
+            reorderResponse.EnsureSuccessStatusCode();
+
+            // Verify new order
+            var getResponse = await client.GetAsync($"/weekplan/1?date={date:yyyy-MM-dd}");
+            var activities = await getResponse.Content.ReadFromJsonAsync<List<ActivityDTO>>();
+            Assert.NotNull(activities);
+            Assert.True(activities.Count >= 2);
+            // B (sortOrder 0) should come before A (sortOrder 1)
+            var bIndex = activities.FindIndex(a => a.ActivityId == a2.ActivityId);
+            var aIndex = activities.FindIndex(a => a.ActivityId == a1.ActivityId);
+            Assert.True(bIndex < aIndex, "Activity B should appear before Activity A after reorder");
+        }
+
+        [Fact]
+        public async Task ReorderActivities_ReturnsUnauthorized_WhenNoToken()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new EmptyDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+
+            var items = new List<ReorderItemDTO> { new(1, 0) };
+            var response = await client.PutAsJsonAsync("/weekplan/reorder/1", items);
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetActivities_ReturnsSortedBySortOrderThenStartTime()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new BaseCaseDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "member");
+
+            var date = DateOnly.FromDateTime(DateTime.UtcNow);
+
+            // Create activities with explicit sort orders (reverse of time)
+            var dto1 = new CreateActivityDTO(Date: date, StartTime: new TimeOnly(8, 0),
+                EndTime: new TimeOnly(9, 0), Title: "Early but second", SortOrder: 1, PictogramId: null);
+            var dto2 = new CreateActivityDTO(Date: date, StartTime: new TimeOnly(10, 0),
+                EndTime: new TimeOnly(11, 0), Title: "Late but first", SortOrder: 0, PictogramId: null);
+
+            await client.PostAsJsonAsync("/weekplan/to-citizen/1", dto1);
+            await client.PostAsJsonAsync("/weekplan/to-citizen/1", dto2);
+
+            var response = await client.GetAsync($"/weekplan/1?date={date:yyyy-MM-dd}");
+            var activities = await response.Content.ReadFromJsonAsync<List<ActivityDTO>>();
+            Assert.NotNull(activities);
+            Assert.True(activities.Count >= 2);
+
+            // "Late but first" (sortOrder 0) should come before "Early but second" (sortOrder 1)
+            var firstIdx = activities.FindIndex(a => a.Title == "Late but first");
+            var secondIdx = activities.FindIndex(a => a.Title == "Early but second");
+            Assert.True(firstIdx < secondIdx, "SortOrder should take priority over StartTime");
+        }
+
+        [Fact]
+        public async Task GetActivitiesForGrade_ReturnsEmptyList_WhenNoActivities()
+        {
+            var factory = new GirafWebApplicationFactory(stubCoreClient: true);
+            var seeder = new BaseCaseDb();
+            var scope = factory.Services.CreateScope();
+            factory.SeedDb(scope, seeder);
+            var client = factory.CreateClient();
+            client.AttachClaimsToken(role: "admin");
+
+            // Use a future date where no activities exist
+            var futureDate = DateOnly.FromDateTime(DateTime.UtcNow.AddYears(1));
+            var response = await client.GetAsync($"/weekplan/grade/1?date={futureDate:yyyy-MM-dd}");
+
+            response.EnsureSuccessStatusCode();
+            var activities = await response.Content.ReadFromJsonAsync<List<ActivityDTO>>();
+            Assert.NotNull(activities);
+            Assert.Empty(activities);
         }
 
         #endregion

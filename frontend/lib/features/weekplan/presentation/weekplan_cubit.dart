@@ -160,6 +160,52 @@ class WeekplanCubit extends Cubit<WeekplanState> {
     }
   }
 
+  /// Optimistically reorder activities after a drag-and-drop.
+  Future<void> reorderActivities(int oldIndex, int newIndex) async {
+    final current = state;
+    if (current is! WeekplanLoaded) return;
+
+    // ReorderableListView adjusts index when moving down
+    final adjustedNew = oldIndex < newIndex ? newIndex - 1 : newIndex;
+    if (oldIndex == adjustedNew) return;
+
+    final backup = current.activities;
+    final reordered = List<Activity>.from(backup);
+    final item = reordered.removeAt(oldIndex);
+    reordered.insert(adjustedNew, item);
+
+    // Update sortOrder to match new positions
+    final withSortOrder = [
+      for (var i = 0; i < reordered.length; i++)
+        reordered[i].copyWith(sortOrder: i),
+    ];
+
+    emit(WeekplanLoaded(
+      selectedDate: current.selectedDate,
+      weekDates: current.weekDates,
+      activities: withSortOrder,
+      pictogramMedia: current.pictogramMedia,
+    ));
+
+    final result = await _activityRepository.reorderActivities(
+      id: subjectId,
+      isCitizen: isCitizen,
+      activities: withSortOrder,
+    );
+    switch (result) {
+      case Left(:final value):
+        _log.warning('Reorder rollback: ${value.message}');
+        emit(WeekplanLoaded(
+          selectedDate: current.selectedDate,
+          weekDates: current.weekDates,
+          activities: backup,
+          pictogramMedia: current.pictogramMedia,
+        ));
+      case Right():
+        break;
+    }
+  }
+
   /// Fetch image and sound URLs for pictograms in the given activities.
   Future<void> _fetchPictogramMedia(List<Activity> activities) async {
     final current = state;

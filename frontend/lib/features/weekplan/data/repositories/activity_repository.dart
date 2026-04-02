@@ -93,4 +93,31 @@ class ActivityRepositoryImpl implements ActivityRepository {
       return Left(const ToggleStatusFailure());
     }
   }
+
+  @override
+  Future<Either<ActivityFailure, Unit>> reorderActivities({
+    required int id,
+    required bool isCitizen,
+    required List<Activity> activities,
+  }) async {
+    try {
+      final items = activities
+          .asMap()
+          .entries
+          .map((e) => {
+                'activityId': e.value.activityId,
+                'sortOrder': e.key,
+              })
+          .toList();
+      await _apiService.reorderActivities(
+        id: id,
+        isCitizen: isCitizen,
+        items: items,
+      );
+      return const Right(unit);
+    } catch (e, stackTrace) {
+      _log.severe('Failed to reorder activities', e, stackTrace);
+      return Left(const ReorderActivitiesFailure());
+    }
+  }
 }

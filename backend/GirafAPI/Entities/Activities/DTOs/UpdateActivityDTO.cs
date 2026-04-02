@@ -5,8 +5,10 @@ namespace GirafAPI.Entities.Activities.DTOs;
 public record UpdateActivityDTO
 (
     [Required] DateOnly Date,
-    [Required] TimeOnly StartTime,
-    [Required] TimeOnly EndTime,
+    TimeOnly? StartTime,
+    TimeOnly? EndTime,
+    [StringLength(200)] string? Title,
+    int? SortOrder,
     [Required] bool IsCompleted,
     int? PictogramId
 );
