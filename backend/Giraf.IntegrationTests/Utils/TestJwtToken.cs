@@ -18,7 +18,7 @@ public class TestJwtToken
             claims: claims,
             expires: DateTime.UtcNow.AddHours(1),
             signingCredentials: creds);
-        
+
         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
         return tokenString;
     }
