@@ -29,6 +29,44 @@ class ActivityListItem extends StatefulWidget {
   State<ActivityListItem> createState() => _ActivityListItemState();
 }
 
+class _ActivityPictogram extends StatelessWidget {
+  final String? imageUrl;
+  final bool hasPictogram;
+
+  const _ActivityPictogram({
+    required this.imageUrl,
+    required this.hasPictogram,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 96,
+      height: 96,
+      decoration: BoxDecoration(
+        color: context.colorScheme.primaryContainer,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: hasPictogram && imageUrl != null
+          ? Image.network(
+              imageUrl!,
+              fit: BoxFit.cover,
+              errorBuilder: (_, _, _) => Icon(
+                Icons.image,
+                size: 40,
+                color: context.colorScheme.onPrimaryContainer,
+              ),
+            )
+          : Icon(
+              hasPictogram ? Icons.image : Icons.event,
+              size: 40,
+              color: context.colorScheme.onPrimaryContainer,
+            ),
+    );
+  }
+}
+
 class _ActivityListItemState extends State<ActivityListItem> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   late final StreamSubscription _onCompleteSubscription;
@@ -102,88 +140,67 @@ class _ActivityListItemState extends State<ActivityListItem> {
               padding: const EdgeInsets.all(12),
               child: Row(
                 children: [
-                  // Pictogram
-                  if (activity.pictogramId != null)
-                    Container(
-                      width: 56,
-                      height: 56,
-                      decoration: BoxDecoration(
-                        color: context.colorScheme.primary,
-                        borderRadius: BorderRadius.circular(28),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: widget.imageUrl != null
-                          ? Image.network(
-                              widget.imageUrl!, // Guarded by != null check above.
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, _, _) => Icon(
-                                Icons.image,
-                                color: context.colorScheme.onPrimary,
-                              ),
-                            )
-                          : Icon(
-                              Icons.image,
-                              color: context.colorScheme.onPrimary,
-                            ),
-                    )
-                  else
-                    Container(
-                      width: 56,
-                      height: 56,
-                      decoration: BoxDecoration(
-                        color: context.colorScheme.primary,
-                        borderRadius: BorderRadius.circular(28),
-                      ),
-                      child: Icon(
-                        Icons.event,
-                        color: context.colorScheme.onPrimary,
-                      ),
-                    ),
-                  const SizedBox(width: 12),
-                  // Time and title
+                  // Pictogram — hero element
+                  _ActivityPictogram(
+                    imageUrl: widget.imageUrl,
+                    hasPictogram: activity.pictogramId != null,
+                  ),
+                  const SizedBox(width: 16),
+                  // Title and time
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        if (activity.title != null)
-                          Text(
-                            activity.title!,
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
+                        Text(
+                          activity.title ?? 'Unavngivet aktivitet',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: activity.title != null
+                                    ? null
+                                    : context.colorScheme.outline,
+                              ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                         if (activity.startTime != null &&
-                            activity.endTime != null)
+                            activity.endTime != null) ...[
+                          const SizedBox(height: 4),
                           Text(
                             '${formatTimeValue(activity.startTime!)} - ${formatTimeValue(activity.endTime!)}',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: context.colorScheme.outline,
-                            ),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: context.colorScheme.outline,
+                                ),
                           ),
+                        ],
                       ],
                     ),
                   ),
-                  // Sound playback button
-                  if (hasSound)
-                    ValueListenableBuilder<bool>(
-                      valueListenable: _isPlaying,
-                      builder: (_, isPlaying, _) => IconButton(
-                        onPressed: _togglePlayback,
-                        icon: Icon(
-                          isPlaying ? Icons.stop_circle : Icons.volume_up,
-                          color: context.girafColors.actionBlue,
-                        ),
-                        tooltip: isPlaying ? 'Stop' : 'Afspil lyd',
+                  // Sound + status column
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        activity.isCompleted
+                            ? Icons.check_circle
+                            : Icons.circle_outlined,
+                        color: activity.isCompleted
+                            ? context.girafColors.completedIndicator
+                            : context.colorScheme.outline,
+                        size: 28,
                       ),
-                    ),
-                  // Status indicator
-                  Icon(
-                    activity.isCompleted
-                        ? Icons.check_circle
-                        : Icons.circle_outlined,
-                    color: activity.isCompleted
-                        ? context.girafColors.completedIndicator
-                        : context.colorScheme.outline,
-                    size: 28,
+                      if (hasSound)
+                        ValueListenableBuilder<bool>(
+                          valueListenable: _isPlaying,
+                          builder: (_, isPlaying, _) => IconButton(
+                            onPressed: _togglePlayback,
+                            icon: Icon(
+                              isPlaying ? Icons.stop_circle : Icons.volume_up,
+                              color: context.girafColors.actionBlue,
+                            ),
+                            tooltip: isPlaying ? 'Stop' : 'Afspil lyd',
+                          ),
+                        ),
+                    ],
                   ),
                 ],
               ),
