@@ -92,6 +92,18 @@ class ActivityApiService implements TokenConsumer {
     await _dio.delete('/weekplan/activity/$activityId');
   }
 
+  // Reorder activities for a citizen or grade
+  Future<void> reorderActivities({
+    required int id,
+    required bool isCitizen,
+    required List<Map<String, dynamic>> items,
+  }) async {
+    final path = isCitizen
+        ? '/weekplan/reorder/$id'
+        : '/weekplan/reorder/grade/$id';
+    await _dio.put(path, data: items);
+  }
+
   // Toggle activity completion status
   Future<void> toggleActivityStatus(int activityId, {required bool isComplete}) async {
     await _dio.put(

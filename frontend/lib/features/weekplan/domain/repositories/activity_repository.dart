@@ -33,4 +33,11 @@ abstract interface class ActivityRepository {
     int activityId, {
     required bool isComplete,
   });
+
+  /// Reorder activities for a citizen or grade.
+  Future<Either<ActivityFailure, Unit>> reorderActivities({
+    required int id,
+    required bool isCitizen,
+    required List<Activity> activities,
+  });
 }

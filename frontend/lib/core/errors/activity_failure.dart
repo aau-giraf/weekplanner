@@ -35,3 +35,9 @@ final class ToggleStatusFailure extends ActivityFailure {
   const ToggleStatusFailure()
       : super('Kunne ikke ændre status');
 }
+
+/// Failed to reorder activities.
+final class ReorderActivitiesFailure extends ActivityFailure {
+  const ReorderActivitiesFailure()
+      : super('Kunne ikke ændre rækkefølge');
+}

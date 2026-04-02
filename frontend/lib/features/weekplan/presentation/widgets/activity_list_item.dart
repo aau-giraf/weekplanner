@@ -145,13 +145,20 @@ class _ActivityListItemState extends State<ActivityListItem> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '${formatTimeValue(activity.startTime)} - ${formatTimeValue(activity.endTime)}',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: context.colorScheme.outline,
+                        if (activity.title != null)
+                          Text(
+                            activity.title!,
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
-                        ),
+                        if (activity.startTime != null &&
+                            activity.endTime != null)
+                          Text(
+                            '${formatTimeValue(activity.startTime!)} - ${formatTimeValue(activity.endTime!)}',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: context.colorScheme.outline,
+                            ),
+                          ),
                       ],
                     ),
                   ),
