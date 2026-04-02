@@ -28,7 +28,7 @@ class PictogramRepositoryImpl implements PictogramRepository {
       final response = await _apiService.searchPictograms(query: query);
       return Right(response.items);
     } catch (e, stackTrace) {
-      _log.severe('Failed to search pictograms', e, stackTrace);
+      _logError('Failed to search pictograms', e, stackTrace);
       return Left(const SearchPictogramsFailure());
     }
   }
@@ -39,7 +39,7 @@ class PictogramRepositoryImpl implements PictogramRepository {
       final pictogram = await _apiService.fetchPictogram(id);
       return Right(pictogram);
     } catch (e, stackTrace) {
-      _log.severe('Failed to fetch pictogram $id', e, stackTrace);
+      _logError('Failed to fetch pictogram $id', e, stackTrace);
       return Left(const FetchPictogramFailure());
     }
   }
@@ -62,7 +62,7 @@ class PictogramRepositoryImpl implements PictogramRepository {
       );
       return Right(pictogram);
     } catch (e, stackTrace) {
-      _log.severe('Failed to create pictogram', e, stackTrace);
+      _logError('Failed to create pictogram', e, stackTrace);
       return Left(const CreatePictogramFailure());
     }
   }
@@ -85,8 +85,18 @@ class PictogramRepositoryImpl implements PictogramRepository {
       );
       return Right(pictogram);
     } catch (e, stackTrace) {
-      _log.severe('Failed to upload pictogram', e, stackTrace);
+      _logError('Failed to upload pictogram', e, stackTrace);
       return Left(const CreatePictogramFailure());
+    }
+  }
+
+  /// Log an error with the server response body when available.
+  void _logError(String message, Object error, StackTrace stackTrace) {
+    if (error is DioException) {
+      final responseData = error.response?.data;
+      _log.severe('$message — server: $responseData', error, stackTrace);
+    } else {
+      _log.severe(message, error, stackTrace);
     }
   }
 
