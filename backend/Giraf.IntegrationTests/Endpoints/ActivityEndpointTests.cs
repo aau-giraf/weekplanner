@@ -145,6 +145,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
                 EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
+                Title: null,
+                SortOrder: null,
                 PictogramId: 1
             );
 
@@ -172,6 +174,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
                 EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
+                Title: null,
+                SortOrder: null,
                 PictogramId: null
             );
 
@@ -200,6 +204,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
                 EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
+                Title: null,
+                SortOrder: null,
                 PictogramId: 1
             );
 
@@ -226,6 +232,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
                 EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
+                Title: null,
+                SortOrder: null,
                 PictogramId: null
             );
 
@@ -255,6 +263,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
                 EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
+                Title: null,
+                SortOrder: null,
                 IsCompleted: true,
                 PictogramId: 1
             );
@@ -288,6 +298,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: TimeOnly.FromDateTime(DateTime.UtcNow),
                 EndTime: TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)),
+                Title: null,
+                SortOrder: null,
                 IsCompleted: false,
                 PictogramId: null
             );
@@ -455,6 +467,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: new TimeOnly(10, 0),
                 EndTime: new TimeOnly(8, 0),
+                Title: null,
+                SortOrder: null,
                 PictogramId: null
             );
 
@@ -478,6 +492,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: new TimeOnly(10, 0),
                 EndTime: new TimeOnly(8, 0),
+                Title: null,
+                SortOrder: null,
                 PictogramId: null
             );
 
@@ -537,6 +553,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: new TimeOnly(14, 0),
                 EndTime: new TimeOnly(12, 0),
+                Title: null,
+                SortOrder: null,
                 IsCompleted: false,
                 PictogramId: null
             );
@@ -733,6 +751,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: new TimeOnly(10, 0),
                 EndTime: new TimeOnly(11, 0),
+                Title: null,
+                SortOrder: null,
                 PictogramId: null
             );
 
@@ -755,6 +775,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: new TimeOnly(10, 0),
                 EndTime: new TimeOnly(11, 0),
+                Title: null,
+                SortOrder: null,
                 IsCompleted: false,
                 PictogramId: null
             );
@@ -898,6 +920,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: new TimeOnly(9, 0),
                 EndTime: new TimeOnly(10, 0),
+                Title: null,
+                SortOrder: null,
                 IsCompleted: false,
                 PictogramId: null
             );
@@ -1001,6 +1025,8 @@ namespace Giraf.IntegrationTests.Endpoints
                 Date: DateOnly.FromDateTime(DateTime.UtcNow),
                 StartTime: new TimeOnly(9, 0),
                 EndTime: new TimeOnly(10, 0),
+                Title: null,
+                SortOrder: null,
                 IsCompleted: false,
                 PictogramId: null
             );

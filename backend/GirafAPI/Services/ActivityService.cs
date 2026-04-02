@@ -28,14 +28,13 @@ public class ActivityService : IActivityService
         var activities = await _db.Activities
             .Where(owner.ToFilter())
             .Where(a => a.Date == date)
+            .OrderBy(a => a.SortOrder)
+            .ThenBy(a => a.StartTime)
             .Select(a => a.ToDTO())
             .AsNoTracking()
             .ToListAsync(ct);
 
-        return owner is ActivityOwner.Grade && activities.Count == 0
-            ? ServiceResult<List<ActivityDTO>>.Fail(
-                new ServiceError(ServiceErrorKind.NotFound, "No activities found for the given date."))
-            : ServiceResult<List<ActivityDTO>>.Success(activities);
+        return ServiceResult<List<ActivityDTO>>.Success(activities);
     }
 
     public async Task<ServiceResult<ActivityDTO>> GetActivityByIdAsync(int id, string accessToken, CancellationToken ct = default)
@@ -58,7 +57,7 @@ public class ActivityService : IActivityService
     public async Task<ServiceResult<ActivityDTO>> CreateActivityAsync(
         ActivityOwner owner, CreateActivityDTO dto, string accessToken, CancellationToken ct = default)
     {
-        if (dto.EndTime <= dto.StartTime)
+        if (dto.StartTime is not null && dto.EndTime is not null && dto.EndTime <= dto.StartTime)
             return ServiceResult<ActivityDTO>.Fail(
                 new ServiceError(ServiceErrorKind.Validation, "End time must be after start time."));
 
@@ -76,6 +75,16 @@ public class ActivityService : IActivityService
         var activity = dto.ToEntity();
         owner.ApplyTo(activity);
 
+        // Auto-assign sort order if not provided
+        if (dto.SortOrder is null)
+        {
+            var maxOrder = await _db.Activities
+                .Where(owner.ToFilter())
+                .Where(a => a.Date == dto.Date)
+                .MaxAsync(a => (int?)a.SortOrder, ct) ?? -1;
+            activity.SortOrder = maxOrder + 1;
+        }
+
         _db.Activities.Add(activity);
         await _db.SaveChangesAsync(ct);
 
@@ -85,7 +94,7 @@ public class ActivityService : IActivityService
     public async Task<ServiceResult<ActivityDTO>> UpdateActivityAsync(
         int id, UpdateActivityDTO dto, string accessToken, CancellationToken ct = default)
     {
-        if (dto.EndTime <= dto.StartTime)
+        if (dto.StartTime is not null && dto.EndTime is not null && dto.EndTime <= dto.StartTime)
             return ServiceResult<ActivityDTO>.Fail(
                 new ServiceError(ServiceErrorKind.Validation, "End time must be after start time."));
 
@@ -107,6 +116,9 @@ public class ActivityService : IActivityService
         activity.Date = dto.Date;
         activity.StartTime = dto.StartTime;
         activity.EndTime = dto.EndTime;
+        activity.Title = dto.Title;
+        if (dto.SortOrder is not null)
+            activity.SortOrder = dto.SortOrder.Value;
         activity.IsCompleted = dto.IsCompleted;
         activity.PictogramId = dto.PictogramId;
         await _db.SaveChangesAsync(ct);
@@ -191,12 +203,39 @@ public class ActivityService : IActivityService
                 Date = targetDate,
                 StartTime = a.StartTime,
                 EndTime = a.EndTime,
+                Title = a.Title,
+                SortOrder = a.SortOrder,
                 IsCompleted = false,
                 PictogramId = a.PictogramId
             };
             owner.ApplyTo(copy);
             _db.Activities.Add(copy);
         }
+
+        await _db.SaveChangesAsync(ct);
+        return ServiceResult.Success();
+    }
+
+    public async Task<ServiceResult> ReorderActivitiesAsync(
+        ActivityOwner owner, List<ReorderItemDTO> items, string accessToken, CancellationToken ct = default)
+    {
+        var ownerResult = await ValidateOwnerAsync(owner, accessToken, ct);
+        if (ownerResult is not null)
+            return ServiceResult.Fail(ownerResult);
+
+        var ids = items.Select(i => i.ActivityId).ToList();
+        var activities = await _db.Activities
+            .Where(owner.ToFilter())
+            .Where(a => ids.Contains(a.Id))
+            .ToListAsync(ct);
+
+        if (activities.Count != ids.Count)
+            return ServiceResult.Fail(
+                new ServiceError(ServiceErrorKind.Validation, "One or more activity IDs are invalid."));
+
+        var orderMap = items.ToDictionary(i => i.ActivityId, i => i.SortOrder);
+        foreach (var activity in activities)
+            activity.SortOrder = orderMap[activity.Id];
 
         await _db.SaveChangesAsync(ct);
         return ServiceResult.Success();

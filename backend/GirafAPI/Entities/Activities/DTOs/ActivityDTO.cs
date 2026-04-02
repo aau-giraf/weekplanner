@@ -6,8 +6,10 @@ public record ActivityDTO
 (
     [Required] int ActivityId,
     [Required] DateOnly Date,
-    [Required] TimeOnly StartTime,
-    [Required] TimeOnly EndTime,
+    TimeOnly? StartTime,
+    TimeOnly? EndTime,
+    string? Title,
+    int SortOrder,
     bool IsCompleted,
     int? PictogramId
 );

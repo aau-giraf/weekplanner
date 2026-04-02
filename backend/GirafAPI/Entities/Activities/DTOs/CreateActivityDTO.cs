@@ -5,7 +5,9 @@ namespace GirafAPI.Entities.Activities.DTOs;
 public record CreateActivityDTO
 (
     [Required] DateOnly Date,
-    [Required] TimeOnly StartTime,
-    [Required] TimeOnly EndTime,
+    TimeOnly? StartTime,
+    TimeOnly? EndTime,
+    string? Title,
+    int? SortOrder,
     int? PictogramId
 );

@@ -7,9 +7,13 @@ public class Activity
 
     public required DateOnly Date { get; set; }
 
-    public required TimeOnly StartTime { get; set; }
+    public TimeOnly? StartTime { get; set; }
 
-    public required TimeOnly EndTime { get; set; }
+    public TimeOnly? EndTime { get; set; }
+
+    public string? Title { get; set; }
+
+    public int SortOrder { get; set; }
 
     public bool IsCompleted { get; set; }
 

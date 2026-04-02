@@ -175,6 +175,52 @@ public static class ActivityEndpoints
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status200OK);
 
+        // PUT reorder activities for citizen
+        group.MapPut("/reorder/{citizenId:int}",
+                async Task<IResult> (int citizenId, List<ReorderItemDTO> items,
+                    IActivityService service, HttpContext httpContext, CancellationToken ct) =>
+                {
+                    var token = GetAccessToken(httpContext);
+                    if (token is null)
+                        return TypedResults.Unauthorized();
+
+                    var result = await service.ReorderActivitiesAsync(
+                        new ActivityOwner.Citizen(citizenId), items, token, ct);
+                    return result.ToHttpResult(() => TypedResults.Ok());
+                })
+            .WithName("ReorderActivitiesForCitizen")
+            .WithDescription("Reorders activities for a citizen.")
+            .WithTags("Activities")
+            .RequireAuthorization()
+            .Accepts<List<ReorderItemDTO>>("application/json")
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status400BadRequest);
+
+        // PUT reorder activities for grade
+        group.MapPut("/reorder/grade/{gradeId:int}",
+                async Task<IResult> (int gradeId, List<ReorderItemDTO> items,
+                    IActivityService service, HttpContext httpContext, CancellationToken ct) =>
+                {
+                    var token = GetAccessToken(httpContext);
+                    if (token is null)
+                        return TypedResults.Unauthorized();
+
+                    var result = await service.ReorderActivitiesAsync(
+                        new ActivityOwner.Grade(gradeId), items, token, ct);
+                    return result.ToHttpResult(() => TypedResults.Ok());
+                })
+            .WithName("ReorderActivitiesForGrade")
+            .WithDescription("Reorders activities for a grade.")
+            .WithTags("Activities")
+            .RequireAuthorization()
+            .Accepts<List<ReorderItemDTO>>("application/json")
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status400BadRequest);
+
         // PUT updated activity
         group.MapPut("/activity/{id:int}",
                 async Task<IResult> (int id, UpdateActivityDTO dto, IActivityService service,
