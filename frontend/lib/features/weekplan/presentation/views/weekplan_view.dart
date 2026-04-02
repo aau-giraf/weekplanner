@@ -144,7 +144,9 @@ class _EmptyDay extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'Ingen aktiviteter for ${GirafDateUtils.dayName(selectedDate.weekday)}',
-            style: TextStyle(color: context.colorScheme.outline, fontSize: 16),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: context.colorScheme.outline,
+                ),
           ),
         ],
       ),

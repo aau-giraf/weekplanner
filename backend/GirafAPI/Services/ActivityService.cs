@@ -57,6 +57,10 @@ public class ActivityService : IActivityService
     public async Task<ServiceResult<ActivityDTO>> CreateActivityAsync(
         ActivityOwner owner, CreateActivityDTO dto, string accessToken, CancellationToken ct = default)
     {
+        if ((dto.StartTime is null) != (dto.EndTime is null))
+            return ServiceResult<ActivityDTO>.Fail(
+                new ServiceError(ServiceErrorKind.Validation, "Start and end time must both be provided or both omitted."));
+
         if (dto.StartTime is not null && dto.EndTime is not null && dto.EndTime <= dto.StartTime)
             return ServiceResult<ActivityDTO>.Fail(
                 new ServiceError(ServiceErrorKind.Validation, "End time must be after start time."));
@@ -94,6 +98,10 @@ public class ActivityService : IActivityService
     public async Task<ServiceResult<ActivityDTO>> UpdateActivityAsync(
         int id, UpdateActivityDTO dto, string accessToken, CancellationToken ct = default)
     {
+        if ((dto.StartTime is null) != (dto.EndTime is null))
+            return ServiceResult<ActivityDTO>.Fail(
+                new ServiceError(ServiceErrorKind.Validation, "Start and end time must both be provided or both omitted."));
+
         if (dto.StartTime is not null && dto.EndTime is not null && dto.EndTime <= dto.StartTime)
             return ServiceResult<ActivityDTO>.Fail(
                 new ServiceError(ServiceErrorKind.Validation, "End time must be after start time."));

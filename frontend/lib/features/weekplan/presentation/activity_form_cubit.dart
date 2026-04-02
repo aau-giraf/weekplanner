@@ -248,9 +248,10 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
     };
 
     final Either<ActivityFailure, Activity> result;
-    if (s.form.isEditing) {
+    final existing = s.form.existingActivity;
+    if (existing != null) {
       result = await _activityRepository.updateActivity(
-          s.form.existingActivity!.activityId, data);
+          existing.activityId, data);
     } else {
       result = await _activityRepository.createActivity(
         id: subjectId,

@@ -48,21 +48,22 @@ class _ActivityPictogram extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       clipBehavior: Clip.antiAlias,
-      child: hasPictogram && imageUrl != null
-          ? Image.network(
-              imageUrl!,
-              fit: BoxFit.cover,
-              errorBuilder: (_, _, _) => Icon(
-                Icons.image,
-                size: 40,
-                color: context.colorScheme.onPrimaryContainer,
-              ),
-            )
-          : Icon(
-              hasPictogram ? Icons.image : Icons.event,
+      child: switch (imageUrl) {
+        final url? when hasPictogram => Image.network(
+            url,
+            fit: BoxFit.cover,
+            errorBuilder: (_, _, _) => Icon(
+              Icons.image,
               size: 40,
               color: context.colorScheme.onPrimaryContainer,
             ),
+          ),
+        _ => Icon(
+            hasPictogram ? Icons.image : Icons.event,
+            size: 40,
+            color: context.colorScheme.onPrimaryContainer,
+          ),
+      },
     );
   }
 }
@@ -104,8 +105,8 @@ class _ActivityListItemState extends State<ActivityListItem> {
   @override
   Widget build(BuildContext context) {
     final activity = widget.activity;
-    // Null-check on left of && guarantees non-null on right.
-    final hasSound = widget.soundUrl != null && widget.soundUrl!.isNotEmpty;
+    final soundUrl = widget.soundUrl;
+    final hasSound = soundUrl != null && soundUrl.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
