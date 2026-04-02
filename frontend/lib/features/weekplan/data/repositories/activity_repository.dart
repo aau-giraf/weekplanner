@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:logging/logging.dart';
 
@@ -19,6 +20,16 @@ class ActivityRepositoryImpl implements ActivityRepository {
   ActivityRepositoryImpl({required ActivityApiService apiService})
       : _apiService = apiService;
 
+  /// Log an error with the server response body when available.
+  void _logError(String message, Object error, StackTrace stackTrace) {
+    if (error is DioException) {
+      final responseData = error.response?.data;
+      _log.severe('$message — server: $responseData', error, stackTrace);
+    } else {
+      _log.severe(message, error, stackTrace);
+    }
+  }
+
   @override
   Future<Either<ActivityFailure, List<Activity>>> fetchActivities({
     required int id,
@@ -32,7 +43,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
           : await _apiService.fetchActivitiesByGrade(id, dateStr);
       return Right(activities);
     } catch (e, stackTrace) {
-      _log.severe('Failed to fetch activities', e, stackTrace);
+      _logError('Failed to fetch activities', e, stackTrace);
       return Left(const FetchActivitiesFailure());
     }
   }
@@ -49,7 +60,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
           : await _apiService.createActivityForGrade(id, data);
       return Right(activity);
     } catch (e, stackTrace) {
-      _log.severe('Failed to create activity', e, stackTrace);
+      _logError('Failed to create activity', e, stackTrace);
       return Left(const CreateActivityFailure());
     }
   }
@@ -63,7 +74,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
       final updated = await _apiService.updateActivity(activityId, data);
       return Right(updated);
     } catch (e, stackTrace) {
-      _log.severe('Failed to update activity', e, stackTrace);
+      _logError('Failed to update activity', e, stackTrace);
       return Left(const UpdateActivityFailure());
     }
   }
@@ -74,7 +85,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
       await _apiService.deleteActivity(activityId);
       return const Right(unit);
     } catch (e, stackTrace) {
-      _log.severe('Failed to delete activity', e, stackTrace);
+      _logError('Failed to delete activity', e, stackTrace);
       return Left(const DeleteActivityFailure());
     }
   }
@@ -89,7 +100,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
           isComplete: isComplete);
       return const Right(unit);
     } catch (e, stackTrace) {
-      _log.severe('Failed to toggle activity status', e, stackTrace);
+      _logError('Failed to toggle activity status', e, stackTrace);
       return Left(const ToggleStatusFailure());
     }
   }
@@ -116,7 +127,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
       );
       return const Right(unit);
     } catch (e, stackTrace) {
-      _log.severe('Failed to reorder activities', e, stackTrace);
+      _logError('Failed to reorder activities', e, stackTrace);
       return Left(const ReorderActivitiesFailure());
     }
   }
