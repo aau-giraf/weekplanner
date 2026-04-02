@@ -29,45 +29,6 @@ class ActivityListItem extends StatefulWidget {
   State<ActivityListItem> createState() => _ActivityListItemState();
 }
 
-class _ActivityPictogram extends StatelessWidget {
-  final String? imageUrl;
-  final bool hasPictogram;
-
-  const _ActivityPictogram({
-    required this.imageUrl,
-    required this.hasPictogram,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 96,
-      height: 96,
-      decoration: BoxDecoration(
-        color: context.colorScheme.primaryContainer,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: switch (imageUrl) {
-        final url? when hasPictogram => Image.network(
-            url,
-            fit: BoxFit.cover,
-            errorBuilder: (_, _, _) => Icon(
-              Icons.image,
-              size: 40,
-              color: context.colorScheme.onPrimaryContainer,
-            ),
-          ),
-        _ => Icon(
-            hasPictogram ? Icons.image : Icons.event,
-            size: 40,
-            color: context.colorScheme.onPrimaryContainer,
-          ),
-      },
-    );
-  }
-}
-
 class _ActivityListItemState extends State<ActivityListItem> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   late final StreamSubscription _onCompleteSubscription;
@@ -135,7 +96,7 @@ class _ActivityListItemState extends State<ActivityListItem> {
               ? context.girafColors.completedBackground
               : context.girafColors.pendingBackground,
           child: InkWell(
-            onTap: widget.onToggleStatus,
+            onTap: hasSound ? _togglePlayback : null,
             borderRadius: BorderRadius.circular(12),
             child: Padding(
               padding: const EdgeInsets.all(12),
@@ -163,45 +124,32 @@ class _ActivityListItemState extends State<ActivityListItem> {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        if (activity.startTime != null &&
-                            activity.endTime != null) ...[
-                          const SizedBox(height: 4),
-                          Text(
-                            '${formatTimeValue(activity.startTime!)} - ${formatTimeValue(activity.endTime!)}',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: context.colorScheme.outline,
-                                ),
-                          ),
-                        ],
+                        if (activity.startTime case final start?)
+                          if (activity.endTime case final end?) ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              '${formatTimeValue(start)} - ${formatTimeValue(end)}',
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: context.colorScheme.outline,
+                                  ),
+                            ),
+                          ],
                       ],
                     ),
                   ),
-                  // Sound + status column
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        activity.isCompleted
-                            ? Icons.check_circle
-                            : Icons.circle_outlined,
-                        color: activity.isCompleted
-                            ? context.girafColors.completedIndicator
-                            : context.colorScheme.outline,
-                        size: 28,
-                      ),
-                      if (hasSound)
-                        ValueListenableBuilder<bool>(
-                          valueListenable: _isPlaying,
-                          builder: (_, isPlaying, _) => IconButton(
-                            onPressed: _togglePlayback,
-                            icon: Icon(
-                              isPlaying ? Icons.stop_circle : Icons.volume_up,
-                              color: context.girafColors.actionBlue,
-                            ),
-                            tooltip: isPlaying ? 'Stop' : 'Afspil lyd',
-                          ),
-                        ),
-                    ],
+                  // Completion toggle
+                  IconButton(
+                    onPressed: widget.onToggleStatus,
+                    icon: Icon(
+                      activity.isCompleted
+                          ? Icons.check_circle
+                          : Icons.circle_outlined,
+                      color: activity.isCompleted
+                          ? context.girafColors.completedIndicator
+                          : context.colorScheme.outline,
+                      size: 28,
+                    ),
+                    tooltip: activity.isCompleted ? 'Ikke færdig' : 'Færdig',
                   ),
                 ],
               ),
@@ -209,6 +157,45 @@ class _ActivityListItemState extends State<ActivityListItem> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ActivityPictogram extends StatelessWidget {
+  final String? imageUrl;
+  final bool hasPictogram;
+
+  const _ActivityPictogram({
+    required this.imageUrl,
+    required this.hasPictogram,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 96,
+      height: 96,
+      decoration: BoxDecoration(
+        color: context.colorScheme.primaryContainer,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: switch (imageUrl) {
+        final url? when hasPictogram => Image.network(
+            url,
+            fit: BoxFit.cover,
+            errorBuilder: (_, _, _) => Icon(
+              Icons.image,
+              size: 40,
+              color: context.colorScheme.onPrimaryContainer,
+            ),
+          ),
+        _ => Icon(
+            hasPictogram ? Icons.image : Icons.event,
+            size: 40,
+            color: context.colorScheme.onPrimaryContainer,
+          ),
+      },
     );
   }
 }

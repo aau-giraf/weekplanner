@@ -8,7 +8,7 @@ import 'package:weekplanner/features/weekplan/presentation/activity_form_cubit.d
 import 'package:weekplanner/features/weekplan/presentation/widgets/pictogram_selector.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';
 
-class ActivityFormView extends StatefulWidget {
+class ActivityFormView extends StatelessWidget {
   const ActivityFormView({
     super.key,
     required this.title,
@@ -19,30 +19,10 @@ class ActivityFormView extends StatefulWidget {
   final String submitLabel;
 
   @override
-  State<ActivityFormView> createState() => _ActivityFormViewState();
-}
-
-class _ActivityFormViewState extends State<ActivityFormView> {
-  late final TextEditingController _titleController;
-
-  @override
-  void initState() {
-    super.initState();
-    final cubit = context.read<ActivityFormCubit>();
-    _titleController = TextEditingController(text: cubit.state.form.title);
-  }
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
       ),
       body: BlocConsumer<ActivityFormCubit, ActivityFormState>(
         listener: (context, state) {
@@ -61,18 +41,14 @@ class _ActivityFormViewState extends State<ActivityFormView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Title field
-                  TextField(
-                    decoration: const InputDecoration(
-                      labelText: 'Titel',
-                      hintText: 'F.eks. Morgenmad, Samling, Frikvarter',
-                      prefixIcon: Icon(Icons.label_outline),
-                    ),
-                    controller: _titleController,
-                    onChanged: cubit.setTitle,
-                    textCapitalization: TextCapitalization.sentences,
+                  // Pictogram selector (required)
+                  Text(
+                    'Piktogram',
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
+                  const PictogramSelector(),
+                  const SizedBox(height: 24),
                   // Time toggle
                   SwitchListTile(
                     title: const Text('Angiv tidspunkt'),
@@ -130,13 +106,6 @@ class _ActivityFormViewState extends State<ActivityFormView> {
                     ),
                   ],
                   const SizedBox(height: 24),
-                  Text(
-                    'Piktogram',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  const PictogramSelector(),
-                  const SizedBox(height: 24),
                   if (error != null)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
@@ -156,7 +125,7 @@ class _ActivityFormViewState extends State<ActivityFormView> {
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : Text(widget.submitLabel),
+                        : Text(submitLabel),
                   ),
                 ],
               ),

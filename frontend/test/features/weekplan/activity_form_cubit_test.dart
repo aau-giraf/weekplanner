@@ -307,8 +307,15 @@ void main() {
   });
 
   group('validate', () {
+    test('returns error when no pictogram is selected', () {
+      final cubit = buildCubit();
+      expect(cubit.validate(), 'Vælg et piktogram');
+      cubit.close();
+    });
+
     test('returns error when endTime <= startTime with time enabled', () {
       final cubit = buildCubit();
+      cubit.selectPictogram(testPictogram);
       cubit.toggleHasTime();
       cubit.setStartTime(const (hour: 10, minute: 0));
       cubit.setEndTime(const (hour: 9, minute: 0));
@@ -318,6 +325,7 @@ void main() {
 
     test('returns error when endTime == startTime with time enabled', () {
       final cubit = buildCubit();
+      cubit.selectPictogram(testPictogram);
       cubit.toggleHasTime();
       cubit.setStartTime(const (hour: 10, minute: 0));
       cubit.setEndTime(const (hour: 10, minute: 0));
@@ -327,6 +335,7 @@ void main() {
 
     test('returns null when hasTime is false regardless of times', () {
       final cubit = buildCubit();
+      cubit.selectPictogram(testPictogram);
       cubit.setStartTime(const (hour: 10, minute: 0));
       cubit.setEndTime(const (hour: 9, minute: 0));
       expect(cubit.validate(), isNull);
@@ -335,6 +344,7 @@ void main() {
 
     test('returns null when times are valid', () {
       final cubit = buildCubit();
+      cubit.selectPictogram(testPictogram);
       cubit.setStartTime(const (hour: 8, minute: 0));
       cubit.setEndTime(const (hour: 9, minute: 0));
       expect(cubit.validate(), isNull);
@@ -355,8 +365,12 @@ void main() {
         ).thenAnswer((_) async => Right(testActivity));
       },
       build: buildCubit,
-      act: (cubit) => cubit.save(),
+      act: (cubit) {
+        cubit.selectPictogram(testPictogram);
+        return cubit.save();
+      },
       expect: () => [
+        isA<ActivityFormReady>(), // selectPictogram
         isA<ActivityFormSaving>(),
         isA<ActivityFormSaved>(),
       ],
@@ -383,8 +397,12 @@ void main() {
         ).thenAnswer((_) async => const Left(CreateActivityFailure()));
       },
       build: buildCubit,
-      act: (cubit) => cubit.save(),
+      act: (cubit) {
+        cubit.selectPictogram(testPictogram);
+        return cubit.save();
+      },
       expect: () => [
+        isA<ActivityFormReady>(), // selectPictogram
         isA<ActivityFormSaving>(),
         isA<ActivityFormReady>().having(
           (s) => s.error,
@@ -405,8 +423,12 @@ void main() {
         ).thenAnswer((_) async => Right(testActivity));
       },
       build: () => buildCubit(existingActivity: testActivity),
-      act: (cubit) => cubit.save(),
+      act: (cubit) {
+        cubit.selectPictogram(testPictogram);
+        return cubit.save();
+      },
       expect: () => [
+        isA<ActivityFormReady>(), // selectPictogram
         isA<ActivityFormSaving>(),
         isA<ActivityFormSaved>(),
       ],
@@ -421,12 +443,15 @@ void main() {
       'emits ActivityFormReady with error and no Saving when validation fails',
       build: buildCubit,
       act: (cubit) async {
+        cubit.selectPictogram(testPictogram);
         cubit.toggleHasTime();
         // Start time moved forward to 10:00, making it after the default end of 9:00
         cubit.setStartTime(const (hour: 10, minute: 0));
         await cubit.save();
       },
       expect: () => [
+        // selectPictogram emits
+        isA<ActivityFormReady>(),
         // toggleHasTime emits
         isA<ActivityFormReady>().having(
           (s) => s.form.hasTime,

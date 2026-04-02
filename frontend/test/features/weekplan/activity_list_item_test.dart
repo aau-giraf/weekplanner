@@ -66,24 +66,25 @@ void main() {
       expect(find.byIcon(Icons.circle_outlined), findsOneWidget);
     });
 
-    testWidgets('tapping the card calls onToggleStatus', (tester) async {
+    testWidgets('tapping the checkbox icon calls onToggleStatus',
+        (tester) async {
       var callCount = 0;
 
       await tester.pumpWidget(buildSubject(onToggleStatus: () => callCount++));
 
-      await tester.tap(find.byType(InkWell).first);
+      await tester.tap(find.byTooltip('Færdig'));
       await tester.pump();
 
       expect(callCount, 1);
     });
 
-    testWidgets('sound button is visible when soundUrl is provided',
-        (tester) async {
+    testWidgets('card is tappable when soundUrl is provided', (tester) async {
       await tester.pumpWidget(
         buildSubject(soundUrl: 'http://test.mp3'),
       );
 
-      expect(find.byIcon(Icons.volume_up), findsOneWidget);
+      final inkWell = tester.widget<InkWell>(find.byType(InkWell).first);
+      expect(inkWell.onTap, isNotNull);
     });
 
     testWidgets('sound button is hidden when soundUrl is null', (tester) async {
