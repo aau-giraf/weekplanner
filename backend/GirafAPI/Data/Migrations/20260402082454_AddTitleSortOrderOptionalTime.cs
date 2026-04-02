@@ -37,7 +37,8 @@ namespace GirafAPI.Data.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "Title",
                 table: "Activities",
-                type: "text",
+                type: "character varying(200)",
+                maxLength: 200,
                 nullable: true);
         }
 

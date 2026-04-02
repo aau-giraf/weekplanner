@@ -55,7 +55,8 @@ namespace GirafAPI.Data.Migrations
                         .HasColumnType("time without time zone");
 
                     b.Property<string>("Title")
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.HasKey("Id");
 

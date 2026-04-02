@@ -117,6 +117,7 @@ public class ActivityService : IActivityService
         activity.StartTime = dto.StartTime;
         activity.EndTime = dto.EndTime;
         activity.Title = dto.Title;
+        // Preserve existing sort order when client omits it (e.g. simple field edits).
         if (dto.SortOrder is not null)
             activity.SortOrder = dto.SortOrder.Value;
         activity.IsCompleted = dto.IsCompleted;

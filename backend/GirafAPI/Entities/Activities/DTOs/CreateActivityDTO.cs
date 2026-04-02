@@ -7,7 +7,7 @@ public record CreateActivityDTO
     [Required] DateOnly Date,
     TimeOnly? StartTime,
     TimeOnly? EndTime,
-    string? Title,
+    [StringLength(200)] string? Title,
     int? SortOrder,
     int? PictogramId
 );

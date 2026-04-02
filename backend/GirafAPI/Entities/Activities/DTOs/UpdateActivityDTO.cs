@@ -7,7 +7,7 @@ public record UpdateActivityDTO
     [Required] DateOnly Date,
     TimeOnly? StartTime,
     TimeOnly? EndTime,
-    string? Title,
+    [StringLength(200)] string? Title,
     int? SortOrder,
     [Required] bool IsCompleted,
     int? PictogramId

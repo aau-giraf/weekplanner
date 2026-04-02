@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GirafAPI.Data.Migrations
 {
     [DbContext(typeof(GirafDbContext))]
-    [Migration("20260402081415_AddTitleSortOrderOptionalTime")]
+    [Migration("20260402082454_AddTitleSortOrderOptionalTime")]
     partial class AddTitleSortOrderOptionalTime
     {
         /// <inheritdoc />
@@ -58,7 +58,8 @@ namespace GirafAPI.Data.Migrations
                         .HasColumnType("time without time zone");
 
                     b.Property<string>("Title")
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.HasKey("Id");
 

@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace GirafAPI.Entities.Activities;
 
 // Data model of one activity in a day
@@ -11,6 +13,7 @@ public class Activity
 
     public TimeOnly? EndTime { get; set; }
 
+    [MaxLength(200)]
     public string? Title { get; set; }
 
     public int SortOrder { get; set; }
