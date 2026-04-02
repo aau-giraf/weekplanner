@@ -136,7 +136,8 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
 
   /// Upload a local image as a new pictogram and select it.
   Future<bool> uploadPictogramFromFile() async {
-    if (state.creation.imageFile == null || state.creation.name.isEmpty) {
+    final imageFile = state.creation.imageFile;
+    if (imageFile == null || state.creation.name.isEmpty) {
       _emitReady(error: 'Angiv navn og vælg et billede');
       return false;
     }
@@ -145,7 +146,7 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
 
     final result = await _pictogramRepository.uploadPictogram(
       name: state.creation.name,
-      imageFile: state.creation.imageFile!,
+      imageFile: imageFile,
       soundFile: state.creation.soundFile,
       organizationId: organizationId,
       generateSound: state.creation.generateSound,

@@ -29,45 +29,6 @@ class ActivityListItem extends StatefulWidget {
   State<ActivityListItem> createState() => _ActivityListItemState();
 }
 
-class _ActivityPictogram extends StatelessWidget {
-  final String? imageUrl;
-  final bool hasPictogram;
-
-  const _ActivityPictogram({
-    required this.imageUrl,
-    required this.hasPictogram,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 96,
-      height: 96,
-      decoration: BoxDecoration(
-        color: context.colorScheme.primaryContainer,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: switch (imageUrl) {
-        final url? when hasPictogram => Image.network(
-            url,
-            fit: BoxFit.cover,
-            errorBuilder: (_, _, _) => Icon(
-              Icons.image,
-              size: 40,
-              color: context.colorScheme.onPrimaryContainer,
-            ),
-          ),
-        _ => Icon(
-            hasPictogram ? Icons.image : Icons.event,
-            size: 40,
-            color: context.colorScheme.onPrimaryContainer,
-          ),
-      },
-    );
-  }
-}
-
 class _ActivityListItemState extends State<ActivityListItem> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   late final StreamSubscription _onCompleteSubscription;
@@ -163,16 +124,16 @@ class _ActivityListItemState extends State<ActivityListItem> {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        if (activity.startTime != null &&
-                            activity.endTime != null) ...[
-                          const SizedBox(height: 4),
-                          Text(
-                            '${formatTimeValue(activity.startTime!)} - ${formatTimeValue(activity.endTime!)}',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: context.colorScheme.outline,
-                                ),
-                          ),
-                        ],
+                        if (activity.startTime case final start?)
+                          if (activity.endTime case final end?) ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              '${formatTimeValue(start)} - ${formatTimeValue(end)}',
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: context.colorScheme.outline,
+                                  ),
+                            ),
+                          ],
                       ],
                     ),
                   ),
@@ -196,6 +157,45 @@ class _ActivityListItemState extends State<ActivityListItem> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ActivityPictogram extends StatelessWidget {
+  final String? imageUrl;
+  final bool hasPictogram;
+
+  const _ActivityPictogram({
+    required this.imageUrl,
+    required this.hasPictogram,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 96,
+      height: 96,
+      decoration: BoxDecoration(
+        color: context.colorScheme.primaryContainer,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: switch (imageUrl) {
+        final url? when hasPictogram => Image.network(
+            url,
+            fit: BoxFit.cover,
+            errorBuilder: (_, _, _) => Icon(
+              Icons.image,
+              size: 40,
+              color: context.colorScheme.onPrimaryContainer,
+            ),
+          ),
+        _ => Icon(
+            hasPictogram ? Icons.image : Icons.event,
+            size: 40,
+            color: context.colorScheme.onPrimaryContainer,
+          ),
+      },
     );
   }
 }
