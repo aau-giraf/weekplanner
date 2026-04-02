@@ -35,7 +35,7 @@ void main() {
   }
 
   group('ActivityFormView', () {
-    testWidgets('shows title field and submit button in ready state',
+    testWidgets('shows pictogram label and submit button in ready state',
         (tester) async {
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
         form: ActivityFormData(date: testDate),
@@ -43,7 +43,7 @@ void main() {
 
       await tester.pumpWidget(buildSubject());
 
-      expect(find.text('Titel'), findsOneWidget);
+      expect(find.text('Piktogram'), findsOneWidget);
       expect(find.text('Angiv tidspunkt'), findsOneWidget);
       expect(find.text('Tilføj'), findsOneWidget);
     });

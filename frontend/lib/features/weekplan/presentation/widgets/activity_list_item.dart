@@ -135,7 +135,7 @@ class _ActivityListItemState extends State<ActivityListItem> {
               ? context.girafColors.completedBackground
               : context.girafColors.pendingBackground,
           child: InkWell(
-            onTap: widget.onToggleStatus,
+            onTap: hasSound ? _togglePlayback : null,
             borderRadius: BorderRadius.circular(12),
             child: Padding(
               padding: const EdgeInsets.all(12),
@@ -176,32 +176,19 @@ class _ActivityListItemState extends State<ActivityListItem> {
                       ],
                     ),
                   ),
-                  // Sound + status column
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        activity.isCompleted
-                            ? Icons.check_circle
-                            : Icons.circle_outlined,
-                        color: activity.isCompleted
-                            ? context.girafColors.completedIndicator
-                            : context.colorScheme.outline,
-                        size: 28,
-                      ),
-                      if (hasSound)
-                        ValueListenableBuilder<bool>(
-                          valueListenable: _isPlaying,
-                          builder: (_, isPlaying, _) => IconButton(
-                            onPressed: _togglePlayback,
-                            icon: Icon(
-                              isPlaying ? Icons.stop_circle : Icons.volume_up,
-                              color: context.girafColors.actionBlue,
-                            ),
-                            tooltip: isPlaying ? 'Stop' : 'Afspil lyd',
-                          ),
-                        ),
-                    ],
+                  // Completion toggle
+                  IconButton(
+                    onPressed: widget.onToggleStatus,
+                    icon: Icon(
+                      activity.isCompleted
+                          ? Icons.check_circle
+                          : Icons.circle_outlined,
+                      color: activity.isCompleted
+                          ? context.girafColors.completedIndicator
+                          : context.colorScheme.outline,
+                      size: 28,
+                    ),
+                    tooltip: activity.isCompleted ? 'Ikke færdig' : 'Færdig',
                   ),
                 ],
               ),

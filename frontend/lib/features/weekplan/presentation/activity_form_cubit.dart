@@ -55,10 +55,6 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
 
   // ── Form field setters ────────────────────────────────────
 
-  void setTitle(String title) {
-    _emitReady(form: state.form.copyWith(title: title));
-  }
-
   void toggleHasTime() {
     _emitReady(form: state.form.copyWith(hasTime: !state.form.hasTime));
   }
@@ -106,6 +102,7 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
   void selectPictogram(Pictogram pictogram) {
     _emitReady(
       selection: PictogramSelection(id: pictogram.id, pictogram: pictogram),
+      form: state.form.copyWith(title: pictogram.name),
     );
   }
 
@@ -165,6 +162,7 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
         _emitReady(
           creation: state.creation.copyWith(isCreating: false),
           selection: PictogramSelection(id: value.id, pictogram: value),
+          form: state.form.copyWith(title: value.name),
         );
         return true;
     }
@@ -200,6 +198,7 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
         _emitReady(
           creation: state.creation.copyWith(isCreating: false),
           selection: PictogramSelection(id: value.id, pictogram: value),
+          form: state.form.copyWith(title: value.name),
         );
         return true;
     }
@@ -209,6 +208,9 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
 
   /// Validate the form and return an error message, or null if valid.
   String? validate() {
+    if (state.selection.id == null) {
+      return 'Vælg et piktogram';
+    }
     if (state.form.hasTime) {
       final startMinutes =
           state.form.startTime.hour * 60 + state.form.startTime.minute;
@@ -243,8 +245,8 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
         'startTime': formatTimeValueForApi(s.form.startTime),
       if (s.form.hasTime)
         'endTime': formatTimeValueForApi(s.form.endTime),
-      if (s.form.title.isNotEmpty) 'title': s.form.title,
-      if (s.selection.id != null) 'pictogramId': s.selection.id,
+      'title': s.form.title,
+      'pictogramId': s.selection.id,
     };
 
     final Either<ActivityFailure, Activity> result;
