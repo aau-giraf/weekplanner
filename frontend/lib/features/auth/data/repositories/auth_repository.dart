@@ -3,6 +3,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:logging/logging.dart';
 
 import 'package:weekplanner/core/errors/auth_failure.dart';
+import 'package:weekplanner/core/logging.dart';
 import 'package:weekplanner/features/auth/domain/repositories/auth_repository.dart';
 import 'package:weekplanner/shared/models/auth_tokens.dart';
 import 'package:weekplanner/shared/services/auth_service.dart';
@@ -31,7 +32,7 @@ class AuthRepositoryImpl implements AuthRepository {
     } on DioException catch (e, stackTrace) {
       return Left(_mapDioError(e, stackTrace));
     } catch (e, stackTrace) {
-      _log.severe('Unexpected login error', e, stackTrace);
+      logServerError(_log, 'Unexpected login error', e, stackTrace);
       return Left(const UnexpectedFailure());
     }
   }
@@ -88,7 +89,7 @@ class AuthRepositoryImpl implements AuthRepository {
       await _authService.logout();
       return const Right(unit);
     } catch (e, stackTrace) {
-      _log.severe('Logout failed', e, stackTrace);
+      logServerError(_log, 'Logout failed', e, stackTrace);
       return Left(const UnexpectedFailure());
     }
   }
@@ -123,7 +124,7 @@ class AuthRepositoryImpl implements AuthRepository {
       _log.warning('Login failed: invalid credentials', e, stackTrace);
       return const InvalidCredentialsFailure();
     }
-    _log.severe('Login failed: server error', e, stackTrace);
+    logServerError(_log, 'Login failed: server error', e, stackTrace);
     return const ServerFailure();
   }
 }

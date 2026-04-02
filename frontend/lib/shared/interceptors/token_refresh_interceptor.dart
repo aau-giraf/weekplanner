@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logging/logging.dart';
+import 'package:weekplanner/core/logging.dart';
 import 'package:weekplanner/shared/services/auth_service.dart';
 
 final _log = Logger('TokenRefreshInterceptor');
@@ -110,7 +111,7 @@ class TokenRefreshInterceptor extends Interceptor {
       onRefreshFailed?.call();
       return handler.next(err);
     } catch (e, stackTrace) {
-      _log.severe('Unexpected error during token refresh', e, stackTrace);
+      logServerError(_log, 'Unexpected error during token refresh', e, stackTrace);
       _refreshCompleter!.complete(null);
       onRefreshFailed?.call();
       return handler.next(err);

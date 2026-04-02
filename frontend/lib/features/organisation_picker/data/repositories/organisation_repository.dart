@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:logging/logging.dart';
 
 import 'package:weekplanner/core/errors/organisation_failure.dart';
+import 'package:weekplanner/core/logging.dart';
 import 'package:weekplanner/features/organisation_picker/domain/repositories/organisation_repository.dart';
 import 'package:weekplanner/shared/models/citizen.dart';
 import 'package:weekplanner/shared/models/grade.dart';
@@ -27,7 +28,7 @@ class OrganisationRepositoryImpl implements OrganisationRepository {
       final response = await _apiService.fetchOrganisations();
       return Right(response.items);
     } catch (e, stackTrace) {
-      _log.severe('Failed to fetch organisations', e, stackTrace);
+      logServerError(_log,'Failed to fetch organisations', e, stackTrace);
       return Left(const FetchOrganisationsFailure());
     }
   }
@@ -44,7 +45,7 @@ class OrganisationRepositoryImpl implements OrganisationRepository {
         (citizens: citizenResponse.items, grades: gradeResponse.items),
       );
     } catch (e, stackTrace) {
-      _log.severe('Failed to fetch citizens and grades', e, stackTrace);
+      logServerError(_log,'Failed to fetch citizens and grades', e, stackTrace);
       return Left(const FetchCitizensFailure());
     }
   }
