@@ -122,10 +122,19 @@ void main() {
         ),
       ));
 
-      // Find the container for today's button — it should have a border
-      // We verify by checking that a Container with a border decoration exists
-      final todayButton = find.text('${now.day}');
-      expect(todayButton, findsOneWidget);
+      // Find the Container ancestor of today's day number text
+      final todayText = find.text('${now.day}');
+      expect(todayText, findsOneWidget);
+
+      final container = tester.widget<Container>(
+        find.ancestor(
+          of: todayText,
+          matching: find.byType(Container),
+        ).first,
+      );
+      final decoration = container.decoration as BoxDecoration?;
+      expect(decoration, isNotNull);
+      expect(decoration?.border, isNotNull);
     });
   });
 }

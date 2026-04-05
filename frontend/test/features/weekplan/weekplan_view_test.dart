@@ -177,6 +177,38 @@ void main() {
       expect(find.text('Annuller'), findsOneWidget);
     });
 
+    testWidgets('delete confirmation confirm calls deleteActivity',
+        (tester) async {
+      final activities = [
+        Activity(
+          activityId: 1,
+          date: DateTime(2026, 3, 22),
+          title: 'Morgenmad',
+        ),
+      ];
+      when(() => mockCubit.state).thenReturn(WeekplanLoaded(
+        selectedDate: testDate,
+        weekDates: testWeekDates,
+        activities: activities,
+      ));
+      when(() => mockCubit.deleteActivity(any()))
+          .thenAnswer((_) async {});
+
+      await tester.pumpWidget(buildSubject());
+
+      // Swipe and tap delete
+      await tester.drag(find.text('Morgenmad'), const Offset(-300, 0));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Slet').last);
+      await tester.pumpAndSettle();
+
+      // Tap confirm "Slet" in dialog
+      await tester.tap(find.text('Slet').last);
+      await tester.pumpAndSettle();
+
+      verify(() => mockCubit.deleteActivity(1)).called(1);
+    });
+
     testWidgets('delete confirmation cancel does not delete', (tester) async {
       final activities = [
         Activity(
