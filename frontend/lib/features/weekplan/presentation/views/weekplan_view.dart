@@ -86,7 +86,12 @@ class _WeekplanViewState extends State<WeekplanView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: !_isSelecting,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) setState(_exitSelectionMode);
+      },
+      child: Scaffold(
       appBar: _isSelecting
           ? _SelectionAppBar(
               selectedCount: _selectedIds.length,
@@ -189,6 +194,7 @@ class _WeekplanViewState extends State<WeekplanView> {
           );
         },
       ),
+    ),
     );
   }
 }
@@ -383,8 +389,10 @@ class _SelectionActionBar extends StatelessWidget {
     final current = cubit.state;
     if (current is! WeekplanLoaded) return;
 
+    final count = selectedIds.length;
+    final ids = selectedIds.toList();
     final result = await cubit.copySelectedToDate(
-      activityIds: selectedIds.toList(),
+      activityIds: ids,
       targetDate: targetDate,
     );
     onDone();
@@ -398,9 +406,7 @@ class _SelectionActionBar extends StatelessWidget {
       final formatted = GirafDateUtils.formatDateDDMM(targetDate);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            '${selectedIds.length} aktiviteter kopieret til $formatted',
-          ),
+          content: Text('$count aktiviteter kopieret til $formatted'),
         ),
       );
     }
@@ -408,7 +414,18 @@ class _SelectionActionBar extends StatelessWidget {
 
   void _bulkComplete(BuildContext context) {
     final cubit = context.read<WeekplanCubit>();
-    for (final id in selectedIds) {
+    final current = cubit.state;
+    if (current is! WeekplanLoaded) return;
+
+    // Only toggle activities that are not yet completed
+    final idsToComplete = selectedIds.where((id) {
+      final activity = current.activities
+          .where((a) => a.activityId == id)
+          .firstOrNull;
+      return activity != null && !activity.isCompleted;
+    }).toList();
+
+    for (final id in idsToComplete) {
       cubit.toggleActivityStatus(id);
     }
     onDone();
