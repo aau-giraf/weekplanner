@@ -93,23 +93,13 @@ class WeekplanCubit extends Cubit<WeekplanState> {
     final updated =
         backup.where((a) => a.activityId != activityId).toList();
 
-    emit(WeekplanLoaded(
-      selectedDate: current.selectedDate,
-      weekDates: current.weekDates,
-      activities: updated,
-      pictogramMedia: current.pictogramMedia,
-    ));
+    emit(current.copyWith(activities: updated));
 
     final result = await _activityRepository.deleteActivity(activityId);
     switch (result) {
       case Left(:final value):
         _log.warning('Delete rollback: ${value.message}');
-        emit(WeekplanLoaded(
-          selectedDate: current.selectedDate,
-          weekDates: current.weekDates,
-          activities: backup,
-          pictogramMedia: current.pictogramMedia,
-        ));
+        emit(current.copyWith(activities: backup));
       case Right():
         break;
     }
@@ -132,12 +122,7 @@ class WeekplanCubit extends Cubit<WeekplanState> {
       return a;
     }).toList();
 
-    emit(WeekplanLoaded(
-      selectedDate: current.selectedDate,
-      weekDates: current.weekDates,
-      activities: updated,
-      pictogramMedia: current.pictogramMedia,
-    ));
+    emit(current.copyWith(activities: updated));
 
     final result = await _activityRepository.toggleActivityStatus(
       activityId,
@@ -152,12 +137,7 @@ class WeekplanCubit extends Cubit<WeekplanState> {
           }
           return a;
         }).toList();
-        emit(WeekplanLoaded(
-          selectedDate: current.selectedDate,
-          weekDates: current.weekDates,
-          activities: rolledBack,
-          pictogramMedia: current.pictogramMedia,
-        ));
+        emit(current.copyWith(activities: rolledBack));
       case Right():
         break;
     }
@@ -183,12 +163,7 @@ class WeekplanCubit extends Cubit<WeekplanState> {
         reordered[i].copyWith(sortOrder: i),
     ];
 
-    emit(WeekplanLoaded(
-      selectedDate: current.selectedDate,
-      weekDates: current.weekDates,
-      activities: withSortOrder,
-      pictogramMedia: current.pictogramMedia,
-    ));
+    emit(current.copyWith(activities: withSortOrder));
 
     final result = await _activityRepository.reorderActivities(
       id: subjectId,
@@ -198,12 +173,7 @@ class WeekplanCubit extends Cubit<WeekplanState> {
     switch (result) {
       case Left(:final value):
         _log.warning('Reorder rollback: ${value.message}');
-        emit(WeekplanLoaded(
-          selectedDate: current.selectedDate,
-          weekDates: current.weekDates,
-          activities: backup,
-          pictogramMedia: current.pictogramMedia,
-        ));
+        emit(current.copyWith(activities: backup));
       case Right():
         break;
     }
@@ -242,13 +212,7 @@ class WeekplanCubit extends Cubit<WeekplanState> {
       }
     }
 
-    emit(WeekplanLoaded(
-      selectedDate: afterState.selectedDate,
-      weekDates: afterState.weekDates,
-      activities: afterState.activities,
-      pictogramMedia: afterState.pictogramMedia,
-      weekActivities: weekMap,
-    ));
+    emit(afterState.copyWith(weekActivities: weekMap));
   }
 
   /// Copy all current day's activities to a target date.
@@ -313,11 +277,6 @@ class WeekplanCubit extends Cubit<WeekplanState> {
       }
     }
 
-    emit(WeekplanLoaded(
-      selectedDate: afterState.selectedDate,
-      weekDates: afterState.weekDates,
-      activities: afterState.activities,
-      pictogramMedia: updatedMedia,
-    ));
+    emit(afterState.copyWith(pictogramMedia: updatedMedia));
   }
 }

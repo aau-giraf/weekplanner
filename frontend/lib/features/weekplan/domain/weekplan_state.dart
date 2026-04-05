@@ -50,6 +50,22 @@ final class WeekplanLoaded extends WeekplanState {
     this.weekActivities = const {},
   });
 
+  WeekplanLoaded copyWith({
+    DateTime? selectedDate,
+    List<DateTime>? weekDates,
+    List<Activity>? activities,
+    Map<int, PictogramMedia>? pictogramMedia,
+    Map<String, List<Activity>>? weekActivities,
+  }) {
+    return WeekplanLoaded(
+      selectedDate: selectedDate ?? this.selectedDate,
+      weekDates: weekDates ?? this.weekDates,
+      activities: activities ?? this.activities,
+      pictogramMedia: pictogramMedia ?? this.pictogramMedia,
+      weekActivities: weekActivities ?? this.weekActivities,
+    );
+  }
+
   @override
   List<Object?> get props =>
       [selectedDate, weekDates, activities, pictogramMedia, weekActivities];
