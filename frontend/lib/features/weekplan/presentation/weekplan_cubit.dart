@@ -209,6 +209,48 @@ class WeekplanCubit extends Cubit<WeekplanState> {
     }
   }
 
+  /// Load activities for all 7 days in the current week.
+  ///
+  /// Stores results in [WeekplanLoaded.weekActivities] keyed by date string.
+  Future<void> loadWeekActivities() async {
+    final current = state;
+    if (current is! WeekplanLoaded) return;
+
+    final results = await Future.wait(
+      current.weekDates.map((date) async {
+        final result = await _activityRepository.fetchActivities(
+          id: subjectId,
+          isCitizen: isCitizen,
+          date: date,
+        );
+        final dateKey = GirafDateUtils.formatQueryDate(date);
+        return (dateKey, result);
+      }),
+    );
+
+    // Re-check state hasn't changed during async gap
+    final afterState = state;
+    if (afterState is! WeekplanLoaded) return;
+
+    final weekMap = <String, List<Activity>>{};
+    for (final (dateKey, result) in results) {
+      switch (result) {
+        case Left():
+          weekMap[dateKey] = const [];
+        case Right(:final value):
+          weekMap[dateKey] = value;
+      }
+    }
+
+    emit(WeekplanLoaded(
+      selectedDate: afterState.selectedDate,
+      weekDates: afterState.weekDates,
+      activities: afterState.activities,
+      pictogramMedia: afterState.pictogramMedia,
+      weekActivities: weekMap,
+    ));
+  }
+
   /// Copy all current day's activities to a target date.
   ///
   /// Returns an error message on failure, or null on success.

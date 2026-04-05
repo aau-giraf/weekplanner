@@ -238,5 +238,38 @@ void main() {
       // deleteActivity should NOT have been called
       verifyNever(() => mockCubit.deleteActivity(any()));
     });
+
+    testWidgets('shows week view toggle button', (tester) async {
+      when(() => mockCubit.state).thenReturn(WeekplanLoading(
+        selectedDate: testDate,
+        weekDates: testWeekDates,
+      ));
+
+      await tester.pumpWidget(buildSubject());
+
+      expect(find.byIcon(Icons.view_week), findsOneWidget);
+      expect(find.byTooltip('Ugeoversigt'), findsOneWidget);
+    });
+
+    testWidgets('tapping toggle switches to week view and calls loadWeekActivities',
+        (tester) async {
+      when(() => mockCubit.state).thenReturn(WeekplanLoaded(
+        selectedDate: testDate,
+        weekDates: testWeekDates,
+        activities: const [],
+        weekActivities: const {},
+      ));
+      when(() => mockCubit.loadWeekActivities())
+          .thenAnswer((_) async {});
+
+      await tester.pumpWidget(buildSubject());
+
+      await tester.tap(find.byIcon(Icons.view_week));
+      await tester.pump();
+
+      verify(() => mockCubit.loadWeekActivities()).called(1);
+      // Icon should switch to day view
+      expect(find.byIcon(Icons.view_day), findsOneWidget);
+    });
   });
 }
