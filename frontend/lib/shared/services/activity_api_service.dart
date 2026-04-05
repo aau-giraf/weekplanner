@@ -120,8 +120,8 @@ class ActivityApiService implements TokenConsumer {
       queryParameters: {
         'sourceDate': sourceDate,
         'targetDate': targetDate,
-        'toCopyIds': activityIds,
       },
+      data: activityIds,
     );
   }
 

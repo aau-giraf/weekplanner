@@ -105,6 +105,11 @@ Future<void> _showCopyDayPicker(BuildContext context) async {
   );
   if (targetDate == null || !context.mounted) return;
 
+  final isSameDay = targetDate.year == sourceDate.year &&
+      targetDate.month == sourceDate.month &&
+      targetDate.day == sourceDate.day;
+  if (isSameDay) return;
+
   final error = await cubit.copyDayToDate(targetDate);
   if (!context.mounted) return;
 
