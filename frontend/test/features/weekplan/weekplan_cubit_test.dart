@@ -244,7 +244,7 @@ void main() {
     );
   });
 
-  group('deleteActivity', () {
+  group('hideActivity', () {
     final activityToDelete = Activity(
       activityId: 99,
       date: DateTime(2026, 3, 22),
@@ -259,51 +259,105 @@ void main() {
     );
 
     blocTest<WeekplanCubit, WeekplanState>(
-      'optimistically removes activity from list on success',
+      'removes activity from list and returns it',
+      build: buildCubit,
+      seed: () => loadedState,
+      act: (cubit) {
+        final removed = cubit.hideActivity(99);
+        expect(removed, activityToDelete);
+      },
+      expect: () => [
+        WeekplanLoaded(
+          selectedDate: testDate,
+          weekDates: testWeekDates,
+          activities: [testActivity],
+        ),
+      ],
+    );
+
+    test('returns null when state is not WeekplanLoaded', () {
+      final cubit = buildCubit();
+      expect(cubit.hideActivity(1), isNull);
+      cubit.close();
+    });
+
+    test('returns null when activity id not found', () {
+      final cubit = buildCubit();
+      cubit.emit(loadedState);
+      expect(cubit.hideActivity(999), isNull);
+      cubit.close();
+    });
+  });
+
+  group('restoreActivity', () {
+    final activityToRestore = Activity(
+      activityId: 99,
+      date: DateTime(2026, 3, 22),
+      sortOrder: 0,
+    );
+
+    blocTest<WeekplanCubit, WeekplanState>(
+      'adds activity back in sort order',
+      build: buildCubit,
+      seed: () => WeekplanLoaded(
+        selectedDate: testDate,
+        weekDates: testWeekDates,
+        activities: [testActivity.copyWith(sortOrder: 1)],
+      ),
+      act: (cubit) => cubit.restoreActivity(activityToRestore),
+      expect: () => [
+        isA<WeekplanLoaded>().having(
+          (s) => s.activities.length,
+          'activities length',
+          2,
+        ),
+      ],
+    );
+  });
+
+  group('confirmDelete', () {
+    final deletedActivity = Activity(
+      activityId: 99,
+      date: DateTime(2026, 3, 22),
+    );
+
+    final loadedState = WeekplanLoaded(
+      selectedDate: testDate,
+      weekDates: testWeekDates,
+      activities: [testActivity],
+    );
+
+    blocTest<WeekplanCubit, WeekplanState>(
+      'calls server delete, no state change on success',
       setUp: () {
         when(() => mockActivityRepo.deleteActivity(99))
             .thenAnswer((_) async => const Right(unit));
       },
       build: buildCubit,
       seed: () => loadedState,
-      act: (cubit) => cubit.deleteActivity(99),
-      expect: () => [
-        WeekplanLoaded(
-          selectedDate: testDate,
-          weekDates: testWeekDates,
-          activities: [testActivity],
-        ),
-      ],
+      act: (cubit) => cubit.confirmDelete(99, deletedActivity),
+      expect: () => <WeekplanState>[],
       verify: (_) {
         verify(() => mockActivityRepo.deleteActivity(99)).called(1);
       },
     );
 
     blocTest<WeekplanCubit, WeekplanState>(
-      'rolls back to original list on failure',
+      'restores activity on server failure',
       setUp: () {
         when(() => mockActivityRepo.deleteActivity(99))
             .thenAnswer((_) async => const Left(DeleteActivityFailure()));
       },
       build: buildCubit,
       seed: () => loadedState,
-      act: (cubit) => cubit.deleteActivity(99),
+      act: (cubit) => cubit.confirmDelete(99, deletedActivity),
       expect: () => [
-        WeekplanLoaded(
-          selectedDate: testDate,
-          weekDates: testWeekDates,
-          activities: [testActivity],
+        isA<WeekplanLoaded>().having(
+          (s) => s.activities.length,
+          'activities length',
+          2,
         ),
-        loadedState,
       ],
-    );
-
-    blocTest<WeekplanCubit, WeekplanState>(
-      'does nothing when state is not WeekplanLoaded',
-      build: buildCubit,
-      // Initial state is WeekplanLoading
-      act: (cubit) => cubit.deleteActivity(1),
-      expect: () => <WeekplanState>[],
     );
   });
 

@@ -372,8 +372,31 @@ class _ActivityList extends StatelessWidget {
         ],
       ),
     );
-    if (confirmed == true) {
-      cubit.deleteActivity(activity.activityId);
-    }
+    if (confirmed != true || !context.mounted) return;
+
+    final removed = cubit.hideActivity(activity.activityId);
+    if (removed == null || !context.mounted) return;
+
+    var undone = false;
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Aktivitet "${activity.title ?? 'denne aktivitet'}" slettet',
+        ),
+        duration: const Duration(seconds: 5),
+        action: SnackBarAction(
+          label: 'Fortryd',
+          onPressed: () {
+            undone = true;
+            cubit.restoreActivity(removed);
+          },
+        ),
+      ),
+    ).closed.then((_) {
+      if (!undone && context.mounted) {
+        cubit.confirmDelete(activity.activityId, removed);
+      }
+    });
   }
 }

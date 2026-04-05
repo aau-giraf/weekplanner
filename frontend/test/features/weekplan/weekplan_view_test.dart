@@ -177,22 +177,19 @@ void main() {
       expect(find.text('Annuller'), findsOneWidget);
     });
 
-    testWidgets('delete confirmation confirm calls deleteActivity',
+    testWidgets('delete confirmation confirm hides activity and shows undo snackbar',
         (tester) async {
-      final activities = [
-        Activity(
-          activityId: 1,
-          date: DateTime(2026, 3, 22),
-          title: 'Morgenmad',
-        ),
-      ];
+      final activity = Activity(
+        activityId: 1,
+        date: DateTime(2026, 3, 22),
+        title: 'Morgenmad',
+      );
       when(() => mockCubit.state).thenReturn(WeekplanLoaded(
         selectedDate: testDate,
         weekDates: testWeekDates,
-        activities: activities,
+        activities: [activity],
       ));
-      when(() => mockCubit.deleteActivity(any()))
-          .thenAnswer((_) async {});
+      when(() => mockCubit.hideActivity(any())).thenReturn(activity);
 
       await tester.pumpWidget(buildSubject());
 
@@ -206,7 +203,40 @@ void main() {
       await tester.tap(find.text('Slet').last);
       await tester.pumpAndSettle();
 
-      verify(() => mockCubit.deleteActivity(1)).called(1);
+      verify(() => mockCubit.hideActivity(1)).called(1);
+      // Undo snackbar should be visible
+      expect(find.text('Fortryd'), findsOneWidget);
+    });
+
+    testWidgets('tapping undo in snackbar restores activity',
+        (tester) async {
+      final activity = Activity(
+        activityId: 1,
+        date: DateTime(2026, 3, 22),
+        title: 'Morgenmad',
+      );
+      when(() => mockCubit.state).thenReturn(WeekplanLoaded(
+        selectedDate: testDate,
+        weekDates: testWeekDates,
+        activities: [activity],
+      ));
+      when(() => mockCubit.hideActivity(any())).thenReturn(activity);
+
+      await tester.pumpWidget(buildSubject());
+
+      // Swipe → delete → confirm
+      await tester.drag(find.text('Morgenmad'), const Offset(-300, 0));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Slet').last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Slet').last);
+      await tester.pumpAndSettle();
+
+      // Tap undo
+      await tester.tap(find.text('Fortryd'));
+      await tester.pumpAndSettle();
+
+      verify(() => mockCubit.restoreActivity(activity)).called(1);
     });
 
     testWidgets('delete confirmation cancel does not delete', (tester) async {
@@ -235,8 +265,8 @@ void main() {
       await tester.tap(find.text('Annuller'));
       await tester.pumpAndSettle();
 
-      // deleteActivity should NOT have been called
-      verifyNever(() => mockCubit.deleteActivity(any()));
+      // hideActivity should NOT have been called
+      verifyNever(() => mockCubit.hideActivity(any()));
     });
 
     testWidgets('shows week view toggle button', (tester) async {
