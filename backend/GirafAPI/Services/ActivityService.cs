@@ -117,7 +117,7 @@ public class ActivityService : IActivityService
                 return ServiceResult<List<ActivityDTO>>.Fail(ToCoreError(picResult, "Pictogram"));
         }
 
-        var created = new List<ActivityDTO>();
+        var activities = new List<Activity>();
         foreach (var date in dto.Dates)
         {
             var activity = dto.ToEntity(date);
@@ -127,15 +127,18 @@ public class ActivityService : IActivityService
                 .Where(owner.ToFilter())
                 .Where(a => a.Date == date)
                 .MaxAsync(a => (int?)a.SortOrder, ct) ?? -1;
-            activity.SortOrder = maxOrder + 1;
+            // Account for other activities being added for the same date in this batch
+            var batchOffset = activities.Count(a => a.Date == date);
+            activity.SortOrder = maxOrder + 1 + batchOffset;
 
             _db.Activities.Add(activity);
-            await _db.SaveChangesAsync(ct);
-
-            created.Add(activity.ToDTO());
+            activities.Add(activity);
         }
 
-        return ServiceResult<List<ActivityDTO>>.Success(created);
+        await _db.SaveChangesAsync(ct);
+
+        return ServiceResult<List<ActivityDTO>>.Success(
+            activities.Select(a => a.ToDTO()).ToList());
     }
 
     public async Task<ServiceResult<ActivityDTO>> UpdateActivityAsync(

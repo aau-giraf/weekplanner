@@ -115,6 +115,80 @@ void main() {
     );
   });
 
+  group('toggleRepeatDay', () {
+    blocTest<ActivityFormCubit, ActivityFormState>(
+      'adds weekday to repeatDays',
+      build: buildCubit,
+      act: (cubit) => cubit.toggleRepeatDay(1),
+      expect: () => [
+        isA<ActivityFormReady>().having(
+          (s) => s.form.repeatDays,
+          'repeatDays',
+          {1},
+        ),
+      ],
+    );
+
+    blocTest<ActivityFormCubit, ActivityFormState>(
+      'removes weekday from repeatDays when already present',
+      build: buildCubit,
+      act: (cubit) {
+        cubit.toggleRepeatDay(1);
+        cubit.toggleRepeatDay(1);
+      },
+      expect: () => [
+        isA<ActivityFormReady>().having(
+          (s) => s.form.repeatDays,
+          'repeatDays',
+          {1},
+        ),
+        isA<ActivityFormReady>().having(
+          (s) => s.form.repeatDays,
+          'repeatDays',
+          <int>{},
+        ),
+      ],
+    );
+  });
+
+  group('setRepeatWeekdays', () {
+    blocTest<ActivityFormCubit, ActivityFormState>(
+      'sets Mon-Fri',
+      build: buildCubit,
+      act: (cubit) => cubit.setRepeatWeekdays(),
+      expect: () => [
+        isA<ActivityFormReady>().having(
+          (s) => s.form.repeatDays,
+          'repeatDays',
+          {1, 2, 3, 4, 5},
+        ),
+      ],
+    );
+  });
+
+  group('clearRepeatDays', () {
+    blocTest<ActivityFormCubit, ActivityFormState>(
+      'clears all repeat days',
+      build: buildCubit,
+      act: (cubit) {
+        cubit.setRepeatWeekdays();
+        cubit.clearRepeatDays();
+      },
+      expect: () => [
+        isA<ActivityFormReady>().having(
+          (s) => s.form.repeatDays,
+          'repeatDays',
+          {1, 2, 3, 4, 5},
+        ),
+        isA<ActivityFormReady>().having(
+          (s) => s.form.repeatDays,
+          'repeatDays',
+          <int>{},
+        ),
+      ],
+    );
+  });
+
   group('setStartTime', () {
     blocTest<ActivityFormCubit, ActivityFormState>(
       'emits updated ActivityFormReady with new start time',

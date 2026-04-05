@@ -271,8 +271,6 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
     final existing = s.form.existingActivity;
     final useBatch = existing == null && s.form.repeatDays.isNotEmpty;
 
-    bool failed = false;
-
     if (useBatch) {
       // Batch create: compute dates from the current week matching repeatDays
       final weekDates = GirafDateUtils.getWeekDates(s.form.date);
@@ -296,10 +294,12 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
         isCitizen: isCitizen,
         data: batchData,
       );
-      failed = result.isLeft();
-      if (failed) {
-        _emitReady(error: result.getLeft().toNullable()?.message);
-        return false;
+      switch (result) {
+        case Left(:final value):
+          _emitReady(error: value.message);
+          return false;
+        case Right():
+          break;
       }
     } else {
       final data = {

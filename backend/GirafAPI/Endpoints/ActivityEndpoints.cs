@@ -144,14 +144,14 @@ public static class ActivityEndpoints
 
                     var result = await service.CreateBatchActivitiesAsync(
                         new ActivityOwner.Citizen(citizenId), dto, token, ct);
-                    return result.ToHttpResult(v => TypedResults.Created("", v));
+                    return result.ToHttpResult(v => TypedResults.Ok(v));
                 })
             .WithName("BatchCreateActivityForCitizen")
             .WithDescription("Creates activities on multiple dates for a citizen.")
             .WithTags("Activities")
             .RequireAuthorization()
             .Accepts<CreateBatchActivityDTO>("application/json")
-            .Produces<List<ActivityDTO>>(StatusCodes.Status201Created)
+            .Produces<List<ActivityDTO>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
@@ -168,14 +168,14 @@ public static class ActivityEndpoints
 
                     var result = await service.CreateBatchActivitiesAsync(
                         new ActivityOwner.Grade(gradeId), dto, token, ct);
-                    return result.ToHttpResult(v => TypedResults.Created("", v));
+                    return result.ToHttpResult(v => TypedResults.Ok(v));
                 })
             .WithName("BatchCreateActivityForGrade")
             .WithDescription("Creates activities on multiple dates for a grade.")
             .WithTags("Activities")
             .RequireAuthorization()
             .Accepts<CreateBatchActivityDTO>("application/json")
-            .Produces<List<ActivityDTO>>(StatusCodes.Status201Created)
+            .Produces<List<ActivityDTO>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
