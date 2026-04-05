@@ -12,6 +12,7 @@ class ActivityListItem extends StatefulWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback onToggleStatus;
+  final VoidCallback? onLongPress;
   final String? imageUrl;
   final String? soundUrl;
 
@@ -21,6 +22,7 @@ class ActivityListItem extends StatefulWidget {
     required this.onEdit,
     required this.onDelete,
     required this.onToggleStatus,
+    this.onLongPress,
     this.imageUrl,
     this.soundUrl,
   });
@@ -97,6 +99,7 @@ class _ActivityListItemState extends State<ActivityListItem> {
               : context.girafColors.pendingBackground,
           child: InkWell(
             onTap: hasSound ? _togglePlayback : null,
+            onLongPress: widget.onLongPress,
             borderRadius: BorderRadius.circular(12),
             child: Padding(
               padding: const EdgeInsets.all(12),
