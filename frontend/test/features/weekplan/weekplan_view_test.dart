@@ -24,15 +24,16 @@ void main() {
     when(() => mockCubit.weekNumber).thenReturn(12);
   });
 
-  Widget buildSubject() {
+  Widget buildSubject({String? subjectName}) {
     return MaterialApp(
       theme: girafTheme,
       home: BlocProvider<WeekplanCubit>.value(
         value: mockCubit,
-        child: const WeekplanView(
+        child: WeekplanView(
           citizenId: 42,
           isCitizen: true,
           orgId: 1,
+          subjectName: subjectName,
         ),
       ),
     );
@@ -119,6 +120,91 @@ void main() {
       await tester.tap(find.text('Prøv igen'));
 
       verify(() => mockCubit.loadActivities()).called(1);
+    });
+
+    testWidgets('shows citizen name in app bar when provided', (tester) async {
+      when(() => mockCubit.state).thenReturn(WeekplanLoading(
+        selectedDate: testDate,
+        weekDates: testWeekDates,
+      ));
+
+      await tester.pumpWidget(buildSubject(subjectName: 'Anders'));
+
+      expect(find.text('Ugeplan — Anders'), findsOneWidget);
+    });
+
+    testWidgets('shows generic title when no citizen name', (tester) async {
+      when(() => mockCubit.state).thenReturn(WeekplanLoading(
+        selectedDate: testDate,
+        weekDates: testWeekDates,
+      ));
+
+      await tester.pumpWidget(buildSubject());
+
+      expect(find.text('Ugeplan'), findsOneWidget);
+    });
+
+    testWidgets('delete shows confirmation dialog', (tester) async {
+      final activities = [
+        Activity(
+          activityId: 1,
+          date: DateTime(2026, 3, 22),
+          title: 'Morgenmad',
+        ),
+      ];
+      when(() => mockCubit.state).thenReturn(WeekplanLoaded(
+        selectedDate: testDate,
+        weekDates: testWeekDates,
+        activities: activities,
+      ));
+
+      await tester.pumpWidget(buildSubject());
+
+      // Swipe to reveal delete action
+      await tester.drag(find.text('Morgenmad'), const Offset(-300, 0));
+      await tester.pumpAndSettle();
+
+      // Tap delete
+      await tester.tap(find.text('Slet').last);
+      await tester.pumpAndSettle();
+
+      // Confirmation dialog should appear
+      expect(find.text('Slet aktivitet'), findsOneWidget);
+      expect(
+        find.text('Er du sikker på du vil slette "Morgenmad"?'),
+        findsOneWidget,
+      );
+      expect(find.text('Annuller'), findsOneWidget);
+    });
+
+    testWidgets('delete confirmation cancel does not delete', (tester) async {
+      final activities = [
+        Activity(
+          activityId: 1,
+          date: DateTime(2026, 3, 22),
+          title: 'Morgenmad',
+        ),
+      ];
+      when(() => mockCubit.state).thenReturn(WeekplanLoaded(
+        selectedDate: testDate,
+        weekDates: testWeekDates,
+        activities: activities,
+      ));
+
+      await tester.pumpWidget(buildSubject());
+
+      // Swipe and tap delete
+      await tester.drag(find.text('Morgenmad'), const Offset(-300, 0));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Slet').last);
+      await tester.pumpAndSettle();
+
+      // Tap cancel
+      await tester.tap(find.text('Annuller'));
+      await tester.pumpAndSettle();
+
+      // deleteActivity should NOT have been called
+      verifyNever(() => mockCubit.deleteActivity(any()));
     });
   });
 }

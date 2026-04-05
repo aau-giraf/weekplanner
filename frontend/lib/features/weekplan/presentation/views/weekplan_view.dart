@@ -14,19 +14,23 @@ class WeekplanView extends StatelessWidget {
   final int citizenId;
   final bool isCitizen;
   final int? orgId;
+  final String? subjectName;
 
   const WeekplanView({
     super.key,
     required this.citizenId,
     required this.isCitizen,
     this.orgId,
+    this.subjectName,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ugeplan'),
+        title: Text(
+          subjectName != null ? 'Ugeplan — $subjectName' : 'Ugeplan',
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -53,6 +57,7 @@ class WeekplanView extends StatelessWidget {
                 selectedDate: state.selectedDate,
                 onPreviousWeek: cubit.goToPreviousWeek,
                 onNextWeek: cubit.goToNextWeek,
+                onGoToToday: cubit.goToToday,
                 onSelectDate: cubit.selectDate,
               ),
               const Divider(height: 1),
@@ -209,11 +214,40 @@ class _ActivityList extends StatelessWidget {
               context.read<WeekplanCubit>().loadActivities();
             }
           },
-          onDelete: () => cubit.deleteActivity(activity.activityId),
+          onDelete: () => _confirmDelete(context, activity, cubit),
           onToggleStatus: () =>
               cubit.toggleActivityStatus(activity.activityId),
         );
       },
     );
+  }
+
+  Future<void> _confirmDelete(
+    BuildContext context,
+    Activity activity,
+    WeekplanCubit cubit,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Slet aktivitet'),
+        content: Text(
+          'Er du sikker på du vil slette "${activity.title ?? 'denne aktivitet'}"?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Annuller'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Slet'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      cubit.deleteActivity(activity.activityId);
+    }
   }
 }

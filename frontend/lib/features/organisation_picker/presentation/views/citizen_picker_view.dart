@@ -97,7 +97,10 @@ class _CitizenGradeList extends StatelessWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
               final type = item.isCitizen ? 'citizen' : 'grade';
-              context.go('/weekplan/${item.id}?type=$type&orgId=$orgId');
+              final encodedName = Uri.encodeComponent(item.name);
+              context.go(
+                '/weekplan/${item.id}?type=$type&orgId=$orgId&name=$encodedName',
+              );
             },
           ),
         );
