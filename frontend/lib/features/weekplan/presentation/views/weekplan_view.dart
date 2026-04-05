@@ -382,7 +382,7 @@ class _ActivityList extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'Aktivitet "${activity.title ?? 'Unavngivet'}" slettet',
+          'Aktivitet "${activity.title ?? 'denne aktivitet'}" slettet',
         ),
         duration: const Duration(seconds: 5),
         action: SnackBarAction(
@@ -394,7 +394,7 @@ class _ActivityList extends StatelessWidget {
         ),
       ),
     ).closed.then((_) {
-      if (!undone) {
+      if (!undone && context.mounted) {
         cubit.confirmDelete(activity.activityId, removed);
       }
     });
