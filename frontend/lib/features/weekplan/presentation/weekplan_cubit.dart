@@ -84,22 +84,45 @@ class WeekplanCubit extends Cubit<WeekplanState> {
   /// Navigate to today.
   Future<void> goToToday() => selectDate(DateTime.now());
 
-  /// Optimistically delete an activity.
-  Future<void> deleteActivity(int activityId) async {
+  /// Remove an activity from the UI without calling the server.
+  ///
+  /// Returns the removed [Activity] so the caller can undo or confirm.
+  /// Returns null if the activity was not found or state is not loaded.
+  Activity? hideActivity(int activityId) {
+    final current = state;
+    if (current is! WeekplanLoaded) return null;
+
+    final index =
+        current.activities.indexWhere((a) => a.activityId == activityId);
+    if (index == -1) return null;
+
+    final removed = current.activities[index];
+    final updated =
+        current.activities.where((a) => a.activityId != activityId).toList();
+    emit(current.copyWith(activities: updated));
+    return removed;
+  }
+
+  /// Restore a previously hidden activity to the list.
+  void restoreActivity(Activity activity) {
     final current = state;
     if (current is! WeekplanLoaded) return;
 
-    final backup = current.activities;
-    final updated =
-        backup.where((a) => a.activityId != activityId).toList();
+    final restored = [...current.activities, activity]
+      ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
+    emit(current.copyWith(activities: restored));
+  }
 
-    emit(current.copyWith(activities: updated));
-
+  /// Permanently delete an activity on the server.
+  ///
+  /// Call after the undo window has passed. If the server call fails,
+  /// the activity is restored to the list.
+  Future<void> confirmDelete(int activityId, Activity backup) async {
     final result = await _activityRepository.deleteActivity(activityId);
     switch (result) {
       case Left(:final value):
-        _log.warning('Delete rollback: ${value.message}');
-        emit(current.copyWith(activities: backup));
+        _log.warning('Delete failed, restoring: ${value.message}');
+        restoreActivity(backup);
       case Right():
         break;
     }
