@@ -85,6 +85,36 @@ void main() {
     });
   });
 
+  group('setTitle', () {
+    blocTest<ActivityFormCubit, ActivityFormState>(
+      'emits updated ActivityFormReady with new title',
+      build: buildCubit,
+      act: (cubit) => cubit.setTitle('Morgenmad'),
+      expect: () => [
+        isA<ActivityFormReady>().having(
+          (s) => s.form.title,
+          'title',
+          'Morgenmad',
+        ),
+      ],
+    );
+  });
+
+  group('setDate', () {
+    blocTest<ActivityFormCubit, ActivityFormState>(
+      'emits updated ActivityFormReady with new date',
+      build: buildCubit,
+      act: (cubit) => cubit.setDate(DateTime(2026, 4, 1)),
+      expect: () => [
+        isA<ActivityFormReady>().having(
+          (s) => s.form.date,
+          'date',
+          DateTime(2026, 4, 1),
+        ),
+      ],
+    );
+  });
+
   group('setStartTime', () {
     blocTest<ActivityFormCubit, ActivityFormState>(
       'emits updated ActivityFormReady with new start time',
