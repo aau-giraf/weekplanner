@@ -301,5 +301,65 @@ void main() {
       // Icon should switch to day view
       expect(find.byIcon(Icons.view_day), findsOneWidget);
     });
+    testWidgets('long-press enters selection mode with checkboxes',
+        (tester) async {
+      final activities = [
+        Activity(
+          activityId: 1,
+          date: DateTime(2026, 3, 22),
+          title: 'Morgenmad',
+        ),
+        Activity(
+          activityId: 2,
+          date: DateTime(2026, 3, 22),
+          title: 'Frokost',
+        ),
+      ];
+      when(() => mockCubit.state).thenReturn(WeekplanLoaded(
+        selectedDate: testDate,
+        weekDates: testWeekDates,
+        activities: activities,
+      ));
+
+      await tester.pumpWidget(buildSubject());
+
+      // Long-press first activity
+      await tester.longPress(find.text('Morgenmad'));
+      await tester.pumpAndSettle();
+
+      // Selection mode indicators
+      expect(find.text('1 valgt'), findsOneWidget);
+      expect(find.text('Vælg alle'), findsOneWidget);
+      expect(find.byType(Checkbox), findsWidgets);
+    });
+
+    testWidgets('close button exits selection mode', (tester) async {
+      final activities = [
+        Activity(
+          activityId: 1,
+          date: DateTime(2026, 3, 22),
+          title: 'Morgenmad',
+        ),
+      ];
+      when(() => mockCubit.state).thenReturn(WeekplanLoaded(
+        selectedDate: testDate,
+        weekDates: testWeekDates,
+        activities: activities,
+      ));
+
+      await tester.pumpWidget(buildSubject());
+
+      // Enter selection mode
+      await tester.longPress(find.text('Morgenmad'));
+      await tester.pumpAndSettle();
+      expect(find.text('1 valgt'), findsOneWidget);
+
+      // Close selection
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pumpAndSettle();
+
+      // Back to normal mode
+      expect(find.text('1 valgt'), findsNothing);
+    });
   });
 }
