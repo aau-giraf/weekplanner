@@ -19,10 +19,25 @@ abstract class Activity with _$Activity {
     @Default(0) int sortOrder,
     @Default(false) bool isCompleted,
     int? pictogramId,
+    int? selectedOptionIndex,
+    @Default([]) List<ActivityOption> options,
   }) = _Activity;
 
   factory Activity.fromJson(Map<String, dynamic> json) =>
       _$ActivityFromJson(json);
+}
+
+@freezed
+abstract class ActivityOption with _$ActivityOption {
+  const factory ActivityOption({
+    required int id,
+    String? title,
+    int? pictogramId,
+    @Default(0) int sortOrder,
+  }) = _ActivityOption;
+
+  factory ActivityOption.fromJson(Map<String, dynamic> json) =>
+      _$ActivityOptionFromJson(json);
 }
 
 final _log = Logger('Activity');

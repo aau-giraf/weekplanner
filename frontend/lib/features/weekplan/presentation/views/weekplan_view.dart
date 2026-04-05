@@ -6,6 +6,7 @@ import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/weekplan/domain/weekplan_state.dart';
 import 'package:weekplanner/features/weekplan/presentation/weekplan_cubit.dart';
 import 'package:weekplanner/features/weekplan/presentation/widgets/activity_list_item.dart';
+import 'package:weekplanner/features/weekplan/presentation/widgets/choice_selector_dialog.dart';
 import 'package:weekplanner/features/weekplan/presentation/widgets/week_overview.dart';
 import 'package:weekplanner/features/weekplan/presentation/widgets/week_selector.dart';
 import 'package:weekplanner/shared/models/activity.dart';
@@ -660,6 +661,10 @@ class _ActivityList extends StatelessWidget {
           imageUrl: media?.imageUrl,
           soundUrl: media?.soundUrl,
           onLongPress: () => onLongPress(activity.activityId),
+          onChoiceTap: activity.options.isNotEmpty &&
+                  activity.selectedOptionIndex == null
+              ? () => _showChoiceSelector(context, activity, cubit)
+              : null,
           onEdit: () async {
             final dateStr =
                 activity.date.toIso8601String().split('T').first;
@@ -733,6 +738,26 @@ class _ActivityList extends StatelessWidget {
         cubit.confirmDelete(activity.activityId, removed);
       }
     });
+  }
+
+  Future<void> _showChoiceSelector(
+    BuildContext context,
+    Activity activity,
+    WeekplanCubit cubit,
+  ) async {
+    final current = cubit.state;
+    if (current is! WeekplanLoaded) return;
+
+    final selectedIndex = await showDialog<int>(
+      context: context,
+      builder: (context) => ChoiceSelectorDialog(
+        activity: activity,
+        pictogramMedia: current.pictogramMedia,
+      ),
+    );
+    if (selectedIndex == null || !context.mounted) return;
+
+    cubit.selectOption(activity.activityId, selectedIndex);
   }
 }
 

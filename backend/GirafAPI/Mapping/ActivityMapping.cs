@@ -7,7 +7,7 @@ public static class ActivityMapping
 {
     public static Activity ToEntity(this CreateActivityDTO dto)
     {
-        return new Activity
+        var activity = new Activity
         {
             Date = dto.Date,
             StartTime = dto.StartTime,
@@ -15,8 +15,20 @@ public static class ActivityMapping
             Title = dto.Title,
             SortOrder = dto.SortOrder ?? 0,
             IsCompleted = false,
-            PictogramId = dto.PictogramId
+            PictogramId = dto.PictogramId,
         };
+
+        if (dto.Options is { Count: > 0 })
+        {
+            activity.Options = dto.Options.Select((o, i) => new ActivityOption
+            {
+                Title = o.Title,
+                PictogramId = o.PictogramId,
+                SortOrder = i,
+            }).ToList();
+        }
+
+        return activity;
     }
 
     public static Activity ToEntity(this CreateBatchActivityDTO dto, DateOnly date)
@@ -43,7 +55,19 @@ public static class ActivityMapping
             activity.Title,
             activity.SortOrder,
             activity.IsCompleted,
-            activity.PictogramId
+            activity.PictogramId,
+            activity.SelectedOptionIndex,
+            activity.Options.Select(o => o.ToDTO()).ToList()
+        );
+    }
+
+    public static ActivityOptionDTO ToDTO(this ActivityOption option)
+    {
+        return new ActivityOptionDTO(
+            option.Id,
+            option.Title,
+            option.PictogramId,
+            option.SortOrder
         );
     }
 }

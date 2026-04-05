@@ -56,6 +56,20 @@ class ActivityRepositoryImpl implements ActivityRepository {
   }
 
   @override
+  Future<Either<ActivityFailure, Activity>> selectOption(
+    int activityId,
+    int optionIndex,
+  ) async {
+    try {
+      final activity = await _apiService.selectOption(activityId, optionIndex);
+      return Right(activity);
+    } catch (e, stackTrace) {
+      logServerError(_log, 'Failed to select option', e, stackTrace);
+      return Left(const UpdateActivityFailure());
+    }
+  }
+
+  @override
   Future<Either<ActivityFailure, List<Activity>>> batchCreateActivities({
     required int id,
     required bool isCitizen,

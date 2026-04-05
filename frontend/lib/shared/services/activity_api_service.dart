@@ -118,6 +118,14 @@ class ActivityApiService implements TokenConsumer {
     return Activity.fromJson(response.data! as Map<String, dynamic>);
   }
 
+  // Select an option on a choice activity
+  Future<Activity> selectOption(int activityId, int optionIndex) async {
+    final response = await _dio.put(
+      '/weekplan/activity/$activityId/select-option/$optionIndex',
+    );
+    return Activity.fromJson(response.data! as Map<String, dynamic>);
+  }
+
   // Delete activity
   Future<void> deleteActivity(int activityId) async {
     await _dio.delete('/weekplan/activity/$activityId');

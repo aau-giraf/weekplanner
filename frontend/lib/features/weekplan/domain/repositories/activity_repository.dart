@@ -26,6 +26,12 @@ abstract interface class ActivityRepository {
     required Map<String, dynamic> data,
   });
 
+  /// Select an option on a choice activity.
+  Future<Either<ActivityFailure, Activity>> selectOption(
+    int activityId,
+    int optionIndex,
+  );
+
   /// Update an existing activity.
   Future<Either<ActivityFailure, Activity>> updateActivity(
     int activityId,

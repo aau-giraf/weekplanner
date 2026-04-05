@@ -34,6 +34,12 @@ final class ActivityFormData with EquatableMixin {
   /// Only used when creating new activities.
   final Set<int> repeatDays;
 
+  /// Whether this is a choice activity with multiple options.
+  final bool isChoiceActivity;
+
+  /// Options for a choice activity. Each has a title and pictogramId.
+  final List<ChoiceOptionData> choiceOptions;
+
   const ActivityFormData({
     this.title = '',
     this.hasTime = false,
@@ -42,6 +48,8 @@ final class ActivityFormData with EquatableMixin {
     required this.date,
     this.existingActivity,
     this.repeatDays = const {},
+    this.isChoiceActivity = false,
+    this.choiceOptions = const [],
   });
 
   /// Whether this is an edit (vs. create) operation.
@@ -56,6 +64,8 @@ final class ActivityFormData with EquatableMixin {
     Activity? existingActivity,
     bool clearExistingActivity = false,
     Set<int>? repeatDays,
+    bool? isChoiceActivity,
+    List<ChoiceOptionData>? choiceOptions,
   }) {
     return ActivityFormData(
       title: title ?? this.title,
@@ -67,12 +77,53 @@ final class ActivityFormData with EquatableMixin {
           ? null
           : (existingActivity ?? this.existingActivity),
       repeatDays: repeatDays ?? this.repeatDays,
+      isChoiceActivity: isChoiceActivity ?? this.isChoiceActivity,
+      choiceOptions: choiceOptions ?? this.choiceOptions,
     );
   }
 
   @override
-  List<Object?> get props =>
-      [title, hasTime, startTime, endTime, date, existingActivity, repeatDays];
+  List<Object?> get props => [
+        title,
+        hasTime,
+        startTime,
+        endTime,
+        date,
+        existingActivity,
+        repeatDays,
+        isChoiceActivity,
+        choiceOptions,
+      ];
+}
+
+/// Data for a single choice option in the activity form.
+final class ChoiceOptionData with EquatableMixin {
+  final String title;
+  final int? pictogramId;
+  final String? pictogramName;
+
+  const ChoiceOptionData({
+    this.title = '',
+    this.pictogramId,
+    this.pictogramName,
+  });
+
+  ChoiceOptionData copyWith({
+    String? title,
+    int? pictogramId,
+    String? pictogramName,
+    bool clearPictogram = false,
+  }) {
+    return ChoiceOptionData(
+      title: title ?? this.title,
+      pictogramId: clearPictogram ? null : (pictogramId ?? this.pictogramId),
+      pictogramName:
+          clearPictogram ? null : (pictogramName ?? this.pictogramName),
+    );
+  }
+
+  @override
+  List<Object?> get props => [title, pictogramId, pictogramName];
 }
 
 // ── Sub-state: Pictogram selection ─────────────────────────

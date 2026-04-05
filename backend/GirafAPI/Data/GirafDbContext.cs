@@ -10,6 +10,7 @@ namespace GirafAPI.Data
         }
 
         public DbSet<Activity> Activities { get; set; }
+        public DbSet<ActivityOption> ActivityOptions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -20,6 +21,10 @@ namespace GirafAPI.Data
                 entity.HasIndex(e => e.CitizenId);
                 entity.HasIndex(e => e.GradeId);
                 entity.HasIndex(e => e.PictogramId);
+                entity.HasMany(e => e.Options)
+                    .WithOne(o => o.Activity)
+                    .HasForeignKey(o => o.ActivityId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }
