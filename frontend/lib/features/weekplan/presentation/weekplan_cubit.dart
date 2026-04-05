@@ -81,6 +81,9 @@ class WeekplanCubit extends Cubit<WeekplanState> {
   Future<void> goToPreviousWeek() =>
       selectDate(state.selectedDate.subtract(const Duration(days: 7)));
 
+  /// Navigate to today.
+  Future<void> goToToday() => selectDate(DateTime.now());
+
   /// Optimistically delete an activity.
   Future<void> deleteActivity(int activityId) async {
     final current = state;

@@ -8,6 +8,7 @@ class WeekSelector extends StatelessWidget {
   final DateTime selectedDate;
   final VoidCallback onPreviousWeek;
   final VoidCallback onNextWeek;
+  final VoidCallback onGoToToday;
   final ValueChanged<DateTime> onSelectDate;
 
   const WeekSelector({
@@ -17,11 +18,15 @@ class WeekSelector extends StatelessWidget {
     required this.selectedDate,
     required this.onPreviousWeek,
     required this.onNextWeek,
+    required this.onGoToToday,
     required this.onSelectDate,
   });
 
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
+    final isCurrentWeek = weekDates.any((d) => _isSameDay(d, now));
+    final isTodaySelected = _isSameDay(selectedDate, now);
     return Column(
       children: [
         // Week navigation
@@ -34,11 +39,28 @@ class WeekSelector extends StatelessWidget {
                 icon: const Icon(Icons.chevron_left),
                 onPressed: onPreviousWeek,
               ),
-              Text(
-                'Uge $weekNumber',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+              GestureDetector(
+                onTap: isTodaySelected ? null : onGoToToday,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Uge $weekNumber',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
+                    if (!isCurrentWeek || !isTodaySelected) ...[
+                      const SizedBox(width: 8),
+                      Text(
+                        'I dag',
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                              color: context.colorScheme.primary,
+                            ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
               IconButton(
                 icon: const Icon(Icons.chevron_right),
@@ -56,14 +78,14 @@ class WeekSelector extends StatelessWidget {
             itemCount: weekDates.length,
             itemBuilder: (context, index) {
               final date = weekDates[index];
-              final isSelected = date.day == selectedDate.day &&
-                  date.month == selectedDate.month &&
-                  date.year == selectedDate.year;
+              final isSelected = _isSameDay(date, selectedDate);
+              final isToday = _isSameDay(date, now);
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 child: _DayButton(
                   date: date,
                   isSelected: isSelected,
+                  isToday: isToday,
                   onTap: () => onSelectDate(date),
                 ),
               );
@@ -73,16 +95,21 @@ class WeekSelector extends StatelessWidget {
       ],
     );
   }
+
+  static bool _isSameDay(DateTime a, DateTime b) =>
+      a.day == b.day && a.month == b.month && a.year == b.year;
 }
 
 class _DayButton extends StatelessWidget {
   final DateTime date;
   final bool isSelected;
+  final bool isToday;
   final VoidCallback onTap;
 
   const _DayButton({
     required this.date,
     required this.isSelected,
+    required this.isToday,
     required this.onTap,
   });
 
@@ -97,6 +124,12 @@ class _DayButton extends StatelessWidget {
               ? context.colorScheme.primary
               : context.colorScheme.surfaceContainerLow,
           borderRadius: BorderRadius.circular(12),
+          border: isToday && !isSelected
+              ? Border.all(
+                  color: context.colorScheme.primary,
+                  width: 2,
+                )
+              : null,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

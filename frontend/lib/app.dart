@@ -75,6 +75,7 @@ GoRouter createRouter({
           final isCitizen = type == 'citizen';
           final orgId =
               int.tryParse(state.uri.queryParameters['orgId'] ?? '');
+          final subjectName = state.uri.queryParameters['name'];
           final activityRepo = context.read<ActivityRepository>();
           final pictogramRepo = context.read<PictogramRepository>();
           return BlocProvider(
@@ -88,6 +89,7 @@ GoRouter createRouter({
               citizenId: citizenId,
               isCitizen: isCitizen,
               orgId: orgId,
+              subjectName: subjectName,
             ),
           );
         },
