@@ -71,6 +71,15 @@ class ActivityFormView extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 16),
+                  // Repeat selector (only for new activities)
+                  if (!state.isEditing)
+                    _RepeatDaySelector(
+                      selectedDays: state.form.repeatDays,
+                      onToggleDay: cubit.toggleRepeatDay,
+                      onSelectWeekdays: cubit.setRepeatWeekdays,
+                      onClear: cubit.clearRepeatDays,
+                    ),
+                  if (!state.isEditing) const SizedBox(height: 16),
                   // Time toggle
                   SwitchListTile(
                     title: const Text('Angiv tidspunkt'),
@@ -239,6 +248,113 @@ class _DatePicker extends StatelessWidget {
         child: Text(
           '$dayName $formatted',
           style: Theme.of(context).textTheme.bodyLarge,
+        ),
+      ),
+    );
+  }
+}
+
+class _RepeatDaySelector extends StatelessWidget {
+  final Set<int> selectedDays;
+  final ValueChanged<int> onToggleDay;
+  final VoidCallback onSelectWeekdays;
+  final VoidCallback onClear;
+
+  const _RepeatDaySelector({
+    required this.selectedDays,
+    required this.onToggleDay,
+    required this.onSelectWeekdays,
+    required this.onClear,
+  });
+
+  static const _dayLabels = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              'Gentag',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const Spacer(),
+            if (selectedDays.isEmpty)
+              TextButton(
+                onPressed: onSelectWeekdays,
+                child: const Text('Hverdage'),
+              )
+            else
+              TextButton(
+                onPressed: onClear,
+                child: const Text('Ryd'),
+              ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: List.generate(7, (index) {
+            final weekday = index + 1;
+            final isSelected = selectedDays.contains(weekday);
+            return _DayChip(
+              label: _dayLabels[index],
+              isSelected: isSelected,
+              onTap: () => onToggleDay(weekday),
+            );
+          }),
+        ),
+        if (selectedDays.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text(
+              'Oprettes på ${selectedDays.length} dage denne uge',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _DayChip extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _DayChip({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: isSelected
+                ? Theme.of(context).colorScheme.onPrimary
+                : Theme.of(context).colorScheme.onSurface,
+          ),
         ),
       ),
     );

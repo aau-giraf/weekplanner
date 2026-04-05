@@ -63,6 +63,26 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
     _emitReady(form: state.form.copyWith(date: date));
   }
 
+  void toggleRepeatDay(int weekday) {
+    final current = Set<int>.from(state.form.repeatDays);
+    if (current.contains(weekday)) {
+      current.remove(weekday);
+    } else {
+      current.add(weekday);
+    }
+    _emitReady(form: state.form.copyWith(repeatDays: current));
+  }
+
+  void setRepeatWeekdays() {
+    _emitReady(
+      form: state.form.copyWith(repeatDays: const {1, 2, 3, 4, 5}),
+    );
+  }
+
+  void clearRepeatDays() {
+    _emitReady(form: state.form.copyWith(repeatDays: const {}));
+  }
+
   void toggleHasTime() {
     _emitReady(form: state.form.copyWith(hasTime: !state.form.hasTime));
   }
@@ -248,42 +268,78 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
       search: s.search,
     ));
 
-    final data = {
-      'date': GirafDateUtils.formatQueryDate(s.form.date),
-      if (s.form.hasTime)
-        'startTime': formatTimeValueForApi(s.form.startTime),
-      if (s.form.hasTime)
-        'endTime': formatTimeValueForApi(s.form.endTime),
-      'title': s.form.title,
-      'pictogramId': s.selection.id,
-    };
-
-    final Either<ActivityFailure, Activity> result;
     final existing = s.form.existingActivity;
-    if (existing != null) {
-      result = await _activityRepository.updateActivity(
-          existing.activityId, data);
-    } else {
-      result = await _activityRepository.createActivity(
+    final useBatch = existing == null && s.form.repeatDays.isNotEmpty;
+
+    if (useBatch) {
+      // Batch create: compute dates from the current week matching repeatDays
+      final weekDates = GirafDateUtils.getWeekDates(s.form.date);
+      final dates = weekDates
+          .where((d) => s.form.repeatDays.contains(d.weekday))
+          .map(GirafDateUtils.formatQueryDate)
+          .toList();
+
+      final batchData = {
+        'dates': dates,
+        if (s.form.hasTime)
+          'startTime': formatTimeValueForApi(s.form.startTime),
+        if (s.form.hasTime)
+          'endTime': formatTimeValueForApi(s.form.endTime),
+        'title': s.form.title,
+        'pictogramId': s.selection.id,
+      };
+
+      final result = await _activityRepository.batchCreateActivities(
         id: subjectId,
         isCitizen: isCitizen,
-        data: data,
+        data: batchData,
       );
+      switch (result) {
+        case Left(:final value):
+          _emitReady(error: value.message);
+          return false;
+        case Right():
+          break;
+      }
+    } else {
+      final data = {
+        'date': GirafDateUtils.formatQueryDate(s.form.date),
+        if (s.form.hasTime)
+          'startTime': formatTimeValueForApi(s.form.startTime),
+        if (s.form.hasTime)
+          'endTime': formatTimeValueForApi(s.form.endTime),
+        'title': s.form.title,
+        'pictogramId': s.selection.id,
+      };
+
+      final Either<ActivityFailure, Activity> result;
+      if (existing != null) {
+        result = await _activityRepository.updateActivity(
+            existing.activityId, data);
+      } else {
+        result = await _activityRepository.createActivity(
+          id: subjectId,
+          isCitizen: isCitizen,
+          data: data,
+        );
+      }
+
+      switch (result) {
+        case Left(:final value):
+          _emitReady(error: value.message);
+          return false;
+        case Right():
+          break;
+      }
     }
 
-    switch (result) {
-      case Left(:final value):
-        _emitReady(error: value.message);
-        return false;
-      case Right():
-        emit(ActivityFormSaved(
-          form: s.form,
-          selection: s.selection,
-          creation: s.creation,
-          search: s.search,
-        ));
-        return true;
-    }
+    emit(ActivityFormSaved(
+      form: s.form,
+      selection: s.selection,
+      creation: s.creation,
+      search: s.search,
+    ));
+    return true;
   }
 
   // ── Helpers ──────────────────────────────────────────────

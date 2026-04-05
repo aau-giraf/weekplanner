@@ -19,6 +19,13 @@ abstract interface class ActivityRepository {
     required Map<String, dynamic> data,
   });
 
+  /// Create activities on multiple dates for a citizen or grade.
+  Future<Either<ActivityFailure, List<Activity>>> batchCreateActivities({
+    required int id,
+    required bool isCitizen,
+    required Map<String, dynamic> data,
+  });
+
   /// Update an existing activity.
   Future<Either<ActivityFailure, Activity>> updateActivity(
     int activityId,

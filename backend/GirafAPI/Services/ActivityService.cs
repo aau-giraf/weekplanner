@@ -95,6 +95,52 @@ public class ActivityService : IActivityService
         return ServiceResult<ActivityDTO>.Success(activity.ToDTO());
     }
 
+    public async Task<ServiceResult<List<ActivityDTO>>> CreateBatchActivitiesAsync(
+        ActivityOwner owner, CreateBatchActivityDTO dto, string accessToken, CancellationToken ct = default)
+    {
+        if ((dto.StartTime is null) != (dto.EndTime is null))
+            return ServiceResult<List<ActivityDTO>>.Fail(
+                new ServiceError(ServiceErrorKind.Validation, "Start and end time must both be provided or both omitted."));
+
+        if (dto.StartTime is not null && dto.EndTime is not null && dto.EndTime <= dto.StartTime)
+            return ServiceResult<List<ActivityDTO>>.Fail(
+                new ServiceError(ServiceErrorKind.Validation, "End time must be after start time."));
+
+        var ownerResult = await ValidateOwnerAsync(owner, accessToken, ct);
+        if (ownerResult is not null)
+            return ServiceResult<List<ActivityDTO>>.Fail(ownerResult);
+
+        if (dto.PictogramId is not null)
+        {
+            var picResult = await _coreClient.ValidatePictogramAsync(dto.PictogramId.Value, accessToken, ct);
+            if (picResult is not CoreValidationResult.Valid)
+                return ServiceResult<List<ActivityDTO>>.Fail(ToCoreError(picResult, "Pictogram"));
+        }
+
+        var activities = new List<Activity>();
+        foreach (var date in dto.Dates)
+        {
+            var activity = dto.ToEntity(date);
+            owner.ApplyTo(activity);
+
+            var maxOrder = await _db.Activities
+                .Where(owner.ToFilter())
+                .Where(a => a.Date == date)
+                .MaxAsync(a => (int?)a.SortOrder, ct) ?? -1;
+            // Account for other activities being added for the same date in this batch
+            var batchOffset = activities.Count(a => a.Date == date);
+            activity.SortOrder = maxOrder + 1 + batchOffset;
+
+            _db.Activities.Add(activity);
+            activities.Add(activity);
+        }
+
+        await _db.SaveChangesAsync(ct);
+
+        return ServiceResult<List<ActivityDTO>>.Success(
+            activities.Select(a => a.ToDTO()).ToList());
+    }
+
     public async Task<ServiceResult<ActivityDTO>> UpdateActivityAsync(
         int id, UpdateActivityDTO dto, string accessToken, CancellationToken ct = default)
     {

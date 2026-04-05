@@ -133,6 +133,55 @@ public static class ActivityEndpoints
             .Produces(StatusCodes.Status500InternalServerError);
 
 
+        // POST batch-create activities for citizen (recurring)
+        group.MapPost("/batch/to-citizen/{citizenId:int}",
+                async Task<IResult> (int citizenId, CreateBatchActivityDTO dto, IActivityService service,
+                    HttpContext httpContext, CancellationToken ct) =>
+                {
+                    var token = GetAccessToken(httpContext);
+                    if (token is null)
+                        return TypedResults.Unauthorized();
+
+                    var result = await service.CreateBatchActivitiesAsync(
+                        new ActivityOwner.Citizen(citizenId), dto, token, ct);
+                    return result.ToHttpResult(v => TypedResults.Ok(v));
+                })
+            .WithName("BatchCreateActivityForCitizen")
+            .WithDescription("Creates activities on multiple dates for a citizen.")
+            .WithTags("Activities")
+            .RequireAuthorization()
+            .Accepts<CreateBatchActivityDTO>("application/json")
+            .Produces<List<ActivityDTO>>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status500InternalServerError);
+
+        // POST batch-create activities for grade (recurring)
+        group.MapPost("/batch/to-grade/{gradeId:int}",
+                async Task<IResult> (int gradeId, CreateBatchActivityDTO dto, IActivityService service,
+                    HttpContext httpContext, CancellationToken ct) =>
+                {
+                    var token = GetAccessToken(httpContext);
+                    if (token is null)
+                        return TypedResults.Unauthorized();
+
+                    var result = await service.CreateBatchActivitiesAsync(
+                        new ActivityOwner.Grade(gradeId), dto, token, ct);
+                    return result.ToHttpResult(v => TypedResults.Ok(v));
+                })
+            .WithName("BatchCreateActivityForGrade")
+            .WithDescription("Creates activities on multiple dates for a grade.")
+            .WithTags("Activities")
+            .RequireAuthorization()
+            .Accepts<CreateBatchActivityDTO>("application/json")
+            .Produces<List<ActivityDTO>>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status500InternalServerError);
+
+
         group.MapPost("/activity/copy-citizen/{citizenId:int}",
                 async Task<IResult> (int citizenId, DateOnly sourceDate, DateOnly targetDate, List<int> toCopyIds,
                     IActivityService service, HttpContext httpContext, CancellationToken ct) =>
