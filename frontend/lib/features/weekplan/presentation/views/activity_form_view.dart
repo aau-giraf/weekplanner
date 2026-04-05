@@ -5,7 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/weekplan/domain/activity_form_state.dart';
 import 'package:weekplanner/features/weekplan/presentation/activity_form_cubit.dart';
+import 'package:weekplanner/features/weekplan/domain/repositories/pictogram_repository.dart';
+import 'package:weekplanner/features/weekplan/presentation/widgets/pictogram_picker_dialog.dart';
 import 'package:weekplanner/features/weekplan/presentation/widgets/pictogram_selector.dart';
+import 'package:weekplanner/shared/models/pictogram.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';
 
 class ActivityFormView extends StatelessWidget {
@@ -41,19 +44,45 @@ class ActivityFormView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Pictogram selector (required)
-                  Text(
-                    'Piktogram',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  const PictogramSelector(),
-                  const SizedBox(height: 24),
-                  // Title field
-                  _TitleField(
-                    title: state.form.title,
-                    onChanged: cubit.setTitle,
-                  ),
+                  // Choice activity toggle (only for new activities)
+                  if (!state.isEditing)
+                    SwitchListTile(
+                      title: const Text('Valgaktivitet'),
+                      subtitle: state.form.isChoiceActivity
+                          ? const Text('Barnet vælger mellem muligheder')
+                          : null,
+                      value: state.form.isChoiceActivity,
+                      onChanged: (_) => cubit.toggleChoiceActivity(),
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                  if (!state.isEditing) const SizedBox(height: 8),
+                  if (state.form.isChoiceActivity) ...[
+                    // Choice options editor
+                    _ChoiceOptionsEditor(
+                      options: state.form.choiceOptions,
+                      cubit: cubit,
+                    ),
+                    const SizedBox(height: 16),
+                    // Title for the activity slot itself
+                    _TitleField(
+                      title: state.form.title,
+                      onChanged: cubit.setTitle,
+                    ),
+                  ] else ...[
+                    // Normal: single pictogram selector
+                    Text(
+                      'Piktogram',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    const PictogramSelector(),
+                    const SizedBox(height: 24),
+                    // Title field
+                    _TitleField(
+                      title: state.form.title,
+                      onChanged: cubit.setTitle,
+                    ),
+                  ],
                   const SizedBox(height: 16),
                   // Date picker
                   _DatePicker(
@@ -355,6 +384,160 @@ class _DayChip extends StatelessWidget {
                 ? Theme.of(context).colorScheme.onPrimary
                 : Theme.of(context).colorScheme.onSurface,
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ChoiceOptionsEditor extends StatelessWidget {
+  final List<ChoiceOptionData> options;
+  final ActivityFormCubit cubit;
+
+  const _ChoiceOptionsEditor({
+    required this.options,
+    required this.cubit,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Valgmuligheder',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: 8),
+        ...options.asMap().entries.map((entry) {
+          final index = entry.key;
+          final option = entry.value;
+          return _ChoiceOptionSlot(
+            index: index,
+            option: option,
+            canRemove: options.length > 2,
+            onTitleChanged: (title) =>
+                cubit.setChoiceOptionTitle(index, title),
+            onPickPictogram: () async {
+              final repo = context.read<PictogramRepository>();
+              final picked = await showDialog<Pictogram>(
+                context: context,
+                builder: (_) => RepositoryProvider.value(
+                  value: repo,
+                  child: const PictogramPickerDialog(),
+                ),
+              );
+              if (picked != null) {
+                cubit.setChoiceOptionPictogram(index, picked.id, picked.name);
+              }
+            },
+            onRemove: () => cubit.removeChoiceOption(index),
+          );
+        }),
+        if (options.length < 3)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: OutlinedButton.icon(
+              onPressed: cubit.addChoiceOption,
+              icon: const Icon(Icons.add),
+              label: const Text('Tilføj valgmulighed'),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _ChoiceOptionSlot extends StatelessWidget {
+  final int index;
+  final ChoiceOptionData option;
+  final bool canRemove;
+  final ValueChanged<String> onTitleChanged;
+  final VoidCallback onPickPictogram;
+  final VoidCallback onRemove;
+
+  const _ChoiceOptionSlot({
+    required this.index,
+    required this.option,
+    required this.canRemove,
+    required this.onTitleChanged,
+    required this.onPickPictogram,
+    required this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            // Pictogram thumbnail / pick button
+            GestureDetector(
+              onTap: onPickPictogram,
+              child: Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: context.colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(8),
+                  border: option.pictogramId == null
+                      ? Border.all(
+                          color: context.colorScheme.outline,
+                          width: 1,
+                          style: BorderStyle.solid,
+                        )
+                      : null,
+                ),
+                child: option.pictogramId != null
+                    ? Icon(
+                        Icons.check,
+                        color: context.colorScheme.primary,
+                      )
+                    : Icon(
+                        Icons.add_photo_alternate,
+                        color: context.colorScheme.outline,
+                      ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Mulighed ${index + 1}',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: context.colorScheme.outline,
+                        ),
+                  ),
+                  if (option.pictogramName != null)
+                    Text(
+                      option.pictogramName!,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: context.colorScheme.primary,
+                          ),
+                    )
+                  else
+                    TextButton(
+                      onPressed: onPickPictogram,
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: const Text('Vælg piktogram'),
+                    ),
+                ],
+              ),
+            ),
+            if (canRemove)
+              IconButton(
+                icon: const Icon(Icons.close, size: 20),
+                onPressed: onRemove,
+              ),
+          ],
         ),
       ),
     );

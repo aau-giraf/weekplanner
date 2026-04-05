@@ -83,6 +83,44 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
     _emitReady(form: state.form.copyWith(repeatDays: const {}));
   }
 
+  void toggleChoiceActivity() {
+    final isChoice = !state.form.isChoiceActivity;
+    _emitReady(form: state.form.copyWith(
+      isChoiceActivity: isChoice,
+      choiceOptions: isChoice && state.form.choiceOptions.isEmpty
+          ? const [ChoiceOptionData(), ChoiceOptionData()]
+          : state.form.choiceOptions,
+    ));
+  }
+
+  void addChoiceOption() {
+    if (state.form.choiceOptions.length >= 3) return;
+    final updated = [...state.form.choiceOptions, const ChoiceOptionData()];
+    _emitReady(form: state.form.copyWith(choiceOptions: updated));
+  }
+
+  void removeChoiceOption(int index) {
+    if (state.form.choiceOptions.length <= 2) return;
+    final updated = [...state.form.choiceOptions]..removeAt(index);
+    _emitReady(form: state.form.copyWith(choiceOptions: updated));
+  }
+
+  void setChoiceOptionTitle(int index, String title) {
+    final updated = [...state.form.choiceOptions];
+    updated[index] = updated[index].copyWith(title: title);
+    _emitReady(form: state.form.copyWith(choiceOptions: updated));
+  }
+
+  void setChoiceOptionPictogram(int index, int pictogramId, String name) {
+    final updated = [...state.form.choiceOptions];
+    updated[index] = updated[index].copyWith(
+      pictogramId: pictogramId,
+      pictogramName: name,
+      title: updated[index].title.isEmpty ? name : null,
+    );
+    _emitReady(form: state.form.copyWith(choiceOptions: updated));
+  }
+
   void toggleHasTime() {
     _emitReady(form: state.form.copyWith(hasTime: !state.form.hasTime));
   }
@@ -237,8 +275,16 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
 
   /// Validate the form and return an error message, or null if valid.
   String? validate() {
-    if (state.selection.id == null) {
-      return 'Vælg et piktogram';
+    if (state.form.isChoiceActivity) {
+      for (final option in state.form.choiceOptions) {
+        if (option.pictogramId == null) {
+          return 'Alle valgmuligheder skal have et piktogram';
+        }
+      }
+    } else {
+      if (state.selection.id == null) {
+        return 'Vælg et piktogram';
+      }
     }
     if (state.form.hasTime) {
       final startMinutes =
@@ -309,7 +355,14 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
         if (s.form.hasTime)
           'endTime': formatTimeValueForApi(s.form.endTime),
         'title': s.form.title,
-        'pictogramId': s.selection.id,
+        if (!s.form.isChoiceActivity) 'pictogramId': s.selection.id,
+        if (s.form.isChoiceActivity)
+          'options': s.form.choiceOptions
+              .map((o) => {
+                    'title': o.title,
+                    'pictogramId': o.pictogramId,
+                  })
+              .toList(),
       };
 
       final Either<ActivityFailure, Activity> result;
