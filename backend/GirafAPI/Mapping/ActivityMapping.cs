@@ -19,6 +19,20 @@ public static class ActivityMapping
         };
     }
 
+    public static Activity ToEntity(this CreateBatchActivityDTO dto, DateOnly date)
+    {
+        return new Activity
+        {
+            Date = date,
+            StartTime = dto.StartTime,
+            EndTime = dto.EndTime,
+            Title = dto.Title,
+            SortOrder = 0,
+            IsCompleted = false,
+            PictogramId = dto.PictogramId
+        };
+    }
+
     public static ActivityDTO ToDTO(this Activity activity)
     {
         return new ActivityDTO(

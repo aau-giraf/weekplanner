@@ -30,6 +30,10 @@ final class ActivityFormData with EquatableMixin {
   /// The activity being edited, or null for new activities.
   final Activity? existingActivity;
 
+  /// Weekdays to repeat on (1=Monday..7=Sunday). Empty = single date only.
+  /// Only used when creating new activities.
+  final Set<int> repeatDays;
+
   const ActivityFormData({
     this.title = '',
     this.hasTime = false,
@@ -37,6 +41,7 @@ final class ActivityFormData with EquatableMixin {
     this.endTime = const (hour: 9, minute: 0),
     required this.date,
     this.existingActivity,
+    this.repeatDays = const {},
   });
 
   /// Whether this is an edit (vs. create) operation.
@@ -50,6 +55,7 @@ final class ActivityFormData with EquatableMixin {
     DateTime? date,
     Activity? existingActivity,
     bool clearExistingActivity = false,
+    Set<int>? repeatDays,
   }) {
     return ActivityFormData(
       title: title ?? this.title,
@@ -60,12 +66,13 @@ final class ActivityFormData with EquatableMixin {
       existingActivity: clearExistingActivity
           ? null
           : (existingActivity ?? this.existingActivity),
+      repeatDays: repeatDays ?? this.repeatDays,
     );
   }
 
   @override
   List<Object?> get props =>
-      [title, hasTime, startTime, endTime, date, existingActivity];
+      [title, hasTime, startTime, endTime, date, existingActivity, repeatDays];
 }
 
 // ── Sub-state: Pictogram selection ─────────────────────────

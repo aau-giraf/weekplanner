@@ -79,6 +79,37 @@ class ActivityApiService implements TokenConsumer {
     return Activity.fromJson(response.data! as Map<String, dynamic>);
   }
 
+  // Batch-create activities on multiple dates
+  Future<List<Activity>> batchCreateForCitizen(
+    int citizenId,
+    Map<String, dynamic> data,
+  ) async {
+    final response = await _dio.post(
+      '/weekplan/batch/to-citizen/$citizenId',
+      data: data,
+    );
+    final list = response.data as List;
+    return list
+        .whereType<Map<String, dynamic>>()
+        .map(Activity.fromJson)
+        .toList();
+  }
+
+  Future<List<Activity>> batchCreateForGrade(
+    int gradeId,
+    Map<String, dynamic> data,
+  ) async {
+    final response = await _dio.post(
+      '/weekplan/batch/to-grade/$gradeId',
+      data: data,
+    );
+    final list = response.data as List;
+    return list
+        .whereType<Map<String, dynamic>>()
+        .map(Activity.fromJson)
+        .toList();
+  }
+
   Future<Activity> updateActivity(
     int activityId,
     Map<String, dynamic> data,

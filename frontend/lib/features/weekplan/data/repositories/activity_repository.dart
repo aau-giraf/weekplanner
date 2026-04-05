@@ -56,6 +56,23 @@ class ActivityRepositoryImpl implements ActivityRepository {
   }
 
   @override
+  Future<Either<ActivityFailure, List<Activity>>> batchCreateActivities({
+    required int id,
+    required bool isCitizen,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      final activities = isCitizen
+          ? await _apiService.batchCreateForCitizen(id, data)
+          : await _apiService.batchCreateForGrade(id, data);
+      return Right(activities);
+    } catch (e, stackTrace) {
+      logServerError(_log, 'Failed to batch-create activities', e, stackTrace);
+      return Left(const CreateActivityFailure());
+    }
+  }
+
+  @override
   Future<Either<ActivityFailure, Activity>> updateActivity(
     int activityId,
     Map<String, dynamic> data,

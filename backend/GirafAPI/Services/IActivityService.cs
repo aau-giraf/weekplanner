@@ -11,6 +11,9 @@ public interface IActivityService
     Task<ServiceResult<ActivityDTO>> CreateActivityAsync(
         ActivityOwner owner, CreateActivityDTO dto, string accessToken, CancellationToken ct = default);
 
+    Task<ServiceResult<List<ActivityDTO>>> CreateBatchActivitiesAsync(
+        ActivityOwner owner, CreateBatchActivityDTO dto, string accessToken, CancellationToken ct = default);
+
     Task<ServiceResult<ActivityDTO>> UpdateActivityAsync(
         int id, UpdateActivityDTO dto, string accessToken, CancellationToken ct = default);
 
