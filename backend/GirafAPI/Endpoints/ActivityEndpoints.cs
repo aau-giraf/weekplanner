@@ -182,6 +182,30 @@ public static class ActivityEndpoints
             .Produces(StatusCodes.Status500InternalServerError);
 
 
+        // PUT select option on a choice activity
+        group.MapPut("/activity/{id:int}/select-option/{optionIndex:int}",
+                async Task<IResult> (int id, int optionIndex, IActivityService service,
+                    HttpContext httpContext, CancellationToken ct) =>
+                {
+                    var token = GetAccessToken(httpContext);
+                    if (token is null)
+                        return TypedResults.Unauthorized();
+
+                    var result = await service.SelectOptionAsync(id, optionIndex, token, ct);
+                    return result.ToHttpResult(v => TypedResults.Ok(v));
+                })
+            .WithName("SelectActivityOption")
+            .WithDescription("Selects an option on a choice activity.")
+            .WithTags("Activities")
+            .RequireAuthorization()
+            .Produces<ActivityDTO>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError);
+
+
         group.MapPost("/activity/copy-citizen/{citizenId:int}",
                 async Task<IResult> (int citizenId, DateOnly sourceDate, DateOnly targetDate, List<int> toCopyIds,
                     IActivityService service, HttpContext httpContext, CancellationToken ct) =>

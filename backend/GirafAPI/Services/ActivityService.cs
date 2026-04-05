@@ -26,20 +26,23 @@ public class ActivityService : IActivityService
             return ServiceResult<List<ActivityDTO>>.Fail(ownerResult);
 
         var activities = await _db.Activities
+            .Include(a => a.Options.OrderBy(o => o.SortOrder))
             .Where(owner.ToFilter())
             .Where(a => a.Date == date)
             .OrderBy(a => a.SortOrder)
             .ThenBy(a => a.StartTime)
-            .Select(a => a.ToDTO())
             .AsNoTracking()
             .ToListAsync(ct);
 
-        return ServiceResult<List<ActivityDTO>>.Success(activities);
+        var dtos = activities.Select(a => a.ToDTO()).ToList();
+
+        return ServiceResult<List<ActivityDTO>>.Success(dtos);
     }
 
     public async Task<ServiceResult<ActivityDTO>> GetActivityByIdAsync(int id, string accessToken, CancellationToken ct = default)
     {
         var activity = await _db.Activities
+            .Include(a => a.Options.OrderBy(o => o.SortOrder))
             .AsNoTracking()
             .FirstOrDefaultAsync(a => a.Id == id, ct);
 
@@ -294,6 +297,36 @@ public class ActivityService : IActivityService
 
         await _db.SaveChangesAsync(ct);
         return ServiceResult.Success();
+    }
+
+    public async Task<ServiceResult<ActivityDTO>> SelectOptionAsync(
+        int activityId, int optionIndex, string accessToken, CancellationToken ct = default)
+    {
+        var activity = await _db.Activities
+            .Include(a => a.Options.OrderBy(o => o.SortOrder))
+            .FirstOrDefaultAsync(a => a.Id == activityId, ct);
+
+        if (activity is null)
+            return ServiceResult<ActivityDTO>.Fail(
+                new ServiceError(ServiceErrorKind.NotFound, "Activity not found."));
+
+        var ownerError = await ValidateActivityOwnerAsync(activity, accessToken, ct);
+        if (ownerError is not null)
+            return ServiceResult<ActivityDTO>.Fail(ownerError);
+
+        if (activity.Options.Count == 0)
+            return ServiceResult<ActivityDTO>.Fail(
+                new ServiceError(ServiceErrorKind.Validation, "Activity has no options to select from."));
+
+        if (optionIndex < 0 || optionIndex >= activity.Options.Count)
+            return ServiceResult<ActivityDTO>.Fail(
+                new ServiceError(ServiceErrorKind.Validation,
+                    $"Option index must be between 0 and {activity.Options.Count - 1}."));
+
+        activity.SelectedOptionIndex = optionIndex;
+        await _db.SaveChangesAsync(ct);
+
+        return ServiceResult<ActivityDTO>.Success(activity.ToDTO());
     }
 
     /// <summary>

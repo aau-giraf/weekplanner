@@ -11,5 +11,7 @@ public record ActivityDTO
     string? Title,
     int SortOrder,
     bool IsCompleted,
-    int? PictogramId
+    int? PictogramId,
+    int? SelectedOptionIndex,
+    List<ActivityOptionDTO> Options
 );

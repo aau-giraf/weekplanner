@@ -25,4 +25,11 @@ public class Activity
     public int? GradeId { get; set; }
 
     public int? PictogramId { get; set; }
+
+    /// Index of the selected option (null = not yet chosen).
+    /// Only meaningful when Options is non-empty.
+    public int? SelectedOptionIndex { get; set; }
+
+    /// Choice options for this activity. Empty for regular activities.
+    public List<ActivityOption> Options { get; set; } = [];
 }
