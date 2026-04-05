@@ -40,4 +40,13 @@ abstract interface class ActivityRepository {
     required bool isCitizen,
     required List<Activity> activities,
   });
+
+  /// Copy activities to a different date.
+  Future<Either<ActivityFailure, Unit>> copyActivities({
+    required int id,
+    required bool isCitizen,
+    required DateTime sourceDate,
+    required DateTime targetDate,
+    required List<int> activityIds,
+  });
 }
