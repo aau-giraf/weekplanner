@@ -93,23 +93,13 @@ class WeekplanCubit extends Cubit<WeekplanState> {
     final updated =
         backup.where((a) => a.activityId != activityId).toList();
 
-    emit(WeekplanLoaded(
-      selectedDate: current.selectedDate,
-      weekDates: current.weekDates,
-      activities: updated,
-      pictogramMedia: current.pictogramMedia,
-    ));
+    emit(current.copyWith(activities: updated));
 
     final result = await _activityRepository.deleteActivity(activityId);
     switch (result) {
       case Left(:final value):
         _log.warning('Delete rollback: ${value.message}');
-        emit(WeekplanLoaded(
-          selectedDate: current.selectedDate,
-          weekDates: current.weekDates,
-          activities: backup,
-          pictogramMedia: current.pictogramMedia,
-        ));
+        emit(current.copyWith(activities: backup));
       case Right():
         break;
     }
@@ -132,12 +122,7 @@ class WeekplanCubit extends Cubit<WeekplanState> {
       return a;
     }).toList();
 
-    emit(WeekplanLoaded(
-      selectedDate: current.selectedDate,
-      weekDates: current.weekDates,
-      activities: updated,
-      pictogramMedia: current.pictogramMedia,
-    ));
+    emit(current.copyWith(activities: updated));
 
     final result = await _activityRepository.toggleActivityStatus(
       activityId,
@@ -152,12 +137,7 @@ class WeekplanCubit extends Cubit<WeekplanState> {
           }
           return a;
         }).toList();
-        emit(WeekplanLoaded(
-          selectedDate: current.selectedDate,
-          weekDates: current.weekDates,
-          activities: rolledBack,
-          pictogramMedia: current.pictogramMedia,
-        ));
+        emit(current.copyWith(activities: rolledBack));
       case Right():
         break;
     }
@@ -183,12 +163,7 @@ class WeekplanCubit extends Cubit<WeekplanState> {
         reordered[i].copyWith(sortOrder: i),
     ];
 
-    emit(WeekplanLoaded(
-      selectedDate: current.selectedDate,
-      weekDates: current.weekDates,
-      activities: withSortOrder,
-      pictogramMedia: current.pictogramMedia,
-    ));
+    emit(current.copyWith(activities: withSortOrder));
 
     final result = await _activityRepository.reorderActivities(
       id: subjectId,
@@ -198,15 +173,46 @@ class WeekplanCubit extends Cubit<WeekplanState> {
     switch (result) {
       case Left(:final value):
         _log.warning('Reorder rollback: ${value.message}');
-        emit(WeekplanLoaded(
-          selectedDate: current.selectedDate,
-          weekDates: current.weekDates,
-          activities: backup,
-          pictogramMedia: current.pictogramMedia,
-        ));
+        emit(current.copyWith(activities: backup));
       case Right():
         break;
     }
+  }
+
+  /// Load activities for all 7 days in the current week.
+  ///
+  /// Stores results in [WeekplanLoaded.weekActivities] keyed by date string.
+  Future<void> loadWeekActivities() async {
+    final current = state;
+    if (current is! WeekplanLoaded) return;
+
+    final results = await Future.wait(
+      current.weekDates.map((date) async {
+        final result = await _activityRepository.fetchActivities(
+          id: subjectId,
+          isCitizen: isCitizen,
+          date: date,
+        );
+        final dateKey = GirafDateUtils.formatQueryDate(date);
+        return (dateKey, result);
+      }),
+    );
+
+    // Re-check state hasn't changed during async gap
+    final afterState = state;
+    if (afterState is! WeekplanLoaded) return;
+
+    final weekMap = <String, List<Activity>>{};
+    for (final (dateKey, result) in results) {
+      switch (result) {
+        case Left():
+          weekMap[dateKey] = const [];
+        case Right(:final value):
+          weekMap[dateKey] = value;
+      }
+    }
+
+    emit(afterState.copyWith(weekActivities: weekMap));
   }
 
   /// Copy all current day's activities to a target date.
@@ -271,11 +277,6 @@ class WeekplanCubit extends Cubit<WeekplanState> {
       }
     }
 
-    emit(WeekplanLoaded(
-      selectedDate: afterState.selectedDate,
-      weekDates: afterState.weekDates,
-      activities: afterState.activities,
-      pictogramMedia: updatedMedia,
-    ));
+    emit(afterState.copyWith(pictogramMedia: updatedMedia));
   }
 }

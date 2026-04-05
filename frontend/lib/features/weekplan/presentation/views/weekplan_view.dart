@@ -6,11 +6,15 @@ import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/weekplan/domain/weekplan_state.dart';
 import 'package:weekplanner/features/weekplan/presentation/weekplan_cubit.dart';
 import 'package:weekplanner/features/weekplan/presentation/widgets/activity_list_item.dart';
+import 'package:weekplanner/features/weekplan/presentation/widgets/week_overview.dart';
 import 'package:weekplanner/features/weekplan/presentation/widgets/week_selector.dart';
 import 'package:weekplanner/shared/models/activity.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';
 
-class WeekplanView extends StatelessWidget {
+/// Weekplan screen with toggle between day view and week overview.
+///
+/// Uses [StatefulWidget] for the ephemeral view-mode toggle state.
+class WeekplanView extends StatefulWidget {
   final int citizenId;
   final bool isCitizen;
   final int? orgId;
@@ -25,64 +29,106 @@ class WeekplanView extends StatelessWidget {
   });
 
   @override
+  State<WeekplanView> createState() => _WeekplanViewState();
+}
+
+class _WeekplanViewState extends State<WeekplanView> {
+  bool _isWeekView = false;
+
+  void _toggleViewMode() {
+    setState(() {
+      _isWeekView = !_isWeekView;
+    });
+    if (_isWeekView) {
+      context.read<WeekplanCubit>().loadWeekActivities();
+    }
+  }
+
+  void _switchToDayView(DateTime date) {
+    setState(() {
+      _isWeekView = false;
+    });
+    context.read<WeekplanCubit>().selectDate(date);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          subjectName != null ? 'Ugeplan — $subjectName' : 'Ugeplan',
+          widget.subjectName != null
+              ? 'Ugeplan — ${widget.subjectName}'
+              : 'Ugeplan',
         ),
         actions: [
-          BlocBuilder<WeekplanCubit, WeekplanState>(
-            builder: (context, state) {
-              final hasActivities =
-                  state is WeekplanLoaded && state.activities.isNotEmpty;
-              return IconButton(
-                icon: const Icon(Icons.copy),
-                tooltip: 'Kopiér dag',
-                onPressed: hasActivities
-                    ? () => _showCopyDayPicker(context)
-                    : null,
-              );
-            },
+          IconButton(
+            icon: Icon(_isWeekView ? Icons.view_day : Icons.view_week),
+            tooltip: _isWeekView ? 'Dagvisning' : 'Ugeoversigt',
+            onPressed: _toggleViewMode,
           ),
+          if (!_isWeekView)
+            BlocBuilder<WeekplanCubit, WeekplanState>(
+              builder: (context, state) {
+                final hasActivities =
+                    state is WeekplanLoaded && state.activities.isNotEmpty;
+                return IconButton(
+                  icon: const Icon(Icons.copy),
+                  tooltip: 'Kopiér dag',
+                  onPressed: hasActivities
+                      ? () => _showCopyDayPicker(context)
+                      : null,
+                );
+              },
+            ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final selectedDate = context.read<WeekplanCubit>().state.selectedDate;
-          final dateStr = selectedDate.toIso8601String().split('T').first;
-          final saved = await context.push<bool>(
-            '/weekplan/$citizenId/add?type=${isCitizen ? 'citizen' : 'grade'}&orgId=$orgId&date=$dateStr',
-          );
-          if (saved == true && context.mounted) {
-            context.read<WeekplanCubit>().loadActivities();
-          }
-        },
-        backgroundColor: context.colorScheme.primary,
-        child: Icon(Icons.add, color: context.colorScheme.onPrimary),
-      ),
+      floatingActionButton: _isWeekView
+          ? null
+          : FloatingActionButton(
+              onPressed: () async {
+                final selectedDate =
+                    context.read<WeekplanCubit>().state.selectedDate;
+                final dateStr =
+                    selectedDate.toIso8601String().split('T').first;
+                final saved = await context.push<bool>(
+                  '/weekplan/${widget.citizenId}/add?type=${widget.isCitizen ? 'citizen' : 'grade'}&orgId=${widget.orgId}&date=$dateStr',
+                );
+                if (saved == true && context.mounted) {
+                  context.read<WeekplanCubit>().loadActivities();
+                }
+              },
+              backgroundColor: context.colorScheme.primary,
+              child: Icon(Icons.add, color: context.colorScheme.onPrimary),
+            ),
       body: BlocBuilder<WeekplanCubit, WeekplanState>(
         builder: (context, state) {
           final cubit = context.read<WeekplanCubit>();
           return Column(
             children: [
-              WeekSelector(
-                weekNumber: cubit.weekNumber,
-                weekDates: state.weekDates,
-                selectedDate: state.selectedDate,
-                onPreviousWeek: cubit.goToPreviousWeek,
-                onNextWeek: cubit.goToNextWeek,
-                onGoToToday: cubit.goToToday,
-                onSelectDate: cubit.selectDate,
-              ),
-              const Divider(height: 1),
-              Expanded(
-                child: _ActivityListArea(
-                  state: state,
-                  citizenId: citizenId,
-                  isCitizen: isCitizen,
-                  orgId: orgId,
+              if (!_isWeekView) ...[
+                WeekSelector(
+                  weekNumber: cubit.weekNumber,
+                  weekDates: state.weekDates,
+                  selectedDate: state.selectedDate,
+                  onPreviousWeek: cubit.goToPreviousWeek,
+                  onNextWeek: cubit.goToNextWeek,
+                  onGoToToday: cubit.goToToday,
+                  onSelectDate: cubit.selectDate,
                 ),
+                const Divider(height: 1),
+              ],
+              Expanded(
+                child: _isWeekView
+                    ? _WeekOverviewArea(
+                        state: state,
+                        onSelectDay: _switchToDayView,
+                      )
+                    : _ActivityListArea(
+                        state: state,
+                        citizenId: widget.citizenId,
+                        isCitizen: widget.isCitizen,
+                        orgId: widget.orgId,
+                      ),
               ),
             ],
           );
@@ -122,6 +168,35 @@ Future<void> _showCopyDayPicker(BuildContext context) async {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Aktiviteter kopieret til $formatted')),
     );
+  }
+}
+
+class _WeekOverviewArea extends StatelessWidget {
+  final WeekplanState state;
+  final ValueChanged<DateTime> onSelectDay;
+
+  const _WeekOverviewArea({
+    required this.state,
+    required this.onSelectDay,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return switch (state) {
+      WeekplanLoading() => const Center(child: CircularProgressIndicator()),
+      WeekplanError(:final message) => _ErrorWithRetry(message: message),
+      WeekplanLoaded(
+        :final weekDates,
+        :final weekActivities,
+        :final pictogramMedia,
+      ) =>
+        WeekOverview(
+          weekDates: weekDates,
+          weekActivities: weekActivities,
+          pictogramMedia: pictogramMedia,
+          onSelectDay: onSelectDay,
+        ),
+    };
   }
 }
 

@@ -471,4 +471,47 @@ void main() {
       cubit.close();
     });
   });
+
+  group('loadWeekActivities', () {
+    final loadedState = WeekplanLoaded(
+      selectedDate: testDate,
+      weekDates: testWeekDates,
+      activities: [testActivity],
+    );
+
+    blocTest<WeekplanCubit, WeekplanState>(
+      'fetches activities for all 7 days and emits weekActivities map',
+      setUp: () {
+        when(() => mockActivityRepo.fetchActivities(
+              id: any(named: 'id'),
+              isCitizen: any(named: 'isCitizen'),
+              date: any(named: 'date'),
+            )).thenAnswer((_) async => const Right(<Activity>[]));
+      },
+      build: buildCubit,
+      seed: () => loadedState,
+      act: (cubit) => cubit.loadWeekActivities(),
+      verify: (_) {
+        verify(() => mockActivityRepo.fetchActivities(
+              id: any(named: 'id'),
+              isCitizen: any(named: 'isCitizen'),
+              date: any(named: 'date'),
+            )).called(7);
+      },
+      expect: () => [
+        isA<WeekplanLoaded>().having(
+          (s) => s.weekActivities.length,
+          'weekActivities length',
+          7,
+        ),
+      ],
+    );
+
+    blocTest<WeekplanCubit, WeekplanState>(
+      'does nothing when state is not WeekplanLoaded',
+      build: buildCubit,
+      act: (cubit) => cubit.loadWeekActivities(),
+      expect: () => <WeekplanState>[],
+    );
+  });
 }
