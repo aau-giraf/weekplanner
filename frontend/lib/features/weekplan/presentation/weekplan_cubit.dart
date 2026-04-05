@@ -209,6 +209,31 @@ class WeekplanCubit extends Cubit<WeekplanState> {
     }
   }
 
+  /// Copy all current day's activities to a target date.
+  ///
+  /// Returns an error message on failure, or null on success.
+  Future<String?> copyDayToDate(DateTime targetDate) async {
+    final current = state;
+    if (current is! WeekplanLoaded) return null;
+    if (current.activities.isEmpty) return null;
+
+    final activityIds =
+        current.activities.map((a) => a.activityId).toList();
+
+    final result = await _activityRepository.copyActivities(
+      id: subjectId,
+      isCitizen: isCitizen,
+      sourceDate: current.selectedDate,
+      targetDate: targetDate,
+      activityIds: activityIds,
+    );
+
+    return switch (result) {
+      Left(:final value) => value.message,
+      Right() => null,
+    };
+  }
+
   /// Fetch image and sound URLs for pictograms in the given activities.
   Future<void> _fetchPictogramMedia(List<Activity> activities) async {
     final current = state;

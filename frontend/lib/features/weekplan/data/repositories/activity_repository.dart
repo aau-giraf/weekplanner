@@ -121,4 +121,27 @@ class ActivityRepositoryImpl implements ActivityRepository {
       return Left(const ReorderActivitiesFailure());
     }
   }
+
+  @override
+  Future<Either<ActivityFailure, Unit>> copyActivities({
+    required int id,
+    required bool isCitizen,
+    required DateTime sourceDate,
+    required DateTime targetDate,
+    required List<int> activityIds,
+  }) async {
+    try {
+      await _apiService.copyActivities(
+        id: id,
+        isCitizen: isCitizen,
+        sourceDate: GirafDateUtils.formatQueryDate(sourceDate),
+        targetDate: GirafDateUtils.formatQueryDate(targetDate),
+        activityIds: activityIds,
+      );
+      return const Right(unit);
+    } catch (e, stackTrace) {
+      logServerError(_log, 'Failed to copy activities', e, stackTrace);
+      return Left(const CopyActivitiesFailure());
+    }
+  }
 }

@@ -17,6 +17,10 @@ class MockActivityRepository extends Mock implements ActivityRepository {}
 class MockPictogramRepository extends Mock implements PictogramRepository {}
 
 void main() {
+  setUpAll(() {
+    registerFallbackValue(DateTime(2026));
+  });
+
   late MockActivityRepository mockActivityRepo;
   late MockPictogramRepository mockPictogramRepo;
 
@@ -391,5 +395,80 @@ void main() {
       act: (cubit) => cubit.toggleActivityStatus(5),
       expect: () => <WeekplanState>[],
     );
+  });
+
+  group('copyDayToDate', () {
+    final loadedState = WeekplanLoaded(
+      selectedDate: testDate,
+      weekDates: testWeekDates,
+      activities: [testActivity, testActivityWithPictogram],
+    );
+
+    final targetDate = DateTime(2026, 3, 25);
+
+    blocTest<WeekplanCubit, WeekplanState>(
+      'returns null on success',
+      setUp: () {
+        when(() => mockActivityRepo.copyActivities(
+              id: any(named: 'id'),
+              isCitizen: any(named: 'isCitizen'),
+              sourceDate: any(named: 'sourceDate'),
+              targetDate: any(named: 'targetDate'),
+              activityIds: any(named: 'activityIds'),
+            )).thenAnswer((_) async => const Right(unit));
+      },
+      build: buildCubit,
+      seed: () => loadedState,
+      act: (cubit) => cubit.copyDayToDate(targetDate),
+      verify: (_) {
+        verify(() => mockActivityRepo.copyActivities(
+              id: 1,
+              isCitizen: true,
+              sourceDate: testDate,
+              targetDate: targetDate,
+              activityIds: [1, 2],
+            )).called(1);
+      },
+      expect: () => <WeekplanState>[],
+    );
+
+    test('returns error message on failure', () async {
+      when(() => mockActivityRepo.copyActivities(
+            id: any(named: 'id'),
+            isCitizen: any(named: 'isCitizen'),
+            sourceDate: any(named: 'sourceDate'),
+            targetDate: any(named: 'targetDate'),
+            activityIds: any(named: 'activityIds'),
+          )).thenAnswer((_) async => const Left(CopyActivitiesFailure()));
+
+      final cubit = buildCubit();
+      cubit.emit(loadedState);
+
+      final error = await cubit.copyDayToDate(targetDate);
+      expect(error, 'Kunne ikke kopiere aktiviteter');
+      cubit.close();
+    });
+
+    test('returns null when no activities', () async {
+      final emptyState = WeekplanLoaded(
+        selectedDate: testDate,
+        weekDates: testWeekDates,
+        activities: const [],
+      );
+
+      final cubit = buildCubit();
+      cubit.emit(emptyState);
+
+      final error = await cubit.copyDayToDate(targetDate);
+      expect(error, isNull);
+      verifyNever(() => mockActivityRepo.copyActivities(
+            id: any(named: 'id'),
+            isCitizen: any(named: 'isCitizen'),
+            sourceDate: any(named: 'sourceDate'),
+            targetDate: any(named: 'targetDate'),
+            activityIds: any(named: 'activityIds'),
+          ));
+      cubit.close();
+    });
   });
 }

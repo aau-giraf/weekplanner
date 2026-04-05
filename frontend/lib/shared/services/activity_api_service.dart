@@ -104,6 +104,27 @@ class ActivityApiService implements TokenConsumer {
     await _dio.put(path, data: items);
   }
 
+  // Copy activities to a different date
+  Future<void> copyActivities({
+    required int id,
+    required bool isCitizen,
+    required String sourceDate,
+    required String targetDate,
+    required List<int> activityIds,
+  }) async {
+    final path = isCitizen
+        ? '/weekplan/activity/copy-citizen/$id'
+        : '/weekplan/activity/copy-grade/$id';
+    await _dio.post(
+      path,
+      queryParameters: {
+        'sourceDate': sourceDate,
+        'targetDate': targetDate,
+        'toCopyIds': activityIds,
+      },
+    );
+  }
+
   // Toggle activity completion status
   Future<void> toggleActivityStatus(int activityId, {required bool isComplete}) async {
     await _dio.put(

@@ -41,3 +41,9 @@ final class ReorderActivitiesFailure extends ActivityFailure {
   const ReorderActivitiesFailure()
       : super('Kunne ikke ændre rækkefølge');
 }
+
+/// Failed to copy activities.
+final class CopyActivitiesFailure extends ActivityFailure {
+  const CopyActivitiesFailure()
+      : super('Kunne ikke kopiere aktiviteter');
+}

@@ -31,6 +31,21 @@ class WeekplanView extends StatelessWidget {
         title: Text(
           subjectName != null ? 'Ugeplan — $subjectName' : 'Ugeplan',
         ),
+        actions: [
+          BlocBuilder<WeekplanCubit, WeekplanState>(
+            builder: (context, state) {
+              final hasActivities =
+                  state is WeekplanLoaded && state.activities.isNotEmpty;
+              return IconButton(
+                icon: const Icon(Icons.copy),
+                tooltip: 'Kopiér dag',
+                onPressed: hasActivities
+                    ? () => _showCopyDayPicker(context)
+                    : null,
+              );
+            },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -73,6 +88,34 @@ class WeekplanView extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+Future<void> _showCopyDayPicker(BuildContext context) async {
+  final cubit = context.read<WeekplanCubit>();
+  final sourceDate = cubit.state.selectedDate;
+
+  final targetDate = await showDatePicker(
+    context: context,
+    initialDate: sourceDate.add(const Duration(days: 1)),
+    firstDate: DateTime(2020),
+    lastDate: DateTime(2100),
+    helpText: 'Kopiér aktiviteter til',
+  );
+  if (targetDate == null || !context.mounted) return;
+
+  final error = await cubit.copyDayToDate(targetDate);
+  if (!context.mounted) return;
+
+  if (error != null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(error)),
+    );
+  } else {
+    final formatted = GirafDateUtils.formatDateDDMM(targetDate);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Aktiviteter kopieret til $formatted')),
     );
   }
 }
