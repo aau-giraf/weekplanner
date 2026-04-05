@@ -48,6 +48,41 @@ void main() {
       expect(find.text('Tilføj'), findsOneWidget);
     });
 
+    testWidgets('shows title field with current title value', (tester) async {
+      when(() => mockCubit.state).thenReturn(ActivityFormReady(
+        form: ActivityFormData(date: testDate, title: 'Morgenmad'),
+      ));
+
+      await tester.pumpWidget(buildSubject());
+
+      expect(find.text('Titel'), findsOneWidget);
+      expect(find.text('Morgenmad'), findsOneWidget);
+    });
+
+    testWidgets('typing in title field calls setTitle', (tester) async {
+      when(() => mockCubit.state).thenReturn(ActivityFormReady(
+        form: ActivityFormData(date: testDate),
+      ));
+      when(() => mockCubit.setTitle(any())).thenReturn(null);
+
+      await tester.pumpWidget(buildSubject());
+      await tester.enterText(find.byType(TextFormField), 'Frokost');
+
+      verify(() => mockCubit.setTitle('Frokost')).called(1);
+    });
+
+    testWidgets('shows date picker field with formatted date', (tester) async {
+      when(() => mockCubit.state).thenReturn(ActivityFormReady(
+        form: ActivityFormData(date: DateTime(2026, 3, 22)),
+      ));
+
+      await tester.pumpWidget(buildSubject());
+
+      expect(find.text('Dato'), findsOneWidget);
+      // 22/03 formatted, Sunday
+      expect(find.text('Søndag 22/03'), findsOneWidget);
+    });
+
     testWidgets('shows time pickers when hasTime is enabled', (tester) async {
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
         form: ActivityFormData(date: testDate, hasTime: true),

@@ -55,6 +55,14 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
 
   // ── Form field setters ────────────────────────────────────
 
+  void setTitle(String title) {
+    _emitReady(form: state.form.copyWith(title: title));
+  }
+
+  void setDate(DateTime date) {
+    _emitReady(form: state.form.copyWith(date: date));
+  }
+
   void toggleHasTime() {
     _emitReady(form: state.form.copyWith(hasTime: !state.form.hasTime));
   }

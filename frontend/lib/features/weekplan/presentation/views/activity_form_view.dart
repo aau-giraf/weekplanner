@@ -49,6 +49,28 @@ class ActivityFormView extends StatelessWidget {
                   const SizedBox(height: 8),
                   const PictogramSelector(),
                   const SizedBox(height: 24),
+                  // Title field
+                  _TitleField(
+                    title: state.form.title,
+                    onChanged: cubit.setTitle,
+                  ),
+                  const SizedBox(height: 16),
+                  // Date picker
+                  _DatePicker(
+                    date: state.form.date,
+                    onTap: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: state.form.date,
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime(2100),
+                      );
+                      if (picked != null && context.mounted) {
+                        cubit.setDate(picked);
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 16),
                   // Time toggle
                   SwitchListTile(
                     title: const Text('Angiv tidspunkt'),
@@ -132,6 +154,92 @@ class ActivityFormView extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+/// Text field for the activity title.
+///
+/// Uses a [TextEditingController] to support bidirectional sync:
+/// user edits update the cubit, and external changes (e.g., pictogram
+/// selection auto-setting the title) update the text field.
+class _TitleField extends StatefulWidget {
+  const _TitleField({
+    required this.title,
+    required this.onChanged,
+  });
+
+  final String title;
+  final ValueChanged<String> onChanged;
+
+  @override
+  State<_TitleField> createState() => _TitleFieldState();
+}
+
+class _TitleFieldState extends State<_TitleField> {
+  final _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.text = widget.title;
+  }
+
+  @override
+  void didUpdateWidget(_TitleField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.title != oldWidget.title && widget.title != _controller.text) {
+      _controller.text = widget.title;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: _controller,
+      onChanged: widget.onChanged,
+      decoration: const InputDecoration(
+        labelText: 'Titel',
+        hintText: 'Giv aktiviteten et navn',
+        prefixIcon: Icon(Icons.edit_outlined),
+      ),
+      maxLength: 200,
+      textCapitalization: TextCapitalization.sentences,
+    );
+  }
+}
+
+class _DatePicker extends StatelessWidget {
+  const _DatePicker({
+    required this.date,
+    required this.onTap,
+  });
+
+  final DateTime date;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final dayName = GirafDateUtils.dayName(date.weekday);
+    final formatted = GirafDateUtils.formatDateDDMM(date);
+    return InkWell(
+      onTap: onTap,
+      child: InputDecorator(
+        decoration: const InputDecoration(
+          labelText: 'Dato',
+          prefixIcon: Icon(Icons.calendar_today),
+        ),
+        child: Text(
+          '$dayName $formatted',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
       ),
     );
   }
