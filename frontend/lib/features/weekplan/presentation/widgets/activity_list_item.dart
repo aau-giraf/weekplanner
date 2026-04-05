@@ -13,6 +13,7 @@ class ActivityListItem extends StatefulWidget {
   final VoidCallback onDelete;
   final VoidCallback onToggleStatus;
   final VoidCallback? onLongPress;
+  final VoidCallback? onChoiceTap;
   final String? imageUrl;
   final String? soundUrl;
 
@@ -23,6 +24,7 @@ class ActivityListItem extends StatefulWidget {
     required this.onDelete,
     required this.onToggleStatus,
     this.onLongPress,
+    this.onChoiceTap,
     this.imageUrl,
     this.soundUrl,
   });
@@ -70,6 +72,8 @@ class _ActivityListItemState extends State<ActivityListItem> {
     final activity = widget.activity;
     final soundUrl = widget.soundUrl;
     final hasSound = soundUrl != null && soundUrl.isNotEmpty;
+    final isUnresolvedChoice =
+        activity.options.isNotEmpty && activity.selectedOptionIndex == null;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -96,19 +100,46 @@ class _ActivityListItemState extends State<ActivityListItem> {
         child: Card(
           color: activity.isCompleted
               ? context.girafColors.completedBackground
-              : context.girafColors.pendingBackground,
+              : isUnresolvedChoice
+                  ? context.colorScheme.tertiaryContainer
+                  : context.girafColors.pendingBackground,
           child: InkWell(
-            onTap: hasSound ? _togglePlayback : null,
+            onTap: isUnresolvedChoice
+                ? widget.onChoiceTap
+                : hasSound
+                    ? _togglePlayback
+                    : null,
             onLongPress: widget.onLongPress,
             borderRadius: BorderRadius.circular(12),
             child: Padding(
               padding: const EdgeInsets.all(12),
               child: Row(
                 children: [
-                  // Pictogram — hero element
-                  _ActivityPictogram(
-                    imageUrl: widget.imageUrl,
-                    hasPictogram: activity.pictogramId != null,
+                  // Pictogram — hero element, with choice badge
+                  Stack(
+                    children: [
+                      _ActivityPictogram(
+                        imageUrl: widget.imageUrl,
+                        hasPictogram: activity.pictogramId != null,
+                      ),
+                      if (isUnresolvedChoice)
+                        Positioned(
+                          right: 0,
+                          bottom: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: context.colorScheme.tertiary,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.touch_app,
+                              size: 16,
+                              color: context.colorScheme.onTertiary,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                   const SizedBox(width: 16),
                   // Title and time
@@ -118,15 +149,28 @@ class _ActivityListItemState extends State<ActivityListItem> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          activity.title ?? 'Unavngivet aktivitet',
+                          isUnresolvedChoice
+                              ? (activity.title ?? 'Tryk for at vælge')
+                              : (activity.title ?? 'Unavngivet aktivitet'),
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                color: activity.title != null
-                                    ? null
-                                    : context.colorScheme.outline,
+                                color: isUnresolvedChoice
+                                    ? context.colorScheme.tertiary
+                                    : activity.title != null
+                                        ? null
+                                        : context.colorScheme.outline,
                               ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
+                        if (isUnresolvedChoice) ...[
+                          const SizedBox(height: 2),
+                          Text(
+                            '${activity.options.length} valgmuligheder',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: context.colorScheme.outline,
+                                ),
+                          ),
+                        ],
                         if (activity.startTime case final start?)
                           if (activity.endTime case final end?) ...[
                             const SizedBox(height: 4),

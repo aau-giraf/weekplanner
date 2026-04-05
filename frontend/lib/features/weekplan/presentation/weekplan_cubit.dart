@@ -166,6 +166,45 @@ class WeekplanCubit extends Cubit<WeekplanState> {
     }
   }
 
+  /// Select an option on a choice activity.
+  ///
+  /// Optimistically updates the activity, rolls back on server failure.
+  Future<void> selectOption(int activityId, int optionIndex) async {
+    final current = state;
+    if (current is! WeekplanLoaded) return;
+
+    final index =
+        current.activities.indexWhere((a) => a.activityId == activityId);
+    if (index == -1) return;
+
+    final activity = current.activities[index];
+    if (optionIndex < 0 || optionIndex >= activity.options.length) return;
+
+    final option = activity.options[optionIndex];
+    final updated = current.activities.map((a) {
+      if (a.activityId == activityId) {
+        return a.copyWith(
+          selectedOptionIndex: optionIndex,
+          title: option.title ?? a.title,
+          pictogramId: option.pictogramId ?? a.pictogramId,
+        );
+      }
+      return a;
+    }).toList();
+
+    emit(current.copyWith(activities: updated));
+
+    final result =
+        await _activityRepository.selectOption(activityId, optionIndex);
+    switch (result) {
+      case Left(:final value):
+        _log.warning('Select option rollback: ${value.message}');
+        emit(current.copyWith(activities: current.activities));
+      case Right():
+        break;
+    }
+  }
+
   /// Optimistically reorder activities after a drag-and-drop.
   Future<void> reorderActivities(int oldIndex, int newIndex) async {
     final current = state;
