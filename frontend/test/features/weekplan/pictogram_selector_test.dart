@@ -103,7 +103,7 @@ void main() {
       expect(find.text('Generer lyd automatisk'), findsOneWidget);
     });
 
-    testWidgets('generate mode shows prompt field but no name field',
+    testWidgets('generate mode shows sound toggle and generate button',
         (tester) async {
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
         form: defaultForm,
@@ -113,7 +113,8 @@ void main() {
       await tester.pumpWidget(buildSubject());
 
       expect(find.text('Navn'), findsNothing);
-      expect(find.text('Beskrivelse til AI (valgfrit)'), findsOneWidget);
+      expect(find.text('Generer lyd'), findsOneWidget);
+      expect(find.text('Generer piktogram'), findsOneWidget);
     });
 
     testWidgets('shows selected pictogram preview with name and check icon',

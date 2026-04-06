@@ -18,12 +18,10 @@ class PictogramSelector extends StatefulWidget {
 
 class _PictogramSelectorState extends State<PictogramSelector> {
   final _searchController = TextEditingController();
-  final _promptController = TextEditingController();
 
   @override
   void dispose() {
     _searchController.dispose();
-    _promptController.dispose();
     super.dispose();
   }
 
@@ -79,10 +77,8 @@ class _PictogramSelectorState extends State<PictogramSelector> {
                   onGenerateSoundChanged: cubit.setGenerateSound,
                 ),
               PictogramMode.generate => _GenerateTab(
-                  promptController: _promptController,
                   generateSound: state.creation.generateSound,
                   isCreatingPictogram: state.creation.isCreating,
-                  onPromptChanged: cubit.setGeneratePrompt,
                   onGenerateSoundChanged: cubit.setGenerateSound,
                   onGenerate: cubit.generatePictogram,
                 ),
@@ -91,6 +87,7 @@ class _PictogramSelectorState extends State<PictogramSelector> {
             // Selected pictogram preview
             if (state.selection.pictogram != null) ...[
               const SizedBox(height: 12),
+              // Guarded by != null check above.
               _SelectedPictogramPreview(pictogram: state.selection.pictogram!),
             ],
           ],
@@ -303,18 +300,14 @@ class _UploadTab extends StatelessWidget {
 /// AI generation tab: optional prompt and sound toggle. The pictogram
 /// name comes from the activity title field — no separate name input.
 class _GenerateTab extends StatelessWidget {
-  final TextEditingController promptController;
   final bool generateSound;
   final bool isCreatingPictogram;
-  final ValueChanged<String> onPromptChanged;
   final ValueChanged<bool> onGenerateSoundChanged;
   final Future<bool> Function() onGenerate;
 
   const _GenerateTab({
-    required this.promptController,
     required this.generateSound,
     required this.isCreatingPictogram,
-    required this.onPromptChanged,
     required this.onGenerateSoundChanged,
     required this.onGenerate,
   });
@@ -324,18 +317,6 @@ class _GenerateTab extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        TextField(
-          controller: promptController,
-          onChanged: onPromptChanged,
-          maxLines: 2,
-          decoration: const InputDecoration(
-            labelText: 'Beskrivelse til AI (valgfrit)',
-            hintText: 'Beskriv hvad billedet skal vise...',
-            helperText:
-                'Lad feltet stå tomt for at bruge titlen som beskrivelse',
-          ),
-        ),
-        const SizedBox(height: 8),
         SwitchListTile(
           title: const Text('Generer lyd'),
           subtitle: const Text('AI-genereret udtale af titlen'),

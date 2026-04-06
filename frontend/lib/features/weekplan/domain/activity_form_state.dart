@@ -165,9 +165,6 @@ final class PictogramCreation with EquatableMixin {
   /// Current pictogram selection mode.
   final PictogramMode mode;
 
-  /// AI generation prompt (optional description for image generation).
-  final String generatePrompt;
-
   /// Selected image file for upload mode.
   final FileData? imageFile;
 
@@ -182,7 +179,6 @@ final class PictogramCreation with EquatableMixin {
 
   const PictogramCreation({
     this.mode = PictogramMode.search,
-    this.generatePrompt = '',
     this.imageFile,
     this.soundFile,
     this.generateSound = true,
@@ -191,7 +187,6 @@ final class PictogramCreation with EquatableMixin {
 
   PictogramCreation copyWith({
     PictogramMode? mode,
-    String? generatePrompt,
     FileData? imageFile,
     FileData? soundFile,
     bool? generateSound,
@@ -201,7 +196,6 @@ final class PictogramCreation with EquatableMixin {
   }) {
     return PictogramCreation(
       mode: mode ?? this.mode,
-      generatePrompt: generatePrompt ?? this.generatePrompt,
       imageFile: clearImageFile ? null : (imageFile ?? this.imageFile),
       soundFile: clearSoundFile ? null : (soundFile ?? this.soundFile),
       generateSound: generateSound ?? this.generateSound,
@@ -212,7 +206,6 @@ final class PictogramCreation with EquatableMixin {
   @override
   List<Object?> get props => [
         mode,
-        generatePrompt,
         imageFile,
         soundFile,
         generateSound,

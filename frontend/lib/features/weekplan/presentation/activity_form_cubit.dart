@@ -137,10 +137,6 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
     _emitReady(creation: state.creation.copyWith(mode: mode));
   }
 
-  void setGeneratePrompt(String prompt) {
-    _emitReady(creation: state.creation.copyWith(generatePrompt: prompt));
-  }
-
   void setSelectedImageFile(FileData? file) {
     if (file == null) {
       _emitReady(creation: state.creation.copyWith(clearImageFile: true));
