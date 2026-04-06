@@ -137,14 +137,6 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
     _emitReady(creation: state.creation.copyWith(mode: mode));
   }
 
-  void setPictogramName(String name) {
-    _emitReady(creation: state.creation.copyWith(name: name));
-  }
-
-  void setGeneratePrompt(String prompt) {
-    _emitReady(creation: state.creation.copyWith(generatePrompt: prompt));
-  }
-
   void setSelectedImageFile(FileData? file) {
     if (file == null) {
       _emitReady(creation: state.creation.copyWith(clearImageFile: true));
@@ -201,17 +193,17 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
   // ── Pictogram creation ───────────────────────────────────
 
   /// Upload a local image as a new pictogram and select it.
-  Future<bool> uploadPictogramFromFile() async {
+  ///
+  /// Uses [ActivityFormData.title] as the pictogram name — there is no
+  /// separate name field.
+  Future<bool> _uploadPictogramFromFile() async {
     final imageFile = state.creation.imageFile;
-    if (imageFile == null || state.creation.name.isEmpty) {
-      _emitReady(error: 'Angiv navn og vælg et billede');
-      return false;
-    }
+    if (imageFile == null) return false;
 
     _emitReady(creation: state.creation.copyWith(isCreating: true));
 
     final result = await _pictogramRepository.uploadPictogram(
-      name: state.creation.name,
+      name: state.form.title,
       imageFile: imageFile,
       soundFile: state.creation.soundFile,
       organizationId: organizationId,
@@ -229,26 +221,26 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
         _emitReady(
           creation: state.creation.copyWith(isCreating: false),
           selection: PictogramSelection(id: value.id, pictogram: value),
-          form: state.form.copyWith(title: value.name),
         );
         return true;
     }
   }
 
   /// Create a pictogram via AI generation and select it.
+  ///
+  /// Uses [ActivityFormData.title] as the pictogram name. The optional
+  /// [PictogramCreation.generatePrompt] provides an AI description for
+  /// image generation — if empty, the title is used as the prompt too.
   Future<bool> generatePictogram() async {
-    final prompt = state.creation.generatePrompt.isNotEmpty
-        ? state.creation.generatePrompt
-        : state.creation.name;
-    if (prompt.isEmpty) {
-      _emitReady(error: 'Angiv et navn eller en beskrivelse');
+    if (state.form.title.isEmpty) {
+      _emitReady(error: 'Angiv en titel først');
       return false;
     }
 
     _emitReady(creation: state.creation.copyWith(isCreating: true));
 
     final result = await _pictogramRepository.createPictogram(
-      name: prompt,
+      name: state.form.title,
       organizationId: organizationId,
       generateImage: true,
       generateSound: state.creation.generateSound,
@@ -265,7 +257,6 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
         _emitReady(
           creation: state.creation.copyWith(isCreating: false),
           selection: PictogramSelection(id: value.id, pictogram: value),
-          form: state.form.copyWith(title: value.name),
         );
         return true;
     }
@@ -273,8 +264,20 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
 
   // ── Validation and save ──────────────────────────────────
 
+  /// Whether the form has a pending pictogram upload (image picked but not
+  /// yet sent to the server).
+  bool get _hasPendingUpload =>
+      state.creation.mode == PictogramMode.upload &&
+      state.creation.imageFile != null &&
+      state.selection.id == null;
+
   /// Validate the form and return an error message, or null if valid.
   String? validate() {
+    // Title is required when uploading or generating a pictogram, since it
+    // doubles as the pictogram name.
+    if (_hasPendingUpload && state.form.title.isEmpty) {
+      return 'Angiv en titel';
+    }
     if (state.form.isChoiceActivity) {
       for (final option in state.form.choiceOptions) {
         if (option.pictogramId == null) {
@@ -282,7 +285,7 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
         }
       }
     } else {
-      if (state.selection.id == null) {
+      if (state.selection.id == null && !_hasPendingUpload) {
         return 'Vælg et piktogram';
       }
     }
@@ -299,11 +302,21 @@ class ActivityFormCubit extends Cubit<ActivityFormState> {
   }
 
   /// Save the activity (create or update). Returns true on success.
+  ///
+  /// When the user has picked an image file (upload mode), the pictogram
+  /// is created first using the activity title as its name. This ensures
+  /// the title is known before the pictogram is sent to the server.
   Future<bool> save() async {
     final validationError = validate();
     if (validationError != null) {
       _emitReady(error: validationError);
       return false;
+    }
+
+    // Deferred upload: create the pictogram now that the title is set.
+    if (_hasPendingUpload) {
+      final uploaded = await _uploadPictogramFromFile();
+      if (!uploaded) return false;
     }
 
     final s = state;

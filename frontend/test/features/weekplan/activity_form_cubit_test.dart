@@ -299,18 +299,26 @@ void main() {
     );
   });
 
-  group('uploadPictogramFromFile', () {
-    test('returns false and emits error when name or file is missing', () async {
+  group('deferred pictogram upload via save', () {
+    test('save validates title is required when image file is pending',
+        () async {
       final cubit = buildCubit();
-      final result = await cubit.uploadPictogramFromFile();
+      cubit.setPictogramMode(PictogramMode.upload);
+      final FileData fakeFile =
+          (name: 'image.png', size: 0, bytes: Uint8List(0), path: null);
+      cubit.setSelectedImageFile(fakeFile);
+
+      final result = await cubit.save();
       expect(result, isFalse);
-      expect(cubit.state, isA<ActivityFormReady>());
-      expect((cubit.state as ActivityFormReady).error,
-          'Angiv navn og vælg et billede');
+      expect(
+        (cubit.state as ActivityFormReady).error,
+        'Angiv en titel',
+      );
       cubit.close();
     });
 
-    test('returns true and selects pictogram on success', () async {
+    test('save uploads pictogram using title as name then creates activity',
+        () async {
       when(
         () => mockPictogramRepo.uploadPictogram(
           name: any(named: 'name'),
@@ -320,22 +328,38 @@ void main() {
           generateSound: any(named: 'generateSound'),
         ),
       ).thenAnswer((_) async => const Right(testPictogram));
+      when(
+        () => mockActivityRepo.createActivity(
+          id: any(named: 'id'),
+          isCitizen: any(named: 'isCitizen'),
+          data: any(named: 'data'),
+        ),
+      ).thenAnswer((_) async => Right(testActivity));
 
       final cubit = buildCubit();
-      // Seed state with name and image file
-      cubit.setPictogramName('test');
-      final FileData fakeFile = (name: 'image.png', size: 0, bytes: Uint8List(0), path: null);
+      cubit.setTitle('Leg udenfor');
+      cubit.setPictogramMode(PictogramMode.upload);
+      final FileData fakeFile =
+          (name: 'image.png', size: 0, bytes: Uint8List(0), path: null);
       cubit.setSelectedImageFile(fakeFile);
 
-      final result = await cubit.uploadPictogramFromFile();
+      final result = await cubit.save();
       expect(result, isTrue);
-      expect(cubit.state, isA<ActivityFormReady>());
-      expect(cubit.state.selection.id, 1);
-      expect(cubit.state.selection.pictogram, testPictogram);
+
+      // Verify pictogram was uploaded with the title as name
+      verify(
+        () => mockPictogramRepo.uploadPictogram(
+          name: 'Leg udenfor',
+          imageFile: fakeFile,
+          soundFile: null,
+          organizationId: null,
+          generateSound: true,
+        ),
+      ).called(1);
       cubit.close();
     });
 
-    test('returns false and emits error message on failure', () async {
+    test('save emits error when upload fails', () async {
       when(
         () => mockPictogramRepo.uploadPictogram(
           name: any(named: 'name'),
@@ -347,11 +371,13 @@ void main() {
       ).thenAnswer((_) async => const Left(CreatePictogramFailure()));
 
       final cubit = buildCubit();
-      cubit.setPictogramName('test');
-      final FileData fakeFile = (name: 'image.png', size: 0, bytes: Uint8List(0), path: null);
+      cubit.setTitle('Leg udenfor');
+      cubit.setPictogramMode(PictogramMode.upload);
+      final FileData fakeFile =
+          (name: 'image.png', size: 0, bytes: Uint8List(0), path: null);
       cubit.setSelectedImageFile(fakeFile);
 
-      final result = await cubit.uploadPictogramFromFile();
+      final result = await cubit.save();
       expect(result, isFalse);
       expect((cubit.state as ActivityFormReady).error,
           'Kunne ikke oprette piktogram');
@@ -360,12 +386,12 @@ void main() {
   });
 
   group('generatePictogram', () {
-    test('returns false and emits error when prompt is empty', () async {
+    test('returns false and emits error when title is empty', () async {
       final cubit = buildCubit();
       final result = await cubit.generatePictogram();
       expect(result, isFalse);
       expect((cubit.state as ActivityFormReady).error,
-          'Angiv et navn eller en beskrivelse');
+          'Angiv en titel først');
       cubit.close();
     });
 
@@ -380,7 +406,7 @@ void main() {
       ).thenAnswer((_) async => const Right(testPictogram));
 
       final cubit = buildCubit();
-      cubit.setPictogramName('cat');
+      cubit.setTitle('cat');
 
       final result = await cubit.generatePictogram();
       expect(result, isTrue);
@@ -400,7 +426,7 @@ void main() {
       ).thenAnswer((_) async => const Left(CreatePictogramFailure()));
 
       final cubit = buildCubit();
-      cubit.setGeneratePrompt('a cat playing');
+      cubit.setTitle('a cat playing');
 
       final result = await cubit.generatePictogram();
       expect(result, isFalse);

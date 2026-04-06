@@ -1,4 +1,5 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,14 +18,10 @@ class PictogramSelector extends StatefulWidget {
 
 class _PictogramSelectorState extends State<PictogramSelector> {
   final _searchController = TextEditingController();
-  final _nameController = TextEditingController();
-  final _promptController = TextEditingController();
 
   @override
   void dispose() {
     _searchController.dispose();
-    _nameController.dispose();
-    _promptController.dispose();
     super.dispose();
   }
 
@@ -62,14 +59,30 @@ class _PictogramSelectorState extends State<PictogramSelector> {
             const SizedBox(height: 12),
 
             // Content per mode
-            _PictogramModeContent(
-              mode: state.creation.mode,
-              state: state,
-              cubit: cubit,
-              searchController: _searchController,
-              nameController: _nameController,
-              promptController: _promptController,
-            ),
+            switch (state.creation.mode) {
+              PictogramMode.search => _SearchTab(
+                  controller: _searchController,
+                  onSearchChanged: cubit.onSearchQueryChanged,
+                  pictograms: state.search.results,
+                  isLoading: state.search.isSearching,
+                  selectedId: state.selection.id,
+                  onSelect: cubit.selectPictogram,
+                ),
+              PictogramMode.upload => _UploadTab(
+                  selectedImageFile: state.creation.imageFile,
+                  selectedSoundFile: state.creation.soundFile,
+                  generateSound: state.creation.generateSound,
+                  onImageFilePicked: cubit.setSelectedImageFile,
+                  onSoundFilePicked: cubit.setSelectedSoundFile,
+                  onGenerateSoundChanged: cubit.setGenerateSound,
+                ),
+              PictogramMode.generate => _GenerateTab(
+                  generateSound: state.creation.generateSound,
+                  isCreatingPictogram: state.creation.isCreating,
+                  onGenerateSoundChanged: cubit.setGenerateSound,
+                  onGenerate: cubit.generatePictogram,
+                ),
+            },
 
             // Selected pictogram preview
             if (state.selection.pictogram != null) ...[
@@ -84,64 +97,7 @@ class _PictogramSelectorState extends State<PictogramSelector> {
   }
 }
 
-// ── Mode content router ───────────────────────────────────────
-
-/// Renders the appropriate tab content based on the selected [PictogramMode].
-class _PictogramModeContent extends StatelessWidget {
-  const _PictogramModeContent({
-    required this.mode,
-    required this.state,
-    required this.cubit,
-    required this.searchController,
-    required this.nameController,
-    required this.promptController,
-  });
-
-  final PictogramMode mode;
-  final ActivityFormState state;
-  final ActivityFormCubit cubit;
-  final TextEditingController searchController;
-  final TextEditingController nameController;
-  final TextEditingController promptController;
-
-  @override
-  Widget build(BuildContext context) {
-    return switch (mode) {
-      PictogramMode.search => _SearchTab(
-          controller: searchController,
-          onSearchChanged: cubit.onSearchQueryChanged,
-          pictograms: state.search.results,
-          isLoading: state.search.isSearching,
-          selectedId: state.selection.id,
-          onSelect: cubit.selectPictogram,
-        ),
-      PictogramMode.upload => _UploadTab(
-          nameController: nameController,
-          selectedImageFile: state.creation.imageFile,
-          selectedSoundFile: state.creation.soundFile,
-          generateSound: state.creation.generateSound,
-          isCreatingPictogram: state.creation.isCreating,
-          onNameChanged: cubit.setPictogramName,
-          onImageFilePicked: cubit.setSelectedImageFile,
-          onSoundFilePicked: cubit.setSelectedSoundFile,
-          onGenerateSoundChanged: cubit.setGenerateSound,
-          onUpload: cubit.uploadPictogramFromFile,
-        ),
-      PictogramMode.generate => _GenerateTab(
-          nameController: nameController,
-          promptController: promptController,
-          generateSound: state.creation.generateSound,
-          isCreatingPictogram: state.creation.isCreating,
-          onNameChanged: cubit.setPictogramName,
-          onPromptChanged: cubit.setGeneratePrompt,
-          onGenerateSoundChanged: cubit.setGenerateSound,
-          onGenerate: cubit.generatePictogram,
-        ),
-    };
-  }
-}
-
-// ── Search tab (existing behavior) ──────────────────────────
+// ── Search tab ────────────────────────────────────────────────
 
 class _SearchTab extends StatelessWidget {
   final TextEditingController controller;
@@ -245,31 +201,26 @@ class _SearchTab extends StatelessWidget {
   }
 }
 
-// ── Upload tab ──────────────────────────────────────────────
+// ── Upload tab ────────────────────────────────────────────────
 
+/// Simplified upload tab: pick image, optionally pick sound or toggle
+/// auto-generation. No separate name field — the activity title (set in
+/// the form below) is used as the pictogram name on submit.
 class _UploadTab extends StatelessWidget {
-  final TextEditingController nameController;
   final FileData? selectedImageFile;
   final FileData? selectedSoundFile;
   final bool generateSound;
-  final bool isCreatingPictogram;
-  final ValueChanged<String> onNameChanged;
   final ValueChanged<FileData?> onImageFilePicked;
   final ValueChanged<FileData?> onSoundFilePicked;
   final ValueChanged<bool> onGenerateSoundChanged;
-  final Future<bool> Function() onUpload;
 
   const _UploadTab({
-    required this.nameController,
     required this.selectedImageFile,
     required this.selectedSoundFile,
     required this.generateSound,
-    required this.isCreatingPictogram,
-    required this.onNameChanged,
     required this.onImageFilePicked,
     required this.onSoundFilePicked,
     required this.onGenerateSoundChanged,
-    required this.onUpload,
   });
 
   @override
@@ -277,18 +228,9 @@ class _UploadTab extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        TextField(
-          controller: nameController,
-          onChanged: onNameChanged,
-          decoration: const InputDecoration(
-            labelText: 'Navn',
-            hintText: 'Giv piktogrammet et navn...',
-          ),
-        ),
-        const SizedBox(height: 12),
         OutlinedButton.icon(
           onPressed: () async {
-            final file = await _pickFile(['jpg', 'jpeg', 'png', 'webp']);
+            final file = await _pickImageFile();
             if (file != null) onImageFilePicked(file);
           },
           icon: const Icon(Icons.image),
@@ -301,7 +243,7 @@ class _UploadTab extends StatelessWidget {
         const SizedBox(height: 8),
         OutlinedButton.icon(
           onPressed: () async {
-            final file = await _pickFile(['mp3']);
+            final file = await _pickSoundFile();
             if (file != null) onSoundFilePicked(file);
           },
           icon: const Icon(Icons.audiotrack),
@@ -314,63 +256,58 @@ class _UploadTab extends StatelessWidget {
         const SizedBox(height: 8),
         SwitchListTile(
           title: const Text('Generer lyd automatisk'),
-          subtitle: const Text('AI-genereret udtale af navnet'),
+          subtitle: const Text('AI-genereret udtale af titlen'),
           value: generateSound,
           onChanged: onGenerateSoundChanged,
           contentPadding: EdgeInsets.zero,
-        ),
-        const SizedBox(height: 12),
-        ElevatedButton(
-          onPressed: isCreatingPictogram ? null : onUpload,
-          child: isCreatingPictogram
-              ? const SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Text('Upload piktogram'),
         ),
       ],
     );
   }
 
-  /// Pick a file and convert to domain-safe [FileData].
-  Future<FileData?> _pickFile(List<String> extensions) async {
+  Future<FileData?> _pickImageFile() async {
     final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: extensions,
+      type: FileType.image,
       withData: true,
     );
+    return _toFileData(result);
+  }
+
+  Future<FileData?> _pickSoundFile() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['mp3', 'wav', 'ogg'],
+      withData: true,
+    );
+    return _toFileData(result);
+  }
+
+  FileData? _toFileData(FilePickerResult? result) {
     final file = result?.files.single;
     if (file == null) return null;
     return (
       name: file.name,
       size: file.size,
       bytes: file.bytes,
-      path: file.path,
+      // PlatformFile.path throws on web — skip it there.
+      path: kIsWeb ? null : file.path,
     );
   }
 }
 
-// ── Generate tab ────────────────────────────────────────────
+// ── Generate tab ──────────────────────────────────────────────
 
+/// AI generation tab: optional prompt and sound toggle. The pictogram
+/// name comes from the activity title field — no separate name input.
 class _GenerateTab extends StatelessWidget {
-  final TextEditingController nameController;
-  final TextEditingController promptController;
   final bool generateSound;
   final bool isCreatingPictogram;
-  final ValueChanged<String> onNameChanged;
-  final ValueChanged<String> onPromptChanged;
   final ValueChanged<bool> onGenerateSoundChanged;
   final Future<bool> Function() onGenerate;
 
   const _GenerateTab({
-    required this.nameController,
-    required this.promptController,
     required this.generateSound,
     required this.isCreatingPictogram,
-    required this.onNameChanged,
-    required this.onPromptChanged,
     required this.onGenerateSoundChanged,
     required this.onGenerate,
   });
@@ -380,30 +317,9 @@ class _GenerateTab extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        TextField(
-          controller: nameController,
-          onChanged: onNameChanged,
-          decoration: const InputDecoration(
-            labelText: 'Navn',
-            hintText: 'Giv piktogrammet et navn...',
-          ),
-        ),
-        const SizedBox(height: 12),
-        TextField(
-          controller: promptController,
-          onChanged: onPromptChanged,
-          maxLines: 2,
-          decoration: const InputDecoration(
-            labelText: 'Beskrivelse til AI (valgfrit)',
-            hintText: 'Beskriv hvad billedet skal vise...',
-            helperText:
-                'Lad feltet stå tomt for at bruge navnet som beskrivelse',
-          ),
-        ),
-        const SizedBox(height: 8),
         SwitchListTile(
           title: const Text('Generer lyd'),
-          subtitle: const Text('AI-genereret udtale af navnet'),
+          subtitle: const Text('AI-genereret udtale af titlen'),
           value: generateSound,
           onChanged: onGenerateSoundChanged,
           contentPadding: EdgeInsets.zero,
@@ -425,7 +341,7 @@ class _GenerateTab extends StatelessWidget {
   }
 }
 
-// ── Selected pictogram preview ──────────────────────────────
+// ── Selected pictogram preview ────────────────────────────────
 
 class _SelectedPictogramPreview extends StatelessWidget {
   final Pictogram pictogram;

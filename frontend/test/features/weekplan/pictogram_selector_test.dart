@@ -90,7 +90,7 @@ void main() {
       expect(find.text('test'), findsOneWidget);
     });
 
-    testWidgets('upload mode shows name field and image button', (tester) async {
+    testWidgets('upload mode shows image and sound buttons', (tester) async {
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
         form: defaultForm,
         creation: const PictogramCreation(mode: PictogramMode.upload),
@@ -98,11 +98,12 @@ void main() {
 
       await tester.pumpWidget(buildSubject());
 
-      expect(find.text('Navn'), findsOneWidget);
       expect(find.text('Vælg billede'), findsOneWidget);
+      expect(find.text('Vælg lydfil (valgfrit)'), findsOneWidget);
+      expect(find.text('Generer lyd automatisk'), findsOneWidget);
     });
 
-    testWidgets('generate mode shows name field and prompt field',
+    testWidgets('generate mode shows sound toggle and generate button',
         (tester) async {
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
         form: defaultForm,
@@ -111,7 +112,9 @@ void main() {
 
       await tester.pumpWidget(buildSubject());
 
-      expect(find.text('Beskrivelse til AI (valgfrit)'), findsOneWidget);
+      expect(find.text('Navn'), findsNothing);
+      expect(find.text('Generer lyd'), findsOneWidget);
+      expect(find.text('Generer piktogram'), findsOneWidget);
     });
 
     testWidgets('shows selected pictogram preview with name and check icon',
