@@ -157,14 +157,15 @@ final class PictogramSelection with EquatableMixin {
 // ── Sub-state: Pictogram creation (upload / generate) ──────
 
 /// Form state for creating a new pictogram via upload or AI generation.
+///
+/// The pictogram name comes from [ActivityFormData.title] — there is no
+/// separate name field. Caregivers see one "Titel" field that serves as
+/// both the activity title and the pictogram name.
 final class PictogramCreation with EquatableMixin {
   /// Current pictogram selection mode.
   final PictogramMode mode;
 
-  /// Name for a new pictogram being created.
-  final String name;
-
-  /// AI generation prompt for a new pictogram.
+  /// AI generation prompt (optional description for image generation).
   final String generatePrompt;
 
   /// Selected image file for upload mode.
@@ -181,7 +182,6 @@ final class PictogramCreation with EquatableMixin {
 
   const PictogramCreation({
     this.mode = PictogramMode.search,
-    this.name = '',
     this.generatePrompt = '',
     this.imageFile,
     this.soundFile,
@@ -191,7 +191,6 @@ final class PictogramCreation with EquatableMixin {
 
   PictogramCreation copyWith({
     PictogramMode? mode,
-    String? name,
     String? generatePrompt,
     FileData? imageFile,
     FileData? soundFile,
@@ -202,7 +201,6 @@ final class PictogramCreation with EquatableMixin {
   }) {
     return PictogramCreation(
       mode: mode ?? this.mode,
-      name: name ?? this.name,
       generatePrompt: generatePrompt ?? this.generatePrompt,
       imageFile: clearImageFile ? null : (imageFile ?? this.imageFile),
       soundFile: clearSoundFile ? null : (soundFile ?? this.soundFile),
@@ -214,10 +212,7 @@ final class PictogramCreation with EquatableMixin {
   @override
   List<Object?> get props => [
         mode,
-        name,
         generatePrompt,
-        // FileData is a record — Dart records have structural equality,
-        // but the Uint8List bytes field uses identity comparison.
         imageFile,
         soundFile,
         generateSound,
