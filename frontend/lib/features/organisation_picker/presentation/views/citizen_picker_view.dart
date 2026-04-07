@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:weekplanner/config/theme.dart';
+import 'package:weekplanner/shared/layout_constants.dart';
 import 'package:weekplanner/features/organisation_picker/domain/organisation_picker_state.dart';
 import 'package:weekplanner/features/organisation_picker/presentation/organisation_picker_cubit.dart';
 import 'package:weekplanner/shared/models/citizen.dart';
@@ -75,10 +76,14 @@ class _CitizenGradeList extends StatelessWidget {
       return const Center(child: Text('Ingen borgere eller grupper fundet'));
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: allItems.length,
-      itemBuilder: (context, index) {
+    return Center(
+      child: ConstrainedBox(
+        constraints:
+            const BoxConstraints(maxWidth: GirafLayout.maxNarrowWidth),
+        child: ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: allItems.length,
+          itemBuilder: (context, index) {
         final item = allItems[index];
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
@@ -105,6 +110,8 @@ class _CitizenGradeList extends StatelessWidget {
           ),
         );
       },
+    ),
+      ),
     );
   }
 }
