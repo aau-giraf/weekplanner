@@ -156,7 +156,7 @@ class _SearchTab extends StatelessWidget {
                             : Colors.transparent,
                         width: 3,
                       ),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(GirafShape.radiusSmall),
                       color: context.colorScheme.surfaceContainerLow,
                     ),
                     child: Column(
@@ -325,7 +325,7 @@ class _GenerateTab extends StatelessWidget {
           contentPadding: EdgeInsets.zero,
         ),
         const SizedBox(height: 12),
-        ElevatedButton.icon(
+        FilledButton.icon(
           onPressed: isCreatingPictogram ? null : onGenerate,
           icon: isCreatingPictogram
               ? const SizedBox(
@@ -354,7 +354,7 @@ class _SelectedPictogramPreview extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: context.colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(GirafShape.radiusSmall),
         border: Border.all(color: context.colorScheme.primary, width: 2),
       ),
       child: Row(

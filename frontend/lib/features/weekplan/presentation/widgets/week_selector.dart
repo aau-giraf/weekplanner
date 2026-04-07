@@ -123,7 +123,7 @@ class _DayButton extends StatelessWidget {
           color: isSelected
               ? context.colorScheme.primary
               : context.colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(GirafShape.radiusMedium),
           border: isToday && !isSelected
               ? Border.all(
                   color: context.colorScheme.primary,

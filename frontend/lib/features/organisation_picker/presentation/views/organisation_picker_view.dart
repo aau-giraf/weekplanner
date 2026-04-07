@@ -61,7 +61,7 @@ class _ErrorWithRetry extends StatelessWidget {
             style: TextStyle(color: context.colorScheme.error),
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
+          FilledButton(
             onPressed: () =>
                 context.read<OrganisationPickerCubit>().loadOrganisations(),
             child: const Text('Prøv igen'),

@@ -85,7 +85,7 @@ class LoginView extends StatelessWidget {
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: context.girafColors.errorBackground,
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(GirafShape.radiusSmall),
                           ),
                           child: Text(
                             errorMessage,
@@ -96,7 +96,7 @@ class LoginView extends StatelessWidget {
                           ),
                         ),
                       const SizedBox(height: 16),
-                      ElevatedButton(
+                      FilledButton(
                         onPressed: isLoading
                             ? null
                             : () =>

@@ -128,9 +128,9 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsWidgets);
       expect(find.text('Tilføj'), findsNothing);
 
-      // The ElevatedButton should be disabled
+      // The FilledButton should be disabled
       final button =
-          tester.widget<ElevatedButton>(find.byType(ElevatedButton).first);
+          tester.widget<FilledButton>(find.byType(FilledButton).first);
       expect(button.onPressed, isNull);
     });
 

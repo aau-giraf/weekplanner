@@ -72,7 +72,7 @@ class _DayColumn extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(GirafShape.radiusMedium),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
