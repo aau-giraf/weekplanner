@@ -175,7 +175,7 @@ class ActivityFormView extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                  ElevatedButton(
+                  FilledButton(
                     onPressed: isSaving
                         ? null
                         : () => cubit.save(),
@@ -481,7 +481,7 @@ class _ChoiceOptionSlot extends StatelessWidget {
                 height: 56,
                 decoration: BoxDecoration(
                   color: context.colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(GirafShape.radiusSmall),
                   border: option.pictogramId == null
                       ? Border.all(
                           color: context.colorScheme.outline,

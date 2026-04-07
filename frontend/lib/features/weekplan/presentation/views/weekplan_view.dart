@@ -553,7 +553,7 @@ class _ErrorWithRetry extends StatelessWidget {
             style: TextStyle(color: context.colorScheme.error),
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
+          FilledButton(
             onPressed: () => context.read<WeekplanCubit>().loadActivities(),
             child: const Text('Prøv igen'),
           ),
@@ -643,7 +643,7 @@ class _ActivityList extends StatelessWidget {
           animation: animation,
           builder: (context, child) => Material(
             elevation: 4,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(GirafShape.radiusMedium),
             child: child,
           ),
           child: child,
@@ -786,7 +786,7 @@ class _SelectableActivityItem extends StatelessWidget {
             : null,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(GirafShape.radiusMedium),
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
@@ -802,7 +802,7 @@ class _SelectableActivityItem extends StatelessWidget {
                   height: 48,
                   decoration: BoxDecoration(
                     color: context.colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(GirafShape.radiusSmall),
                   ),
                   clipBehavior: Clip.antiAlias,
                   child: imageUrl != null

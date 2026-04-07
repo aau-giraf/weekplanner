@@ -110,7 +110,7 @@ class _ActivityListItemState extends State<ActivityListItem> {
                     ? _togglePlayback
                     : null,
             onLongPress: widget.onLongPress,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(GirafShape.radiusMedium),
             child: Padding(
               padding: const EdgeInsets.all(12),
               child: Row(
@@ -224,7 +224,7 @@ class _ActivityPictogram extends StatelessWidget {
       height: 96,
       decoration: BoxDecoration(
         color: context.colorScheme.primaryContainer,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(GirafShape.radiusMedium),
       ),
       clipBehavior: Clip.antiAlias,
       child: switch (imageUrl) {
