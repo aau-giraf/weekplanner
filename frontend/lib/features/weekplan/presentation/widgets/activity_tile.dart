@@ -124,12 +124,15 @@ class _ActivityTileState extends State<ActivityTile> {
             ? widget.onChoiceTap
             : hasSound
                 ? _togglePlayback
-                : widget.onToggleStatus,
+                : null,
         onLongPress: widget.onLongPress ?? () => _showContextMenu(context),
         child: Column(
           children: [
             Expanded(child: _TilePictogram(this)),
-            _TileLabel(activity: activity),
+            _TileLabel(
+              activity: activity,
+              onToggleStatus: widget.onToggleStatus,
+            ),
           ],
         ),
       ),
@@ -254,34 +257,60 @@ class _PictogramPlaceholder extends StatelessWidget {
 
 class _TileLabel extends StatelessWidget {
   final Activity activity;
+  final VoidCallback onToggleStatus;
 
-  const _TileLabel({required this.activity});
+  const _TileLabel({
+    required this.activity,
+    required this.onToggleStatus,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: GirafLayout.tileLabelHeight,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.only(left: 8, right: 2, top: 4, bottom: 4),
       color: context.colorScheme.surfaceContainerLow,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Row(
         children: [
-          Text(
-            activity.title ?? 'Unavngivet',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  activity.title ?? 'Unavngivet',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
-          ),
-          if (activity.startTime case final start?)
-            if (activity.endTime case final end?)
-              Text(
-                '${formatTimeValue(start)} - ${formatTimeValue(end)}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: context.colorScheme.outline,
+                if (activity.startTime case final start?)
+                  if (activity.endTime case final end?)
+                    Text(
+                      '${formatTimeValue(start)} - ${formatTimeValue(end)}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: context.colorScheme.outline,
+                          ),
                     ),
-              ),
+              ],
+            ),
+          ),
+          IconButton(
+            onPressed: onToggleStatus,
+            icon: Icon(
+              activity.isCompleted
+                  ? Icons.check_circle
+                  : Icons.circle_outlined,
+              color: activity.isCompleted
+                  ? context.girafColors.completedIndicator
+                  : context.colorScheme.outline,
+            ),
+            tooltip: activity.isCompleted ? 'Ikke færdig' : 'Færdig',
+            iconSize: 28,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+          ),
         ],
       ),
     );

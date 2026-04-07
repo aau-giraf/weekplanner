@@ -622,47 +622,88 @@ class _ActivityList extends StatelessWidget {
           maxWidth: GirafLayout.maxContentWidth,
           maxHeight: 450,
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              for (final activity in activities)
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: isSelecting
-                        ? _SelectableTile(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final tileCount = activities.length.clamp(1, 6);
+            final totalPadding = 48.0 + (tileCount - 1) * 12.0;
+            final tileWidth =
+                (constraints.maxWidth - totalPadding) / tileCount;
+
+            if (isSelecting) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 24, vertical: 16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (final activity in activities)
+                      Expanded(
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: 6),
+                          child: _SelectableTile(
                             activity: activity,
                             imageUrl: _imageUrlFor(activity),
-                            isSelected:
-                                selectedIds.contains(activity.activityId),
+                            isSelected: selectedIds
+                                .contains(activity.activityId),
                             onTap: () =>
                                 onToggleSelection(activity.activityId),
-                          )
-                        : ActivityTile(
-                            key: ValueKey(activity.activityId),
-                            activity: activity,
-                            imageUrl: _imageUrlFor(activity),
-                            soundUrl: _soundUrlFor(activity),
-                            onLongPress: () =>
-                                onLongPress(activity.activityId),
-                            onChoiceTap: activity.options.isNotEmpty &&
-                                    activity.selectedOptionIndex == null
-                                ? () => _showChoiceSelector(
-                                    context, activity, cubit)
-                                : null,
-                            onEdit: () => _editActivity(context, activity),
-                            onDelete: () =>
-                                _confirmDelete(context, activity, cubit),
-                            onToggleStatus: () =>
-                                cubit.toggleActivityStatus(
-                                    activity.activityId),
                           ),
-                  ),
+                        ),
+                      ),
+                  ],
                 ),
-            ],
-          ),
+              );
+            }
+
+            return ReorderableListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 24, vertical: 16),
+              onReorder: cubit.reorderActivities,
+              proxyDecorator: (child, index, animation) =>
+                  AnimatedBuilder(
+                animation: animation,
+                builder: (context, child) => Material(
+                  elevation: 4,
+                  borderRadius:
+                      BorderRadius.circular(GirafShape.radiusLarge),
+                  child: child,
+                ),
+                child: child,
+              ),
+              children: [
+                for (final activity in activities)
+                  SizedBox(
+                    key: ValueKey(activity.activityId),
+                    width: tileWidth,
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 6),
+                      child: ActivityTile(
+                        activity: activity,
+                        imageUrl: _imageUrlFor(activity),
+                        soundUrl: _soundUrlFor(activity),
+                        onLongPress: () =>
+                            onLongPress(activity.activityId),
+                        onChoiceTap: activity.options.isNotEmpty &&
+                                activity.selectedOptionIndex == null
+                            ? () => _showChoiceSelector(
+                                context, activity, cubit)
+                            : null,
+                        onEdit: () =>
+                            _editActivity(context, activity),
+                        onDelete: () => _confirmDelete(
+                            context, activity, cubit),
+                        onToggleStatus: () =>
+                            cubit.toggleActivityStatus(
+                                activity.activityId),
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          },
         ),
       ),
     );
