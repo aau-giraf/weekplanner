@@ -72,12 +72,13 @@ class _ActivityTileState extends State<ActivityTile> {
     }
   }
 
-  void _showContextMenu(BuildContext context) {
+  Future<void> _showContextMenu(BuildContext context) async {
+    // Non-null: only called from onLongPress, so widget is laid out.
     final renderBox = context.findRenderObject()! as RenderBox;
     final offset = renderBox.localToGlobal(Offset.zero);
     final size = renderBox.size;
 
-    showMenu<String>(
+    final value = await showMenu<String>(
       context: context,
       position: RelativeRect.fromLTRB(
         offset.dx,
@@ -89,17 +90,16 @@ class _ActivityTileState extends State<ActivityTile> {
         const PopupMenuItem(value: 'edit', child: Text('Rediger')),
         const PopupMenuItem(value: 'delete', child: Text('Slet')),
       ],
-    ).then((value) {
-      if (!mounted) return;
-      switch (value) {
-        case 'edit':
-          widget.onEdit();
-        case 'delete':
-          widget.onDelete();
-        default:
-          break;
-      }
-    });
+    );
+    if (!mounted) return;
+    switch (value) {
+      case 'edit':
+        widget.onEdit();
+      case 'delete':
+        widget.onDelete();
+      default:
+        break;
+    }
   }
 
   @override
@@ -128,7 +128,16 @@ class _ActivityTileState extends State<ActivityTile> {
         onLongPress: widget.onLongPress ?? () => _showContextMenu(context),
         child: Column(
           children: [
-            Expanded(child: _TilePictogram(this)),
+            Expanded(
+              child: _TilePictogram(
+                imageUrl: widget.imageUrl,
+                hasPictogram: activity.pictogramId != null,
+                isCompleted: activity.isCompleted,
+                isUnresolvedChoice: isUnresolvedChoice,
+                hasSound: hasSound,
+                isPlaying: _isPlaying,
+              ),
+            ),
             _TileLabel(
               activity: activity,
               onToggleStatus: widget.onToggleStatus,
@@ -141,25 +150,31 @@ class _ActivityTileState extends State<ActivityTile> {
 }
 
 class _TilePictogram extends StatelessWidget {
-  final _ActivityTileState state;
+  final String? imageUrl;
+  final bool hasPictogram;
+  final bool isCompleted;
+  final bool isUnresolvedChoice;
+  final bool hasSound;
+  final ValueNotifier<bool> isPlaying;
 
-  const _TilePictogram(this.state);
+  const _TilePictogram({
+    required this.imageUrl,
+    required this.hasPictogram,
+    required this.isCompleted,
+    required this.isUnresolvedChoice,
+    required this.hasSound,
+    required this.isPlaying,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final activity = state.widget.activity;
-    final imageUrl = state.widget.imageUrl;
-    final hasPictogram = activity.pictogramId != null;
-    final isUnresolvedChoice =
-        activity.options.isNotEmpty && activity.selectedOptionIndex == null;
-
     return Stack(
       fit: StackFit.expand,
       children: [
         // Pictogram image or placeholder
         if (imageUrl != null && hasPictogram)
           Image.network(
-            imageUrl,
+            imageUrl!,
             fit: BoxFit.cover,
             errorBuilder: (_, _, _) => _PictogramPlaceholder(
               icon: Icons.image,
@@ -171,7 +186,7 @@ class _TilePictogram extends StatelessWidget {
           ),
 
         // Completion indicator (top-right)
-        if (activity.isCompleted)
+        if (isCompleted)
           Positioned(
             top: 8,
             right: 8,
@@ -209,21 +224,20 @@ class _TilePictogram extends StatelessWidget {
           ),
 
         // Sound indicator (top-left)
-        if (state.widget.soundUrl != null &&
-            state.widget.soundUrl!.isNotEmpty)
+        if (hasSound)
           Positioned(
             top: 8,
             left: 8,
             child: ValueListenableBuilder<bool>(
-              valueListenable: state._isPlaying,
-              builder: (context, isPlaying, _) => Container(
+              valueListenable: isPlaying,
+              builder: (context, playing, _) => Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
                   color: context.colorScheme.surface.withAlpha(200),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  isPlaying ? Icons.volume_up : Icons.volume_off,
+                  playing ? Icons.volume_up : Icons.volume_off,
                   size: 16,
                   color: context.colorScheme.onSurface,
                 ),
