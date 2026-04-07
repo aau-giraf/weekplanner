@@ -5,8 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/weekplan/domain/weekplan_state.dart';
 import 'package:weekplanner/features/weekplan/presentation/weekplan_cubit.dart';
-import 'package:weekplanner/features/weekplan/presentation/widgets/activity_list_item.dart';
+import 'package:weekplanner/features/weekplan/presentation/widgets/activity_tile.dart';
 import 'package:weekplanner/features/weekplan/presentation/widgets/choice_selector_dialog.dart';
+import 'package:weekplanner/shared/layout_constants.dart';
 import 'package:weekplanner/features/weekplan/presentation/widgets/week_overview.dart';
 import 'package:weekplanner/features/weekplan/presentation/widgets/week_selector.dart';
 import 'package:weekplanner/shared/models/activity.dart';
@@ -615,74 +616,119 @@ class _ActivityList extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = context.read<WeekplanCubit>();
 
-    if (isSelecting) {
-      return ListView.builder(
-        padding: const EdgeInsets.only(top: 8, bottom: 80),
-        itemCount: activities.length,
-        itemBuilder: (context, index) {
-          final activity = activities[index];
-          final media = activity.pictogramId != null
-              ? pictogramMedia[activity.pictogramId!]
-              : null;
-          final isSelected = selectedIds.contains(activity.activityId);
-          return _SelectableActivityItem(
-            activity: activity,
-            imageUrl: media?.imageUrl,
-            isSelected: isSelected,
-            onTap: () => onToggleSelection(activity.activityId),
-          );
-        },
-      );
-    }
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: GirafLayout.maxContentWidth,
+          maxHeight: 450,
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final tileCount = activities.length.clamp(1, 6);
+            final totalPadding = 48.0 + (tileCount - 1) * 12.0;
+            final tileWidth =
+                (constraints.maxWidth - totalPadding) / tileCount;
 
-    return ReorderableListView.builder(
-      padding: const EdgeInsets.only(top: 8, bottom: 80),
-      onReorder: cubit.reorderActivities,
-      proxyDecorator: (child, index, animation) {
-        return AnimatedBuilder(
-          animation: animation,
-          builder: (context, child) => Material(
-            elevation: 4,
-            borderRadius: BorderRadius.circular(GirafShape.radiusMedium),
-            child: child,
-          ),
-          child: child,
-        );
-      },
-      itemCount: activities.length,
-      itemBuilder: (context, index) {
-        final activity = activities[index];
-        final media = activity.pictogramId != null
-            ? pictogramMedia[activity.pictogramId!]
-            : null;
-        return ActivityListItem(
-          key: ValueKey(activity.activityId),
-          activity: activity,
-          imageUrl: media?.imageUrl,
-          soundUrl: media?.soundUrl,
-          onLongPress: () => onLongPress(activity.activityId),
-          onChoiceTap: activity.options.isNotEmpty &&
-                  activity.selectedOptionIndex == null
-              ? () => _showChoiceSelector(context, activity, cubit)
-              : null,
-          onEdit: () async {
-            final dateStr =
-                activity.date.toIso8601String().split('T').first;
-            final saved = await context.push<bool>(
-              '/weekplan/$citizenId/edit/${activity.activityId}'
-              '?type=${isCitizen ? 'citizen' : 'grade'}&orgId=$orgId&date=$dateStr',
-              extra: activity,
-            );
-            if (saved == true && context.mounted) {
-              context.read<WeekplanCubit>().loadActivities();
+            if (isSelecting) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 24, vertical: 16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (final activity in activities)
+                      Expanded(
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: 6),
+                          child: _SelectableTile(
+                            activity: activity,
+                            imageUrl: _imageUrlFor(activity),
+                            isSelected: selectedIds
+                                .contains(activity.activityId),
+                            onTap: () =>
+                                onToggleSelection(activity.activityId),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              );
             }
+
+            return ReorderableListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 24, vertical: 16),
+              onReorder: cubit.reorderActivities,
+              proxyDecorator: (child, index, animation) =>
+                  AnimatedBuilder(
+                animation: animation,
+                builder: (context, child) => Material(
+                  elevation: 4,
+                  borderRadius:
+                      BorderRadius.circular(GirafShape.radiusLarge),
+                  child: child,
+                ),
+                child: child,
+              ),
+              children: [
+                for (final activity in activities)
+                  SizedBox(
+                    key: ValueKey(activity.activityId),
+                    width: tileWidth,
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 6),
+                      child: ActivityTile(
+                        activity: activity,
+                        imageUrl: _imageUrlFor(activity),
+                        soundUrl: _soundUrlFor(activity),
+                        onLongPress: () =>
+                            onLongPress(activity.activityId),
+                        onChoiceTap: activity.options.isNotEmpty &&
+                                activity.selectedOptionIndex == null
+                            ? () => _showChoiceSelector(
+                                context, activity, cubit)
+                            : null,
+                        onEdit: () =>
+                            _editActivity(context, activity),
+                        onDelete: () => _confirmDelete(
+                            context, activity, cubit),
+                        onToggleStatus: () =>
+                            cubit.toggleActivityStatus(
+                                activity.activityId),
+                      ),
+                    ),
+                  ),
+              ],
+            );
           },
-          onDelete: () => _confirmDelete(context, activity, cubit),
-          onToggleStatus: () =>
-              cubit.toggleActivityStatus(activity.activityId),
-        );
-      },
+        ),
+      ),
     );
+  }
+
+  String? _imageUrlFor(Activity activity) {
+    if (activity.pictogramId == null) return null;
+    return pictogramMedia[activity.pictogramId!]?.imageUrl;
+  }
+
+  String? _soundUrlFor(Activity activity) {
+    if (activity.pictogramId == null) return null;
+    return pictogramMedia[activity.pictogramId!]?.soundUrl;
+  }
+
+  Future<void> _editActivity(BuildContext context, Activity activity) async {
+    final dateStr = activity.date.toIso8601String().split('T').first;
+    final saved = await context.push<bool>(
+      '/weekplan/$citizenId/edit/${activity.activityId}'
+      '?type=${isCitizen ? 'citizen' : 'grade'}&orgId=$orgId&date=$dateStr',
+      extra: activity,
+    );
+    if (saved == true && context.mounted) {
+      context.read<WeekplanCubit>().loadActivities();
+    }
   }
 
   Future<void> _confirmDelete(
@@ -761,15 +807,15 @@ class _ActivityList extends StatelessWidget {
   }
 }
 
-// ── Selectable activity item (selection mode) ─────────────
+// ── Selectable activity tile (selection mode) ───────────────
 
-class _SelectableActivityItem extends StatelessWidget {
+class _SelectableTile extends StatelessWidget {
   final Activity activity;
   final String? imageUrl;
   final bool isSelected;
   final VoidCallback onTap;
 
-  const _SelectableActivityItem({
+  const _SelectableTile({
     required this.activity,
     this.imageUrl,
     required this.isSelected,
@@ -778,61 +824,75 @@ class _SelectableActivityItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+    final hasPictogram = activity.pictogramId != null;
+
+    return GestureDetector(
+      onTap: onTap,
       child: Card(
-        color: isSelected
-            ? context.colorScheme.primaryContainer
-            : null,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(GirafShape.radiusMedium),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
+        clipBehavior: Clip.antiAlias,
+        color: isSelected ? context.colorScheme.primaryContainer : null,
+        child: Stack(
+          children: [
+            Column(
               children: [
-                Checkbox(
-                  value: isSelected,
-                  onChanged: (_) => onTap(),
-                ),
-                const SizedBox(width: 8),
-                // Pictogram thumbnail
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: context.colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(GirafShape.radiusSmall),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: imageUrl != null
+                Expanded(
+                  child: imageUrl != null && hasPictogram
                       ? Image.network(
                           imageUrl!,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => Icon(
-                            Icons.image,
-                            size: 24,
-                            color: context.colorScheme.onPrimaryContainer,
+                          width: double.infinity,
+                          errorBuilder: (_, _, _) => Center(
+                            child: Icon(
+                              Icons.image,
+                              size: 48,
+                              color: context.colorScheme.onPrimaryContainer,
+                            ),
                           ),
                         )
-                      : Icon(
-                          Icons.event,
-                          size: 24,
-                          color: context.colorScheme.onPrimaryContainer,
+                      : Container(
+                          color: context.colorScheme.primaryContainer,
+                          child: Center(
+                            child: Icon(
+                              hasPictogram ? Icons.image : Icons.event,
+                              size: 48,
+                              color: context.colorScheme.onPrimaryContainer,
+                            ),
+                          ),
                         ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    activity.title ?? 'Unavngivet aktivitet',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                Container(
+                  height: GirafLayout.tileLabelHeight,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  color: context.colorScheme.surfaceContainerLow,
+                  child: Center(
+                    child: Text(
+                      activity.title ?? 'Unavngivet',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
+            Positioned(
+              top: 8,
+              left: 8,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: context.colorScheme.surface.withAlpha(200),
+                  shape: BoxShape.circle,
+                ),
+                child: Checkbox(
+                  value: isSelected,
+                  onChanged: (_) => onTap(),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

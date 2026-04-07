@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:weekplanner/config/theme.dart';
+import 'package:weekplanner/shared/layout_constants.dart';
 import 'package:weekplanner/features/weekplan/domain/activity_form_state.dart';
 import 'package:weekplanner/features/weekplan/presentation/activity_form_cubit.dart';
 import 'package:weekplanner/features/weekplan/domain/repositories/pictogram_repository.dart';
@@ -39,155 +40,186 @@ class ActivityFormView extends StatelessWidget {
           final cubit = context.read<ActivityFormCubit>();
           return IgnorePointer(
             ignoring: isSaving,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Choice activity toggle (only for new activities)
-                  if (!state.isEditing)
-                    SwitchListTile(
-                      title: const Text('Valgaktivitet'),
-                      subtitle: state.form.isChoiceActivity
-                          ? const Text('Barnet vælger mellem muligheder')
-                          : null,
-                      value: state.form.isChoiceActivity,
-                      onChanged: (_) => cubit.toggleChoiceActivity(),
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                  if (!state.isEditing) const SizedBox(height: 8),
-                  if (state.form.isChoiceActivity) ...[
-                    // Choice options editor
-                    _ChoiceOptionsEditor(
-                      options: state.form.choiceOptions,
-                      cubit: cubit,
-                    ),
-                    const SizedBox(height: 16),
-                    // Title for the activity slot itself
-                    _TitleField(
-                      title: state.form.title,
-                      onChanged: cubit.setTitle,
-                    ),
-                  ] else ...[
-                    // Normal: single pictogram selector
-                    Text(
-                      'Piktogram',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 8),
-                    const PictogramSelector(),
-                    const SizedBox(height: 24),
-                    // Title field
-                    _TitleField(
-                      title: state.form.title,
-                      onChanged: cubit.setTitle,
-                    ),
-                  ],
-                  const SizedBox(height: 16),
-                  // Date picker
-                  _DatePicker(
-                    date: state.form.date,
-                    onTap: () async {
-                      final picked = await showDatePicker(
-                        context: context,
-                        initialDate: state.form.date,
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2100),
-                      );
-                      if (picked != null && context.mounted) {
-                        cubit.setDate(picked);
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  // Repeat selector (only for new activities)
-                  if (!state.isEditing)
-                    _RepeatDaySelector(
-                      selectedDays: state.form.repeatDays,
-                      onToggleDay: cubit.toggleRepeatDay,
-                      onSelectWeekdays: cubit.setRepeatWeekdays,
-                      onClear: cubit.clearRepeatDays,
-                    ),
-                  if (!state.isEditing) const SizedBox(height: 16),
-                  // Time toggle
-                  SwitchListTile(
-                    title: const Text('Angiv tidspunkt'),
-                    value: state.form.hasTime,
-                    onChanged: (_) => cubit.toggleHasTime(),
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  // Time pickers (only when enabled)
-                  if (state.form.hasTime) ...[
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _TimePicker(
-                            label: 'Starttid',
-                            time: state.form.startTime,
-                            onTap: () async {
-                              final picked = await showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay(
-                                  hour: state.form.startTime.hour,
-                                  minute: state.form.startTime.minute,
-                                ),
-                              );
-                              if (picked != null && context.mounted) {
-                                cubit.setStartTime(
-                                  (hour: picked.hour, minute: picked.minute),
-                                );
-                              }
-                            },
-                          ),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                    maxWidth: GirafLayout.maxContentWidth),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Left column: pictogram / choice options
+                      Expanded(
+                        flex: 45,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            if (!state.isEditing)
+                              SwitchListTile(
+                                title: const Text('Valgaktivitet'),
+                                subtitle: state.form.isChoiceActivity
+                                    ? const Text(
+                                        'Barnet vælger mellem muligheder')
+                                    : null,
+                                value: state.form.isChoiceActivity,
+                                onChanged: (_) =>
+                                    cubit.toggleChoiceActivity(),
+                                contentPadding: EdgeInsets.zero,
+                              ),
+                            if (!state.isEditing) const SizedBox(height: 8),
+                            if (state.form.isChoiceActivity)
+                              _ChoiceOptionsEditor(
+                                options: state.form.choiceOptions,
+                                cubit: cubit,
+                              )
+                            else ...[
+                              Text(
+                                'Piktogram',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium,
+                              ),
+                              const SizedBox(height: 8),
+                              const PictogramSelector(),
+                            ],
+                          ],
                         ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: _TimePicker(
-                            label: 'Sluttid',
-                            time: state.form.endTime,
-                            onTap: () async {
-                              final picked = await showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay(
-                                  hour: state.form.endTime.hour,
-                                  minute: state.form.endTime.minute,
-                                ),
-                              );
-                              if (picked != null && context.mounted) {
-                                cubit.setEndTime(
-                                  (hour: picked.hour, minute: picked.minute),
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                  const SizedBox(height: 24),
-                  if (error != null)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: Text(
-                        error,
-                        style: TextStyle(color: context.colorScheme.error),
-                        textAlign: TextAlign.center,
                       ),
-                    ),
-                  FilledButton(
-                    onPressed: isSaving
-                        ? null
-                        : () => cubit.save(),
-                    child: isSaving
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : Text(submitLabel),
+                      const SizedBox(width: 32),
+                      // Right column: form fields
+                      Expanded(
+                        flex: 55,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            _TitleField(
+                              title: state.form.title,
+                              onChanged: cubit.setTitle,
+                            ),
+                            const SizedBox(height: 16),
+                            _DatePicker(
+                              date: state.form.date,
+                              onTap: () async {
+                                final picked = await showDatePicker(
+                                  context: context,
+                                  initialDate: state.form.date,
+                                  firstDate: DateTime(2020),
+                                  lastDate: DateTime(2100),
+                                );
+                                if (picked != null && context.mounted) {
+                                  cubit.setDate(picked);
+                                }
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            if (!state.isEditing)
+                              _RepeatDaySelector(
+                                selectedDays: state.form.repeatDays,
+                                onToggleDay: cubit.toggleRepeatDay,
+                                onSelectWeekdays:
+                                    cubit.setRepeatWeekdays,
+                                onClear: cubit.clearRepeatDays,
+                              ),
+                            if (!state.isEditing)
+                              const SizedBox(height: 16),
+                            SwitchListTile(
+                              title: const Text('Angiv tidspunkt'),
+                              value: state.form.hasTime,
+                              onChanged: (_) => cubit.toggleHasTime(),
+                              contentPadding: EdgeInsets.zero,
+                            ),
+                            if (state.form.hasTime) ...[
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _TimePicker(
+                                      label: 'Starttid',
+                                      time: state.form.startTime,
+                                      onTap: () async {
+                                        final picked =
+                                            await showTimePicker(
+                                          context: context,
+                                          initialTime: TimeOfDay(
+                                            hour: state
+                                                .form.startTime.hour,
+                                            minute: state
+                                                .form.startTime.minute,
+                                          ),
+                                        );
+                                        if (picked != null &&
+                                            context.mounted) {
+                                          cubit.setStartTime((
+                                            hour: picked.hour,
+                                            minute: picked.minute,
+                                          ));
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: _TimePicker(
+                                      label: 'Sluttid',
+                                      time: state.form.endTime,
+                                      onTap: () async {
+                                        final picked =
+                                            await showTimePicker(
+                                          context: context,
+                                          initialTime: TimeOfDay(
+                                            hour:
+                                                state.form.endTime.hour,
+                                            minute: state
+                                                .form.endTime.minute,
+                                          ),
+                                        );
+                                        if (picked != null &&
+                                            context.mounted) {
+                                          cubit.setEndTime((
+                                            hour: picked.hour,
+                                            minute: picked.minute,
+                                          ));
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                            const SizedBox(height: 24),
+                            if (error != null)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(bottom: 16),
+                                child: Text(
+                                  error,
+                                  style: TextStyle(
+                                      color: context.colorScheme.error),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            FilledButton(
+                              onPressed: isSaving
+                                  ? null
+                                  : () => cubit.save(),
+                              child: isSaving
+                                  ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child:
+                                          CircularProgressIndicator(
+                                              strokeWidth: 2),
+                                    )
+                                  : Text(submitLabel),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           );

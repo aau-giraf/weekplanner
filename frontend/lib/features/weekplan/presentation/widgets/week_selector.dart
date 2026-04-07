@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/config/theme.dart';
+import 'package:weekplanner/shared/layout_constants.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';
 
 class WeekSelector extends StatelessWidget {
@@ -30,10 +31,14 @@ class WeekSelector extends StatelessWidget {
     return Column(
       children: [
         // Week navigation
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Center(
+          child: ConstrainedBox(
+            constraints:
+                const BoxConstraints(maxWidth: GirafLayout.maxContentWidth),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(
                 icon: const Icon(Icons.chevron_left),
@@ -69,27 +74,27 @@ class WeekSelector extends StatelessWidget {
             ],
           ),
         ),
-        // Day buttons
+          ),
+        ),
+        // Day buttons — centered row of larger buttons
         SizedBox(
-          height: 64,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            itemCount: weekDates.length,
-            itemBuilder: (context, index) {
-              final date = weekDates[index];
-              final isSelected = _isSameDay(date, selectedDate);
-              final isToday = _isSameDay(date, now);
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: _DayButton(
-                  date: date,
-                  isSelected: isSelected,
-                  isToday: isToday,
-                  onTap: () => onSelectDate(date),
-                ),
-              );
-            },
+          height: 80,
+          child: Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (final date in weekDates)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    child: _DayButton(
+                      date: date,
+                      isSelected: _isSameDay(date, selectedDate),
+                      isToday: _isSameDay(date, now),
+                      onTap: () => onSelectDate(date),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ],
@@ -118,7 +123,7 @@ class _DayButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 48,
+        width: GirafLayout.daySelectorSize,
         decoration: BoxDecoration(
           color: isSelected
               ? context.colorScheme.primary
@@ -137,7 +142,7 @@ class _DayButton extends StatelessWidget {
             Text(
               GirafDateUtils.dayNameShort(date.weekday),
               style: TextStyle(
-                fontSize: 11,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: isSelected
                     ? context.colorScheme.onPrimary
@@ -148,7 +153,7 @@ class _DayButton extends StatelessWidget {
             Text(
               '${date.day}',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: isSelected
                     ? context.colorScheme.onPrimary

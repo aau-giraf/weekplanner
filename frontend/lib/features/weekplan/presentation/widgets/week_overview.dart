@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/weekplan/domain/weekplan_state.dart';
+import 'package:weekplanner/shared/layout_constants.dart';
 import 'package:weekplanner/shared/models/activity.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';
 
@@ -30,20 +31,33 @@ class WeekOverview extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      itemCount: weekDates.length,
-      itemBuilder: (context, index) {
-        final date = weekDates[index];
-        final dateKey = GirafDateUtils.formatQueryDate(date);
-        final activities = weekActivities[dateKey] ?? const [];
-        return _DayColumn(
-          date: date,
-          activities: activities,
-          pictogramMedia: pictogramMedia,
-          onTap: () => onSelectDay(date),
-        );
-      },
+    return Center(
+      child: ConstrainedBox(
+        constraints:
+            const BoxConstraints(maxWidth: GirafLayout.maxContentWidth),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              for (final date in weekDates)
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: _DayColumn(
+                      date: date,
+                      activities: weekActivities[
+                              GirafDateUtils.formatQueryDate(date)] ??
+                          const [],
+                      pictogramMedia: pictogramMedia,
+                      onTap: () => onSelectDay(date),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -69,21 +83,27 @@ class _DayColumn extends StatelessWidget {
         date.year == now.year;
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 8),
+      shape: isToday
+          ? RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(GirafShape.radiusLarge),
+              side: BorderSide(color: context.colorScheme.primary, width: 2),
+            )
+          : null,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(GirafShape.radiusMedium),
+        borderRadius: BorderRadius.circular(GirafShape.radiusLarge),
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(8),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _DayHeader(date: date, isToday: isToday),
+              const SizedBox(height: 4),
               if (activities.isEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
-                    'Ingen aktiviteter',
+                    'Ingen',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: context.colorScheme.outline,
                           fontStyle: FontStyle.italic,
@@ -115,36 +135,21 @@ class _DayHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
         Text(
-          '${GirafDateUtils.dayName(date.weekday)} ${GirafDateUtils.formatDateDDMM(date)}',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+          GirafDateUtils.dayNameShort(date.weekday),
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: isToday ? context.colorScheme.primary : context.colorScheme.outline,
+              ),
+        ),
+        Text(
+          '${date.day}',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: isToday ? context.colorScheme.primary : null,
               ),
-        ),
-        if (isToday) ...[
-          const SizedBox(width: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            decoration: BoxDecoration(
-              color: context.colorScheme.primary,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              'I dag',
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: context.colorScheme.onPrimary,
-                  ),
-            ),
-          ),
-        ],
-        const Spacer(),
-        Icon(
-          Icons.chevron_right,
-          color: context.colorScheme.outline,
-          size: 20,
         ),
       ],
     );
@@ -163,18 +168,17 @@ class _ActivityRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 6),
-      child: Row(
+      padding: const EdgeInsets.only(top: 4),
+      child: Stack(
         children: [
-          // Small pictogram thumbnail
           Container(
-            width: 32,
-            height: 32,
+            width: double.infinity,
+            height: 48,
             decoration: BoxDecoration(
               color: activity.isCompleted
                   ? context.girafColors.completedBackground
                   : context.colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(GirafShape.radiusSmall),
             ),
             clipBehavior: Clip.antiAlias,
             child: imageUrl != null
@@ -183,37 +187,27 @@ class _ActivityRow extends StatelessWidget {
                     fit: BoxFit.cover,
                     errorBuilder: (_, _, _) => Icon(
                       Icons.image,
-                      size: 16,
+                      size: 20,
                       color: context.colorScheme.onPrimaryContainer,
                     ),
                   )
-                : Icon(
-                    Icons.event,
-                    size: 16,
-                    color: context.colorScheme.onPrimaryContainer,
+                : Center(
+                    child: Icon(
+                      Icons.event,
+                      size: 20,
+                      color: context.colorScheme.onPrimaryContainer,
+                    ),
                   ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              activity.title ?? 'Unavngivet aktivitet',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    decoration: activity.isCompleted
-                        ? TextDecoration.lineThrough
-                        : null,
-                    color: activity.isCompleted
-                        ? context.colorScheme.outline
-                        : null,
-                  ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
           ),
           if (activity.isCompleted)
-            Icon(
-              Icons.check_circle,
-              size: 16,
-              color: context.girafColors.completedIndicator,
+            Positioned(
+              top: 2,
+              right: 2,
+              child: Icon(
+                Icons.check_circle,
+                size: 14,
+                color: context.girafColors.completedIndicator,
+              ),
             ),
         ],
       ),
