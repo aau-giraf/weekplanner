@@ -618,8 +618,10 @@ class _ActivityList extends StatelessWidget {
 
     return Center(
       child: ConstrainedBox(
-        constraints:
-            const BoxConstraints(maxWidth: GirafLayout.maxContentWidth),
+        constraints: const BoxConstraints(
+          maxWidth: GirafLayout.maxContentWidth,
+          maxHeight: 450,
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           child: Row(

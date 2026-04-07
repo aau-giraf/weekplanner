@@ -40,7 +40,8 @@ class ActivityFormView extends StatelessWidget {
           final cubit = context.read<ActivityFormCubit>();
           return IgnorePointer(
             ignoring: isSaving,
-            child: Center(
+            child: Align(
+              alignment: Alignment.topCenter,
               child: ConstrainedBox(
                 constraints: const BoxConstraints(
                     maxWidth: GirafLayout.maxContentWidth),
