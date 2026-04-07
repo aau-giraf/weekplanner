@@ -17,6 +17,7 @@ class ActivityTile extends StatefulWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback onToggleStatus;
+  final VoidCallback? onLongPress;
   final VoidCallback? onChoiceTap;
   final String? imageUrl;
   final String? soundUrl;
@@ -27,6 +28,7 @@ class ActivityTile extends StatefulWidget {
     required this.onEdit,
     required this.onDelete,
     required this.onToggleStatus,
+    this.onLongPress,
     this.onChoiceTap,
     this.imageUrl,
     this.soundUrl,
@@ -123,7 +125,7 @@ class _ActivityTileState extends State<ActivityTile> {
             : hasSound
                 ? _togglePlayback
                 : widget.onToggleStatus,
-        onLongPress: () => _showContextMenu(context),
+        onLongPress: widget.onLongPress ?? () => _showContextMenu(context),
         child: Column(
           children: [
             Expanded(child: _TilePictogram(this)),

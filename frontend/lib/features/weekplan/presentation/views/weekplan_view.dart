@@ -643,6 +643,8 @@ class _ActivityList extends StatelessWidget {
                             activity: activity,
                             imageUrl: _imageUrlFor(activity),
                             soundUrl: _soundUrlFor(activity),
+                            onLongPress: () =>
+                                onLongPress(activity.activityId),
                             onChoiceTap: activity.options.isNotEmpty &&
                                     activity.selectedOptionIndex == null
                                 ? () => _showChoiceSelector(

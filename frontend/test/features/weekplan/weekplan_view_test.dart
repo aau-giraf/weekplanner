@@ -144,7 +144,8 @@ void main() {
       expect(find.text('Ugeplan'), findsOneWidget);
     });
 
-    testWidgets('delete shows confirmation dialog', (tester) async {
+    testWidgets('delete via selection mode shows confirmation dialog',
+        (tester) async {
       final activities = [
         Activity(
           activityId: 1,
@@ -160,20 +161,16 @@ void main() {
 
       await tester.pumpWidget(buildSubject());
 
-      // Swipe to reveal delete action
-      await tester.drag(find.text('Morgenmad'), const Offset(-300, 0));
+      // Long-press to enter selection mode (auto-selects the activity)
+      await tester.longPress(find.text('Morgenmad'));
       await tester.pumpAndSettle();
 
-      // Tap delete
-      await tester.tap(find.text('Slet').last);
+      // Tap "Slet" in the selection action bar
+      await tester.tap(find.text('Slet'));
       await tester.pumpAndSettle();
 
       // Confirmation dialog should appear
-      expect(find.text('Slet aktivitet'), findsOneWidget);
-      expect(
-        find.text('Er du sikker på du vil slette "Morgenmad"?'),
-        findsOneWidget,
-      );
+      expect(find.text('Slet aktiviteter'), findsOneWidget);
       expect(find.text('Annuller'), findsOneWidget);
     });
 
@@ -193,13 +190,11 @@ void main() {
 
       await tester.pumpWidget(buildSubject());
 
-      // Swipe and tap delete
-      await tester.drag(find.text('Morgenmad'), const Offset(-300, 0));
+      // Long-press → select → Slet → confirm
+      await tester.longPress(find.text('Morgenmad'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Slet').last);
+      await tester.tap(find.text('Slet'));
       await tester.pumpAndSettle();
-
-      // Tap confirm "Slet" in dialog
       await tester.tap(find.text('Slet').last);
       await tester.pumpAndSettle();
 
@@ -224,10 +219,10 @@ void main() {
 
       await tester.pumpWidget(buildSubject());
 
-      // Swipe → delete → confirm
-      await tester.drag(find.text('Morgenmad'), const Offset(-300, 0));
+      // Long-press → select → Slet → confirm
+      await tester.longPress(find.text('Morgenmad'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Slet').last);
+      await tester.tap(find.text('Slet'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Slet').last);
       await tester.pumpAndSettle();
@@ -255,13 +250,11 @@ void main() {
 
       await tester.pumpWidget(buildSubject());
 
-      // Swipe and tap delete
-      await tester.drag(find.text('Morgenmad'), const Offset(-300, 0));
+      // Long-press → select → Slet → cancel
+      await tester.longPress(find.text('Morgenmad'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Slet').last);
+      await tester.tap(find.text('Slet'));
       await tester.pumpAndSettle();
-
-      // Tap cancel
       await tester.tap(find.text('Annuller'));
       await tester.pumpAndSettle();
 
