@@ -2,6 +2,8 @@
 
 Schedule management app for the GIRAF ecosystem — helps children with autism manage their weekly activities using pictograms.
 
+**Target device:** iPad or iPhone in **landscape orientation**. All UI design and testing should assume a horizontal layout.
+
 ## Architecture
 
 ```
