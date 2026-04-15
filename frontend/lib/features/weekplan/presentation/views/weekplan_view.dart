@@ -155,6 +155,7 @@ class _WeekplanViewState extends State<WeekplanView> {
               selectedIds: _selectedIds,
               citizenId: widget.citizenId,
               isCitizen: widget.isCitizen,
+              orgId: widget.orgId,
               onDone: () => setState(_exitSelectionMode),
             )
           : null,
@@ -275,21 +276,29 @@ class _SelectionActionBar extends StatelessWidget {
   final Set<int> selectedIds;
   final int citizenId;
   final bool isCitizen;
+  final int? orgId;
   final VoidCallback onDone;
 
   const _SelectionActionBar({
     required this.selectedIds,
     required this.citizenId,
     required this.isCitizen,
+    required this.orgId,
     required this.onDone,
   });
 
   @override
   Widget build(BuildContext context) {
+    final canEdit = selectedIds.length == 1;
     return BottomAppBar(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          _ActionButton(
+            icon: Icons.edit_outlined,
+            label: 'Rediger',
+            onTap: canEdit ? () => _editSelected(context) : null,
+          ),
           _ActionButton(
             icon: Icons.delete_outline,
             label: 'Slet',
@@ -309,6 +318,30 @@ class _SelectionActionBar extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _editSelected(BuildContext context) async {
+    if (selectedIds.length != 1) return;
+    final cubit = context.read<WeekplanCubit>();
+    final state = cubit.state;
+    if (state is! WeekplanLoaded) return;
+    final activityId = selectedIds.first;
+    final idx =
+        state.activities.indexWhere((a) => a.activityId == activityId);
+    if (idx == -1) return;
+    final activity = state.activities[idx];
+    final dateStr = activity.date.toIso8601String().split('T').first;
+
+    onDone();
+    if (!context.mounted) return;
+    final saved = await context.push<bool>(
+      '/weekplan/$citizenId/edit/${activity.activityId}'
+      '?type=${isCitizen ? 'citizen' : 'grade'}&orgId=$orgId&date=$dateStr',
+      extra: activity,
+    );
+    if (saved == true && context.mounted) {
+      cubit.loadActivities();
+    }
   }
 
   Future<void> _bulkDelete(BuildContext context) async {
@@ -438,7 +471,7 @@ class _ActionButton extends StatelessWidget {
   final IconData icon;
   final String label;
   final Color? color;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const _ActionButton({
     required this.icon,
@@ -449,7 +482,10 @@ class _ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveColor = color ?? Theme.of(context).colorScheme.primary;
+    final isEnabled = onTap != null;
+    final activeColor = color ?? Theme.of(context).colorScheme.primary;
+    final effectiveColor =
+        isEnabled ? activeColor : Theme.of(context).disabledColor;
     return TextButton.icon(
       onPressed: onTap,
       icon: Icon(icon, color: effectiveColor),
@@ -691,10 +727,6 @@ class _ActivityList extends StatelessWidget {
                             ? () => _showChoiceSelector(
                                 context, activity, cubit)
                             : null,
-                        onEdit: () =>
-                            _editActivity(context, activity),
-                        onDelete: () => _confirmDelete(
-                            context, activity, cubit),
                         onToggleStatus: () =>
                             cubit.toggleActivityStatus(
                                 activity.activityId),
@@ -717,73 +749,6 @@ class _ActivityList extends StatelessWidget {
   String? _soundUrlFor(Activity activity) {
     if (activity.pictogramId == null) return null;
     return pictogramMedia[activity.pictogramId!]?.soundUrl;
-  }
-
-  Future<void> _editActivity(BuildContext context, Activity activity) async {
-    final dateStr = activity.date.toIso8601String().split('T').first;
-    final saved = await context.push<bool>(
-      '/weekplan/$citizenId/edit/${activity.activityId}'
-      '?type=${isCitizen ? 'citizen' : 'grade'}&orgId=$orgId&date=$dateStr',
-      extra: activity,
-    );
-    if (saved == true && context.mounted) {
-      context.read<WeekplanCubit>().loadActivities();
-    }
-  }
-
-  Future<void> _confirmDelete(
-    BuildContext context,
-    Activity activity,
-    WeekplanCubit cubit,
-  ) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Slet aktivitet'),
-        content: Text(
-          'Er du sikker på du vil slette "${activity.title ?? 'denne aktivitet'}"?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Annuller'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(
-              'Slet',
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
-            ),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true || !context.mounted) return;
-
-    final removed = cubit.hideActivity(activity.activityId);
-    if (removed == null || !context.mounted) return;
-
-    var undone = false;
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Aktivitet "${activity.title ?? 'denne aktivitet'}" slettet',
-        ),
-        duration: const Duration(seconds: 5),
-        action: SnackBarAction(
-          label: 'Fortryd',
-          onPressed: () {
-            undone = true;
-            cubit.restoreActivity(removed);
-          },
-        ),
-      ),
-    ).closed.then((_) {
-      if (!undone && context.mounted) {
-        cubit.confirmDelete(activity.activityId, removed);
-      }
-    });
   }
 
   Future<void> _showChoiceSelector(

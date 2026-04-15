@@ -326,6 +326,68 @@ void main() {
       expect(find.byType(Checkbox), findsWidgets);
     });
 
+    testWidgets('Rediger button is enabled when exactly one activity selected',
+        (tester) async {
+      final activities = [
+        Activity(
+          activityId: 1,
+          date: DateTime(2026, 3, 22),
+          title: 'Morgenmad',
+        ),
+        Activity(
+          activityId: 2,
+          date: DateTime(2026, 3, 22),
+          title: 'Frokost',
+        ),
+      ];
+      when(() => mockCubit.state).thenReturn(WeekplanLoaded(
+        selectedDate: testDate,
+        weekDates: testWeekDates,
+        activities: activities,
+      ));
+
+      await tester.pumpWidget(buildSubject());
+
+      await tester.longPress(find.text('Morgenmad'));
+      await tester.pumpAndSettle();
+
+      final rediger = find.widgetWithText(TextButton, 'Rediger');
+      expect(rediger, findsOneWidget);
+      expect(tester.widget<TextButton>(rediger).onPressed, isNotNull);
+    });
+
+    testWidgets('Rediger button is disabled when multiple activities selected',
+        (tester) async {
+      final activities = [
+        Activity(
+          activityId: 1,
+          date: DateTime(2026, 3, 22),
+          title: 'Morgenmad',
+        ),
+        Activity(
+          activityId: 2,
+          date: DateTime(2026, 3, 22),
+          title: 'Frokost',
+        ),
+      ];
+      when(() => mockCubit.state).thenReturn(WeekplanLoaded(
+        selectedDate: testDate,
+        weekDates: testWeekDates,
+        activities: activities,
+      ));
+
+      await tester.pumpWidget(buildSubject());
+
+      await tester.longPress(find.text('Morgenmad'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Vælg alle'));
+      await tester.pumpAndSettle();
+
+      final rediger = find.widgetWithText(TextButton, 'Rediger');
+      expect(rediger, findsOneWidget);
+      expect(tester.widget<TextButton>(rediger).onPressed, isNull);
+    });
+
     testWidgets('close button exits selection mode', (tester) async {
       final activities = [
         Activity(
