@@ -14,10 +14,8 @@ import 'package:weekplanner/shared/utils/date_utils.dart';
 /// where 6 tiles sit side-by-side in a single row.
 class ActivityTile extends StatefulWidget {
   final Activity activity;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
   final VoidCallback onToggleStatus;
-  final VoidCallback? onLongPress;
+  final VoidCallback onLongPress;
   final VoidCallback? onChoiceTap;
   final String? imageUrl;
   final String? soundUrl;
@@ -25,10 +23,8 @@ class ActivityTile extends StatefulWidget {
   const ActivityTile({
     super.key,
     required this.activity,
-    required this.onEdit,
-    required this.onDelete,
     required this.onToggleStatus,
-    this.onLongPress,
+    required this.onLongPress,
     this.onChoiceTap,
     this.imageUrl,
     this.soundUrl,
@@ -72,36 +68,6 @@ class _ActivityTileState extends State<ActivityTile> {
     }
   }
 
-  Future<void> _showContextMenu(BuildContext context) async {
-    // Non-null: only called from onLongPress, so widget is laid out.
-    final renderBox = context.findRenderObject()! as RenderBox;
-    final offset = renderBox.localToGlobal(Offset.zero);
-    final size = renderBox.size;
-
-    final value = await showMenu<String>(
-      context: context,
-      position: RelativeRect.fromLTRB(
-        offset.dx,
-        offset.dy + size.height,
-        offset.dx + size.width,
-        offset.dy,
-      ),
-      items: [
-        const PopupMenuItem(value: 'edit', child: Text('Rediger')),
-        const PopupMenuItem(value: 'delete', child: Text('Slet')),
-      ],
-    );
-    if (!mounted) return;
-    switch (value) {
-      case 'edit':
-        widget.onEdit();
-      case 'delete':
-        widget.onDelete();
-      default:
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final activity = widget.activity;
@@ -125,7 +91,7 @@ class _ActivityTileState extends State<ActivityTile> {
             : hasSound
                 ? _togglePlayback
                 : null,
-        onLongPress: widget.onLongPress ?? () => _showContextMenu(context),
+        onLongPress: widget.onLongPress,
         child: Column(
           children: [
             Expanded(
