@@ -610,13 +610,15 @@ class _EmptyDay extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.event_busy, size: 64, color: context.colorScheme.outline),
-          const SizedBox(height: 16),
+          Image.asset(
+            'assets/images/giraf_mascot.png',
+            width: 120,
+            height: 120,
+          ),
+          const SizedBox(height: GirafSpacing.lg),
           Text(
             'Ingen aktiviteter for ${GirafDateUtils.dayName(selectedDate.weekday)}',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: context.colorScheme.outline,
-                ),
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
         ],
       ),
@@ -667,7 +669,9 @@ class _ActivityList extends StatelessWidget {
             if (isSelecting) {
               return Padding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 24, vertical: 16),
+                  horizontal: GirafSpacing.xl,
+                  vertical: GirafSpacing.lg,
+                ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -694,7 +698,9 @@ class _ActivityList extends StatelessWidget {
             return ReorderableListView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(
-                  horizontal: 24, vertical: 16),
+                horizontal: GirafSpacing.xl,
+                vertical: GirafSpacing.lg,
+              ),
               onReorder: cubit.reorderActivities,
               proxyDecorator: (child, index, animation) =>
                   AnimatedBuilder(
@@ -713,8 +719,9 @@ class _ActivityList extends StatelessWidget {
                     key: ValueKey(activity.activityId),
                     width: tileWidth,
                     child: Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: GirafSpacing.sm,
+                      ),
                       child: ActivityTile(
                         activity: activity,
                         imageUrl: _imageUrlFor(activity),
@@ -826,16 +833,18 @@ class _SelectableTile extends StatelessWidget {
                 ),
                 Container(
                   height: GirafLayout.tileLabelHeight,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  color: context.colorScheme.surfaceContainerLow,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: GirafSpacing.sm,
+                    vertical: GirafSpacing.xs,
+                  ),
+                  color: GirafColors.surface,
                   child: Center(
                     child: Text(
                       activity.title ?? 'Unavngivet',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w700,
                           ),
                     ),
                   ),
