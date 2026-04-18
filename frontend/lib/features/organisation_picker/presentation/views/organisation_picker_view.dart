@@ -60,7 +60,7 @@ class _ErrorWithRetry extends StatelessWidget {
             message,
             style: TextStyle(color: context.colorScheme.error),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: GirafSpacing.lg),
           FilledButton(
             onPressed: () =>
                 context.read<OrganisationPickerCubit>().loadOrganisations(),
@@ -84,7 +84,7 @@ class _OrganisationList extends StatelessWidget {
         constraints:
             const BoxConstraints(maxWidth: GirafLayout.maxNarrowWidth),
         child: ListView.builder(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(GirafSpacing.lg),
           itemCount: organisations.length,
           itemBuilder: (context, index) {
             final org = organisations[index];
@@ -104,7 +104,7 @@ class _OrgCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: GirafSpacing.md),
       child: ListTile(
         leading: CircleAvatar(
           backgroundColor: context.colorScheme.primary,
@@ -116,7 +116,7 @@ class _OrgCard extends StatelessWidget {
             ),
           ),
         ),
-        title: Text(org.name, style: const TextStyle(fontWeight: FontWeight.w600)),
+        title: Text(org.name, style: Theme.of(context).textTheme.titleMedium),
         trailing: const Icon(Icons.chevron_right),
         onTap: () => context.go('/organisations/${org.id}/citizens'),
       ),

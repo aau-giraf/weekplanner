@@ -80,12 +80,12 @@ class _CitizenGradeList extends StatelessWidget {
         constraints:
             const BoxConstraints(maxWidth: GirafLayout.maxNarrowWidth),
         child: ListView.builder(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(GirafSpacing.lg),
           itemCount: allItems.length,
           itemBuilder: (context, index) {
         final item = allItems[index];
         return Card(
-          margin: const EdgeInsets.only(bottom: 12),
+          margin: const EdgeInsets.only(bottom: GirafSpacing.md),
           child: ListTile(
             leading: CircleAvatar(
               backgroundColor: item.isCitizen
