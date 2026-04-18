@@ -6,6 +6,7 @@ CLAUDE.md
 AGENTS.md
 .claude/
 tests/playwright
+.redesign/
 
 # --- Backend (.NET) ---
 backend/GirafAPI/bin/
