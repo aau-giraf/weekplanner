@@ -81,9 +81,6 @@ class GirafLayout {
 
   /// Height of the label strip at the bottom of activity tiles.
   static const double tileLabelHeight = 56.0;
-
-  /// Edge length of a day selector button / chip.
-  static const double daySelectorSize = 72.0;
 }
 
 /// Elevation tokens. Prefer attaching to a [BoxDecoration] rather than

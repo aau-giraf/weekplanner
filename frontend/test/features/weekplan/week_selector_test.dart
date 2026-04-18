@@ -32,28 +32,32 @@ void main() {
   }
 
   group('WeekSelector', () {
-    testWidgets('renders week number text', (tester) async {
+    testWidgets('renders week number pill', (tester) async {
       await tester.pumpWidget(buildSubject());
 
       expect(find.text('Uge 13'), findsOneWidget);
     });
 
-    testWidgets('renders 7 day buttons with correct short labels',
+    testWidgets('renders a pill for each weekday with short name and date',
         (tester) async {
       await tester.pumpWidget(buildSubject());
 
-      for (final label in ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn']) {
-        expect(find.text(label), findsOneWidget);
+      for (var i = 0; i < weekDates.length; i++) {
+        final date = weekDates[i];
+        final label =
+            '${GirafDateUtils.dayNameShort(date.weekday)} ${date.day}';
+        expect(find.text(label), findsOneWidget,
+            reason: 'Expected chip labelled "$label"');
       }
     });
 
-    testWidgets('tapping a day button calls onSelectDate with the correct date',
+    testWidgets('tapping a day pill calls onSelectDate with the correct date',
         (tester) async {
       DateTime? captured;
       await tester.pumpWidget(buildSubject(onSelectDate: (d) => captured = d));
 
-      // Tap the day button for the 25th (Wednesday)
-      await tester.tap(find.text('25'));
+      // Tap the Wednesday pill ("Ons 25")
+      await tester.tap(find.text('Ons 25'));
       await tester.pump();
 
       expect(captured, equals(DateTime(2026, 3, 25)));
@@ -79,8 +83,7 @@ void main() {
       expect(callCount, 1);
     });
 
-    testWidgets('shows "I dag" button when not on current week',
-        (tester) async {
+    testWidgets('shows "I dag" pill when not on today', (tester) async {
       // selectedDate is 2026-03-25, which is not today
       await tester.pumpWidget(buildSubject());
 
@@ -97,15 +100,11 @@ void main() {
       expect(callCount, 1);
     });
 
-    testWidgets('shows today indicator border on today\'s date',
+    testWidgets('shows today-indicator border on today\'s day chip',
         (tester) async {
-      // Build with today's date in the week
       final now = DateTime.now();
       final todayWeekDates = GirafDateUtils.getWeekDates(now);
-      // Select a different day than today so we can see the border
-      final otherDay = todayWeekDates.firstWhere(
-        (d) => d.day != now.day,
-      );
+      final otherDay = todayWeekDates.firstWhere((d) => d.day != now.day);
 
       await tester.pumpWidget(MaterialApp(
         theme: girafTheme,
@@ -122,19 +121,23 @@ void main() {
         ),
       ));
 
-      // Find the Container ancestor of today's day number text
-      final todayText = find.text('${now.day}');
+      final todayLabel =
+          '${GirafDateUtils.dayNameShort(now.weekday)} ${now.day}';
+      final todayText = find.text(todayLabel);
       expect(todayText, findsOneWidget);
 
-      final container = tester.widget<Container>(
-        find.ancestor(
-          of: todayText,
-          matching: find.byType(Container),
-        ).first,
+      final container = tester.widget<AnimatedContainer>(
+        find
+            .ancestor(of: todayText, matching: find.byType(AnimatedContainer))
+            .first,
       );
       final decoration = container.decoration as BoxDecoration?;
       expect(decoration, isNotNull);
       expect(decoration?.border, isNotNull);
+      expect(
+        (decoration!.border as Border).top.color,
+        equals(GirafColors.brownDark),
+      );
     });
   });
 }
