@@ -313,7 +313,11 @@ class GirafTheme {
         GirafThemeExtension(
           actionBlue: GirafColors.actionBlue,
           pendingBackground: GirafColors.peach,
-          completedIndicator: GirafColors.success,
+          // Brand orange as the completion tick — matches the mockup and
+          // reinforces GIRAF's identity. Kept distinct from the greenish
+          // `completedBackground` tint so tiles are still semantically
+          // distinguishable at a glance.
+          completedIndicator: GirafColors.primaryOrange,
           completedBackground: GirafColors.successLight,
           errorBackground: GirafColors.errorLight,
         ),
