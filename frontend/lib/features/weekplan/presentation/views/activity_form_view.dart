@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:weekplanner/config/theme.dart';
-import 'package:weekplanner/shared/layout_constants.dart';
 import 'package:weekplanner/features/weekplan/domain/activity_form_state.dart';
 import 'package:weekplanner/features/weekplan/presentation/activity_form_cubit.dart';
 import 'package:weekplanner/features/weekplan/domain/repositories/pictogram_repository.dart';
@@ -46,7 +45,7 @@ class ActivityFormView extends StatelessWidget {
                 constraints: const BoxConstraints(
                     maxWidth: GirafLayout.maxContentWidth),
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(GirafSpacing.xl),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -68,7 +67,8 @@ class ActivityFormView extends StatelessWidget {
                                     cubit.toggleChoiceActivity(),
                                 contentPadding: EdgeInsets.zero,
                               ),
-                            if (!state.isEditing) const SizedBox(height: 8),
+                            if (!state.isEditing)
+                              const SizedBox(height: GirafSpacing.sm),
                             if (state.form.isChoiceActivity)
                               _ChoiceOptionsEditor(
                                 options: state.form.choiceOptions,
@@ -79,15 +79,15 @@ class ActivityFormView extends StatelessWidget {
                                 'Piktogram',
                                 style: Theme.of(context)
                                     .textTheme
-                                    .titleMedium,
+                                    .titleLarge,
                               ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: GirafSpacing.sm),
                               const PictogramSelector(),
                             ],
                           ],
                         ),
                       ),
-                      const SizedBox(width: 32),
+                      const SizedBox(width: GirafSpacing.xxl),
                       // Right column: form fields
                       Expanded(
                         flex: 55,
@@ -98,7 +98,7 @@ class ActivityFormView extends StatelessWidget {
                               title: state.form.title,
                               onChanged: cubit.setTitle,
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: GirafSpacing.lg),
                             _DatePicker(
                               date: state.form.date,
                               onTap: () async {
@@ -113,7 +113,7 @@ class ActivityFormView extends StatelessWidget {
                                 }
                               },
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: GirafSpacing.lg),
                             if (!state.isEditing)
                               _RepeatDaySelector(
                                 selectedDays: state.form.repeatDays,
@@ -123,7 +123,7 @@ class ActivityFormView extends StatelessWidget {
                                 onClear: cubit.clearRepeatDays,
                               ),
                             if (!state.isEditing)
-                              const SizedBox(height: 16),
+                              const SizedBox(height: GirafSpacing.lg),
                             SwitchListTile(
                               title: const Text('Angiv tidspunkt'),
                               value: state.form.hasTime,
@@ -131,7 +131,7 @@ class ActivityFormView extends StatelessWidget {
                               contentPadding: EdgeInsets.zero,
                             ),
                             if (state.form.hasTime) ...[
-                              const SizedBox(height: 8),
+                              const SizedBox(height: GirafSpacing.sm),
                               Row(
                                 children: [
                                   Expanded(
@@ -159,7 +159,7 @@ class ActivityFormView extends StatelessWidget {
                                       },
                                     ),
                                   ),
-                                  const SizedBox(width: 16),
+                                  const SizedBox(width: GirafSpacing.lg),
                                   Expanded(
                                     child: _TimePicker(
                                       label: 'Sluttid',
@@ -188,11 +188,12 @@ class ActivityFormView extends StatelessWidget {
                                 ],
                               ),
                             ],
-                            const SizedBox(height: 24),
+                            const SizedBox(height: GirafSpacing.xl),
                             if (error != null)
                               Padding(
-                                padding:
-                                    const EdgeInsets.only(bottom: 16),
+                                padding: const EdgeInsets.only(
+                                  bottom: GirafSpacing.lg,
+                                ),
                                 child: Text(
                                   error,
                                   style: TextStyle(
@@ -339,7 +340,7 @@ class _RepeatDaySelector extends StatelessWidget {
           children: [
             Text(
               'Gentag',
-              style: Theme.of(context).textTheme.titleMedium,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             const Spacer(),
             if (selectedDays.isEmpty)
@@ -354,7 +355,7 @@ class _RepeatDaySelector extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: GirafSpacing.sm),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(7, (index) {
@@ -369,12 +370,10 @@ class _RepeatDaySelector extends StatelessWidget {
         ),
         if (selectedDays.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.only(top: GirafSpacing.sm),
             child: Text(
               'Oprettes på ${selectedDays.length} dage denne uge',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
       ],
@@ -395,26 +394,27 @@ class _DayChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: isSelected
-              ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: isSelected
-                ? Theme.of(context).colorScheme.onPrimary
-                : Theme.of(context).colorScheme.onSurface,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        customBorder: const CircleBorder(),
+        child: AnimatedContainer(
+          duration: GirafMotion.dayChip,
+          curve: GirafMotion.standard,
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: isSelected ? GirafColors.primaryOrange : GirafColors.peach,
+            shape: BoxShape.circle,
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            label.substring(0, 1),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: isSelected ? Colors.white : GirafColors.brownDark,
+                ),
           ),
         ),
       ),
@@ -438,9 +438,9 @@ class _ChoiceOptionsEditor extends StatelessWidget {
       children: [
         Text(
           'Valgmuligheder',
-          style: Theme.of(context).textTheme.titleMedium,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: GirafSpacing.sm),
         ...options.asMap().entries.map((entry) {
           final index = entry.key;
           final option = entry.value;
@@ -468,7 +468,7 @@ class _ChoiceOptionsEditor extends StatelessWidget {
         }),
         if (options.length < 3)
           Padding(
-            padding: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.only(top: GirafSpacing.sm),
             child: OutlinedButton.icon(
               onPressed: cubit.addChoiceOption,
               icon: const Icon(Icons.add),
@@ -499,77 +499,75 @@ class _ChoiceOptionSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            // Pictogram thumbnail / pick button
-            GestureDetector(
-              onTap: onPickPictogram,
-              child: Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  color: context.colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(GirafShape.radiusSmall),
-                  border: option.pictogramId == null
-                      ? Border.all(
-                          color: context.colorScheme.outline,
-                          width: 1,
-                          style: BorderStyle.solid,
-                        )
-                      : null,
-                ),
-                child: option.pictogramId != null
-                    ? Icon(
-                        Icons.check,
-                        color: context.colorScheme.primary,
-                      )
-                    : Icon(
-                        Icons.add_photo_alternate,
-                        color: context.colorScheme.outline,
-                      ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Mulighed ${index + 1}',
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: context.colorScheme.outline,
-                        ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: GirafSpacing.sm),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: GirafColors.surface,
+          borderRadius: GirafRadii.cardRadius,
+          boxShadow: GirafElevation.card,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(GirafSpacing.md),
+          child: Row(
+            children: [
+              // Pictogram thumbnail / pick button
+              GestureDetector(
+                onTap: onPickPictogram,
+                child: Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: GirafColors.peach,
+                    borderRadius: GirafRadii.inputRadius,
+                    border: option.pictogramId == null
+                        ? Border.all(color: GirafColors.outline)
+                        : null,
                   ),
-                  if (option.pictogramName != null)
+                  child: option.pictogramId != null
+                      ? const Icon(Icons.check,
+                          color: GirafColors.primaryOrange)
+                      : const Icon(Icons.add_photo_alternate,
+                          color: GirafColors.brownMuted),
+                ),
+              ),
+              const SizedBox(width: GirafSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      option.pictogramName!,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: context.colorScheme.primary,
-                          ),
-                    )
-                  else
-                    TextButton(
-                      onPressed: onPickPictogram,
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: Size.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      child: const Text('Vælg piktogram'),
+                      'Mulighed ${index + 1}',
+                      style: Theme.of(context).textTheme.labelSmall,
                     ),
-                ],
+                    if (option.pictogramName != null)
+                      Text(
+                        option.pictogramName!,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              color: GirafColors.orangeDeep,
+                              fontWeight: FontWeight.w700,
+                            ),
+                      )
+                    else
+                      TextButton(
+                        onPressed: onPickPictogram,
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: const Text('Vælg piktogram'),
+                      ),
+                  ],
+                ),
               ),
-            ),
-            if (canRemove)
-              IconButton(
-                icon: const Icon(Icons.close, size: 20),
-                onPressed: onRemove,
-              ),
-          ],
+              if (canRemove)
+                IconButton(
+                  icon: const Icon(Icons.close, size: 20),
+                  onPressed: onRemove,
+                ),
+            ],
+          ),
         ),
       ),
     );

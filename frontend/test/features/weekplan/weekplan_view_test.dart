@@ -91,7 +91,12 @@ void main() {
 
       await tester.pumpWidget(buildSubject());
 
-      expect(find.byIcon(Icons.event_busy), findsOneWidget);
+      // Mascot illustration stands in for the old event_busy icon.
+      expect(find.byType(Image), findsWidgets);
+      expect(
+        find.textContaining('Ingen aktiviteter'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('shows error message and retry button in error state',

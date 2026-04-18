@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:weekplanner/config/theme.dart';
-import 'package:weekplanner/shared/layout_constants.dart';
 import 'package:weekplanner/features/auth/presentation/auth_cubit.dart';
 import 'package:weekplanner/features/organisation_picker/domain/organisation_picker_state.dart';
 import 'package:weekplanner/features/organisation_picker/presentation/organisation_picker_cubit.dart';
@@ -61,7 +60,7 @@ class _ErrorWithRetry extends StatelessWidget {
             message,
             style: TextStyle(color: context.colorScheme.error),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: GirafSpacing.lg),
           FilledButton(
             onPressed: () =>
                 context.read<OrganisationPickerCubit>().loadOrganisations(),
@@ -85,7 +84,7 @@ class _OrganisationList extends StatelessWidget {
         constraints:
             const BoxConstraints(maxWidth: GirafLayout.maxNarrowWidth),
         child: ListView.builder(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(GirafSpacing.lg),
           itemCount: organisations.length,
           itemBuilder: (context, index) {
             final org = organisations[index];
@@ -105,7 +104,7 @@ class _OrgCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: GirafSpacing.md),
       child: ListTile(
         leading: CircleAvatar(
           backgroundColor: context.colorScheme.primary,
@@ -117,7 +116,7 @@ class _OrgCard extends StatelessWidget {
             ),
           ),
         ),
-        title: Text(org.name, style: const TextStyle(fontWeight: FontWeight.w600)),
+        title: Text(org.name, style: Theme.of(context).textTheme.titleMedium),
         trailing: const Icon(Icons.chevron_right),
         onTap: () => context.go('/organisations/${org.id}/citizens'),
       ),

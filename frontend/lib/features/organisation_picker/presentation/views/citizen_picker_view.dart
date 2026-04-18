@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:weekplanner/config/theme.dart';
-import 'package:weekplanner/shared/layout_constants.dart';
 import 'package:weekplanner/features/organisation_picker/domain/organisation_picker_state.dart';
 import 'package:weekplanner/features/organisation_picker/presentation/organisation_picker_cubit.dart';
 import 'package:weekplanner/shared/models/citizen.dart';
@@ -81,12 +80,12 @@ class _CitizenGradeList extends StatelessWidget {
         constraints:
             const BoxConstraints(maxWidth: GirafLayout.maxNarrowWidth),
         child: ListView.builder(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(GirafSpacing.lg),
           itemCount: allItems.length,
           itemBuilder: (context, index) {
         final item = allItems[index];
         return Card(
-          margin: const EdgeInsets.only(bottom: 12),
+          margin: const EdgeInsets.only(bottom: GirafSpacing.md),
           child: ListTile(
             leading: CircleAvatar(
               backgroundColor: item.isCitizen

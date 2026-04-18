@@ -57,7 +57,7 @@ void main() {
       await tester.pumpWidget(buildSubject());
 
       expect(
-        find.widgetWithText(TextField, 'Søg piktogrammer...'),
+        find.widgetWithText(TextField, 'Søg piktogram'),
         findsOneWidget,
       );
     });

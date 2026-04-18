@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/config/theme.dart';
-import 'package:weekplanner/shared/layout_constants.dart';
 import 'package:weekplanner/shared/models/activity.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';
 
@@ -76,39 +75,51 @@ class _ActivityTileState extends State<ActivityTile> {
     final hasSound =
         widget.soundUrl != null && widget.soundUrl!.isNotEmpty;
 
-    final cardColor = activity.isCompleted
+    final pictogramBackground = activity.isCompleted
         ? context.girafColors.completedBackground
         : isUnresolvedChoice
             ? context.colorScheme.tertiaryContainer
             : context.girafColors.pendingBackground;
 
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      color: cardColor,
-      child: InkWell(
-        onTap: isUnresolvedChoice
-            ? widget.onChoiceTap
-            : hasSound
-                ? _togglePlayback
-                : null,
-        onLongPress: widget.onLongPress,
-        child: Column(
-          children: [
-            Expanded(
-              child: _TilePictogram(
-                imageUrl: widget.imageUrl,
-                hasPictogram: activity.pictogramId != null,
-                isCompleted: activity.isCompleted,
-                isUnresolvedChoice: isUnresolvedChoice,
-                hasSound: hasSound,
-                isPlaying: _isPlaying,
-              ),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: GirafColors.surface,
+        borderRadius: GirafRadii.cardRadius,
+        boxShadow: GirafElevation.card,
+      ),
+      child: ClipRRect(
+        borderRadius: GirafRadii.cardRadius,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: isUnresolvedChoice
+                ? widget.onChoiceTap
+                : hasSound
+                    ? _togglePlayback
+                    : null,
+            onLongPress: widget.onLongPress,
+            child: Column(
+              children: [
+                Expanded(
+                  child: ColoredBox(
+                    color: pictogramBackground,
+                    child: _TilePictogram(
+                      imageUrl: widget.imageUrl,
+                      hasPictogram: activity.pictogramId != null,
+                      isCompleted: activity.isCompleted,
+                      isUnresolvedChoice: isUnresolvedChoice,
+                      hasSound: hasSound,
+                      isPlaying: _isPlaying,
+                    ),
+                  ),
+                ),
+                _TileLabel(
+                  activity: activity,
+                  onToggleStatus: widget.onToggleStatus,
+                ),
+              ],
             ),
-            _TileLabel(
-              activity: activity,
-              onToggleStatus: widget.onToggleStatus,
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -248,8 +259,11 @@ class _TileLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: GirafLayout.tileLabelHeight,
-      padding: const EdgeInsets.only(left: 8, right: 2, top: 4, bottom: 4),
-      color: context.colorScheme.surfaceContainerLow,
+      padding: const EdgeInsets.symmetric(
+        horizontal: GirafSpacing.md,
+        vertical: GirafSpacing.xs,
+      ),
+      color: GirafColors.surface,
       child: Row(
         children: [
           Expanded(
@@ -261,17 +275,15 @@ class _TileLabel extends StatelessWidget {
                   activity.title ?? 'Unavngivet',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
                       ),
                 ),
                 if (activity.startTime case final start?)
                   if (activity.endTime case final end?)
                     Text(
                       '${formatTimeValue(start)} - ${formatTimeValue(end)}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: context.colorScheme.outline,
-                          ),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
               ],
             ),
@@ -284,7 +296,7 @@ class _TileLabel extends StatelessWidget {
                   : Icons.circle_outlined,
               color: activity.isCompleted
                   ? context.girafColors.completedIndicator
-                  : context.colorScheme.outline,
+                  : GirafColors.brownMuted,
             ),
             tooltip: activity.isCompleted ? 'Ikke færdig' : 'Færdig',
             iconSize: 28,
