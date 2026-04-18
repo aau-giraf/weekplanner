@@ -56,7 +56,7 @@ class _PictogramSelectorState extends State<PictogramSelector> {
               onSelectionChanged: (modes) =>
                   cubit.setPictogramMode(modes.first),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: GirafSpacing.md),
 
             // Content per mode
             switch (state.creation.mode) {
@@ -86,7 +86,7 @@ class _PictogramSelectorState extends State<PictogramSelector> {
 
             // Selected pictogram preview
             if (state.selection.pictogram != null) ...[
-              const SizedBox(height: 12),
+              const SizedBox(height: GirafSpacing.md),
               // Guarded by != null check above.
               _SelectedPictogramPreview(pictogram: state.selection.pictogram!),
             ],
@@ -124,79 +124,110 @@ class _SearchTab extends StatelessWidget {
           controller: controller,
           onChanged: onSearchChanged,
           decoration: const InputDecoration(
-            hintText: 'Søg piktogrammer...',
+            hintText: 'Søg piktogram',
             prefixIcon: Icon(Icons.search),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: GirafSpacing.md),
         if (isLoading)
           const Center(child: CircularProgressIndicator())
         else if (pictograms.isEmpty && controller.text.isNotEmpty)
           const Center(child: Text('Ingen piktogrammer fundet'))
         else
           SizedBox(
-            height: 200,
+            height: 240,
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
+                crossAxisSpacing: GirafSpacing.sm,
+                mainAxisSpacing: GirafSpacing.sm,
               ),
               itemCount: pictograms.length,
               itemBuilder: (context, index) {
                 final pictogram = pictograms[index];
                 final isSelected = pictogram.id == selectedId;
-                return GestureDetector(
+                return _PictogramGridTile(
+                  pictogram: pictogram,
+                  isSelected: isSelected,
                   onTap: () => onSelect(pictogram),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: isSelected
-                            ? context.colorScheme.primary
-                            : Colors.transparent,
-                        width: 3,
-                      ),
-                      borderRadius: BorderRadius.circular(GirafRadii.input),
-                      color: context.colorScheme.surfaceContainerLow,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: pictogram.imageUrl != null
-                                ? Image.network(
-                                    pictogram.imageUrl!,
-                                    fit: BoxFit.contain,
-                                    errorBuilder: (_, _, _) => Icon(
-                                      Icons.image,
-                                      color: context.colorScheme.outline,
-                                    ),
-                                  )
-                                : Icon(
-                                    Icons.image,
-                                    color: context.colorScheme.outline,
-                                  ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Text(
-                            pictogram.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontSize: 10),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 );
               },
             ),
           ),
       ],
+    );
+  }
+}
+
+class _PictogramGridTile extends StatelessWidget {
+  final Pictogram pictogram;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _PictogramGridTile({
+    required this.pictogram,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: GirafRadii.inputRadius,
+        child: AnimatedContainer(
+          duration: GirafMotion.activityTick,
+          curve: GirafMotion.standard,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: isSelected ? GirafColors.primaryOrange : Colors.transparent,
+              width: 3,
+            ),
+            borderRadius: GirafRadii.inputRadius,
+            color: GirafColors.peach,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(GirafSpacing.xs),
+                  child: pictogram.imageUrl != null
+                      ? Image.network(
+                          pictogram.imageUrl!,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, _, _) => const Icon(
+                            Icons.image,
+                            color: GirafColors.brownMuted,
+                          ),
+                        )
+                      : const Icon(
+                          Icons.image,
+                          color: GirafColors.brownMuted,
+                        ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: GirafSpacing.xs,
+                  vertical: GirafSpacing.xs,
+                ),
+                child: Text(
+                  pictogram.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: GirafColors.brownDark,
+                        fontWeight: FontWeight.w700,
+                      ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -240,7 +271,7 @@ class _UploadTab extends StatelessWidget {
                 : 'Vælg billede',
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: GirafSpacing.sm),
         OutlinedButton.icon(
           onPressed: () async {
             final file = await _pickSoundFile();
@@ -253,7 +284,7 @@ class _UploadTab extends StatelessWidget {
                 : 'Vælg lydfil (valgfrit)',
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: GirafSpacing.sm),
         SwitchListTile(
           title: const Text('Generer lyd automatisk'),
           subtitle: const Text('AI-genereret udtale af titlen'),
@@ -324,7 +355,7 @@ class _GenerateTab extends StatelessWidget {
           onChanged: onGenerateSoundChanged,
           contentPadding: EdgeInsets.zero,
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: GirafSpacing.md),
         FilledButton.icon(
           onPressed: isCreatingPictogram ? null : onGenerate,
           icon: isCreatingPictogram
@@ -351,56 +382,55 @@ class _SelectedPictogramPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(GirafSpacing.sm),
       decoration: BoxDecoration(
-        color: context.colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(GirafRadii.input),
-        border: Border.all(color: context.colorScheme.primary, width: 2),
+        color: GirafColors.surface,
+        borderRadius: GirafRadii.inputRadius,
+        border: Border.all(color: GirafColors.primaryOrange, width: 2),
       ),
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(GirafSpacing.xs),
             child: pictogram.imageUrl != null
                 ? Image.network(
                     pictogram.imageUrl!,
                     width: 48,
                     height: 48,
                     fit: BoxFit.contain,
-                    errorBuilder: (_, _, _) => Icon(
+                    errorBuilder: (_, _, _) => const Icon(
                       Icons.image,
                       size: 48,
-                      color: context.colorScheme.outline,
+                      color: GirafColors.brownMuted,
                     ),
                   )
-                : Icon(
+                : const Icon(
                     Icons.image,
                     size: 48,
-                    color: context.colorScheme.outline,
+                    color: GirafColors.brownMuted,
                   ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: GirafSpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   pictogram.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                 ),
                 if (pictogram.soundUrl != null &&
                     pictogram.soundUrl!.isNotEmpty)
                   Text(
                     'Med lyd',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: context.colorScheme.outline,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
               ],
             ),
           ),
-          Icon(Icons.check_circle, color: context.colorScheme.primary),
+          const Icon(Icons.check_circle, color: GirafColors.primaryOrange),
         ],
       ),
     );

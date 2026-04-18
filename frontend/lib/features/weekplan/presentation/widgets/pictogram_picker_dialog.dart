@@ -46,28 +46,30 @@ class _PictogramPickerDialogState extends State<PictogramPickerDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: GirafRadii.cardRadius),
+      backgroundColor: GirafColors.surface,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 400, maxHeight: 500),
+        constraints: const BoxConstraints(maxWidth: 480, maxHeight: 560),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(GirafSpacing.lg),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 'Vælg piktogram',
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: GirafSpacing.md),
               TextField(
                 controller: _searchController,
                 decoration: const InputDecoration(
-                  hintText: 'Søg efter piktogram...',
+                  hintText: 'Søg piktogram',
                   prefixIcon: Icon(Icons.search),
                 ),
                 onSubmitted: _search,
                 textInputAction: TextInputAction.search,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: GirafSpacing.md),
               Flexible(
                 child: _isSearching
                     ? const Center(child: CircularProgressIndicator())
@@ -75,9 +77,7 @@ class _PictogramPickerDialogState extends State<PictogramPickerDialog> {
                         ? Center(
                             child: Text(
                               'Søg for at finde piktogrammer',
-                              style: TextStyle(
-                                color: context.colorScheme.outline,
-                              ),
+                              style: Theme.of(context).textTheme.bodyLarge,
                             ),
                           )
                         : GridView.builder(
@@ -85,8 +85,8 @@ class _PictogramPickerDialogState extends State<PictogramPickerDialog> {
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
-                              mainAxisSpacing: 8,
-                              crossAxisSpacing: 8,
+                              mainAxisSpacing: GirafSpacing.sm,
+                              crossAxisSpacing: GirafSpacing.sm,
                             ),
                             itemCount: _results.length,
                             itemBuilder: (context, index) {
@@ -99,7 +99,7 @@ class _PictogramPickerDialogState extends State<PictogramPickerDialog> {
                             },
                           ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: GirafSpacing.sm),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: const Text('Annuller'),
@@ -133,25 +133,25 @@ class _PictogramGridItem extends StatelessWidget {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: context.colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(GirafRadii.input),
+              color: GirafColors.peach,
+              borderRadius: GirafRadii.inputRadius,
             ),
             clipBehavior: Clip.antiAlias,
             child: pictogram.imageUrl != null
                 ? Image.network(
                     pictogram.imageUrl!,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, _, _) => Icon(
+                    errorBuilder: (_, _, _) => const Icon(
                       Icons.image,
-                      color: context.colorScheme.onPrimaryContainer,
+                      color: GirafColors.brownMuted,
                     ),
                   )
-                : Icon(
+                : const Icon(
                     Icons.image,
-                    color: context.colorScheme.onPrimaryContainer,
+                    color: GirafColors.brownMuted,
                   ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: GirafSpacing.xs),
           Text(
             pictogram.name,
             style: Theme.of(context).textTheme.labelSmall,
