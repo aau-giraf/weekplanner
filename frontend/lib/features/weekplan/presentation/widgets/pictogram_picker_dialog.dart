@@ -125,7 +125,7 @@ class _PictogramGridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(GirafShape.radiusSmall),
+      borderRadius: BorderRadius.circular(GirafRadii.input),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -134,7 +134,7 @@ class _PictogramGridItem extends StatelessWidget {
             height: 56,
             decoration: BoxDecoration(
               color: context.colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(GirafShape.radiusSmall),
+              borderRadius: BorderRadius.circular(GirafRadii.input),
             ),
             clipBehavior: Clip.antiAlias,
             child: pictogram.imageUrl != null

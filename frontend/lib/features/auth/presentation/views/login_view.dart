@@ -85,7 +85,7 @@ class LoginView extends StatelessWidget {
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: context.girafColors.errorBackground,
-                            borderRadius: BorderRadius.circular(GirafShape.radiusSmall),
+                            borderRadius: BorderRadius.circular(GirafRadii.input),
                           ),
                           child: Text(
                             errorMessage,

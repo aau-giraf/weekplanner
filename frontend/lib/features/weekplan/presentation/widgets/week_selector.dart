@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/config/theme.dart';
-import 'package:weekplanner/shared/layout_constants.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';
 
 class WeekSelector extends StatelessWidget {
@@ -128,7 +127,7 @@ class _DayButton extends StatelessWidget {
           color: isSelected
               ? context.colorScheme.primary
               : context.colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(GirafShape.radiusMedium),
+          borderRadius: BorderRadius.circular(GirafRadii.input),
           border: isToday && !isSelected
               ? Border.all(
                   color: context.colorScheme.primary,

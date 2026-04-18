@@ -82,7 +82,7 @@ class _OptionCard extends StatelessWidget {
                   height: 64,
                   decoration: BoxDecoration(
                     color: context.colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(GirafShape.radiusMedium),
+                    borderRadius: BorderRadius.circular(GirafRadii.input),
                   ),
                   clipBehavior: Clip.antiAlias,
                   child: imageUrl != null

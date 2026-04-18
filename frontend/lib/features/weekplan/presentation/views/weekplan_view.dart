@@ -7,7 +7,6 @@ import 'package:weekplanner/features/weekplan/domain/weekplan_state.dart';
 import 'package:weekplanner/features/weekplan/presentation/weekplan_cubit.dart';
 import 'package:weekplanner/features/weekplan/presentation/widgets/activity_tile.dart';
 import 'package:weekplanner/features/weekplan/presentation/widgets/choice_selector_dialog.dart';
-import 'package:weekplanner/shared/layout_constants.dart';
 import 'package:weekplanner/features/weekplan/presentation/widgets/week_overview.dart';
 import 'package:weekplanner/features/weekplan/presentation/widgets/week_selector.dart';
 import 'package:weekplanner/shared/models/activity.dart';
@@ -703,7 +702,7 @@ class _ActivityList extends StatelessWidget {
                 builder: (context, child) => Material(
                   elevation: 4,
                   borderRadius:
-                      BorderRadius.circular(GirafShape.radiusLarge),
+                      BorderRadius.circular(GirafRadii.card),
                   child: child,
                 ),
                 child: child,

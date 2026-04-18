@@ -156,7 +156,7 @@ class _SearchTab extends StatelessWidget {
                             : Colors.transparent,
                         width: 3,
                       ),
-                      borderRadius: BorderRadius.circular(GirafShape.radiusSmall),
+                      borderRadius: BorderRadius.circular(GirafRadii.input),
                       color: context.colorScheme.surfaceContainerLow,
                     ),
                     child: Column(
@@ -354,7 +354,7 @@ class _SelectedPictogramPreview extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: context.colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(GirafShape.radiusSmall),
+        borderRadius: BorderRadius.circular(GirafRadii.input),
         border: Border.all(color: context.colorScheme.primary, width: 2),
       ),
       child: Row(

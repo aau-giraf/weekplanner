@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:weekplanner/config/theme.dart';
-import 'package:weekplanner/shared/layout_constants.dart';
 import 'package:weekplanner/features/weekplan/domain/activity_form_state.dart';
 import 'package:weekplanner/features/weekplan/presentation/activity_form_cubit.dart';
 import 'package:weekplanner/features/weekplan/domain/repositories/pictogram_repository.dart';
@@ -513,7 +512,7 @@ class _ChoiceOptionSlot extends StatelessWidget {
                 height: 56,
                 decoration: BoxDecoration(
                   color: context.colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(GirafShape.radiusSmall),
+                  borderRadius: BorderRadius.circular(GirafRadii.input),
                   border: option.pictogramId == null
                       ? Border.all(
                           color: context.colorScheme.outline,

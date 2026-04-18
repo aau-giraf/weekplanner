@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/weekplan/domain/weekplan_state.dart';
-import 'package:weekplanner/shared/layout_constants.dart';
 import 'package:weekplanner/shared/models/activity.dart';
 import 'package:weekplanner/shared/utils/date_utils.dart';
 
@@ -85,13 +84,13 @@ class _DayColumn extends StatelessWidget {
     return Card(
       shape: isToday
           ? RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(GirafShape.radiusLarge),
+              borderRadius: BorderRadius.circular(GirafRadii.card),
               side: BorderSide(color: context.colorScheme.primary, width: 2),
             )
           : null,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(GirafShape.radiusLarge),
+        borderRadius: BorderRadius.circular(GirafRadii.card),
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: Column(
@@ -178,7 +177,7 @@ class _ActivityRow extends StatelessWidget {
               color: activity.isCompleted
                   ? context.girafColors.completedBackground
                   : context.colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(GirafShape.radiusSmall),
+              borderRadius: BorderRadius.circular(GirafRadii.input),
             ),
             clipBehavior: Clip.antiAlias,
             child: imageUrl != null
