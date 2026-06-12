@@ -206,18 +206,20 @@ class WeekplanCubit extends Cubit<WeekplanState> {
   }
 
   /// Optimistically reorder activities after a drag-and-drop.
+  ///
+  /// [newIndex] is the final position of the dragged item, as provided
+  /// by `ReorderableListView.onReorderItem` (already adjusted for the
+  /// removed slot).
   Future<void> reorderActivities(int oldIndex, int newIndex) async {
     final current = state;
     if (current is! WeekplanLoaded) return;
 
-    // ReorderableListView adjusts index when moving down
-    final adjustedNew = oldIndex < newIndex ? newIndex - 1 : newIndex;
-    if (oldIndex == adjustedNew) return;
+    if (oldIndex == newIndex) return;
 
     final backup = current.activities;
     final reordered = List<Activity>.from(backup);
     final item = reordered.removeAt(oldIndex);
-    reordered.insert(adjustedNew, item);
+    reordered.insert(newIndex, item);
 
     // Update sortOrder to match new positions
     final withSortOrder = [
