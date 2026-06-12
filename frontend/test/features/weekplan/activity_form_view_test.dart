@@ -48,6 +48,17 @@ void main() {
       expect(find.text('Tilføj'), findsOneWidget);
     });
 
+    testWidgets('labels the choice toggle Aktivitetsvælger', (tester) async {
+      when(() => mockCubit.state).thenReturn(ActivityFormReady(
+        form: ActivityFormData(date: testDate),
+      ));
+
+      await tester.pumpWidget(buildSubject());
+
+      expect(find.text('Aktivitetsvælger'), findsOneWidget);
+      expect(find.text('Valgaktivitet'), findsNothing);
+    });
+
     testWidgets('shows title field with current title value', (tester) async {
       when(() => mockCubit.state).thenReturn(ActivityFormReady(
         form: ActivityFormData(date: testDate, title: 'Morgenmad'),
