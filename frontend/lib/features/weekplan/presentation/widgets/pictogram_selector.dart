@@ -1,11 +1,10 @@
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:weekplanner/config/theme.dart';
 import 'package:weekplanner/features/weekplan/domain/activity_form_state.dart';
 import 'package:weekplanner/features/weekplan/presentation/activity_form_cubit.dart';
+import 'package:weekplanner/features/weekplan/presentation/widgets/pictogram_file_pickers.dart';
 import 'package:weekplanner/shared/models/file_data.dart';
 import 'package:weekplanner/shared/models/pictogram.dart';
 
@@ -261,7 +260,7 @@ class _UploadTab extends StatelessWidget {
       children: [
         OutlinedButton.icon(
           onPressed: () async {
-            final file = await _pickImageFile();
+            final file = await pickImageFileFromDevice();
             if (file != null) onImageFilePicked(file);
           },
           icon: const Icon(Icons.image),
@@ -274,7 +273,7 @@ class _UploadTab extends StatelessWidget {
         const SizedBox(height: GirafSpacing.sm),
         OutlinedButton.icon(
           onPressed: () async {
-            final file = await _pickSoundFile();
+            final file = await pickSoundFileFromDevice();
             if (file != null) onSoundFilePicked(file);
           },
           icon: const Icon(Icons.audiotrack),
@@ -296,34 +295,6 @@ class _UploadTab extends StatelessWidget {
     );
   }
 
-  Future<FileData?> _pickImageFile() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-      withData: true,
-    );
-    return _toFileData(result);
-  }
-
-  Future<FileData?> _pickSoundFile() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['mp3', 'wav', 'ogg'],
-      withData: true,
-    );
-    return _toFileData(result);
-  }
-
-  FileData? _toFileData(FilePickerResult? result) {
-    final file = result?.files.single;
-    if (file == null) return null;
-    return (
-      name: file.name,
-      size: file.size,
-      bytes: file.bytes,
-      // PlatformFile.path throws on web — skip it there.
-      path: kIsWeb ? null : file.path,
-    );
-  }
 }
 
 // ── Generate tab ──────────────────────────────────────────────
