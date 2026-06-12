@@ -113,6 +113,5 @@ void main() {
       expect(find.byIcon(Icons.event), findsOneWidget);
     });
 
-    // TODO: test audio playback with injected AudioPlayer
   });
 }
