@@ -568,4 +568,116 @@ void main() {
       expect: () => <WeekplanState>[],
     );
   });
+
+  group('reorderActivities', () {
+    // onReorderItem semantics: newIndex is the final position of the
+    // dragged item — no index adjustment for the removed slot.
+    final a1 = testActivity.copyWith(activityId: 11, sortOrder: 0);
+    final a2 = testActivity.copyWith(activityId: 12, sortOrder: 1);
+    final a3 = testActivity.copyWith(activityId: 13, sortOrder: 2);
+
+    WeekplanLoaded loadedState() => WeekplanLoaded(
+          selectedDate: testDate,
+          weekDates: testWeekDates,
+          activities: [a1, a2, a3],
+        );
+
+    setUpAll(() {
+      registerFallbackValue(<Activity>[]);
+    });
+
+    void stubReorderSuccess() {
+      when(
+        () => mockActivityRepo.reorderActivities(
+          id: any(named: 'id'),
+          isCitizen: any(named: 'isCitizen'),
+          activities: any(named: 'activities'),
+        ),
+      ).thenAnswer((_) async => const Right(unit));
+    }
+
+    blocTest<WeekplanCubit, WeekplanState>(
+      'moves an activity down to the exact newIndex and renumbers sortOrder',
+      setUp: stubReorderSuccess,
+      build: buildCubit,
+      seed: loadedState,
+      act: (cubit) => cubit.reorderActivities(0, 1),
+      expect: () => [
+        loadedState().copyWith(activities: [
+          a2.copyWith(sortOrder: 0),
+          a1.copyWith(sortOrder: 1),
+          a3.copyWith(sortOrder: 2),
+        ]),
+      ],
+      verify: (_) {
+        verify(
+          () => mockActivityRepo.reorderActivities(
+            id: 1,
+            isCitizen: true,
+            activities: [
+              a2.copyWith(sortOrder: 0),
+              a1.copyWith(sortOrder: 1),
+              a3.copyWith(sortOrder: 2),
+            ],
+          ),
+        ).called(1);
+      },
+    );
+
+    blocTest<WeekplanCubit, WeekplanState>(
+      'moves an activity up to the exact newIndex',
+      setUp: stubReorderSuccess,
+      build: buildCubit,
+      seed: loadedState,
+      act: (cubit) => cubit.reorderActivities(2, 0),
+      expect: () => [
+        loadedState().copyWith(activities: [
+          a3.copyWith(sortOrder: 0),
+          a1.copyWith(sortOrder: 1),
+          a2.copyWith(sortOrder: 2),
+        ]),
+      ],
+    );
+
+    blocTest<WeekplanCubit, WeekplanState>(
+      'does nothing when the position is unchanged',
+      build: buildCubit,
+      seed: loadedState,
+      act: (cubit) => cubit.reorderActivities(1, 1),
+      expect: () => <WeekplanState>[],
+      verify: (_) {
+        verifyNever(
+          () => mockActivityRepo.reorderActivities(
+            id: any(named: 'id'),
+            isCitizen: any(named: 'isCitizen'),
+            activities: any(named: 'activities'),
+          ),
+        );
+      },
+    );
+
+    blocTest<WeekplanCubit, WeekplanState>(
+      'rolls back the optimistic reorder on repository failure',
+      setUp: () {
+        when(
+          () => mockActivityRepo.reorderActivities(
+            id: any(named: 'id'),
+            isCitizen: any(named: 'isCitizen'),
+            activities: any(named: 'activities'),
+          ),
+        ).thenAnswer((_) async => const Left(ReorderActivitiesFailure()));
+      },
+      build: buildCubit,
+      seed: loadedState,
+      act: (cubit) => cubit.reorderActivities(0, 1),
+      expect: () => [
+        loadedState().copyWith(activities: [
+          a2.copyWith(sortOrder: 0),
+          a1.copyWith(sortOrder: 1),
+          a3.copyWith(sortOrder: 2),
+        ]),
+        loadedState(),
+      ],
+    );
+  });
 }

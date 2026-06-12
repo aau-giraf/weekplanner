@@ -701,10 +701,7 @@ class _ActivityList extends StatelessWidget {
                 horizontal: GirafSpacing.xl,
                 vertical: GirafSpacing.lg,
               ),
-              // TODO(#82): migrate to onReorderItem once dev SDKs are on
-              // Flutter >=3.44 (onReorderItem does not exist in 3.41).
-              // ignore: deprecated_member_use
-              onReorder: cubit.reorderActivities,
+              onReorderItem: cubit.reorderActivities,
               proxyDecorator: (child, index, animation) =>
                   AnimatedBuilder(
                 animation: animation,

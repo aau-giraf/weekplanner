@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 - Renamed the "Valgaktivitet" toggle to "Aktivitetsvælger" (#75)
+- Migrated `ReorderableListView.onReorder` to `onReorderItem` — developing the frontend now requires Flutter ≥3.44 (#82)
 - Upgraded backend from .NET 8 to .NET 10 LTS (EOL Nov 2029)
 - Replaced Swashbuckle with built-in OpenAPI + Scalar UI (API docs now at `/scalar/v1`)
 - Bumped all NuGet packages to latest (EF Core 10, xunit 2.9, FluentAssertions 7.2)
