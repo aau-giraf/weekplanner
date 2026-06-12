@@ -57,7 +57,7 @@ class ActivityFormView extends StatelessWidget {
                           children: [
                             if (!state.isEditing)
                               SwitchListTile(
-                                title: const Text('Valgaktivitet'),
+                                title: const Text('Aktivitetsvælger'),
                                 subtitle: state.form.isChoiceActivity
                                     ? const Text(
                                         'Barnet vælger mellem muligheder')
@@ -456,7 +456,9 @@ class _ChoiceOptionsEditor extends StatelessWidget {
                 context: context,
                 builder: (_) => RepositoryProvider.value(
                   value: repo,
-                  child: const PictogramPickerDialog(),
+                  child: PictogramPickerDialog(
+                    organizationId: cubit.organizationId,
+                  ),
                 ),
               );
               if (picked != null) {
